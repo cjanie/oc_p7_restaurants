@@ -17,8 +17,6 @@ public class MainActivity extends AppCompatActivity {
 
     private RestaurantViewModel restaurantViewModel;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
