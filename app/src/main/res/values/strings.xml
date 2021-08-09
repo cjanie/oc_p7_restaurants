@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Go4Lunch</string>
+
+
+    <string name="restaurant_name">Restaurant Name</string>
+    <string name="address">Address</string>
+    <string name="info">Info</string>
+    <string name="distance">Distance</string>
+
+
+</resources>
