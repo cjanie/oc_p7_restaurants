@@ -27,7 +27,7 @@ public class MapRestaurantFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_restaurant_map, container, false);
         ButterKnife.bind(this, root);
         this.webView.setWebViewClient(new WebViewClient());
-        this.webView.loadUrl("http://google.com");
+        this.webView.loadUrl("https://www.openstreetmap.org");
         return root;
     }
 

@@ -9,15 +9,17 @@ public class Restaurant {
 
     private String name;
 
-    private CustomLocation location;
+    private String address;
 
     private LocalTime open;
 
     private LocalTime close;
 
-    public Restaurant(String name, CustomLocation location) {
+    private Geolocation geolocation;
+
+    public Restaurant(String name, String address) {
         this.name = name;
-        this.location = location;
+        this.address = address;
     }
 
 
@@ -30,12 +32,8 @@ public class Restaurant {
         this.name = name;
     }
 
-    public CustomLocation getLocation() {
-        return location;
-    }
-
-    public void setLocation(CustomLocation location) {
-        this.location = location;
+    public String getAddress() {
+        return address;
     }
 
     public LocalTime getOpen() {
@@ -52,5 +50,13 @@ public class Restaurant {
 
     public void setClose(LocalTime close) {
         this.close = close;
+    }
+
+    public Geolocation getGeolocation() {
+        return geolocation;
+    }
+
+    public void setGeolocation(Geolocation geolocation) {
+        this.geolocation = geolocation;
     }
 }

@@ -1,9 +1,13 @@
 package com.android.go4lunch;
 
+import com.android.go4lunch.read.adapter.DeterministicGeolocationProvider;
 import com.android.go4lunch.read.adapter.DeterministicTimeProvider;
 import com.android.go4lunch.read.adapter.InMemoryRestaurantQuery;
+import com.android.go4lunch.read.businesslogic.gateways.GeolocationProvider;
 import com.android.go4lunch.read.businesslogic.usecases.Info;
 import com.android.go4lunch.read.businesslogic.usecases.model.CustomLocation;
+import com.android.go4lunch.read.businesslogic.usecases.model.DistanceInfo;
+import com.android.go4lunch.read.businesslogic.usecases.model.Geolocation;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 import com.android.go4lunch.read.businesslogic.usecases.RetrieveRestaurants;
 
@@ -27,18 +31,18 @@ public class RetrieveRestaurantsTest {
 
     @Test
     public void shouldReturnOneRestaurantWhenThereIsOneAvailable() {
-        Restaurant restaurant = new Restaurant("Aa", new CustomLocation("rue neuve"));
+        Restaurant restaurant = new Restaurant("Aa", "rue neuve");
         this.initWithSomeRestaurants(Arrays.asList(new Restaurant[] {restaurant}));
 
         assert(new RetrieveRestaurants(this.restaurantQuery).handle().size() == 1);
         assert(new RetrieveRestaurants(this.restaurantQuery).handle().get(0).getName().equals("Aa"));
-        assertNotNull(new RetrieveRestaurants(this.restaurantQuery).handle().get(0).getLocation().getAddress().equals("rue neuve"));
+        assertNotNull(new RetrieveRestaurants(this.restaurantQuery).handle().get(0).getAddress().equals("rue neuve"));
     }
 
     @Test
     public void shouldReturnTwoRestaurantsIfTwoAreAvailable() {
-        Restaurant restaurant1 = new Restaurant("Aa", new CustomLocation(""));
-        Restaurant restaurant2 = new Restaurant("Bb", new CustomLocation(""));
+        Restaurant restaurant1 = new Restaurant("Aa", "");
+        Restaurant restaurant2 = new Restaurant("Bb", "");
         this.initWithSomeRestaurants(Arrays.asList(new Restaurant[] {restaurant1, restaurant2}));
 
         assert (new RetrieveRestaurants(this.restaurantQuery).handle().size() == 2);
@@ -52,45 +56,41 @@ public class RetrieveRestaurantsTest {
 
     @Test
     public void shouldReturnCLOSEIfCLOSE() {
-        Restaurant restaurant1 = new Restaurant("Aa", new CustomLocation(""));
-        restaurant1.setOpen(LocalTime.of(9, 0));
-        restaurant1.setClose(LocalTime.of(21,0));
-        this.initWithSomeRestaurants(Arrays.asList(new Restaurant[] {restaurant1}));
-        DeterministicTimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(6, 0));
-        assert(new RetrieveRestaurants(this.restaurantQuery).handleVO(timeProvider).get(0).getInfo().equals(Info.CLOSE));
-    }
+        this.checkMatchesTimeInfo(LocalTime.of(9, 0), LocalTime.of(21,0),
+                LocalTime.of(6, 0), Info.CLOSE);
+        }
 
     @Test
     public void shouldReturnOPENIfOPEN() {
-        Restaurant restaurant1 = new Restaurant("Aa", new CustomLocation(""));
-        restaurant1.setOpen(LocalTime.of(9, 0));
-        restaurant1.setClose(LocalTime.of(21,0));
-        this.initWithSomeRestaurants(Arrays.asList(new Restaurant[] {restaurant1}));
-        DeterministicTimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(12, 0));
-        assert(new RetrieveRestaurants(this.restaurantQuery).handleVO(timeProvider).get(0).getInfo().equals(Info.OPEN));
+        this.checkMatchesTimeInfo(LocalTime.of(9, 0), LocalTime.of(21,0),
+                LocalTime.of(12, 0), Info.OPEN);
     }
 
     @Test
     public void shouldReturnOPENINGSOONIfOPENINGSOON() {
-        Restaurant restaurant1 = new Restaurant("Aa", new CustomLocation(""));
-        restaurant1.setOpen(LocalTime.of(9, 0));
-        restaurant1.setClose(LocalTime.of(21,0));
-        this.initWithSomeRestaurants(Arrays.asList(new Restaurant[] {restaurant1}));
-        DeterministicTimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(8, 0));
-        assert(new RetrieveRestaurants(this.restaurantQuery).handleVO(timeProvider).get(0).getInfo().equals(Info.OPENING_SOON));
+        this.checkMatchesTimeInfo(LocalTime.of(9, 0), LocalTime.of(21,0),
+                LocalTime.of(8, 0), Info.OPENING_SOON);
     }
 
     @Test
     public void shouldReturnCLOSINGSOONIfCLOSINGSOON() {
-        Restaurant restaurant1 = new Restaurant("Aa", new CustomLocation(""));
-        restaurant1.setOpen(LocalTime.of(9, 0));
-        restaurant1.setClose(LocalTime.of(21,0));
-        this.initWithSomeRestaurants(Arrays.asList(new Restaurant[] {restaurant1}));
-        DeterministicTimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(20, 0));
-        assert(new RetrieveRestaurants(this.restaurantQuery).handleVO(timeProvider).get(0).getInfo().equals(Info.CLOSING_SOON));
+        this.checkMatchesTimeInfo(LocalTime.of(9, 0), LocalTime.of(21,0),
+                LocalTime.of(20, 0), Info.CLOSING_SOON);
+    }
+
+    private void checkMatchesTimeInfo(LocalTime open, LocalTime close, LocalTime now, Info info) {
+        Restaurant restaurant = new Restaurant("Aa", "");
+        restaurant.setOpen(open);
+        restaurant.setClose(close);
+        this.initWithSomeRestaurants(Arrays.asList(new Restaurant[] {restaurant}));
+        DeterministicTimeProvider timeProvider = new DeterministicTimeProvider(now);
+        DeterministicGeolocationProvider geolocationProvider = new DeterministicGeolocationProvider(new Geolocation(0D, 0D));
+        assert(new RetrieveRestaurants(this.restaurantQuery).handleVO(timeProvider, geolocationProvider).get(0).getInfo().equals(info));
     }
 
     private void initWithSomeRestaurants(List<Restaurant> restaurants) {
         this.restaurantQuery.setRestaurants(restaurants);
     }
+
+
 }

@@ -21,7 +21,7 @@ public class TimeInfoTest {
 
     @Test
     public void shouldShowThatRestaurantIsOpen() {
-        Restaurant restaurant = new Restaurant("R1", new CustomLocation("L"));
+        Restaurant restaurant = new Restaurant("R1", "L");
         restaurant.setOpen(LocalTime.of(9,0));
         restaurant.setClose(LocalTime.of(20, 30));
         TimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(12, 0));
@@ -30,7 +30,7 @@ public class TimeInfoTest {
 
     @Test
     public void shouldShowThatRestaurantIsClose() {
-        Restaurant restaurant = new Restaurant("R1", new CustomLocation("L"));
+        Restaurant restaurant = new Restaurant("R1", "L");
         restaurant.setOpen(LocalTime.of(9,0));
         restaurant.setClose(LocalTime.of(20, 30));
         TimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(23, 0));
@@ -39,7 +39,7 @@ public class TimeInfoTest {
 
     @Test
     public void shouldShowCloseIf1AMAndRestaurantOpensAt9AM() {
-        Restaurant restaurant = new Restaurant("R1", new CustomLocation("L"));
+        Restaurant restaurant = new Restaurant("R1", "L");
         restaurant.setOpen(LocalTime.of(9,0));
         restaurant.setClose(LocalTime.of(20, 30));
         TimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(1, 0));
@@ -48,7 +48,7 @@ public class TimeInfoTest {
 
     @Test
     public void shouldShowCloseSoon1HourBeforeClosing() {
-        Restaurant restaurant = new Restaurant("R1", new CustomLocation("L"));
+        Restaurant restaurant = new Restaurant("R1", "L");
         restaurant.setOpen(LocalTime.of(9,0));
         restaurant.setClose(LocalTime.of(20, 30));
         TimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(19, 35));
@@ -57,7 +57,7 @@ public class TimeInfoTest {
 
     @Test
     public void shouldShowCloseSoon1HourExactlyBeforeClosing() {
-        Restaurant restaurant = new Restaurant("R1", new CustomLocation("L"));
+        Restaurant restaurant = new Restaurant("R1", "L");
         restaurant.setOpen(LocalTime.of(9,0));
         restaurant.setClose(LocalTime.of(20, 30));
         TimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(19, 30));
@@ -66,7 +66,7 @@ public class TimeInfoTest {
 
     @Test
     public void shouldShowOpeningSoon1HourBeforeOpening() {
-        Restaurant restaurant = new Restaurant("R1", new CustomLocation("L"));
+        Restaurant restaurant = new Restaurant("R1", "L");
         restaurant.setOpen(LocalTime.of(9,0));
         restaurant.setClose(LocalTime.of(20, 30));
         TimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(8, 35));
@@ -75,7 +75,7 @@ public class TimeInfoTest {
 
     @Test
     public void shouldShowOpeningSoon1HourExactelyBeforeOpening() {
-        Restaurant restaurant = new Restaurant("R1", new CustomLocation("L"));
+        Restaurant restaurant = new Restaurant("R1", "L");
         restaurant.setOpen(LocalTime.of(9,0));
         restaurant.setClose(LocalTime.of(20, 30));
         TimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(8, 00));
