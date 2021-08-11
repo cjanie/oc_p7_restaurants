@@ -3,13 +3,11 @@ package com.android.go4lunch;
 import com.android.go4lunch.read.adapter.DeterministicGeolocationProvider;
 import com.android.go4lunch.read.adapter.DeterministicTimeProvider;
 import com.android.go4lunch.read.adapter.InMemoryRestaurantQuery;
-import com.android.go4lunch.read.businesslogic.gateways.GeolocationProvider;
 import com.android.go4lunch.read.businesslogic.usecases.Info;
-import com.android.go4lunch.read.businesslogic.usecases.model.CustomLocation;
-import com.android.go4lunch.read.businesslogic.usecases.model.DistanceInfo;
 import com.android.go4lunch.read.businesslogic.usecases.model.Geolocation;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 import com.android.go4lunch.read.businesslogic.usecases.RetrieveRestaurants;
+import com.android.go4lunch.read.businesslogic.usecases.model.TimeInfo;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -85,7 +83,7 @@ public class RetrieveRestaurantsTest {
         this.initWithSomeRestaurants(Arrays.asList(new Restaurant[] {restaurant}));
         DeterministicTimeProvider timeProvider = new DeterministicTimeProvider(now);
         DeterministicGeolocationProvider geolocationProvider = new DeterministicGeolocationProvider(new Geolocation(0D, 0D));
-        assert(new RetrieveRestaurants(this.restaurantQuery).handleVO(timeProvider, geolocationProvider).get(0).getInfo().equals(info));
+        assert(new TimeInfo(timeProvider, new RetrieveRestaurants(this.restaurantQuery).handleVO().get(0)).getInfo().equals(info));
     }
 
     private void initWithSomeRestaurants(List<Restaurant> restaurants) {

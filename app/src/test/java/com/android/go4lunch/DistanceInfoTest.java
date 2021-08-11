@@ -75,7 +75,7 @@ public class DistanceInfoTest {
 
     private void checkAssertedDistance(Geolocation here, Geolocation remote, long distanceExpected) {
         DeterministicGeolocationProvider geolocationProvider = new DeterministicGeolocationProvider(here);
-        assert(new DistanceInfo(geolocationProvider).handle(remote) == distanceExpected);
+        assert(new DistanceInfo(geolocationProvider).getDistance(remote) == distanceExpected);
     }
 
 }

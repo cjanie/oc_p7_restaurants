@@ -1,14 +1,9 @@
 package com.android.go4lunch;
 
-import com.android.go4lunch.read.adapter.DeterministicGeolocationProvider;
 import com.android.go4lunch.read.adapter.DeterministicTimeProvider;
 import com.android.go4lunch.read.adapter.InMemoryRestaurantQuery;
 import com.android.go4lunch.read.businesslogic.usecases.Info;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
-import com.android.go4lunch.read.businesslogic.usecases.RetrieveRestaurants;
-import com.android.go4lunch.read.businesslogic.usecases.model.CustomLocation;
-import com.android.go4lunch.read.businesslogic.usecases.model.DistanceInfo;
-import com.android.go4lunch.read.businesslogic.usecases.model.Geolocation;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 import com.android.go4lunch.read.businesslogic.usecases.model.TimeInfo;
 
@@ -19,46 +14,42 @@ import java.util.Arrays;
 
 public class RestaurantVOTest {
 
-    @Test
-    public void shouldReturnCLOSEIfRestaurantIsClose() {
+    private void checkIfMatchesInfo(LocalTime open, LocalTime close, LocalTime now, Info info) {
         Restaurant restaurant = new Restaurant("r", "l");
-        restaurant.setOpen(LocalTime.of(9,0));
-        restaurant.setClose(LocalTime.of(23,0));
-
+        restaurant.setOpen(open);
+        restaurant.setClose(close);
 
         InMemoryRestaurantQuery restaurantQuery = new InMemoryRestaurantQuery();
         restaurantQuery.setRestaurants(Arrays.asList(new Restaurant[] {restaurant}));
-        DeterministicTimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(23,30));
-        DeterministicGeolocationProvider geolocationProvider = new DeterministicGeolocationProvider(new Geolocation(0D, 0D));
+        DeterministicTimeProvider timeProvider = new DeterministicTimeProvider(now);
 
-        assert(new RetrieveRestaurants(restaurantQuery).handleVO(timeProvider, geolocationProvider).get(0).getInfo().equals(Info.CLOSE));
+        assert(new TimeInfo(timeProvider, new RestaurantVO(restaurant)).getInfo().equals(info));
+
+
+    }
+
+    @Test
+    public void shouldReturnCLOSEIfRestaurantIsClose() {
+
+        LocalTime open = LocalTime.of(9,0);
+        LocalTime close = LocalTime.of(23,0);
+        LocalTime now = LocalTime.of(23,30);
+        this.checkIfMatchesInfo(open, close, now, Info.CLOSE);
     }
 
     @Test
     public void shouldReturnOPENIfRestaurantIsOpen() {
-        Restaurant restaurant = new Restaurant("r", "l");
-        restaurant.setOpen(LocalTime.of(9,0));
-        restaurant.setClose(LocalTime.of(23,0));
-
-        InMemoryRestaurantQuery restaurantQuery = new InMemoryRestaurantQuery();
-        restaurantQuery.setRestaurants(Arrays.asList(new Restaurant[] {restaurant}));
-        DeterministicTimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(12,30));
-        DeterministicGeolocationProvider geolocationProvider = new DeterministicGeolocationProvider(new Geolocation(0D, 0D));
-
-        assert(new RetrieveRestaurants(restaurantQuery).handleVO(timeProvider, geolocationProvider).get(0).getInfo().equals(Info.OPEN));
+        LocalTime open = LocalTime.of(9,0);
+        LocalTime close = LocalTime.of(23,0);
+        LocalTime now = LocalTime.of(12,30);
+        this.checkIfMatchesInfo(open, close, now, Info.OPEN);
     }
 
     @Test
     public void shouldReturnOPENINGSOONIfRestaurantIsOpenningSoon() {
-        Restaurant restaurant = new Restaurant("r", "l");
-        restaurant.setOpen(LocalTime.of(9,0));
-        restaurant.setClose(LocalTime.of(23,0));
-
-        InMemoryRestaurantQuery restaurantQuery = new InMemoryRestaurantQuery();
-        restaurantQuery.setRestaurants(Arrays.asList(new Restaurant[] {restaurant}));
-        DeterministicTimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(8,0));
-        DeterministicGeolocationProvider geolocationProvider = new DeterministicGeolocationProvider(new Geolocation(0D, 0D));
-
-        assert(new RetrieveRestaurants(restaurantQuery).handleVO(timeProvider, geolocationProvider).get(0).getInfo().equals(Info.OPENING_SOON));
+        LocalTime open = LocalTime.of(9,0);
+        LocalTime close = LocalTime.of(23,0);
+        LocalTime now = LocalTime.of(8,0);
+        this.checkIfMatchesInfo(open, close, now, Info.OPENING_SOON);
     }
 }

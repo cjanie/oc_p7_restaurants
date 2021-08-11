@@ -1,5 +1,9 @@
 <resources>
-    <string name="app_name">Go4Lunch</string>
+    <string name="app_name">I\'m Hungry!</string>
+
+    <string name="map_view">Map View</string>
+    <string name="list_view">List View</string>
+    <string name="workmates">Workmates</string>
 
 
     <string name="restaurant_name">Restaurant Name</string>
@@ -7,6 +11,7 @@
     <string name="info">Info</string>
     <string name="distance">Distance</string>
     <string name="localize_me">Localise moi</string>
+
 
 
 </resources>

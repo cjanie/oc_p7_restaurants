@@ -1,5 +1,6 @@
 package com.android.go4lunch.read.businesslogic.usecases;
 
+import com.android.go4lunch.read.adapter.RealTimeProvider;
 import com.android.go4lunch.read.businesslogic.gateways.GeolocationProvider;
 import com.android.go4lunch.read.businesslogic.gateways.RestaurantQuery;
 import com.android.go4lunch.read.businesslogic.gateways.TimeProvider;
@@ -25,16 +26,11 @@ public class RetrieveRestaurants {
         return this.restaurantQuery.findAll();
     }
 
-    public List<RestaurantVO> handleVO(TimeProvider timeProvider, GeolocationProvider geolocationProvider) {
+    public List<RestaurantVO> handleVO() {
         List<RestaurantVO> restaurantVOs = new ArrayList<>();
         if(!this.handle().isEmpty()) {
             for(Restaurant r: this.handle()) {
-                RestaurantVO restaurantVO = new RestaurantVO(
-                        r.getName(),
-                        r.getAddress(),
-                        new TimeInfo(timeProvider).handle(r),
-                        (Long) new DistanceInfo(geolocationProvider).handle(r.getGeolocation())
-                );
+                RestaurantVO restaurantVO = new RestaurantVO(r);
                 restaurantVOs.add(restaurantVO);
             }
         }

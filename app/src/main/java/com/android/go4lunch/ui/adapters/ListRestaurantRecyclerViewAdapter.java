@@ -38,15 +38,11 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<List
     @Override
     public void onBindViewHolder(@NonNull ListRestaurantRecyclerViewAdapter.ViewHolder holder, int position) {
         RestaurantVO restaurant = this.restaurantVOs.get(position);
-        holder.name.setText(restaurant.getName());
-        holder.address.setText(restaurant.getAddress());
+        holder.name.setText(restaurant.getRestaurant().getName());
+        holder.address.setText(restaurant.getRestaurant().getAddress());
         holder.info.setText(restaurant.getInfo().toString());
         if(restaurant.getDistanceInfo() != null) {
-            DistanceUnity unity = DistanceUnity.UNITY; // TODO METER
-            DistanceUnityController distanceUnityController = new DistanceUnityController(unity);
-            Map<DistanceUnity, Long> map = distanceUnityController.getDistanceInfo(restaurant.getDistanceInfo());
-            Long l = map.get(unity);
-            holder.distance.setText(l + unity.toString());
+            holder.distance.setText(restaurant.getDistanceInfo().toString());
         }
     }
 
