@@ -1,24 +1,18 @@
 package com.android.go4lunch.ui;
 
 import android.app.Application;
-import android.content.Context;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.android.go4lunch.read.adapter.DeterministicGeolocationProvider;
 import com.android.go4lunch.read.adapter.DeterministicTimeProvider;
-import com.android.go4lunch.read.adapter.GPSGeolocationProvider;
 import com.android.go4lunch.read.adapter.InMemoryRestaurantQuery;
 import com.android.go4lunch.read.businesslogic.gateways.GeolocationProvider;
-import com.android.go4lunch.read.businesslogic.gateways.RestaurantQuery;
 import com.android.go4lunch.read.businesslogic.gateways.TimeProvider;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
 import com.android.go4lunch.read.businesslogic.usecases.RetrieveRestaurants;
-import com.android.go4lunch.read.businesslogic.usecases.model.CustomLocation;
-import com.android.go4lunch.read.businesslogic.usecases.model.DistanceInfo;
 import com.android.go4lunch.read.businesslogic.usecases.model.Geolocation;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 

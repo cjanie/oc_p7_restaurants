@@ -6,6 +6,7 @@
     <string name="address">Address</string>
     <string name="info">Info</string>
     <string name="distance">Distance</string>
+    <string name="localize_me">Localise moi</string>
 
 
 </resources>
