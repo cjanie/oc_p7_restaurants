@@ -1,15 +1,29 @@
-package com.android.go4lunch;
+package com.android.go4lunch.read.businesslogic.usecases.decorators;
 
 import com.android.go4lunch.read.adapter.DeterministicGeolocationProvider;
-import com.android.go4lunch.read.businesslogic.usecases.model.DistanceInfo;
+import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
+import com.android.go4lunch.read.businesslogic.usecases.decorators.DistanceInfoDecorator;
 import com.android.go4lunch.read.businesslogic.usecases.model.Geolocation;
+import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 
 import org.junit.Test;
 
-public class DistanceInfoTest {
+public class DistanceInfoDecoratorTest {
+
+
+    private RestaurantVO initRestaurantVOWithGeolocation(Geolocation geolocation) {
+        Restaurant restaurant = new Restaurant("Janie", "Hello");
+        restaurant.setGeolocation(geolocation);
+        return new RestaurantVO(restaurant);
+    }
+
+    private void checkAssertedDistance(Geolocation myPosition, Geolocation remote, long distanceExpected) {
+        assert(new DistanceInfoDecorator(this.initRestaurantVOWithGeolocation(remote))
+                .decor(myPosition).getDistanceInfo() == distanceExpected);
+    }
 
     @Test
-    public void pointATopointBMakingHalfSquare() {
+    public void pointAToPointBMakingHalfSquare() {
         Geolocation a = new Geolocation(1D, 2D);
         Geolocation b = new Geolocation(3D, 1D);
         this.checkAssertedDistance(a, b, 3);
@@ -70,12 +84,6 @@ public class DistanceInfoTest {
         Geolocation b = new Geolocation(2D, 3D);
         this.checkAssertedDistance(a,b, 3);
 
-    }
-
-
-    private void checkAssertedDistance(Geolocation here, Geolocation remote, long distanceExpected) {
-        DeterministicGeolocationProvider geolocationProvider = new DeterministicGeolocationProvider(here);
-        assert(new DistanceInfo(geolocationProvider).getDistance(remote) == distanceExpected);
     }
 
 }

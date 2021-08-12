@@ -1,37 +1,42 @@
-package com.android.go4lunch.read.businesslogic.usecases.model;
+package com.android.go4lunch.read.businesslogic.usecases.decorators;
 
 import com.android.go4lunch.read.businesslogic.gateways.TimeProvider;
-import com.android.go4lunch.read.businesslogic.usecases.Info;
+import com.android.go4lunch.read.businesslogic.usecases.enums.TimeInfo;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
 
 import java.time.LocalTime;
 
-public class TimeInfo {
+public class TimeInfoDecorator {
 
     private TimeProvider timeProvider;
 
     private RestaurantVO restaurant;
 
-    public TimeInfo(TimeProvider timeProvider, RestaurantVO restaurant) {
+    public TimeInfoDecorator(TimeProvider timeProvider, RestaurantVO restaurant) {
         this.timeProvider = timeProvider;
         this.restaurant = restaurant;
     }
 
-    public Info getInfo() {
+    public RestaurantVO decor() {
+        this.restaurant.setTimeInfo(this.getInfo());
+        return this.restaurant;
+    }
+
+    private TimeInfo getInfo() {
 
         LocalTime open = this.restaurant.getRestaurant().getOpen();
         LocalTime close = this.restaurant.getRestaurant().getClose();
         LocalTime now = this.timeProvider.now();
 
         if(now.isAfter(close))
-            return Info.CLOSE;
+            return TimeInfo.CLOSE;
         if(!now.isBefore(close.minusHours(1)))
-            return Info.CLOSING_SOON;
+            return TimeInfo.CLOSING_SOON;
         if(now.isAfter(open))
-            return Info.OPEN;
+            return TimeInfo.OPEN;
         if(!now.isBefore(open.minusHours(1)))
-            return Info.OPENING_SOON;
-        return Info.CLOSE;
+            return TimeInfo.OPENING_SOON;
+        return TimeInfo.CLOSE;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.android.go4lunch;
+package com.android.go4lunch.read;
 
 import org.junit.Test;
 

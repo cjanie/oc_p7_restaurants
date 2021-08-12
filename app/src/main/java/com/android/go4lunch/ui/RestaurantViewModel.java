@@ -7,23 +7,28 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.go4lunch.read.adapter.InMemoryRestaurantQuery;
+import com.android.go4lunch.read.adapter.InMemorySelectionQuery;
 import com.android.go4lunch.read.adapter.RealTimeProvider;
-import com.android.go4lunch.read.businesslogic.gateways.GeolocationProvider;
-import com.android.go4lunch.read.businesslogic.usecases.Info;
+import com.android.go4lunch.read.businesslogic.usecases.decorators.SelectionInfoDecorator;
+import com.android.go4lunch.read.businesslogic.usecases.enums.TimeInfo;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
 import com.android.go4lunch.read.businesslogic.usecases.RetrieveRestaurants;
-import com.android.go4lunch.read.businesslogic.usecases.model.DistanceInfo;
 import com.android.go4lunch.read.businesslogic.usecases.model.Geolocation;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
-import com.android.go4lunch.read.businesslogic.usecases.model.TimeInfo;
+import com.android.go4lunch.read.businesslogic.usecases.decorators.TimeInfoDecorator;
+import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
+import com.android.go4lunch.read.businesslogic.usecases.model.Workmate;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class RestaurantViewModel extends AndroidViewModel {
 
     private final RetrieveRestaurants retrieveRestaurants;
+
+    InMemorySelectionQuery selectionQuery;
 
     public RestaurantViewModel(Application application) {
         super(application);
@@ -40,6 +45,11 @@ public class RestaurantViewModel extends AndroidViewModel {
         restaurantQuery.setRestaurants(Arrays.asList(new Restaurant[]{r1, r2}));
 
         this.retrieveRestaurants = new RetrieveRestaurants(restaurantQuery);
+
+        this.selectionQuery = new InMemorySelectionQuery();
+        List<Selection> selections = new ArrayList<>();
+        selections.add(new Selection(r1, new Workmate()));
+        selectionQuery.setSelections(selections);
     }
 
 
@@ -48,8 +58,8 @@ public class RestaurantViewModel extends AndroidViewModel {
         List<RestaurantVO> list = this.retrieveRestaurants.handleVO();
         if(!list.isEmpty()) {
             for(RestaurantVO r: list) {
-                Info info = new TimeInfo(new RealTimeProvider(), r).getInfo();
-                r.setInfo(info);
+                r = new TimeInfoDecorator(new RealTimeProvider(), r).decor();
+                r = new SelectionInfoDecorator(this.selectionQuery, r).decor();
             }
         }
         mRestaurants.setValue(list);

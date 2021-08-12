@@ -34,7 +34,7 @@
             android:id="@+id/restaurant_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/info"
+            android:text="@string/timeInfo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/address" />
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -60,7 +60,16 @@
             android:id="@+id/users"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="@+id/distance">
+            app:layout_constraintTop_toBottomOf="@+id/distance">
+
+            <TextView
+                android:id="@+id/selections"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/selections"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

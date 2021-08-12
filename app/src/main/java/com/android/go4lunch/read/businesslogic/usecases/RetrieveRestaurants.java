@@ -1,13 +1,7 @@
 package com.android.go4lunch.read.businesslogic.usecases;
 
-import com.android.go4lunch.read.adapter.RealTimeProvider;
-import com.android.go4lunch.read.businesslogic.gateways.GeolocationProvider;
 import com.android.go4lunch.read.businesslogic.gateways.RestaurantQuery;
-import com.android.go4lunch.read.businesslogic.gateways.TimeProvider;
-import com.android.go4lunch.read.businesslogic.usecases.model.DistanceInfo;
-import com.android.go4lunch.read.businesslogic.usecases.model.Geolocation;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
-import com.android.go4lunch.read.businesslogic.usecases.model.TimeInfo;
 
 import java.util.ArrayList;
 import java.util.List;
