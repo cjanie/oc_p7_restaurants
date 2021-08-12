@@ -3,7 +3,7 @@ package com.android.go4lunch;
 import com.android.go4lunch.read.adapter.DeterministicTimeProvider;
 import com.android.go4lunch.read.businesslogic.gateways.TimeProvider;
 import com.android.go4lunch.read.businesslogic.usecases.Info;
-import com.android.go4lunch.read.businesslogic.usecases.model.CustomLocation;
+import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 import com.android.go4lunch.read.businesslogic.usecases.model.TimeInfo;
 
@@ -19,66 +19,67 @@ public class TimeInfoTest {
 
     }
 
+    private void checkMatchesInfo(LocalTime open, LocalTime close, LocalTime now, Info expected) {
+        Restaurant restaurant = new Restaurant("R1", "L");
+        restaurant.setOpen(open);
+        restaurant.setClose(close);
+        TimeProvider timeProvider = new DeterministicTimeProvider(now);
+        assert(new TimeInfo(timeProvider, new RestaurantVO(restaurant)).getInfo().equals(expected));
+    }
+
     @Test
     public void shouldShowThatRestaurantIsOpen() {
-        Restaurant restaurant = new Restaurant("R1", "L");
-        restaurant.setOpen(LocalTime.of(9,0));
-        restaurant.setClose(LocalTime.of(20, 30));
-        TimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(12, 0));
-        assert(new TimeInfo(timeProvider).handle(restaurant).equals(Info.OPEN));
+        LocalTime open = LocalTime.of(9,0);
+        LocalTime close = LocalTime.of(20, 30);
+        LocalTime now = LocalTime.of(12, 0);
+        this.checkMatchesInfo(open, close, now, Info.OPEN);
     }
 
     @Test
     public void shouldShowThatRestaurantIsClose() {
-        Restaurant restaurant = new Restaurant("R1", "L");
-        restaurant.setOpen(LocalTime.of(9,0));
-        restaurant.setClose(LocalTime.of(20, 30));
-        TimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(23, 0));
-        assert(new TimeInfo(timeProvider).handle(restaurant).equals(Info.CLOSE));
+        LocalTime open = LocalTime.of(9,0);
+        LocalTime close = LocalTime.of(20, 30);
+        LocalTime now = LocalTime.of(23, 0);
+        this.checkMatchesInfo(open, close, now, Info.CLOSE);
     }
 
     @Test
     public void shouldShowCloseIf1AMAndRestaurantOpensAt9AM() {
-        Restaurant restaurant = new Restaurant("R1", "L");
-        restaurant.setOpen(LocalTime.of(9,0));
-        restaurant.setClose(LocalTime.of(20, 30));
-        TimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(1, 0));
-        assert(new TimeInfo(timeProvider).handle(restaurant).equals(Info.CLOSE));
+        LocalTime open = LocalTime.of(9,0);
+        LocalTime close = LocalTime.of(20, 30);
+        LocalTime now = LocalTime.of(1, 0);
+        this.checkMatchesInfo(open, close, now, Info.CLOSE);
     }
 
     @Test
     public void shouldShowCloseSoon1HourBeforeClosing() {
-        Restaurant restaurant = new Restaurant("R1", "L");
-        restaurant.setOpen(LocalTime.of(9,0));
-        restaurant.setClose(LocalTime.of(20, 30));
-        TimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(19, 35));
-        assert(new TimeInfo(timeProvider).handle(restaurant).equals(Info.CLOSING_SOON));
+        LocalTime open = LocalTime.of(9,0);
+        LocalTime close = LocalTime.of(20, 30);
+        LocalTime now = LocalTime.of(19, 35);
+        this.checkMatchesInfo(open, close, now, Info.CLOSING_SOON);
     }
 
     @Test
     public void shouldShowCloseSoon1HourExactlyBeforeClosing() {
-        Restaurant restaurant = new Restaurant("R1", "L");
-        restaurant.setOpen(LocalTime.of(9,0));
-        restaurant.setClose(LocalTime.of(20, 30));
-        TimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(19, 30));
-        assert(new TimeInfo(timeProvider).handle(restaurant).equals(Info.CLOSING_SOON));
+        LocalTime open = LocalTime.of(9,0);
+        LocalTime close = LocalTime.of(20, 30);
+        LocalTime now = LocalTime.of(19, 30);
+        this.checkMatchesInfo(open, close, now, Info.CLOSING_SOON);
     }
 
     @Test
     public void shouldShowOpeningSoon1HourBeforeOpening() {
-        Restaurant restaurant = new Restaurant("R1", "L");
-        restaurant.setOpen(LocalTime.of(9,0));
-        restaurant.setClose(LocalTime.of(20, 30));
-        TimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(8, 35));
-        assert(new TimeInfo(timeProvider).handle(restaurant).equals(Info.OPENING_SOON));
+        LocalTime open = LocalTime.of(9,0);
+        LocalTime close = LocalTime.of(20, 30);
+        LocalTime now = LocalTime.of(8, 35);
+        this.checkMatchesInfo(open, close, now, Info.OPENING_SOON);
     }
 
     @Test
     public void shouldShowOpeningSoon1HourExactelyBeforeOpening() {
-        Restaurant restaurant = new Restaurant("R1", "L");
-        restaurant.setOpen(LocalTime.of(9,0));
-        restaurant.setClose(LocalTime.of(20, 30));
-        TimeProvider timeProvider = new DeterministicTimeProvider(LocalTime.of(8, 00));
-        assert(new TimeInfo(timeProvider).handle(restaurant).equals(Info.OPENING_SOON));
+        LocalTime open = LocalTime.of(9,0);
+        LocalTime close = LocalTime.of(20, 30);
+        LocalTime now = LocalTime.of(8, 0);
+        this.checkMatchesInfo(open, close, now, Info.OPENING_SOON);
     }
 }

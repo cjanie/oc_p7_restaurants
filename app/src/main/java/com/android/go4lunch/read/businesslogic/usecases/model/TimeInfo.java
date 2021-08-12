@@ -2,6 +2,7 @@ package com.android.go4lunch.read.businesslogic.usecases.model;
 
 import com.android.go4lunch.read.businesslogic.gateways.TimeProvider;
 import com.android.go4lunch.read.businesslogic.usecases.Info;
+import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
 
 import java.time.LocalTime;
 
@@ -9,17 +10,17 @@ public class TimeInfo {
 
     private TimeProvider timeProvider;
 
-    public TimeInfo(TimeProvider timeProvider) {
+    private RestaurantVO restaurant;
+
+    public TimeInfo(TimeProvider timeProvider, RestaurantVO restaurant) {
         this.timeProvider = timeProvider;
+        this.restaurant = restaurant;
     }
 
-    public Info handle(Restaurant restaurant) {
-        return this.getInfo(restaurant);
-    }
+    public Info getInfo() {
 
-    private Info getInfo(Restaurant restaurant) {
-        LocalTime open = restaurant.getOpen();
-        LocalTime close = restaurant.getClose();
+        LocalTime open = this.restaurant.getRestaurant().getOpen();
+        LocalTime close = this.restaurant.getRestaurant().getClose();
         LocalTime now = this.timeProvider.now();
 
         if(now.isAfter(close))

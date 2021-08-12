@@ -6,21 +6,20 @@ public class DistanceInfo {
 
     private GeolocationProvider geolocationProvider;
 
+    public DistanceInfo() {
+
+    }
+
     public DistanceInfo(GeolocationProvider geolocationProvider) {
         this.geolocationProvider = geolocationProvider;
     }
 
-    private Geolocation getHere() {
-        return this.geolocationProvider.here();
+    public Long getDistance(Geolocation remote) {
+        return this.getSquareDistanceRoundDown(geolocationProvider.here(), remote);
     }
 
-
-    public long handle(Geolocation remote) {
-        return this.getSquareDistanceRoundDown(this.getHere(), remote);
-    }
-
-    private long getSquareDistanceRoundDown(Geolocation a, Geolocation b) {
-        long roundDown = (long) Math.floor(this.getSquareDistance(a, b));
+    public Long getSquareDistanceRoundDown(Geolocation a, Geolocation b) {
+        Long roundDown = (long) Math.floor(this.getSquareDistance(a, b));
         return roundDown;
     }
 

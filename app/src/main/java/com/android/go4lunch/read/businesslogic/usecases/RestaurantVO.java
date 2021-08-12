@@ -2,30 +2,38 @@ package com.android.go4lunch.read.businesslogic.usecases;
 
 import com.android.go4lunch.read.businesslogic.usecases.model.CustomLocation;
 import com.android.go4lunch.read.businesslogic.usecases.model.DistanceInfo;
+import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 
 public class RestaurantVO {
 
-    private String name;
-
-    private String address;
+    private Restaurant restaurant;
 
     private Info info;
 
     private Long distanceInfo;
 
-    public RestaurantVO(String name, String address, Info info, Long distanceInfo) {
-        this.name = name;
-        this.address = address;
+    public RestaurantVO(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+
+    public RestaurantVO(Restaurant restaurant, Info info) {
+        this(restaurant);
         this.info = info;
+    }
+
+
+    public RestaurantVO(Restaurant restaurant, Info info, Long distanceInfo) {
+        this(restaurant, info);
         this.distanceInfo = distanceInfo;
     }
 
-    public String getName() {
-        return name;
+    public RestaurantVO(Restaurant restaurant, Long distanceInfo) {
+        this(restaurant);
+        this.distanceInfo = distanceInfo;
     }
 
-    public String getAddress() {
-        return address;
+    public Restaurant getRestaurant() {
+        return restaurant;
     }
 
     public Info getInfo() {
@@ -36,4 +44,11 @@ public class RestaurantVO {
         return this.distanceInfo;
     }
 
+    public void setInfo(Info info) {
+        this.info = info;
+    }
+
+    public void setDistanceInfo(Long distanceInfo) {
+        this.distanceInfo = distanceInfo;
+    }
 }
