@@ -8,8 +8,9 @@
 
     <string name="restaurant_name">Restaurant Name</string>
     <string name="address">Address</string>
-    <string name="info">Info</string>
+    <string name="timeInfo">Info</string>
     <string name="distance">Distance</string>
+    <string name="selections">Selections</string>
     <string name="localize_me">Localise moi</string>
 
 

@@ -1,29 +1,30 @@
 package com.android.go4lunch.read.businesslogic.usecases;
 
-import com.android.go4lunch.read.businesslogic.usecases.model.CustomLocation;
-import com.android.go4lunch.read.businesslogic.usecases.model.DistanceInfo;
+import com.android.go4lunch.read.businesslogic.usecases.enums.TimeInfo;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 
 public class RestaurantVO {
 
     private Restaurant restaurant;
 
-    private Info info;
+    private TimeInfo timeInfo;
 
     private Long distanceInfo;
+
+    private int selectionCountInfo;
 
     public RestaurantVO(Restaurant restaurant) {
         this.restaurant = restaurant;
     }
 
-    public RestaurantVO(Restaurant restaurant, Info info) {
+    public RestaurantVO(Restaurant restaurant, TimeInfo timeInfo) {
         this(restaurant);
-        this.info = info;
+        this.timeInfo = timeInfo;
     }
 
 
-    public RestaurantVO(Restaurant restaurant, Info info, Long distanceInfo) {
-        this(restaurant, info);
+    public RestaurantVO(Restaurant restaurant, TimeInfo timeInfo, Long distanceInfo) {
+        this(restaurant, timeInfo);
         this.distanceInfo = distanceInfo;
     }
 
@@ -32,23 +33,36 @@ public class RestaurantVO {
         this.distanceInfo = distanceInfo;
     }
 
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+
     public Restaurant getRestaurant() {
         return restaurant;
     }
 
-    public Info getInfo() {
-        return this.info;
+    public void setTimeInfo(TimeInfo timeInfo) {
+        this.timeInfo = timeInfo;
+    }
+
+    public TimeInfo getTimeInfo() {
+        return this.timeInfo;
+    }
+
+    public void setDistanceInfo(Long distanceInfo) {
+        this.distanceInfo = distanceInfo;
     }
 
     public Long getDistanceInfo() {
         return this.distanceInfo;
     }
 
-    public void setInfo(Info info) {
-        this.info = info;
+    public void setSelectionsCountInfo(int selectionCountInfo) {
+        this.selectionCountInfo = selectionCountInfo;
     }
 
-    public void setDistanceInfo(Long distanceInfo) {
-        this.distanceInfo = distanceInfo;
+    public int getSelectionCountInfo() {
+        return selectionCountInfo;
     }
+
 }

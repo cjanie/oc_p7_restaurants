@@ -12,18 +12,14 @@ import android.webkit.WebViewClient;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.R;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
-import com.android.go4lunch.read.businesslogic.usecases.model.DistanceInfo;
 import com.android.go4lunch.read.businesslogic.usecases.model.Geolocation;
-import com.android.go4lunch.ui.adapters.ListRestaurantRecyclerViewAdapter;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;

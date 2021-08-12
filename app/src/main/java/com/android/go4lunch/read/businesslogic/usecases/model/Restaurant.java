@@ -1,8 +1,5 @@
 package com.android.go4lunch.read.businesslogic.usecases.model;
 
-
-import com.android.go4lunch.read.businesslogic.usecases.model.CustomLocation;
-
 import java.time.LocalTime;
 
 public class Restaurant {

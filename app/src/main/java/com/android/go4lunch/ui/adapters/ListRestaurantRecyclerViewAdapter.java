@@ -10,11 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
-import com.android.go4lunch.read.businesslogic.usecases.model.DistanceUnity;
-import com.android.go4lunch.read.businesslogic.usecases.model.DistanceUnityController;
 
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,10 +37,11 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<List
         RestaurantVO restaurant = this.restaurantVOs.get(position);
         holder.name.setText(restaurant.getRestaurant().getName());
         holder.address.setText(restaurant.getRestaurant().getAddress());
-        holder.info.setText(restaurant.getInfo().toString());
+        holder.info.setText(restaurant.getTimeInfo().toString());
         if(restaurant.getDistanceInfo() != null) {
             holder.distance.setText(restaurant.getDistanceInfo().toString());
         }
+        holder.selections.setText("(" + String.valueOf(restaurant.getSelectionCountInfo()) +")");
     }
 
 
@@ -65,6 +63,9 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<List
 
         @BindView(R.id.distance)
         TextView distance;
+
+        @BindView(R.id.selections)
+        TextView selections;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
