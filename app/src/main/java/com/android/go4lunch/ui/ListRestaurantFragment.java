@@ -57,6 +57,8 @@ public class ListRestaurantFragment extends WithLocationPermissionFragment {
     public void onResume() {
         super.onResume();
         this.restaurantViewModel.list().observe(this, restaurants -> {
+            ListRestaurantRecyclerViewAdapter adapter = new ListRestaurantRecyclerViewAdapter(restaurants);
+            this.recyclerView.setAdapter(adapter);
             this.initLocation(restaurants);
         });
     }
@@ -97,6 +99,7 @@ public class ListRestaurantFragment extends WithLocationPermissionFragment {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             System.out.println("getlastlocation failed" + "************" + e.getMessage());
+
                         }
                     });
         } else {
