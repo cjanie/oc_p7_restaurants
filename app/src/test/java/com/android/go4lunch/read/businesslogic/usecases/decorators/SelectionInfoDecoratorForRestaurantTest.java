@@ -27,7 +27,7 @@ public class SelectionInfoDecoratorForRestaurantTest {
     private void initWithSomeSelections(int selectionsCount) {
         List<Selection> selections = new ArrayList<>();
         for(int i=0; i<selectionsCount; i++) {
-            Selection selection = new Selection(this.restaurant, new Workmate());
+            Selection selection = new Selection(this.restaurant, new Workmate("Janie"));
             selections.add(selection);
         }
         this.selectionQuery.setSelections(selections);

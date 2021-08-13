@@ -27,7 +27,7 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     private final RetrieveRestaurants retrieveRestaurants;
 
-    InMemorySelectionQuery selectionQuery;
+    private final InMemorySelectionQuery selectionQuery;
 
     public RestaurantViewModel(Application application) {
         super(application);
@@ -47,7 +47,7 @@ public class RestaurantViewModel extends AndroidViewModel {
 
         this.selectionQuery = new InMemorySelectionQuery();
         List<Selection> selections = new ArrayList<>();
-        selections.add(new Selection(r1, new Workmate()));
+        selections.add(new Selection(r1, new Workmate("Janie")));
         selectionQuery.setSelections(selections);
     }
 
