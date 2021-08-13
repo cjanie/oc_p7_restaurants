@@ -57,12 +57,12 @@ public class ListRestaurantFragment extends WithLocationPermissionFragment {
         this.restaurantViewModel.list().observe(this, restaurants -> {
             ListRestaurantRecyclerViewAdapter adapter = new ListRestaurantRecyclerViewAdapter(restaurants);
             this.recyclerView.setAdapter(adapter);
-            this.initLocation(restaurants);
+            this.initMyPosition(restaurants);
         });
     }
 
     @Override
-    protected void initLocation(List<RestaurantVO> restaurants) {
+    protected void initMyPosition(List<RestaurantVO> restaurants) {
         this.fusedlocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
         if(ActivityCompat.checkSelfPermission(
                 this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED

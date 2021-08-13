@@ -20,12 +20,7 @@ public class InMemorySelectionQuery implements SelectionQuery {
     }
 
     @Override
-    public int getSelectionsCount() {
-        return this.selections.size();
-    }
-
-    @Override
-    public List<Selection> getSelections() {
+    public List<Selection> findAll() {
         return this.selections;
     }
 }

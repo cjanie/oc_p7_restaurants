@@ -12,6 +12,7 @@ import android.webkit.WebViewClient;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.R;
@@ -49,12 +50,12 @@ public class MapRestaurantFragment extends WithLocationPermissionFragment {
     public void onResume() {
         super.onResume();
         this.mapViewModel.list().observe(this.getActivity(), restaurants -> {
-            //this.initLocation(restaurants);
+            this.initMyPosition(restaurants);
         });
     }
 
     @Override
-    protected void initLocation(List<RestaurantVO> restaurants) {
+    protected void initMyPosition(List<RestaurantVO> restaurants) {
         // TODO WITH RIGHT US MAP VIEW MODEL
         this.fusedlocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
         if(ActivityCompat.checkSelfPermission(
@@ -83,11 +84,12 @@ public class MapRestaurantFragment extends WithLocationPermissionFragment {
                     .addOnFailureListener(this.getActivity(), new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            System.out.println("getlastlocation failed" + "************" + e.getMessage());
+                            System.out.println("getLastLocation failed" + "************" + e.getMessage());
                         }
                     });
         } else {
             this.showEducationalUI();
         }
     }
+
 }

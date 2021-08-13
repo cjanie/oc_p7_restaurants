@@ -10,15 +10,10 @@ import org.junit.Test;
 
 public class DistanceInfoDecoratorTest {
 
-
-    private RestaurantVO initRestaurantVOWithGeolocation(Geolocation geolocation) {
-        Restaurant restaurant = new Restaurant("Janie", "Hello");
-        restaurant.setGeolocation(geolocation);
-        return new RestaurantVO(restaurant);
-    }
-
     private void checkAssertedDistance(Geolocation myPosition, Geolocation remote, long distanceExpected) {
-        assert(new DistanceInfoDecorator(this.initRestaurantVOWithGeolocation(remote))
+        Restaurant restaurant = new Restaurant("Janie", "Hello");
+        restaurant.setGeolocation(remote);
+        assert(new DistanceInfoDecorator(new RestaurantVO(restaurant))
                 .decor(myPosition).getDistanceInfo() == distanceExpected);
     }
 

@@ -16,19 +16,20 @@ public class RetrieveRestaurants {
         this.restaurantQuery = restaurantQuery;
     }
 
-    public List<Restaurant> handle() {
-        return this.restaurantQuery.findAll();
-    }
-
-    public List<RestaurantVO> handleVO() {
+    public List<RestaurantVO> handle() {
         List<RestaurantVO> restaurantVOs = new ArrayList<>();
-        if(!this.handle().isEmpty()) {
-            for(Restaurant r: this.handle()) {
+        if(!this.findAll().isEmpty()) {
+            for(Restaurant r: this.findAll()) {
                 RestaurantVO restaurantVO = new RestaurantVO(r);
                 restaurantVOs.add(restaurantVO);
             }
         }
         return restaurantVOs;
     }
+
+    private List<Restaurant> findAll() {
+        return this.restaurantQuery.findAll();
+    }
+
 
 }

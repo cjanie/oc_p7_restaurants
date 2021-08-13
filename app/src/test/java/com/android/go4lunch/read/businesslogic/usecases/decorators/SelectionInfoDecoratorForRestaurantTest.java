@@ -12,7 +12,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectionInfoDecoratorTest {
+public class SelectionInfoDecoratorForRestaurantTest {
 
     private InMemorySelectionQuery selectionQuery;
 
@@ -34,7 +34,7 @@ public class SelectionInfoDecoratorTest {
     }
 
     private void assertMatchesSelectionCount(int expectedCount) {
-        assert(new SelectionInfoDecorator(this.selectionQuery, new RestaurantVO(this.restaurant))
+        assert(new SelectionInfoDecoratorForRestaurant(this.selectionQuery, new RestaurantVO(this.restaurant))
                 .decor().getSelectionCountInfo() == expectedCount);
     }
 
@@ -60,7 +60,7 @@ public class SelectionInfoDecoratorTest {
     public void shouldReturn0IfRestaurantIsNotTheOneSelected() {
         this.initWithSomeSelections(1);
         Restaurant unselected = new Restaurant("oioi", "nono");
-        assert(new SelectionInfoDecorator(this.selectionQuery, new RestaurantVO(unselected))
+        assert(new SelectionInfoDecoratorForRestaurant(this.selectionQuery, new RestaurantVO(unselected))
                 .decor().getSelectionCountInfo() == 0);
     }
 
