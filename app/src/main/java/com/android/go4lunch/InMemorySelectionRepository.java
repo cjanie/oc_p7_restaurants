@@ -1,17 +1,18 @@
-package com.android.go4lunch.read.adapter;
+package com.android.go4lunch;
 
 import com.android.go4lunch.read.businesslogic.gateways.SelectionQuery;
 import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
+import com.android.go4lunch.write.businesslogic.gateways.SelectionCommand;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class InMemorySelectionQuery implements SelectionQuery {
+public class InMemorySelectionRepository implements SelectionQuery, SelectionCommand {
 
     private List<Selection> selections;
 
-    public InMemorySelectionQuery() {
+    public InMemorySelectionRepository() {
         this.selections = new ArrayList<>();
     }
 
@@ -23,4 +24,12 @@ public class InMemorySelectionQuery implements SelectionQuery {
     public List<Selection> findAll() {
         return this.selections;
     }
+
+    @Override
+    public void toggle(Selection selection) {
+        if(this.selections.contains(selection)) this.selections.remove(selection);
+        else this.selections.add(selection);
+    }
+
+
 }

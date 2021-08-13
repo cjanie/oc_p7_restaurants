@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.go4lunch.read.adapter.InMemoryRestaurantQuery;
-import com.android.go4lunch.read.adapter.InMemorySelectionQuery;
+import com.android.go4lunch.InMemorySelectionRepository;
 import com.android.go4lunch.read.adapter.RealTimeProvider;
 import com.android.go4lunch.read.businesslogic.usecases.decorators.SelectionInfoDecoratorForRestaurant;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
@@ -27,7 +27,7 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     private final RetrieveRestaurants retrieveRestaurants;
 
-    private final InMemorySelectionQuery selectionQuery;
+    private final InMemorySelectionRepository selectionQuery;
 
     public RestaurantViewModel(Application application) {
         super(application);
@@ -45,7 +45,7 @@ public class RestaurantViewModel extends AndroidViewModel {
 
         this.retrieveRestaurants = new RetrieveRestaurants(restaurantQuery);
 
-        this.selectionQuery = new InMemorySelectionQuery();
+        this.selectionQuery = new InMemorySelectionRepository();
         List<Selection> selections = new ArrayList<>();
         selections.add(new Selection(r1, new Workmate("Janie")));
         selectionQuery.setSelections(selections);

@@ -42,6 +42,12 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<List
             holder.distance.setText(restaurant.getDistanceInfo().toString());
         }
         holder.selections.setText("(" + String.valueOf(restaurant.getSelectionCountInfo()) +")");
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
 
