@@ -9,8 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.android.go4lunch.read.adapter.InMemoryRestaurantQuery;
 import com.android.go4lunch.read.adapter.InMemorySelectionQuery;
 import com.android.go4lunch.read.adapter.RealTimeProvider;
-import com.android.go4lunch.read.businesslogic.usecases.decorators.SelectionInfoDecorator;
-import com.android.go4lunch.read.businesslogic.usecases.enums.TimeInfo;
+import com.android.go4lunch.read.businesslogic.usecases.decorators.SelectionInfoDecoratorForRestaurant;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
 import com.android.go4lunch.read.businesslogic.usecases.RetrieveRestaurants;
 import com.android.go4lunch.read.businesslogic.usecases.model.Geolocation;
@@ -55,11 +54,11 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     public LiveData<List<RestaurantVO>> list() {
         MutableLiveData<List<RestaurantVO>> mRestaurants = new MutableLiveData<>();
-        List<RestaurantVO> list = this.retrieveRestaurants.handleVO();
+        List<RestaurantVO> list = this.retrieveRestaurants.handle();
         if(!list.isEmpty()) {
             for(RestaurantVO r: list) {
                 r = new TimeInfoDecorator(new RealTimeProvider(), r).decor();
-                r = new SelectionInfoDecorator(this.selectionQuery, r).decor();
+                r = new SelectionInfoDecoratorForRestaurant(this.selectionQuery, r).decor();
             }
         }
         mRestaurants.setValue(list);

@@ -12,7 +12,7 @@ public abstract class WithLocationPermissionFragment extends Fragment {
 
     protected FusedLocationProviderClient fusedlocationProviderClient;
 
-    protected abstract void initLocation(List<RestaurantVO> restaurants);
+    protected abstract void initMyPosition(List<RestaurantVO> restaurants);
 
     protected void showEducationalUI() {
         // Explain to the user that

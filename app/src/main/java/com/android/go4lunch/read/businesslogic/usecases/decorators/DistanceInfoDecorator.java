@@ -14,17 +14,12 @@ public class DistanceInfoDecorator {
         this.restaurantVO = restaurantVO;
     }
 
-    public DistanceInfoDecorator(GeolocationProvider geolocationProvider, RestaurantVO restaurantVO) {
-        this.geolocationProvider = geolocationProvider;
-        this.restaurantVO = restaurantVO;
-    }
-
     public RestaurantVO decor(Geolocation myPosition) {
-        this.restaurantVO.setDistanceInfo(this.getInfo(myPosition));
+        this.restaurantVO.setDistanceInfo(this.getDistanceFromMyPosition(myPosition));
         return this.restaurantVO;
     }
 
-    private long getInfo(Geolocation myPosition) {
+    private long getDistanceFromMyPosition(Geolocation myPosition) {
         return this.getSquareDistanceRoundDown(myPosition, this.restaurantVO.getRestaurant().getGeolocation());
     }
 

@@ -1,16 +1,11 @@
 package com.android.go4lunch.read.businesslogic.usecases;
 
-import com.android.go4lunch.read.adapter.DeterministicTimeProvider;
 import com.android.go4lunch.read.adapter.InMemoryRestaurantQuery;
-import com.android.go4lunch.read.businesslogic.usecases.enums.TimeInfo;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
-import com.android.go4lunch.read.businesslogic.usecases.RetrieveRestaurants;
-import com.android.go4lunch.read.businesslogic.usecases.decorators.TimeInfoDecorator;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,8 +30,8 @@ public class RetrieveRestaurantsTest {
         this.initWithSomeRestaurants(Arrays.asList(new Restaurant[] {restaurant}));
 
         assert(new RetrieveRestaurants(this.restaurantQuery).handle().size() == 1);
-        assert(new RetrieveRestaurants(this.restaurantQuery).handle().get(0).getName().equals("Aa"));
-        assertNotNull(new RetrieveRestaurants(this.restaurantQuery).handle().get(0).getAddress().equals("rue neuve"));
+        assert(new RetrieveRestaurants(this.restaurantQuery).handle().get(0).getRestaurant().getName().equals("Aa"));
+        assertNotNull(new RetrieveRestaurants(this.restaurantQuery).handle().get(0).getRestaurant().getAddress().equals("rue neuve"));
     }
 
     @Test

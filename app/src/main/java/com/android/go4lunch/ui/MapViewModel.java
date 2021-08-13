@@ -36,7 +36,7 @@ public class MapViewModel extends ViewModel {
 
     public LiveData<List<RestaurantVO>> list() {
         MutableLiveData<List<RestaurantVO>> restaurants = new MutableLiveData<>();
-        restaurants.setValue(this.retrieveRestaurants.handleVO());
+        restaurants.setValue(this.retrieveRestaurants.handle());
         return restaurants;
     }
 }
