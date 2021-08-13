@@ -12,14 +12,14 @@ public class RetrieveWorkmatesTest {
     @Test
     public void shouldReturn1WhenOneWorkmateIsAvailable() {
         InMemoryWorkmateQuery workmateQuery = new InMemoryWorkmateQuery();
-        workmateQuery.setWorkmates(Arrays.asList(new Workmate[]{new Workmate()}));
+        workmateQuery.setWorkmates(Arrays.asList(new Workmate[]{new Workmate("Janie")}));
         assert(new RetrieveWorkmates(workmateQuery).handle().size() == 1);
     }
 
     @Test
     public void shouldReturn2WhenAreWorkmateIsAvailable() {
         InMemoryWorkmateQuery workmateQuery = new InMemoryWorkmateQuery();
-        workmateQuery.setWorkmates(Arrays.asList(new Workmate[]{new Workmate(), new Workmate()}));
+        workmateQuery.setWorkmates(Arrays.asList(new Workmate[]{new Workmate("Janie"), new Workmate("Cyril")}));
         assert(new RetrieveWorkmates(workmateQuery).handle().size() == 2);
     }
 

@@ -28,7 +28,7 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<List
     @NonNull
     @Override
     public ListRestaurantRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.restaurant_list_item_fragment, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_restaurant_list_item, parent, false);
         return new ListRestaurantRecyclerViewAdapter.ViewHolder(view);
     }
 

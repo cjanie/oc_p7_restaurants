@@ -1,17 +1,30 @@
 <resources>
+
     <string name="app_name">I\'m Hungry!</string>
 
+    <!-- MENU -->
     <string name="map_view">Map View</string>
     <string name="list_view">List View</string>
     <string name="workmates">Workmates</string>
 
-
+    <!-- RESTAURANTS -->
     <string name="restaurant_name">Restaurant Name</string>
     <string name="address">Address</string>
-    <string name="timeInfo">Info</string>
+
+    <string name="info">Info</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="opening_soon">Opening soon</string>
+    <string name="closing_soon">Closing soon</string>
+
     <string name="distance">Distance</string>
+
+    <!-- WORKMATES -->
     <string name="selections">Selections</string>
-    <string name="localize_me">Localise moi</string>
+
+    <string name="is_eating">is eating</string>
+    <string name="has_not_decided">has not decided yet</string>
+
 
 
 
