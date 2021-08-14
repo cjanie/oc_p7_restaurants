@@ -1,8 +1,8 @@
-package com.android.go4lunch.write.businesslogic.gateways;
+package com.android.go4lunch.read.businesslogic.gateways;
 
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 
-public interface SelectionsCount {
+public interface HistoricOfSelectionsQuery {
 
     int getCount(Restaurant restaurant);
 

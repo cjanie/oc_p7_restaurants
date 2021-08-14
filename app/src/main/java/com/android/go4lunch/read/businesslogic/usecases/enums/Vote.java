@@ -1,6 +1,6 @@
-package com.android.go4lunch.write.businesslogic.usecases.enums;
+package com.android.go4lunch.read.businesslogic.usecases.enums;
 
-public enum VoteRule {
+public enum Vote {
     MINIMUM(0),
     ONE_STAR(2),
     TWO_STARS(4),
@@ -8,7 +8,7 @@ public enum VoteRule {
 
     private final int selectionsCount;
 
-    VoteRule(final int selectionsCount) {
+    Vote(final int selectionsCount) {
         this.selectionsCount = selectionsCount;
     }
 

@@ -1,10 +1,12 @@
 package com.android.go4lunch.read.businesslogic.usecases.decorators;
 
+import com.android.go4lunch.read.businesslogic.gateways.Decorator;
 import com.android.go4lunch.read.businesslogic.gateways.GeolocationProvider;
+import com.android.go4lunch.read.businesslogic.gateways.WithLocationPermissionDecorator;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
 import com.android.go4lunch.read.businesslogic.usecases.model.Geolocation;
 
-public class DistanceInfoDecorator {
+public class DistanceInfoDecorator implements WithLocationPermissionDecorator {
 
     private GeolocationProvider geolocationProvider;
 
@@ -14,6 +16,7 @@ public class DistanceInfoDecorator {
         this.restaurantVO = restaurantVO;
     }
 
+    @Override
     public RestaurantVO decor(Geolocation myPosition) {
         this.restaurantVO.setDistanceInfo(this.getDistanceFromMyPosition(myPosition));
         return this.restaurantVO;
