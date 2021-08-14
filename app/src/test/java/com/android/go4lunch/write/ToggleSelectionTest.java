@@ -16,8 +16,6 @@ import java.util.List;
 
 public class ToggleSelectionTest {
 
-
-
     @Test
     public void toggleShouldAddSelectionIfItDoesNotExist_caseListOfSelectionsIsEmpty() {
 
