@@ -2,7 +2,9 @@ package com.android.go4lunch;
 
 import com.android.go4lunch.read.businesslogic.gateways.SelectionQuery;
 import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
+import com.android.go4lunch.write.businesslogic.gateways.HistoricOfSelectionsCommand;
 import com.android.go4lunch.write.businesslogic.gateways.SelectionCommand;
+import com.android.go4lunch.write.businesslogic.usecases.IncrementSelectionsCount;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +14,11 @@ public class InMemorySelectionRepository implements SelectionQuery, SelectionCom
 
     private List<Selection> selections;
 
-    public InMemorySelectionRepository() {
+    private HistoricOfSelectionsCommand historicCommand;
+
+    public InMemorySelectionRepository(HistoricOfSelectionsCommand historicCommand) {
         this.selections = new ArrayList<>();
+        this.historicCommand = historicCommand;
     }
 
     public void setSelections(List<Selection> selections) {
@@ -46,8 +51,11 @@ public class InMemorySelectionRepository implements SelectionQuery, SelectionCom
                 }
             }
 
-            if(foundSame == null)
+            if(foundSame == null) {
                 this.selections.add(selection);
+                new IncrementSelectionsCount(this.historicCommand, selection.getRestaurant()).handle();
+            }
+
             else this.selections.remove(foundSame);
 
             if(foundAnotherButSameWorkmate != null)

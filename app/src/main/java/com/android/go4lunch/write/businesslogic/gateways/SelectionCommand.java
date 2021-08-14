@@ -5,4 +5,6 @@ import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
 public interface SelectionCommand {
 
     void toggle(Selection selection);
+
+
 }

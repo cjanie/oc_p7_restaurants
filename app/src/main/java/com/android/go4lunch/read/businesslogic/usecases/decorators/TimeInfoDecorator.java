@@ -1,12 +1,13 @@
 package com.android.go4lunch.read.businesslogic.usecases.decorators;
 
+import com.android.go4lunch.read.businesslogic.gateways.Decorator;
 import com.android.go4lunch.read.businesslogic.gateways.TimeProvider;
 import com.android.go4lunch.read.businesslogic.usecases.enums.TimeInfo;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
 
 import java.time.LocalTime;
 
-public class TimeInfoDecorator {
+public class TimeInfoDecorator implements Decorator {
 
     private TimeProvider timeProvider;
 
@@ -17,6 +18,7 @@ public class TimeInfoDecorator {
         this.restaurant = restaurant;
     }
 
+    @Override
     public RestaurantVO decor() {
         this.restaurant.setTimeInfo(this.getInfo());
         return this.restaurant;

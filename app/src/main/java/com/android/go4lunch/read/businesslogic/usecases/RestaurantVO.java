@@ -2,6 +2,7 @@ package com.android.go4lunch.read.businesslogic.usecases;
 
 import com.android.go4lunch.read.businesslogic.usecases.enums.TimeInfo;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
+import com.android.go4lunch.read.businesslogic.usecases.enums.Vote;
 
 public class RestaurantVO {
 
@@ -12,6 +13,8 @@ public class RestaurantVO {
     private Long distanceInfo;
 
     private int selectionCountInfo;
+
+    private Vote voteInfo;
 
     public RestaurantVO(Restaurant restaurant) {
         this.restaurant = restaurant;
@@ -65,4 +68,15 @@ public class RestaurantVO {
         return selectionCountInfo;
     }
 
+    public void setSelectionCountInfo(int selectionCountInfo) {
+        this.selectionCountInfo = selectionCountInfo;
+    }
+
+    public Vote getVoteInfo() {
+        return voteInfo;
+    }
+
+    public void setVoteInfo(Vote voteInfo) {
+        this.voteInfo = voteInfo;
+    }
 }

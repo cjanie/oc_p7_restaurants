@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.android.go4lunch.InMemoryHistoricOfSelectionsRepository;
 import com.android.go4lunch.InMemorySelectionRepository;
 import com.android.go4lunch.read.adapter.InMemoryWorkmateQuery;
 import com.android.go4lunch.read.businesslogic.usecases.RetrieveWorkmates;
@@ -30,7 +31,8 @@ public class WorkmateViewModel extends ViewModel {
         workmateQuery.setWorkmates(Arrays.asList(new Workmate[]{janie, cyril}));
         this.retrieveWorkmates = new RetrieveWorkmates(workmateQuery);
 
-        this.selectionQuery = new InMemorySelectionRepository();
+        InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
+        this.selectionQuery = new InMemorySelectionRepository(historicRepository);
         Selection selection = new Selection(new Restaurant("AIOU", "loc"), janie);
         selectionQuery.setSelections(Arrays.asList(new Selection[] {selection}));
     }
