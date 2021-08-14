@@ -8,7 +8,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.android.go4lunch.read.adapter.InMemoryRestaurantQuery;
 import com.android.go4lunch.InMemorySelectionRepository;
+import com.android.go4lunch.read.adapter.InMemorySessionQuery;
 import com.android.go4lunch.read.adapter.RealTimeProvider;
+import com.android.go4lunch.read.businesslogic.usecases.RetrieveSession;
 import com.android.go4lunch.read.businesslogic.usecases.decorators.SelectionInfoDecoratorForRestaurant;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
 import com.android.go4lunch.read.businesslogic.usecases.RetrieveRestaurants;
@@ -17,6 +19,7 @@ import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 import com.android.go4lunch.read.businesslogic.usecases.decorators.TimeInfoDecorator;
 import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
 import com.android.go4lunch.read.businesslogic.usecases.model.Workmate;
+import com.android.go4lunch.write.businesslogic.usecases.ToggleSelection;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -28,6 +31,8 @@ public class RestaurantViewModel extends AndroidViewModel {
     private final RetrieveRestaurants retrieveRestaurants;
 
     private final InMemorySelectionRepository selectionQuery;
+
+    private final RetrieveSession retrieveSession;
 
     public RestaurantViewModel(Application application) {
         super(application);
@@ -49,6 +54,10 @@ public class RestaurantViewModel extends AndroidViewModel {
         List<Selection> selections = new ArrayList<>();
         selections.add(new Selection(r1, new Workmate("Janie")));
         selectionQuery.setSelections(selections);
+
+        InMemorySessionQuery sessionQuery = new InMemorySessionQuery();
+        sessionQuery.setWorkmate(new Workmate("Cyril"));
+        this.retrieveSession = new RetrieveSession(sessionQuery);
     }
 
 
@@ -66,4 +75,7 @@ public class RestaurantViewModel extends AndroidViewModel {
         return mRestaurants;
     }
 
+    public void toggleSelection(Restaurant restaurant) {
+        new ToggleSelection(this.selectionQuery, this.retrieveSession, restaurant).toggle();
+    }
 }

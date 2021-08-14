@@ -10,6 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
+import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
+import com.android.go4lunch.read.businesslogic.usecases.model.Workmate;
+import com.android.go4lunch.write.businesslogic.usecases.events.ToggleSelectionEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -45,7 +50,7 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<List
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                EventBus.getDefault().post(new ToggleSelectionEvent(restaurant.getRestaurant()));
             }
         });
     }

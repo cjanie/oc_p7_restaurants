@@ -1,5 +1,7 @@
 package com.android.go4lunch.write.businesslogic.usecases;
 
+import com.android.go4lunch.read.businesslogic.usecases.RetrieveSession;
+import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
 import com.android.go4lunch.write.businesslogic.gateways.SelectionCommand;
 
@@ -7,14 +9,19 @@ public class ToggleSelection {
 
     private SelectionCommand selectionCommand;
 
-    private Selection selection;
+    private RetrieveSession retrieveSession;
 
-    public ToggleSelection(SelectionCommand selectionCommand, Selection selection) {
+    private Restaurant restaurant;
+
+    public ToggleSelection(SelectionCommand selectionCommand, RetrieveSession retrieveSession, Restaurant restaurant) {
         this.selectionCommand = selectionCommand;
-        this.selection = selection;
+        this.retrieveSession = retrieveSession;
+        this.restaurant = restaurant;
     }
 
     public void toggle() {
-        this.selectionCommand.toggle(this.selection);
+        Selection selection = new Selection(restaurant, this.retrieveSession.handle());
+        this.selectionCommand.toggle(selection);
+
     }
 }

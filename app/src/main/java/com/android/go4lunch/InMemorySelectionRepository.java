@@ -27,8 +27,33 @@ public class InMemorySelectionRepository implements SelectionQuery, SelectionCom
 
     @Override
     public void toggle(Selection selection) {
-        if(this.selections.contains(selection)) this.selections.remove(selection);
-        else this.selections.add(selection);
+        if(this.selections.isEmpty())
+            this.selections.add(selection);
+        else {
+            Selection foundSame = null;
+            Selection foundAnotherButSameWorkmate = null;
+
+            for(int i=0; i<this.selections.size(); i++) {
+                Selection s = this.selections.get(i);
+                if(s.getWorkmate().equals(selection.getWorkmate())) {
+                    if(s.getRestaurant().equals(selection.getRestaurant())) {
+                        foundSame = s;
+                        break;
+                    } else {
+                        foundAnotherButSameWorkmate = s;
+                        break;
+                    }
+                }
+            }
+
+            if(foundSame == null)
+                this.selections.add(selection);
+            else this.selections.remove(foundSame);
+
+            if(foundAnotherButSameWorkmate != null)
+                this.selections.remove(foundAnotherButSameWorkmate);
+
+        }
     }
 
 

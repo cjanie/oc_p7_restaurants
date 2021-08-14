@@ -25,8 +25,13 @@ import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
 import com.android.go4lunch.read.businesslogic.usecases.decorators.DistanceInfoDecorator;
 import com.android.go4lunch.read.businesslogic.usecases.model.Geolocation;
 import com.android.go4lunch.ui.adapters.ListRestaurantRecyclerViewAdapter;
+import com.android.go4lunch.write.businesslogic.usecases.ToggleSelection;
+import com.android.go4lunch.write.businesslogic.usecases.events.ToggleSelectionEvent;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -54,6 +59,10 @@ public class ListRestaurantFragment extends WithLocationPermissionFragment {
     @Override
     public void onResume() {
         super.onResume();
+        this.loadData();
+    }
+
+    private void loadData() {
         this.restaurantViewModel.list().observe(this, restaurants -> {
             ListRestaurantRecyclerViewAdapter adapter = new ListRestaurantRecyclerViewAdapter(restaurants);
             this.recyclerView.setAdapter(adapter);
@@ -105,4 +114,21 @@ public class ListRestaurantFragment extends WithLocationPermissionFragment {
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void toggleSelection(ToggleSelectionEvent event) {
+        this.restaurantViewModel.toggleSelection(event.restaurant);
+        this.loadData();
+    }
 }
