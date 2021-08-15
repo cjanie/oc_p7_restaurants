@@ -1,4 +1,4 @@
-package com.android.go4lunch.read.businesslogic.usecases;
+package com.android.go4lunch;
 
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 import com.android.go4lunch.InMemoryHistoricOfSelectionsRepository;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RetrieveSelectionsCountForOneRestaurantTest {
+public class InMemoryHistoricOfSelectionsRepositoryTest {
 
     private void checkMatchesData(int selectionsCount, int expected) {
         Restaurant restaurant = new Restaurant("Oa", "loc");
@@ -20,7 +20,7 @@ public class RetrieveSelectionsCountForOneRestaurantTest {
         map.put(restaurant, selectionsCount);
         list.add(map);
         inMemoryHistoricOfSelectionsRepository.setList(list);
-        assert(new RetrieveSelectionsCountForOneRestaurant(restaurant, inMemoryHistoricOfSelectionsRepository).countSelections() == expected);
+        assert(inMemoryHistoricOfSelectionsRepository.getCount(restaurant) == expected);
     }
 
 

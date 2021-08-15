@@ -2,7 +2,7 @@ package com.android.go4lunch.write;
 
 import com.android.go4lunch.InMemoryHistoricOfSelectionsRepository;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
-import com.android.go4lunch.write.businesslogic.usecases.IncrementSelectionsCount;
+import com.android.go4lunch.write.businesslogic.usecases.UpdateHistoric;
 
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class IncrementSelectionsCountTest {
+public class UpdateHistoricTest {
 
     @Test
     public void shouldReturn1IfRestaurantHasIncrementFrom0() {
@@ -20,7 +20,7 @@ public class IncrementSelectionsCountTest {
         Restaurant restaurant = new Restaurant("AA", "OO");
         assert(inMemoryHistoricOfSelectionsRepository.getCount(restaurant) == 0);
 
-        new IncrementSelectionsCount(inMemoryHistoricOfSelectionsRepository, restaurant).handle();
+        new UpdateHistoric(inMemoryHistoricOfSelectionsRepository, restaurant).handle();
         assert(inMemoryHistoricOfSelectionsRepository.getCount(restaurant) == 1);
     }
 
@@ -37,7 +37,7 @@ public class IncrementSelectionsCountTest {
         inMemoryHistoricOfSelectionsRepository.setList(list);
         assert(inMemoryHistoricOfSelectionsRepository.getCount(restaurant) == 1);
 
-        new IncrementSelectionsCount(inMemoryHistoricOfSelectionsRepository, restaurant).handle();
+        new UpdateHistoric(inMemoryHistoricOfSelectionsRepository, restaurant).handle();
         assert(inMemoryHistoricOfSelectionsRepository.getCount(restaurant) == 2);
     }
 
@@ -54,7 +54,7 @@ public class IncrementSelectionsCountTest {
         inMemoryHistoricOfSelectionsRepository.setList(list);
         assert(inMemoryHistoricOfSelectionsRepository.getCount(restaurant) == 2);
 
-        new IncrementSelectionsCount(inMemoryHistoricOfSelectionsRepository, restaurant).handle();
+        new UpdateHistoric(inMemoryHistoricOfSelectionsRepository, restaurant).handle();
         assert(inMemoryHistoricOfSelectionsRepository.getCount(restaurant) == 3);
     }
 }

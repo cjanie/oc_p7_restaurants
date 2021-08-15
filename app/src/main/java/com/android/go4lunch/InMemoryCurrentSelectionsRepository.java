@@ -4,18 +4,18 @@ import com.android.go4lunch.read.businesslogic.gateways.SelectionQuery;
 import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
 import com.android.go4lunch.write.businesslogic.gateways.HistoricOfSelectionsCommand;
 import com.android.go4lunch.write.businesslogic.gateways.SelectionCommand;
-import com.android.go4lunch.write.businesslogic.usecases.IncrementSelectionsCount;
+import com.android.go4lunch.write.businesslogic.usecases.UpdateHistoric;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMemorySelectionRepository implements SelectionQuery, SelectionCommand {
+public class InMemoryCurrentSelectionsRepository implements SelectionQuery, SelectionCommand {
 
     private List<Selection> selections;
 
     private HistoricOfSelectionsCommand historicCommand;
 
-    public InMemorySelectionRepository(HistoricOfSelectionsCommand historicCommand) {
+    public InMemoryCurrentSelectionsRepository(HistoricOfSelectionsCommand historicCommand) {
         this.selections = new ArrayList<>();
         this.historicCommand = historicCommand;
     }
@@ -65,11 +65,9 @@ public class InMemorySelectionRepository implements SelectionQuery, SelectionCom
         }
     }
 
-
-
     private void add(Selection selection) {
         this.selections.add(selection);
-        new IncrementSelectionsCount(this.historicCommand, selection.getRestaurant()).handle();
+        new UpdateHistoric(this.historicCommand, selection.getRestaurant()).handle();
     }
 
     private void remove(Selection selection) {

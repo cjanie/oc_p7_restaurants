@@ -7,39 +7,31 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.go4lunch.InMemoryHistoricOfSelectionsRepository;
-import com.android.go4lunch.read.adapter.InMemoryRestaurantQuery;
-import com.android.go4lunch.InMemorySelectionRepository;
-import com.android.go4lunch.read.adapter.InMemorySessionQuery;
+import com.android.go4lunch.read.adapter.FakeRestaurantQuery;
+import com.android.go4lunch.read.adapter.FakeSessionQuery;
+import com.android.go4lunch.InMemoryCurrentSelectionsRepository;
 import com.android.go4lunch.read.adapter.RealTimeProvider;
-import com.android.go4lunch.read.businesslogic.usecases.RetrieveSelectionsCountForOneRestaurant;
 import com.android.go4lunch.read.businesslogic.usecases.RetrieveSession;
 import com.android.go4lunch.read.businesslogic.usecases.decorators.SelectionInfoDecoratorForRestaurant;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
 import com.android.go4lunch.read.businesslogic.usecases.RetrieveRestaurants;
 import com.android.go4lunch.read.businesslogic.usecases.decorators.VoteInfoDecorator;
-import com.android.go4lunch.read.businesslogic.usecases.decorators.VoteResult;
-import com.android.go4lunch.read.businesslogic.usecases.model.Geolocation;
+import com.android.go4lunch.read.businesslogic.usecases.VoteResult;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 import com.android.go4lunch.read.businesslogic.usecases.decorators.TimeInfoDecorator;
 import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
 import com.android.go4lunch.read.businesslogic.usecases.model.Workmate;
-import com.android.go4lunch.write.businesslogic.usecases.IncrementSelectionsCount;
 import com.android.go4lunch.write.businesslogic.usecases.ToggleSelection;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class RestaurantViewModel extends AndroidViewModel {
 
     private final RetrieveRestaurants retrieveRestaurants;
 
-    private final InMemorySelectionRepository selectionQuery;
-
     private final RetrieveSession retrieveSession;
 
-    private final InMemoryHistoricOfSelectionsRepository historicRepository;
 
     private final TimeInfoDecorator timeInfoDecorator;
 
@@ -47,37 +39,32 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     private VoteInfoDecorator voteInfoDecorator;
 
+
+    private final ToggleSelection toggleSelection;
+
+
     public RestaurantViewModel(Application application) {
         super(application);
-        // FAKE DATA QUERY USING INMEMORY // TODO: API
-        InMemoryRestaurantQuery restaurantQuery = new InMemoryRestaurantQuery();
-        Restaurant r1 = new Restaurant("nm", "loc");
-        r1.setOpen(LocalTime.of(9, 0));
-        r1.setClose(LocalTime.of(23, 30));
-        r1.setGeolocation(new Geolocation(33.421974, -162.0842122));
-        Restaurant r2 = new Restaurant("nm2", "loc");
-        r2.setOpen(LocalTime.of(9, 0));
-        r2.setClose(LocalTime.of(16, 30));
-        r2.setGeolocation(new Geolocation(47.421894, -142.0842122));
-        restaurantQuery.setRestaurants(Arrays.asList(new Restaurant[]{r1, r2}));
+        // TODO: replace fake with API
+        this.retrieveRestaurants = new RetrieveRestaurants(new FakeRestaurantQuery());
+        this.retrieveSession = new RetrieveSession(new FakeSessionQuery());
+        this.timeInfoDecorator = new TimeInfoDecorator(new RealTimeProvider());
 
-        this.retrieveRestaurants = new RetrieveRestaurants(restaurantQuery);
+        InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
 
-        this.historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        this.selectionQuery = new InMemorySelectionRepository(this.historicRepository);
+        InMemoryCurrentSelectionsRepository selectionQuery = new InMemoryCurrentSelectionsRepository(historicRepository);
         List<Selection> selections = new ArrayList<>();
-        selections.add(new Selection(r1, new Workmate("Janie")));
+        selections.add(new Selection(this.retrieveRestaurants.handle().get(0).getRestaurant(), new Workmate("Janie")));
         selectionQuery.setSelections(selections);
 
-        InMemorySessionQuery sessionQuery = new InMemorySessionQuery();
-        sessionQuery.setWorkmate(new Workmate("Cyril"));
-        this.retrieveSession = new RetrieveSession(sessionQuery);
 
+        this.selectionInfoDecorator = new SelectionInfoDecoratorForRestaurant(selectionQuery);
+        // Vote
+        VoteResult voteResult = new VoteResult(historicRepository);
+        this.voteInfoDecorator = new VoteInfoDecorator(voteResult);
 
-
-        //***
-        this.timeInfoDecorator = new TimeInfoDecorator(new RealTimeProvider());
-        this.selectionInfoDecorator = new SelectionInfoDecoratorForRestaurant(this.selectionQuery);
+        // Command
+        this.toggleSelection = new ToggleSelection(selectionQuery, this.retrieveSession);
 
 
     }
@@ -90,9 +77,6 @@ public class RestaurantViewModel extends AndroidViewModel {
             for(RestaurantVO r: list) {
                 r = this.timeInfoDecorator.decor(r);
                 r = this.selectionInfoDecorator.decor(r);
-                VoteResult voteResult = new VoteResult(
-                        new RetrieveSelectionsCountForOneRestaurant(r.getRestaurant(),this.historicRepository));
-                this.voteInfoDecorator = new VoteInfoDecorator(voteResult);
                 r = this.voteInfoDecorator.decor(r);
             }
         }
@@ -102,6 +86,6 @@ public class RestaurantViewModel extends AndroidViewModel {
     }
 
     public void toggleSelection(Restaurant restaurant) {
-        new ToggleSelection(this.selectionQuery, this.retrieveSession, restaurant).toggle();
+        this.toggleSelection.toggle(restaurant);
     }
 }

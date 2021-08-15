@@ -1,7 +1,7 @@
 package com.android.go4lunch.read.businesslogic.usecases.decorators;
 
 import com.android.go4lunch.InMemoryHistoricOfSelectionsRepository;
-import com.android.go4lunch.InMemorySelectionRepository;
+import com.android.go4lunch.InMemoryCurrentSelectionsRepository;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
@@ -15,14 +15,14 @@ import java.util.List;
 
 public class SelectionInfoDecoratorForRestaurantTest {
 
-    private InMemorySelectionRepository selectionQuery;
+    private InMemoryCurrentSelectionsRepository selectionQuery;
 
     private Restaurant restaurant;
 
     @Before
     public void setUp() {
         InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        this.selectionQuery = new InMemorySelectionRepository(historicRepository);
+        this.selectionQuery = new InMemoryCurrentSelectionsRepository(historicRepository);
         this.restaurant = new Restaurant("Aa", "Ou");
     }
 

@@ -1,7 +1,7 @@
 package com.android.go4lunch.write;
 
 import com.android.go4lunch.InMemoryHistoricOfSelectionsRepository;
-import com.android.go4lunch.InMemorySelectionRepository;
+import com.android.go4lunch.InMemoryCurrentSelectionsRepository;
 import com.android.go4lunch.read.adapter.InMemorySessionQuery;
 import com.android.go4lunch.read.businesslogic.usecases.RetrieveSession;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
@@ -12,7 +12,6 @@ import com.android.go4lunch.write.businesslogic.usecases.ToggleSelection;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ToggleSelectionTest {
@@ -27,10 +26,10 @@ public class ToggleSelectionTest {
 
         // init selection
         InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        InMemorySelectionRepository selectionRepository = new InMemorySelectionRepository(historicRepository);
+        InMemoryCurrentSelectionsRepository selectionRepository = new InMemoryCurrentSelectionsRepository(historicRepository);
         Restaurant restaurant = new Restaurant("O", "A");
 
-        new ToggleSelection(selectionRepository, new RetrieveSession(sessionQuery), restaurant).toggle();
+        new ToggleSelection(selectionRepository, new RetrieveSession(sessionQuery)).toggle(restaurant);
         assert(selectionRepository.findAll().size() == 1);
 
 
@@ -45,13 +44,13 @@ public class ToggleSelectionTest {
         RetrieveSession retrieveSession = new RetrieveSession(sessionQuery);
 
         InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        InMemorySelectionRepository selectionRepository = new InMemorySelectionRepository(historicRepository);
+        InMemoryCurrentSelectionsRepository selectionRepository = new InMemoryCurrentSelectionsRepository(historicRepository);
 
         Restaurant restaurant = new Restaurant("O", "A");
-        new ToggleSelection(selectionRepository, retrieveSession, restaurant).toggle();
+        new ToggleSelection(selectionRepository, retrieveSession).toggle(restaurant);
         assert(selectionRepository.findAll().size() == 1);
 
-        new ToggleSelection(selectionRepository, retrieveSession, restaurant).toggle();
+        new ToggleSelection(selectionRepository, retrieveSession).toggle(restaurant);
         assert(selectionRepository.findAll().isEmpty());
     }
 
@@ -59,7 +58,7 @@ public class ToggleSelectionTest {
     public void toggleShouldAddSelectionIfItDoesNotExistWhenThereAreAlreadySelections() {
 
         InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        InMemorySelectionRepository selectionRepository = new InMemorySelectionRepository(historicRepository);
+        InMemoryCurrentSelectionsRepository selectionRepository = new InMemoryCurrentSelectionsRepository(historicRepository);
         List<Selection> selections = new ArrayList<>();
         selections.add(new Selection(new Restaurant("O", "A"), new Workmate("J")));
         selectionRepository.setSelections(selections);
@@ -69,7 +68,7 @@ public class ToggleSelectionTest {
         Workmate me = new Workmate("JJ");
         sessionQuery.setWorkmate(me);
         Restaurant restaurant = new Restaurant("OO", "AA");
-        new ToggleSelection(selectionRepository, new RetrieveSession(sessionQuery), restaurant).toggle();
+        new ToggleSelection(selectionRepository, new RetrieveSession(sessionQuery)).toggle(restaurant);
         assert(selectionRepository.findAll().size() == 2);
     }
 
@@ -77,7 +76,7 @@ public class ToggleSelectionTest {
     public void shouldAddNewSelectionTo2Selections() {
         // init selection Repo with two selections
         InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        InMemorySelectionRepository selectionRepository = new InMemorySelectionRepository(historicRepository);
+        InMemoryCurrentSelectionsRepository selectionRepository = new InMemoryCurrentSelectionsRepository(historicRepository);
         List<Selection> selections = new ArrayList<>();
         Restaurant restaurant0 = new Restaurant("O", "A");
         Selection selection1 = new Selection(restaurant0, new Workmate("J"));
@@ -97,7 +96,7 @@ public class ToggleSelectionTest {
         Restaurant restaurant = new Restaurant("OO", "AA");
 
         // Select restaurant
-        new ToggleSelection(selectionRepository, retrieveSession, restaurant).toggle();
+        new ToggleSelection(selectionRepository, retrieveSession).toggle(restaurant);
 
         // Check that selection has been added in repo
         assert(selectionRepository.findAll().size() == 3);
@@ -108,7 +107,7 @@ public class ToggleSelectionTest {
 
         // init selection Repo with one selection
         InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        InMemorySelectionRepository selectionRepository = new InMemorySelectionRepository(historicRepository);
+        InMemoryCurrentSelectionsRepository selectionRepository = new InMemoryCurrentSelectionsRepository(historicRepository);
         List<Selection> selections = new ArrayList<>();
         Restaurant restaurant0 = new Restaurant("O", "A");
         Selection selection1 = new Selection(restaurant0, new Workmate("J"));
@@ -128,12 +127,12 @@ public class ToggleSelectionTest {
         Restaurant restaurant = new Restaurant("OO", "AA");
 
         // Select restaurant
-        new ToggleSelection(selectionRepository, retrieveSession, restaurant).toggle();
+        new ToggleSelection(selectionRepository, retrieveSession).toggle(restaurant);
 
         // Check that selection has been added in repo
         assert(selectionRepository.findAll().size() == 3);
 
-        new ToggleSelection(selectionRepository, retrieveSession, restaurant).toggle();
+        new ToggleSelection(selectionRepository, retrieveSession).toggle(restaurant);
         assert(selectionRepository.findAll().size() == 2);
     }
 
@@ -141,7 +140,7 @@ public class ToggleSelectionTest {
     public void newSelectionShouldRemovePreviousSelectionOfTheSameWorkmate() {
         // init selection Repo with one selection
         InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        InMemorySelectionRepository selectionRepository = new InMemorySelectionRepository(historicRepository);
+        InMemoryCurrentSelectionsRepository selectionRepository = new InMemoryCurrentSelectionsRepository(historicRepository);
         assert(selectionRepository.findAll().size() == 0);
 
         // init session
@@ -154,12 +153,12 @@ public class ToggleSelectionTest {
         Restaurant restaurant = new Restaurant("OO", "AA");
 
         // Select restaurant
-        new ToggleSelection(selectionRepository, retrieveSession, restaurant).toggle();
+        new ToggleSelection(selectionRepository, retrieveSession).toggle(restaurant);
 
         // Check that selection has been added in repo
         assert(selectionRepository.findAll().size() == 1);
         Restaurant restaurant2 = new Restaurant("OIE", "YO");
-        new ToggleSelection(selectionRepository, retrieveSession, restaurant2);
+        new ToggleSelection(selectionRepository, retrieveSession).toggle(restaurant2);
         assert(selectionRepository.findAll().size() == 1);
     }
 
@@ -168,7 +167,7 @@ public class ToggleSelectionTest {
     public void onAddSelectionShouldUpdateHistoricWhenHistoricIsNotEmpty() {
 
         InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        InMemorySelectionRepository selectionRepository = new InMemorySelectionRepository(historicRepository);
+        InMemoryCurrentSelectionsRepository selectionRepository = new InMemoryCurrentSelectionsRepository(historicRepository);
         List<Selection> selections = new ArrayList<>();
         selections.add(new Selection(new Restaurant("O", "A"), new Workmate("J")));
         selectionRepository.setSelections(selections);
@@ -178,14 +177,14 @@ public class ToggleSelectionTest {
         Workmate me = new Workmate("JJ");
         sessionQuery.setWorkmate(me);
         Restaurant restaurant = new Restaurant("OO", "AA");
-        new ToggleSelection(selectionRepository, new RetrieveSession(sessionQuery), restaurant).toggle();
+        new ToggleSelection(selectionRepository, new RetrieveSession(sessionQuery)).toggle(restaurant);
         assert(historicRepository.getCount(restaurant) == 1);
     }
 
     @Test
     public void onAddSelectionShouldFillEmptyHistoric() {
         InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        InMemorySelectionRepository selectionRepository = new InMemorySelectionRepository(historicRepository);
+        InMemoryCurrentSelectionsRepository selectionRepository = new InMemoryCurrentSelectionsRepository(historicRepository);
         assert(selectionRepository.findAll().size() == 0);
 
         InMemorySessionQuery sessionQuery = new InMemorySessionQuery();
@@ -193,7 +192,7 @@ public class ToggleSelectionTest {
         sessionQuery.setWorkmate(me);
         Restaurant restaurant = new Restaurant("OO", "AA");
         int countInit = historicRepository.getCount(restaurant);
-        new ToggleSelection(selectionRepository, new RetrieveSession(sessionQuery), restaurant).toggle();
+        new ToggleSelection(selectionRepository, new RetrieveSession(sessionQuery)).toggle(restaurant);
         assert(selectionRepository.findAll().size() == 1);
         assert(historicRepository.getCount(restaurant) == countInit + 1);
     }

@@ -2,7 +2,6 @@ package com.android.go4lunch.read.businesslogic.usecases;
 
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 import com.android.go4lunch.InMemoryHistoricOfSelectionsRepository;
-import com.android.go4lunch.read.businesslogic.usecases.decorators.VoteResult;
 import com.android.go4lunch.read.businesslogic.usecases.enums.Vote;
 
 import org.junit.Before;
@@ -29,8 +28,7 @@ public class VoteResultTest {
         map.put(this.restaurant, selectionsCount);
         list.add(map);
         inMemoryHistoricOfSelectionsRepository.setList(list);
-        RetrieveSelectionsCountForOneRestaurant retrieveSelectionsCountForOneRestaurant = new RetrieveSelectionsCountForOneRestaurant(this.restaurant, inMemoryHistoricOfSelectionsRepository);
-        assert(new VoteResult(retrieveSelectionsCountForOneRestaurant).get().equals(expected));
+        assert(new VoteResult(inMemoryHistoricOfSelectionsRepository).get(this.restaurant).equals(expected));
     }
     @Test
     public void shouldReturnOneStarAccordingToVoteRule() {

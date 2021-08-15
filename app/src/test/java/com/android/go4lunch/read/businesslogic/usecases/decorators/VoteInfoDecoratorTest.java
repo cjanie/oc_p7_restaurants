@@ -2,7 +2,7 @@ package com.android.go4lunch.read.businesslogic.usecases.decorators;
 
 import com.android.go4lunch.InMemoryHistoricOfSelectionsRepository;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
-import com.android.go4lunch.read.businesslogic.usecases.RetrieveSelectionsCountForOneRestaurant;
+import com.android.go4lunch.read.businesslogic.usecases.VoteResult;
 import com.android.go4lunch.read.businesslogic.usecases.enums.Vote;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 
@@ -24,9 +24,7 @@ public class VoteInfoDecoratorTest {
         list.add(map);
         inMemoryHistoricOfSelectionsRepository.setList(list);
 
-        RetrieveSelectionsCountForOneRestaurant retrieveSelectionsCountForOneRestaurant
-                = new RetrieveSelectionsCountForOneRestaurant(restaurantVO.getRestaurant(), inMemoryHistoricOfSelectionsRepository);
-        VoteResult voteResult = new VoteResult(retrieveSelectionsCountForOneRestaurant);
+        VoteResult voteResult = new VoteResult(inMemoryHistoricOfSelectionsRepository);
         restaurantVO = new VoteInfoDecorator(voteResult).decor(restaurantVO);
 
         assert(restaurantVO.getVoteInfo().equals(expected));
@@ -37,9 +35,7 @@ public class VoteInfoDecoratorTest {
 
         RestaurantVO restaurantVO = new RestaurantVO(new Restaurant("AA", "LOC"));
         InMemoryHistoricOfSelectionsRepository inMemoryHistoricOfSelectionsRepository = new InMemoryHistoricOfSelectionsRepository();
-        RetrieveSelectionsCountForOneRestaurant retrieveSelectionsCountForOneRestaurant
-                = new RetrieveSelectionsCountForOneRestaurant(restaurantVO.getRestaurant(), inMemoryHistoricOfSelectionsRepository);
-        VoteResult voteResult = new VoteResult(retrieveSelectionsCountForOneRestaurant);
+        VoteResult voteResult = new VoteResult(inMemoryHistoricOfSelectionsRepository);
         restaurantVO = new VoteInfoDecorator(voteResult).decor(restaurantVO);
         assert(restaurantVO.getVoteInfo().equals(Vote.MINIMUM));
     }

@@ -2,6 +2,7 @@ package com.android.go4lunch.read.businesslogic.usecases.decorators;
 
 import com.android.go4lunch.read.businesslogic.gateways.Decorator;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
+import com.android.go4lunch.read.businesslogic.usecases.VoteResult;
 import com.android.go4lunch.read.businesslogic.usecases.enums.Vote;
 
 public class VoteInfoDecorator implements Decorator<RestaurantVO> {
@@ -14,7 +15,7 @@ public class VoteInfoDecorator implements Decorator<RestaurantVO> {
 
     @Override
     public RestaurantVO decor(RestaurantVO restaurant) {
-        Vote vote = this.voteResult.get();
+        Vote vote = this.voteResult.get(restaurant.getRestaurant());
         restaurant.setVoteInfo(vote);
         return restaurant;
     }

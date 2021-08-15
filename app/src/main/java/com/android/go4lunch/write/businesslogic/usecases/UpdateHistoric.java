@@ -3,12 +3,12 @@ package com.android.go4lunch.write.businesslogic.usecases;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 import com.android.go4lunch.write.businesslogic.gateways.HistoricOfSelectionsCommand;
 
-public class IncrementSelectionsCount {
+public class UpdateHistoric {
 
     private HistoricOfSelectionsCommand historicOfSelectionsCommand;
     private Restaurant restaurant;
 
-    public IncrementSelectionsCount(HistoricOfSelectionsCommand historicOfSelectionsCommand, Restaurant restaurant) {
+    public UpdateHistoric(HistoricOfSelectionsCommand historicOfSelectionsCommand, Restaurant restaurant) {
         this.historicOfSelectionsCommand = historicOfSelectionsCommand;
         this.restaurant = restaurant;
     }

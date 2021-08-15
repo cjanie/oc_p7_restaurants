@@ -13,15 +13,12 @@ public class ToggleSelection {
 
     private RetrieveSession retrieveSession;
 
-    private Restaurant restaurant;
-
-    public ToggleSelection(SelectionCommand selectionCommand, RetrieveSession retrieveSession, Restaurant restaurant) {
+    public ToggleSelection(SelectionCommand selectionCommand, RetrieveSession retrieveSession) {
         this.selectionCommand = selectionCommand;
         this.retrieveSession = retrieveSession;
-        this.restaurant = restaurant;
     }
 
-    public void toggle() {
+    public void toggle(Restaurant restaurant) {
         Selection selection = new Selection(restaurant, this.retrieveSession.handle());
         this.selectionCommand.toggle(selection);
     }
