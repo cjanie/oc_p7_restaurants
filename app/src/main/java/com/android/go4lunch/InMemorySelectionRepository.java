@@ -67,14 +67,12 @@ public class InMemorySelectionRepository implements SelectionQuery, SelectionCom
 
 
 
-    @Override
-    public void add(Selection selection) {
+    private void add(Selection selection) {
         this.selections.add(selection);
         new IncrementSelectionsCount(this.historicCommand, selection.getRestaurant()).handle();
     }
 
-    @Override
-    public void remove(Selection selection) {
+    private void remove(Selection selection) {
         this.selections.remove(selection);
     }
 

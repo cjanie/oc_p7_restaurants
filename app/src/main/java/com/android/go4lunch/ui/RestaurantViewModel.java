@@ -11,10 +11,13 @@ import com.android.go4lunch.read.adapter.InMemoryRestaurantQuery;
 import com.android.go4lunch.InMemorySelectionRepository;
 import com.android.go4lunch.read.adapter.InMemorySessionQuery;
 import com.android.go4lunch.read.adapter.RealTimeProvider;
+import com.android.go4lunch.read.businesslogic.usecases.RetrieveSelectionsCountForOneRestaurant;
 import com.android.go4lunch.read.businesslogic.usecases.RetrieveSession;
 import com.android.go4lunch.read.businesslogic.usecases.decorators.SelectionInfoDecoratorForRestaurant;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
 import com.android.go4lunch.read.businesslogic.usecases.RetrieveRestaurants;
+import com.android.go4lunch.read.businesslogic.usecases.decorators.VoteInfoDecorator;
+import com.android.go4lunch.read.businesslogic.usecases.decorators.VoteResult;
 import com.android.go4lunch.read.businesslogic.usecases.model.Geolocation;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 import com.android.go4lunch.read.businesslogic.usecases.decorators.TimeInfoDecorator;
@@ -36,6 +39,8 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     private final RetrieveSession retrieveSession;
 
+    private final InMemoryHistoricOfSelectionsRepository historicRepository;
+
     public RestaurantViewModel(Application application) {
         super(application);
         // FAKE DATA QUERY USING INMEMORY // TODO: API
@@ -52,8 +57,8 @@ public class RestaurantViewModel extends AndroidViewModel {
 
         this.retrieveRestaurants = new RetrieveRestaurants(restaurantQuery);
 
-        InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        this.selectionQuery = new InMemorySelectionRepository(historicRepository);
+        this.historicRepository = new InMemoryHistoricOfSelectionsRepository();
+        this.selectionQuery = new InMemorySelectionRepository(this.historicRepository);
         List<Selection> selections = new ArrayList<>();
         selections.add(new Selection(r1, new Workmate("Janie")));
         selectionQuery.setSelections(selections);
@@ -61,6 +66,7 @@ public class RestaurantViewModel extends AndroidViewModel {
         InMemorySessionQuery sessionQuery = new InMemorySessionQuery();
         sessionQuery.setWorkmate(new Workmate("Cyril"));
         this.retrieveSession = new RetrieveSession(sessionQuery);
+
     }
 
 
@@ -71,6 +77,9 @@ public class RestaurantViewModel extends AndroidViewModel {
             for(RestaurantVO r: list) {
                 r = new TimeInfoDecorator(new RealTimeProvider(), r).decor();
                 r = new SelectionInfoDecoratorForRestaurant(this.selectionQuery, r).decor();
+                VoteResult voteResult = new VoteResult(
+                        new RetrieveSelectionsCountForOneRestaurant(r.getRestaurant(),this.historicRepository));
+                r = new VoteInfoDecorator(r, voteResult).decor();
             }
         }
         mRestaurants.setValue(list);
