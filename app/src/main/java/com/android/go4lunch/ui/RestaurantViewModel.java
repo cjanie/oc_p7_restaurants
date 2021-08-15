@@ -41,6 +41,12 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     private final InMemoryHistoricOfSelectionsRepository historicRepository;
 
+    private final TimeInfoDecorator timeInfoDecorator;
+
+    private final SelectionInfoDecoratorForRestaurant selectionInfoDecorator;
+
+    private VoteInfoDecorator voteInfoDecorator;
+
     public RestaurantViewModel(Application application) {
         super(application);
         // FAKE DATA QUERY USING INMEMORY // TODO: API
@@ -67,6 +73,13 @@ public class RestaurantViewModel extends AndroidViewModel {
         sessionQuery.setWorkmate(new Workmate("Cyril"));
         this.retrieveSession = new RetrieveSession(sessionQuery);
 
+
+
+        //***
+        this.timeInfoDecorator = new TimeInfoDecorator(new RealTimeProvider());
+        this.selectionInfoDecorator = new SelectionInfoDecoratorForRestaurant(this.selectionQuery);
+
+
     }
 
 
@@ -75,11 +88,12 @@ public class RestaurantViewModel extends AndroidViewModel {
         List<RestaurantVO> list = this.retrieveRestaurants.handle();
         if(!list.isEmpty()) {
             for(RestaurantVO r: list) {
-                r = new TimeInfoDecorator(new RealTimeProvider(), r).decor();
-                r = new SelectionInfoDecoratorForRestaurant(this.selectionQuery, r).decor();
+                r = this.timeInfoDecorator.decor(r);
+                r = this.selectionInfoDecorator.decor(r);
                 VoteResult voteResult = new VoteResult(
                         new RetrieveSelectionsCountForOneRestaurant(r.getRestaurant(),this.historicRepository));
-                r = new VoteInfoDecorator(r, voteResult).decor();
+                this.voteInfoDecorator = new VoteInfoDecorator(voteResult);
+                r = this.voteInfoDecorator.decor(r);
             }
         }
         mRestaurants.setValue(list);

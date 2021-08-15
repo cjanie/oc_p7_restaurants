@@ -13,8 +13,8 @@ public class DistanceInfoDecoratorTest {
     private void checkAssertedDistance(Geolocation myPosition, Geolocation remote, long distanceExpected) {
         Restaurant restaurant = new Restaurant("Janie", "Hello");
         restaurant.setGeolocation(remote);
-        assert(new DistanceInfoDecorator(new RestaurantVO(restaurant))
-                .decor(myPosition).getDistanceInfo() == distanceExpected);
+        assert(new DistanceInfoDecorator()
+                .decor(myPosition, new RestaurantVO(restaurant)).getDistanceInfo() == distanceExpected);
     }
 
     @Test

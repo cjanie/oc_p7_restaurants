@@ -36,8 +36,8 @@ public class SelectionInfoDecoratorForRestaurantTest {
     }
 
     private void assertMatchesSelectionCount(int expectedCount) {
-        assert(new SelectionInfoDecoratorForRestaurant(this.selectionQuery, new RestaurantVO(this.restaurant))
-                .decor().getSelectionCountInfo() == expectedCount);
+        assert(new SelectionInfoDecoratorForRestaurant(this.selectionQuery)
+                .decor(new RestaurantVO(this.restaurant)).getSelectionCountInfo() == expectedCount);
     }
 
     @Test
@@ -62,8 +62,8 @@ public class SelectionInfoDecoratorForRestaurantTest {
     public void shouldReturn0IfRestaurantIsNotTheOneSelected() {
         this.initWithSomeSelections(1);
         Restaurant unselected = new Restaurant("oioi", "nono");
-        assert(new SelectionInfoDecoratorForRestaurant(this.selectionQuery, new RestaurantVO(unselected))
-                .decor().getSelectionCountInfo() == 0);
+        assert(new SelectionInfoDecoratorForRestaurant(this.selectionQuery)
+                .decor(new RestaurantVO(unselected)).getSelectionCountInfo() == 0);
     }
 
 }

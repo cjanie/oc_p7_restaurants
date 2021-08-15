@@ -25,8 +25,8 @@ public class SelectionInfoDecoratorForWorkmateTest {
         Selection selection = new Selection(restaurant, workmate);
         selectionQuery.setSelections(Arrays.asList(new Selection[]{selection}));
 
-        WorkmateVO workmateVO = new SelectionInfoDecoratorForWorkMate(selectionQuery, new WorkmateVO(workmate))
-                .decor();
+        WorkmateVO workmateVO = new SelectionInfoDecoratorForWorkMate(selectionQuery)
+                .decor(new WorkmateVO(workmate));
 
         assert(workmateVO.getSelection().getName().equals(restaurant.getName()));
     }
@@ -40,8 +40,8 @@ public class SelectionInfoDecoratorForWorkmateTest {
         Selection selection = new Selection(restaurant, workmate);
         selectionQuery.setSelections(Arrays.asList(new Selection[]{selection}));
 
-        WorkmateVO workmateVO = new SelectionInfoDecoratorForWorkMate(selectionQuery, new WorkmateVO(workmate))
-                .decor();
+        WorkmateVO workmateVO = new SelectionInfoDecoratorForWorkMate(selectionQuery)
+                .decor(new WorkmateVO(workmate));
 
         assert(workmateVO.getSelection().equals(restaurant));
     }

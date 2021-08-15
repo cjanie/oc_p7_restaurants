@@ -1,5 +1,6 @@
 package com.android.go4lunch.ui.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,46 +55,20 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<List
         holder.selections.setText("(" + String.valueOf(restaurant.getSelectionCountInfo()) +")");
 
         // Vote
-        ConstraintLayout constraintLayout = new ConstraintLayout(holder.itemView.getContext());
-
-        ImageView star = new ImageView(holder.itemView.getContext());
-        star.setImageDrawable(star.getContext().getDrawable(R.drawable.ic_baseline_star_24));
-        ImageView starB = new ImageView(holder.itemView.getContext());
-        starB.setImageDrawable(holder.itemView.getContext().getDrawable(R.drawable.ic_baseline_star_border_24));
-        constraintLayout.addView(star);
-        constraintLayout.addView(starB);
-
-        ConstraintLayout constraintLayout2 = new ConstraintLayout(holder.itemView.getContext());
-        ImageView star2 = new ImageView(holder.itemView.getContext());
-        star2.setImageDrawable(star.getContext().getDrawable(R.drawable.ic_baseline_star_24));
-        ImageView star2B = new ImageView(holder.itemView.getContext());
-        star2B.setImageDrawable(holder.itemView.getContext().getDrawable(R.drawable.ic_baseline_star_border_24));
-        constraintLayout2.addView(star2);
-        constraintLayout2.addView(star2B);
-
-        ConstraintLayout constraintLayout3 = new ConstraintLayout(holder.itemView.getContext());
-        ImageView star3 = new ImageView(holder.itemView.getContext());
-        star3.setImageDrawable(holder.itemView.getContext().getDrawable(R.drawable.ic_baseline_star_24));
-        ImageView star3B = new ImageView(holder.itemView.getContext());
-        star3B.setImageDrawable(holder.itemView.getContext().getDrawable(R.drawable.ic_baseline_star_border_24));
-        constraintLayout3.addView(star3);
-        constraintLayout3.addView(star3B);
-
-
         Vote vote = restaurant.getVoteInfo();
 
         if(vote == Vote.ONE_STAR) {
-            holder.starsContainer.addView(constraintLayout);
+            holder.starsContainer.addView(this.createStar(holder.itemView.getContext()));
         }
         if(vote == Vote.TWO_STARS) {
-            holder.starsContainer.addView(constraintLayout);
-
-            holder.starsContainer.addView(constraintLayout2);
+            for(int i=0; i<2; i++) {
+                holder.starsContainer.addView(this.createStar(holder.itemView.getContext()));
+            }
         }
         if(vote == Vote.THREE_STARS) {
-            holder.starsContainer.addView(constraintLayout);
-            holder.starsContainer.addView(constraintLayout2);
-            holder.starsContainer.addView(constraintLayout3);
+            for(int i=0; i<3; i++) {
+                holder.starsContainer.addView(this.createStar(holder.itemView.getContext()));
+            }
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +77,19 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<List
                 EventBus.getDefault().post(new ToggleSelectionEvent(restaurant.getRestaurant()));
             }
         });
+    }
+
+    private ConstraintLayout createStar(Context context) {
+        ConstraintLayout constraintLayout = new ConstraintLayout(context);
+        ImageView star = new ImageView(context);
+        star.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_star_24));
+        ImageView starBorder = new ImageView(context);
+        starBorder.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_star_border_24));
+
+        constraintLayout.addView(star);
+        constraintLayout.addView(starBorder);
+
+        return constraintLayout;
     }
 
 

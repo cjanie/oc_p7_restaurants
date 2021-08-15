@@ -7,27 +7,26 @@ import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
 
 import java.time.LocalTime;
 
-public class TimeInfoDecorator implements Decorator {
+public class TimeInfoDecorator implements Decorator<RestaurantVO> {
 
     private TimeProvider timeProvider;
 
-    private RestaurantVO restaurant;
 
-    public TimeInfoDecorator(TimeProvider timeProvider, RestaurantVO restaurant) {
+
+    public TimeInfoDecorator(TimeProvider timeProvider) {
         this.timeProvider = timeProvider;
-        this.restaurant = restaurant;
     }
 
     @Override
-    public RestaurantVO decor() {
-        this.restaurant.setTimeInfo(this.getInfo());
-        return this.restaurant;
+    public RestaurantVO decor(RestaurantVO restaurant) {
+        restaurant.setTimeInfo(this.getInfo(restaurant));
+        return restaurant;
     }
 
-    private TimeInfo getInfo() {
+    private TimeInfo getInfo(RestaurantVO restaurant) {
 
-        LocalTime open = this.restaurant.getRestaurant().getOpen();
-        LocalTime close = this.restaurant.getRestaurant().getClose();
+        LocalTime open = restaurant.getRestaurant().getOpen();
+        LocalTime close = restaurant.getRestaurant().getClose();
         LocalTime now = this.timeProvider.now();
 
         if(now.isAfter(close))

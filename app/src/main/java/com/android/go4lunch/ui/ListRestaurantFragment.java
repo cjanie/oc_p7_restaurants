@@ -86,7 +86,7 @@ public class ListRestaurantFragment extends WithLocationPermissionFragment {
                             Geolocation myPosition = new Geolocation(x, y);
 
                             for(RestaurantVO r: restaurants) {
-                                r = new DistanceInfoDecorator(r).decor(myPosition);
+                                r = new DistanceInfoDecorator().decor(myPosition, r);
                                 //r = new DistanceInfoDecorator(r).decor(new Geolocation(37.421994, -122.0840022));
                             }
 

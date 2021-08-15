@@ -26,8 +26,8 @@ public class TimeInfoDecoratorTest {
         restaurant.setOpen(open);
         restaurant.setClose(close);
         TimeProvider timeProvider = new DeterministicTimeProvider(now);
-        assert(new TimeInfoDecorator(timeProvider, new RestaurantVO(restaurant))
-                .decor().getTimeInfo().equals(expected));
+        assert(new TimeInfoDecorator(timeProvider)
+                .decor(new RestaurantVO(restaurant)).getTimeInfo().equals(expected));
     }
 
     @Test

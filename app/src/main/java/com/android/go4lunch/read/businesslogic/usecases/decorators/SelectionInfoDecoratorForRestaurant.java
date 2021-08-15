@@ -1,30 +1,29 @@
 package com.android.go4lunch.read.businesslogic.usecases.decorators;
 
+import com.android.go4lunch.read.businesslogic.gateways.Decorator;
 import com.android.go4lunch.read.businesslogic.gateways.SelectionQuery;
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
 import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
 
 
-public class SelectionInfoDecoratorForRestaurant extends SelectionInfoDecorator<RestaurantVO> {
+public class SelectionInfoDecoratorForRestaurant implements Decorator<RestaurantVO> {
 
-    private RestaurantVO restaurantVO;
+    private SelectionQuery selectionQuery;
 
-
-    public SelectionInfoDecoratorForRestaurant(SelectionQuery selectionQuery, RestaurantVO restaurantVO) {
+    public SelectionInfoDecoratorForRestaurant(SelectionQuery selectionQuery) {
         this.selectionQuery = selectionQuery;
-        this.restaurantVO = restaurantVO;
     }
 
     @Override
-    public RestaurantVO decor() {
-        this.restaurantVO.setSelectionsCountInfo(this.getSelectionsCount());
-        return this.restaurantVO;
+    public RestaurantVO decor(RestaurantVO restaurant) {
+        restaurant.setSelectionsCountInfo(this.getSelectionsCount(restaurant));
+        return restaurant;
     }
 
-    private int getSelectionsCount() {
+    private int getSelectionsCount(RestaurantVO restaurant) {
         int count = 0;
         for(Selection selection: this.selectionQuery.findAll()) {
-            if(selection.getRestaurant().equals(this.restaurantVO.getRestaurant())) {
+            if(selection.getRestaurant().equals(restaurant.getRestaurant())) {
                 count += 1;
             }
         }

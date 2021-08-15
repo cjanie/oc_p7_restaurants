@@ -8,22 +8,14 @@ import com.android.go4lunch.read.businesslogic.usecases.model.Geolocation;
 
 public class DistanceInfoDecorator implements WithLocationPermissionDecorator {
 
-    private GeolocationProvider geolocationProvider;
-
-    private RestaurantVO restaurantVO;
-
-    public DistanceInfoDecorator(RestaurantVO restaurantVO) {
-        this.restaurantVO = restaurantVO;
-    }
-
     @Override
-    public RestaurantVO decor(Geolocation myPosition) {
-        this.restaurantVO.setDistanceInfo(this.getDistanceFromMyPosition(myPosition));
-        return this.restaurantVO;
+    public RestaurantVO decor(Geolocation myPosition, RestaurantVO restaurant) {
+        restaurant.setDistanceInfo(this.getDistanceFromMyPosition(myPosition, restaurant));
+        return restaurant;
     }
 
-    private long getDistanceFromMyPosition(Geolocation myPosition) {
-        return this.getSquareDistanceRoundDown(myPosition, this.restaurantVO.getRestaurant().getGeolocation());
+    private long getDistanceFromMyPosition(Geolocation myPosition, RestaurantVO restaurant) {
+        return this.getSquareDistanceRoundDown(myPosition, restaurant.getRestaurant().getGeolocation());
     }
 
 

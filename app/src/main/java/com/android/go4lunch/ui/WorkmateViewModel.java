@@ -41,7 +41,7 @@ public class WorkmateViewModel extends ViewModel {
         MutableLiveData<List<WorkmateVO>> mWorkmates = new MutableLiveData<>();
         List<WorkmateVO> workmates = new ArrayList<>();
         for(WorkmateVO w: this.retrieveWorkmates.handle()) {
-            w = new SelectionInfoDecoratorForWorkMate(this.selectionQuery, w).decor();
+            w = new SelectionInfoDecoratorForWorkMate(this.selectionQuery).decor(w);
             workmates.add(w);
         }
         mWorkmates.setValue(workmates);

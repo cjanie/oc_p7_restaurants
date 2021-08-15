@@ -1,5 +1,6 @@
 package com.android.go4lunch.read.businesslogic.usecases.decorators;
 
+import com.android.go4lunch.read.businesslogic.gateways.Decorator;
 import com.android.go4lunch.read.businesslogic.gateways.SelectionQuery;
 import com.android.go4lunch.read.businesslogic.usecases.WorkmateVO;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
@@ -7,27 +8,25 @@ import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
 
 import java.util.List;
 
-public class SelectionInfoDecoratorForWorkMate extends SelectionInfoDecorator<WorkmateVO> {
+public class SelectionInfoDecoratorForWorkMate implements Decorator<WorkmateVO> {
 
-    private WorkmateVO workmateVO;
+    private SelectionQuery selectionQuery;
 
-    public SelectionInfoDecoratorForWorkMate(SelectionQuery selectionQuery, WorkmateVO workmateVO) {
+    public SelectionInfoDecoratorForWorkMate(SelectionQuery selectionQuery) {
         this.selectionQuery = selectionQuery;
-        this.workmateVO = workmateVO;
     }
 
     @Override
-    public WorkmateVO decor() {
-        // TODO decor
-        this.workmateVO.setSelection(this.getSelection());
-        return this.workmateVO;
+    public WorkmateVO decor(WorkmateVO workmate) {
+        workmate.setSelection(this.getSelection(workmate));
+        return workmate;
     }
 
-    private Restaurant getSelection() {
+    private Restaurant getSelection(WorkmateVO workmate) {
         Restaurant selected = null;
 
         for(Selection s: this.selectionQuery.findAll()) {
-            if(s.getWorkmate().equals(this.workmateVO.getWorkmate())) {
+            if(s.getWorkmate().equals(workmate.getWorkmate())) {
                 selected = s.getRestaurant();
                 break;
             }

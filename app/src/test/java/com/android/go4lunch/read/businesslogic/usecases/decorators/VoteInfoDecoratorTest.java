@@ -27,7 +27,7 @@ public class VoteInfoDecoratorTest {
         RetrieveSelectionsCountForOneRestaurant retrieveSelectionsCountForOneRestaurant
                 = new RetrieveSelectionsCountForOneRestaurant(restaurantVO.getRestaurant(), inMemoryHistoricOfSelectionsRepository);
         VoteResult voteResult = new VoteResult(retrieveSelectionsCountForOneRestaurant);
-        restaurantVO = new VoteInfoDecorator(restaurantVO, voteResult).decor();
+        restaurantVO = new VoteInfoDecorator(voteResult).decor(restaurantVO);
 
         assert(restaurantVO.getVoteInfo().equals(expected));
     }
@@ -40,7 +40,7 @@ public class VoteInfoDecoratorTest {
         RetrieveSelectionsCountForOneRestaurant retrieveSelectionsCountForOneRestaurant
                 = new RetrieveSelectionsCountForOneRestaurant(restaurantVO.getRestaurant(), inMemoryHistoricOfSelectionsRepository);
         VoteResult voteResult = new VoteResult(retrieveSelectionsCountForOneRestaurant);
-        restaurantVO = new VoteInfoDecorator(restaurantVO, voteResult).decor();
+        restaurantVO = new VoteInfoDecorator(voteResult).decor(restaurantVO);
         assert(restaurantVO.getVoteInfo().equals(Vote.MINIMUM));
     }
 
