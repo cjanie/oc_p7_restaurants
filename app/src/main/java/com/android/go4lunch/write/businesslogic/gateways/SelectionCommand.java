@@ -6,5 +6,9 @@ public interface SelectionCommand {
 
     void toggle(Selection selection);
 
+    void add(Selection selection);
+
+    void remove(Selection selection);
+
 
 }

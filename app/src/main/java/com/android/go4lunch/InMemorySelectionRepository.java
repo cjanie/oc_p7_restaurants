@@ -8,7 +8,6 @@ import com.android.go4lunch.write.businesslogic.usecases.IncrementSelectionsCoun
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class InMemorySelectionRepository implements SelectionQuery, SelectionCommand {
 
@@ -30,10 +29,13 @@ public class InMemorySelectionRepository implements SelectionQuery, SelectionCom
         return this.selections;
     }
 
+
     @Override
     public void toggle(Selection selection) {
+
         if(this.selections.isEmpty())
-            this.selections.add(selection);
+            this.add(selection);
+
         else {
             Selection foundSame = null;
             Selection foundAnotherButSameWorkmate = null;
@@ -52,16 +54,28 @@ public class InMemorySelectionRepository implements SelectionQuery, SelectionCom
             }
 
             if(foundSame == null) {
-                this.selections.add(selection);
-                new IncrementSelectionsCount(this.historicCommand, selection.getRestaurant()).handle();
+                this.add(selection);
             }
 
-            else this.selections.remove(foundSame);
+            else this.remove(foundSame);
 
             if(foundAnotherButSameWorkmate != null)
-                this.selections.remove(foundAnotherButSameWorkmate);
+                this.remove(foundAnotherButSameWorkmate);
 
         }
+    }
+
+
+
+    @Override
+    public void add(Selection selection) {
+        this.selections.add(selection);
+        new IncrementSelectionsCount(this.historicCommand, selection.getRestaurant()).handle();
+    }
+
+    @Override
+    public void remove(Selection selection) {
+        this.selections.remove(selection);
     }
 
 

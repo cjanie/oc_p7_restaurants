@@ -183,7 +183,7 @@ public class ToggleSelectionTest {
     }
 
     @Test
-    public void onAddSelectionShouldUpdateHistoricWhenHistoricIsEmpty() {
+    public void onAddSelectionShouldFillEmptyHistoric() {
         InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
         InMemorySelectionRepository selectionRepository = new InMemorySelectionRepository(historicRepository);
         assert(selectionRepository.findAll().size() == 0);

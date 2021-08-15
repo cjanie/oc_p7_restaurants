@@ -5,6 +5,8 @@ import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
 import com.android.go4lunch.write.businesslogic.gateways.SelectionCommand;
 
+import java.util.List;
+
 public class ToggleSelection {
 
     private SelectionCommand selectionCommand;
@@ -22,6 +24,6 @@ public class ToggleSelection {
     public void toggle() {
         Selection selection = new Selection(restaurant, this.retrieveSession.handle());
         this.selectionCommand.toggle(selection);
-
     }
+
 }
