@@ -16,7 +16,7 @@ import com.android.go4lunch.read.businesslogic.usecases.decorators.SelectionInfo
 import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
 import com.android.go4lunch.read.businesslogic.usecases.RetrieveRestaurants;
 import com.android.go4lunch.read.businesslogic.usecases.decorators.VoteInfoDecorator;
-import com.android.go4lunch.read.businesslogic.usecases.VoteResult;
+import com.android.go4lunch.read.businesslogic.usecases.decorators.VoteResult;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 import com.android.go4lunch.read.businesslogic.usecases.decorators.TimeInfoDecorator;
 import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
@@ -28,18 +28,20 @@ import java.util.List;
 
 public class RestaurantViewModel extends AndroidViewModel {
 
+    // Data
     private final RetrieveRestaurants retrieveRestaurants;
 
     private final RetrieveSession retrieveSession;
 
 
+    // Decor
     private final TimeInfoDecorator timeInfoDecorator;
 
     private final SelectionInfoDecoratorForRestaurant selectionInfoDecorator;
 
     private VoteInfoDecorator voteInfoDecorator;
 
-
+    // Action
     private final ToggleSelection toggleSelection;
 
 
@@ -52,7 +54,7 @@ public class RestaurantViewModel extends AndroidViewModel {
 
         InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
 
-        InMemoryCurrentSelectionsRepository selectionQuery = new InMemoryCurrentSelectionsRepository(historicRepository);
+        InMemoryCurrentSelectionsRepository selectionQuery = new InMemoryCurrentSelectionsRepository();
         List<Selection> selections = new ArrayList<>();
         selections.add(new Selection(this.retrieveRestaurants.handle().get(0).getRestaurant(), new Workmate("Janie")));
         selectionQuery.setSelections(selections);
@@ -63,10 +65,8 @@ public class RestaurantViewModel extends AndroidViewModel {
         VoteResult voteResult = new VoteResult(historicRepository);
         this.voteInfoDecorator = new VoteInfoDecorator(voteResult);
 
-        // Command
-        this.toggleSelection = new ToggleSelection(selectionQuery, this.retrieveSession);
-
-
+        // Select
+        this.toggleSelection = new ToggleSelection(selectionQuery, this.retrieveSession, historicRepository);
     }
 
 

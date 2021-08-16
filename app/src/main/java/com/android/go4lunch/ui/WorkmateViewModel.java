@@ -30,9 +30,7 @@ public class WorkmateViewModel extends ViewModel {
         Workmate cyril = new Workmate("Cyril");
         workmateQuery.setWorkmates(Arrays.asList(new Workmate[]{janie, cyril}));
         this.retrieveWorkmates = new RetrieveWorkmates(workmateQuery);
-
-        InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        this.selectionQuery = new InMemoryCurrentSelectionsRepository(historicRepository);
+        this.selectionQuery = new InMemoryCurrentSelectionsRepository();
         Selection selection = new Selection(new Restaurant("AIOU", "loc"), janie);
         selectionQuery.setSelections(Arrays.asList(new Selection[] {selection}));
     }

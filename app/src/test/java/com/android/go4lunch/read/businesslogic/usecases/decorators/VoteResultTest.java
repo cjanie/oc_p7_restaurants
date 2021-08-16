@@ -1,5 +1,6 @@
-package com.android.go4lunch.read.businesslogic.usecases;
+package com.android.go4lunch.read.businesslogic.usecases.decorators;
 
+import com.android.go4lunch.read.businesslogic.usecases.decorators.VoteResult;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 import com.android.go4lunch.InMemoryHistoricOfSelectionsRepository;
 import com.android.go4lunch.read.businesslogic.usecases.enums.Vote;

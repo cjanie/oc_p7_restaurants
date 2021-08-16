@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InMemoryHistoricOfSelectionsRepository implements HistoricOfSelectionsQuery, HistoricOfSelectionsCommand {
+public class InMemoryHistoricOfSelectionsRepository implements HistoricOfSelectionsRepository {
 
     List<Map<Restaurant, Integer>> list;
 
@@ -19,6 +19,11 @@ public class InMemoryHistoricOfSelectionsRepository implements HistoricOfSelecti
 
     public void setList(List<Map<Restaurant, Integer>> list) {
         this.list = list;
+    }
+
+    @Override
+    public List<Map<Restaurant, Integer>> findAll() {
+        return this.list;
     }
 
     @Override
@@ -33,7 +38,7 @@ public class InMemoryHistoricOfSelectionsRepository implements HistoricOfSelecti
         return count;
     }
 
-    @Override
+    /*
     public void increment(Restaurant restaurant) {
 
         Map<Restaurant, Integer> found = null;
@@ -60,5 +65,12 @@ public class InMemoryHistoricOfSelectionsRepository implements HistoricOfSelecti
             map.put(restaurant, 1);
             this.list.add(map);
         }
+    }
+
+     */
+
+    @Override
+    public void add(Map<Restaurant, Integer> map) {
+        this.list.add(map);
     }
 }

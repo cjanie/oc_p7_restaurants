@@ -9,15 +9,14 @@ import com.android.go4lunch.write.businesslogic.usecases.UpdateHistoric;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMemoryCurrentSelectionsRepository implements SelectionQuery, SelectionCommand {
+public class InMemoryCurrentSelectionsRepository implements SelectionRepository {
 
     private List<Selection> selections;
 
-    private HistoricOfSelectionsCommand historicCommand;
 
-    public InMemoryCurrentSelectionsRepository(HistoricOfSelectionsCommand historicCommand) {
+
+    public InMemoryCurrentSelectionsRepository() {
         this.selections = new ArrayList<>();
-        this.historicCommand = historicCommand;
     }
 
     public void setSelections(List<Selection> selections) {
@@ -31,46 +30,12 @@ public class InMemoryCurrentSelectionsRepository implements SelectionQuery, Sele
 
 
     @Override
-    public void toggle(Selection selection) {
-
-        if(this.selections.isEmpty())
-            this.add(selection);
-
-        else {
-            Selection foundSame = null;
-            Selection foundAnotherButSameWorkmate = null;
-
-            for(int i=0; i<this.selections.size(); i++) {
-                Selection s = this.selections.get(i);
-                if(s.getWorkmate().equals(selection.getWorkmate())) {
-                    if(s.getRestaurant().equals(selection.getRestaurant())) {
-                        foundSame = s;
-                        break;
-                    } else {
-                        foundAnotherButSameWorkmate = s;
-                        break;
-                    }
-                }
-            }
-
-            if(foundSame == null) {
-                this.add(selection);
-            }
-
-            else this.remove(foundSame);
-
-            if(foundAnotherButSameWorkmate != null)
-                this.remove(foundAnotherButSameWorkmate);
-
-        }
-    }
-
-    private void add(Selection selection) {
+    public void add(Selection selection) {
         this.selections.add(selection);
-        new UpdateHistoric(this.historicCommand, selection.getRestaurant()).handle();
     }
 
-    private void remove(Selection selection) {
+    @Override
+    public void remove(Selection selection) {
         this.selections.remove(selection);
     }
 

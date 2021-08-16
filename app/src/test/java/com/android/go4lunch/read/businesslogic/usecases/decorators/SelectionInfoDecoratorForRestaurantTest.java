@@ -22,7 +22,7 @@ public class SelectionInfoDecoratorForRestaurantTest {
     @Before
     public void setUp() {
         InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        this.selectionQuery = new InMemoryCurrentSelectionsRepository(historicRepository);
+        this.selectionQuery = new InMemoryCurrentSelectionsRepository();
         this.restaurant = new Restaurant("Aa", "Ou");
     }
 

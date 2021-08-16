@@ -1,4 +1,4 @@
-package com.android.go4lunch.read.businesslogic.usecases;
+package com.android.go4lunch.read.businesslogic.usecases.decorators;
 
 
 import com.android.go4lunch.read.businesslogic.gateways.HistoricOfSelectionsQuery;
