@@ -1,10 +1,6 @@
 package com.android.go4lunch;
 
-import com.android.go4lunch.read.businesslogic.gateways.SelectionQuery;
 import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
-import com.android.go4lunch.write.businesslogic.gateways.HistoricOfSelectionsCommand;
-import com.android.go4lunch.write.businesslogic.gateways.SelectionCommand;
-import com.android.go4lunch.write.businesslogic.usecases.UpdateHistoric;
 
 import java.util.ArrayList;
 import java.util.List;

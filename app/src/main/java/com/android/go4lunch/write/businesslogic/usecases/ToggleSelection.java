@@ -2,14 +2,9 @@ package com.android.go4lunch.write.businesslogic.usecases;
 
 import com.android.go4lunch.HistoricOfSelectionsRepository;
 import com.android.go4lunch.SelectionRepository;
-import com.android.go4lunch.read.businesslogic.gateways.SelectionQuery;
 import com.android.go4lunch.read.businesslogic.usecases.RetrieveSession;
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
 import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
-import com.android.go4lunch.write.businesslogic.gateways.HistoricOfSelectionsCommand;
-import com.android.go4lunch.write.businesslogic.gateways.SelectionCommand;
-
-import java.util.List;
 
 public class ToggleSelection {
 

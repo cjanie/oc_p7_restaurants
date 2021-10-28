@@ -1,8 +1,6 @@
 package com.android.go4lunch;
 
 import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
-import com.android.go4lunch.read.businesslogic.gateways.HistoricOfSelectionsQuery;
-import com.android.go4lunch.write.businesslogic.gateways.HistoricOfSelectionsCommand;
 
 import java.util.ArrayList;
 import java.util.HashMap;
