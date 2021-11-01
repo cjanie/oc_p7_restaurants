@@ -10,15 +10,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
-import com.android.go4lunch.read.businesslogic.usecases.RestaurantVO;
-import com.android.go4lunch.read.businesslogic.usecases.enums.Vote;
-import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
-import com.android.go4lunch.read.businesslogic.usecases.model.Workmate;
+import com.android.go4lunch.usecases.models_vo.RestaurantVO;
+import com.android.go4lunch.ui.utils.TimeInfoTextHandler;
+import com.android.go4lunch.usecases.enums.Vote;
 import com.android.go4lunch.write.businesslogic.usecases.events.ToggleSelectionEvent;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -46,13 +46,26 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<List
     @Override
     public void onBindViewHolder(@NonNull ListRestaurantRecyclerViewAdapter.ViewHolder holder, int position) {
         RestaurantVO restaurant = this.restaurantVOs.get(position);
+        Glide.with(holder.photo.getContext())
+                .load(restaurant.getRestaurant().getPhotoUrl())
+                .apply(RequestOptions.centerCropTransform())
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_foreground)
+                .into(holder.photo);
         holder.name.setText(restaurant.getRestaurant().getName());
         holder.address.setText(restaurant.getRestaurant().getAddress());
-        holder.info.setText(restaurant.getTimeInfo().toString());
-        if(restaurant.getDistanceInfo() != null) {
-            holder.distance.setText(restaurant.getDistanceInfo().toString());
+
+        if(restaurant.getTimeInfo() != null) {
+            TimeInfoTextHandler timeInfoTextHandler = new TimeInfoTextHandler();
+            holder.info.setText(timeInfoTextHandler.getText(restaurant));
+            holder.info.setTextColor(timeInfoTextHandler.getColor(restaurant, holder.info));
+            holder.info.setTypeface(null, timeInfoTextHandler.getStyle(restaurant));
         }
-        holder.selections.setText("(" + String.valueOf(restaurant.getSelectionCountInfo()) +")");
+
+        if(restaurant.getDistanceInfo() != null) {
+            holder.distance.setText(restaurant.getDistanceInfo().toString() + "m");
+        }
+        holder.selections.setText("(" + restaurant.getSelectionCountInfo() +")");
 
         // Vote
         Vote vote = restaurant.getVoteInfo();
@@ -92,12 +105,12 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<List
         return constraintLayout;
     }
 
-
-
     @Override
     public int getItemCount() {
         return this.restaurantVOs.size();
     }
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.restaurant_name)
@@ -118,6 +131,8 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<List
         @BindView(R.id.starts_container)
         LinearLayout starsContainer;
 
+        @BindView(R.id.photo)
+        ImageView photo;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

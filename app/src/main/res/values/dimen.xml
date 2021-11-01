@@ -2,4 +2,7 @@
 <resources>
     <dimen name="margin">16dp</dimen>
     <dimen name="margin_half">8dp</dimen>
+    <dimen name="text_size_big">16dp</dimen>
+    <dimen name="photo_size">100dp</dimen>
+    <dimen name="toolbar_size">50dp</dimen>
 </resources>

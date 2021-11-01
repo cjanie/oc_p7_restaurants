@@ -1,6 +1,14 @@
 <resources>
 
     <string name="app_name">I\'m Hungry!</string>
+    <string name="app_title">Go4Lunch</string>
+    <string name="app_subtitle">Find a nice restaurant and invite your co-workers for lunch!</string>
+    <!-- SIGN IN -->
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="sign_in_failure">Sign in failure</string>
+    <string name="sign_in_cancelled">Sign in cancelled</string>
+    <string name="no_internet_connection">No internet connection</string>
 
     <!-- MENU -->
     <string name="map_view">Map View</string>
@@ -26,6 +34,12 @@
     <string name="has_not_decided">has not decided yet</string>
 
 
+    <!-- PERMISSION -->
+    <string name="location_rationale">You must grant permissions for location</string>
 
+    <!-- FACEBOOK -->
+    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
+    <string name="facebook_application_id" translatable="false">570389354021189</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb570389354021189</string>
 
 </resources>
