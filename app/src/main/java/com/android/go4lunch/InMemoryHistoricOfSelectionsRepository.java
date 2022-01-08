@@ -1,11 +1,12 @@
 package com.android.go4lunch;
 
-import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
+import com.android.go4lunch.models.Restaurant;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.Observable;
 
 public class InMemoryHistoricOfSelectionsRepository implements HistoricOfSelectionsRepository {
 
@@ -20,12 +21,12 @@ public class InMemoryHistoricOfSelectionsRepository implements HistoricOfSelecti
     }
 
     @Override
-    public List<Map<Restaurant, Integer>> findAll() {
-        return this.list;
+    public Observable<List<Map<Restaurant, Integer>>> findAll() {
+        return Observable.just(this.list);
     }
 
     @Override
-    public int getCount(Restaurant restaurant) {
+    public Observable<Integer> getCount(Restaurant restaurant) {
         int count = 0;
         for(Map map: this.list) {
 
@@ -33,7 +34,7 @@ public class InMemoryHistoricOfSelectionsRepository implements HistoricOfSelecti
                 count = (int) map.get(restaurant);
             }
         }
-        return count;
+        return Observable.just(count);
     }
 
     /*

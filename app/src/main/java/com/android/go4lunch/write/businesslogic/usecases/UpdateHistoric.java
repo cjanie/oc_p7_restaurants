@@ -1,8 +1,7 @@
 package com.android.go4lunch.write.businesslogic.usecases;
 
 import com.android.go4lunch.HistoricOfSelectionsRepository;
-import com.android.go4lunch.InMemoryHistoricOfSelectionsRepository;
-import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
+import com.android.go4lunch.models.Restaurant;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +25,7 @@ public class UpdateHistoric {
 
         Map<Restaurant, Integer> found = null;
         Integer index = null;
-
+/*
         for(int i=0; i<this.historicRepository.findAll().size(); i++) {
             if(this.historicRepository.findAll().get(i).keySet().contains(restaurant)) {
                 found = this.historicRepository.findAll().get(i);
@@ -48,5 +47,9 @@ public class UpdateHistoric {
             map.put(restaurant, 1);
             this.historicRepository.add(map);
         }
+
+ */
     }
+
+
 }

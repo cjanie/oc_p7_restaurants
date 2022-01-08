@@ -2,33 +2,34 @@ package com.android.go4lunch.write.businesslogic.usecases;
 
 import com.android.go4lunch.HistoricOfSelectionsRepository;
 import com.android.go4lunch.SelectionRepository;
-import com.android.go4lunch.read.businesslogic.usecases.RetrieveSession;
-import com.android.go4lunch.read.businesslogic.usecases.model.Restaurant;
-import com.android.go4lunch.read.businesslogic.usecases.model.Selection;
+import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
+import com.android.go4lunch.models.Restaurant;
+import com.android.go4lunch.models.Selection;
+import com.android.go4lunch.usecases.GetSession;
 
 public class ToggleSelection {
 
     private SelectionRepository selectionRepository;
 
-    private RetrieveSession retrieveSession;
+    private GetSession getSession;
 
     private HistoricOfSelectionsRepository historicRepository;
 
     public ToggleSelection(SelectionRepository selectionRepository,
-                           RetrieveSession retrieveSession,
+                           GetSession getSession,
                            HistoricOfSelectionsRepository historicRepository) {
         this.selectionRepository = selectionRepository;
-        this.retrieveSession = retrieveSession;
+        this.getSession = getSession;
         this.historicRepository = historicRepository;
     }
 
-    public void toggle(Restaurant restaurant) {
-        Selection selection = new Selection(restaurant, this.retrieveSession.handle());
-        this.handle(selection);
+    public void toggle(Restaurant restaurant) throws NoWorkmateForSessionException {
+        //Selection selection = new Selection(restaurant, this.getSession.getWorkmate());
+        //this.handle(selection);
     }
 
     private void handle(Selection selection) {
-
+    /*
         if(this.selectionRepository.findAll().isEmpty())
             this.add(selection);
 
@@ -59,6 +60,8 @@ public class ToggleSelection {
                 this.remove(foundAnotherButSameWorkmate);
 
         }
+
+     */
     }
 
     private void add(Selection selection) {

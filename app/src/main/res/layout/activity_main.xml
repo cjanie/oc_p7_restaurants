@@ -6,67 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
-    <fragment
-        android:id="@+id/list"
-        android:name="com.android.go4lunch.ui.ListRestaurantFragment"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_half"
-        android:layout_marginVertical="@dimen/margin"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toTopOf="@+id/tabs"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!--
-        <fragment
-            android:id="@+id/main_fragment"
-            android:name="com.android.go4lunch.ui.MapRestaurantFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/list" />
--->
-    <fragment
-        android:id="@+id/workmate_list"
-        android:name="com.android.go4lunch.ui.WorkmateListFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/list" />
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
-        <com.google.android.material.tabs.TabLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_baseline_map_24"
-                android:text="@string/map_view" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_baseline_view_list_24"
-                android:text="@string/list_view" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_baseline_group_24"
-                android:text="@string/workmates" />
-        </com.google.android.material.tabs.TabLayout>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
+    </com.google.android.material.tabs.TabLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
