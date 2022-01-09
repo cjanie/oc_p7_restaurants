@@ -7,8 +7,11 @@ import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.R;
+import com.android.go4lunch.apiFirebase.entities.UserService;
+import com.android.go4lunch.ui.viewmodels.SignInViewModel;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
@@ -27,9 +30,12 @@ public class SignInActivity extends AppCompatActivity {
 
     private final static String TAG = "SIGN IN ACTIVITY";
 
+    private SignInViewModel signInViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.signInViewModel = new ViewModelProvider(this).get(SignInViewModel.class);
         this.startActivityForResult();
     }
 
@@ -41,6 +47,11 @@ public class SignInActivity extends AppCompatActivity {
                     // Result is returned from launching the Intent;
                     if(result.getResultCode() == this.RESULT_OK) {
                         // Successfully signed in
+                        Log.d(TAG, "name " + result.getIdpResponse().getUser().getName());
+                        Log.d(TAG, "email " + result.getIdpResponse().getUser().getEmail());
+                        // Save user signed in view model
+                        this.signInViewModel.createSession();
+                        // Go to Main Activity
                         Intent intent = new Intent(this, MainActivity.class);
                         intent.putExtra("username", result.getIdpResponse().getUser().getName());
                         intent.putExtra("email", result.getIdpResponse().getUser().getEmail());

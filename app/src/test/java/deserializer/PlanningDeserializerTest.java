@@ -1,8 +1,8 @@
 package deserializer;
 
-import com.android.go4lunch.httpclient.deserialized_entities.OpenClose;
-import com.android.go4lunch.httpclient.deserialized_entities.Period;
-import com.android.go4lunch.httpclient.entities.PlanningDeserializer;
+import com.android.go4lunch.apiGoogleMaps.deserialized_entities.OpenClose;
+import com.android.go4lunch.apiGoogleMaps.deserialized_entities.Period;
+import com.android.go4lunch.apiGoogleMaps.entities.PlanningDeserializer;
 
 import org.junit.Before;
 import org.junit.Test;

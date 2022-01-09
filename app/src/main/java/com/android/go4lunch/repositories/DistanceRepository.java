@@ -1,7 +1,7 @@
 package com.android.go4lunch.repositories;
 
 import com.android.go4lunch.exceptions.NullDistanceResponseException;
-import com.android.go4lunch.httpclient.DistanceStream;
+import com.android.go4lunch.apiGoogleMaps.DistanceStream;
 import com.android.go4lunch.gateways.DistanceQuery;
 import com.android.go4lunch.models.Geolocation;
 

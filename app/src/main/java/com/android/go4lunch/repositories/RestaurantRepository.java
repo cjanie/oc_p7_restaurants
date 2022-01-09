@@ -1,7 +1,7 @@
 package com.android.go4lunch.repositories;
 
 import com.android.go4lunch.gateways.RestaurantQuery;
-import com.android.go4lunch.httpclient.RestaurantStream;
+import com.android.go4lunch.apiGoogleMaps.RestaurantStream;
 import com.android.go4lunch.models.Geolocation;
 import com.android.go4lunch.models.Restaurant;
 
@@ -24,17 +24,17 @@ public class RestaurantRepository implements RestaurantQuery {
                 .flatMap(restaurants -> this.formatRestaurants(restaurants));
     }
 
-    private Observable<List<Restaurant>> formatRestaurants(List<com.android.go4lunch.httpclient.entities.Restaurant> listToFormat) {
+    private Observable<List<Restaurant>> formatRestaurants(List<com.android.go4lunch.apiGoogleMaps.entities.Restaurant> listToFormat) {
         List<Restaurant> formattedList = new ArrayList<>();
         if(!listToFormat.isEmpty()) {
-            for(com.android.go4lunch.httpclient.entities.Restaurant r: listToFormat) {
+            for(com.android.go4lunch.apiGoogleMaps.entities.Restaurant r: listToFormat) {
                 formattedList.add(this.formatRestaurant(r));
             }
         }
         return Observable.just(formattedList);
     }
 
-    private Restaurant formatRestaurant(com.android.go4lunch.httpclient.entities.Restaurant r) {
+    private Restaurant formatRestaurant(com.android.go4lunch.apiGoogleMaps.entities.Restaurant r) {
         Restaurant restaurant = null;
         if(r != null) {
             restaurant = new Restaurant(r.getName(), r.getAddress());
