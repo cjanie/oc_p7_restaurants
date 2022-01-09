@@ -1,16 +1,4 @@
-package com.android.go4lunch;
-
-import com.android.go4lunch.InMemoryHistoricOfSelectionsRepository;
-import com.android.go4lunch.InMemoryCurrentSelectionsRepository;
-import com.android.go4lunch.usecases.decorators.SelectionInfoDecoratorForWorkMate;
-import com.android.go4lunch.usecases.models_vo.WorkmateVO;
-import com.android.go4lunch.models.Restaurant;
-import com.android.go4lunch.models.Selection;
-import com.android.go4lunch.models.Workmate;
-
-import org.junit.Test;
-
-import java.util.Arrays;
+package com.android.go4lunch.usecases;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

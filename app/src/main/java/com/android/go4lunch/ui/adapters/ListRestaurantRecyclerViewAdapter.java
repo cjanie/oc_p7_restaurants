@@ -16,7 +16,7 @@ import com.android.go4lunch.R;
 import com.android.go4lunch.usecases.models_vo.RestaurantVO;
 import com.android.go4lunch.ui.utils.TimeInfoTextHandler;
 import com.android.go4lunch.usecases.enums.Vote;
-import com.android.go4lunch.write.businesslogic.usecases.events.ToggleSelectionEvent;
+import com.android.go4lunch.ui.events.ToggleSelectionEvent;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 

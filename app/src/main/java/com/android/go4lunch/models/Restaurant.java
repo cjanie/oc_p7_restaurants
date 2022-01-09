@@ -5,6 +5,8 @@ import java.util.Map;
 
 public class Restaurant {
 
+    private String id;
+
     private String name;
 
     private String address;
@@ -18,6 +20,19 @@ public class Restaurant {
     public Restaurant(String name, String address) {
         this.name = name;
         this.address = address;
+    }
+
+    public Restaurant(String id, String name, String address) {
+        this(name, address);
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {

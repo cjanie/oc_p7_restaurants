@@ -1,9 +1,8 @@
-package com.android.go4lunch.write.businesslogic.usecases;
+package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.HistoricOfSelectionsRepository;
+import com.android.go4lunch.gateways.HistoricOfSelectionsRepository;
 import com.android.go4lunch.models.Restaurant;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class UpdateHistoric {

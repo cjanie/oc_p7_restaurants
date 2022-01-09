@@ -1,5 +1,6 @@
-package com.android.go4lunch;
+package com.android.go4lunch.repositories;
 
+import com.android.go4lunch.gateways.HistoricOfSelectionsRepository;
 import com.android.go4lunch.models.Restaurant;
 
 import java.util.ArrayList;

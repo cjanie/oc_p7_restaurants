@@ -1,4 +1,4 @@
-package deserializer;
+package com.android.go4lunch.deserializer;
 
 import com.android.go4lunch.apiGoogleMaps.deserialized_entities.OpenClose;
 import com.android.go4lunch.apiGoogleMaps.deserialized_entities.Period;

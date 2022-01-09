@@ -1,15 +1,4 @@
-package com.android.go4lunch.write;
-
-import com.android.go4lunch.InMemoryHistoricOfSelectionsRepository;
-import com.android.go4lunch.models.Restaurant;
-import com.android.go4lunch.write.businesslogic.usecases.UpdateHistoric;
-
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+package com.android.go4lunch.usecases;
 
 public class UpdateHistoricTest {
 /*

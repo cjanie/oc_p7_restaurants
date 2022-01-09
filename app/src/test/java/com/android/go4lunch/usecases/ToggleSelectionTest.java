@@ -1,38 +1,45 @@
-package com.android.go4lunch.write;
+package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.InMemoryHistoricOfSelectionsRepository;
-import com.android.go4lunch.InMemoryCurrentSelectionsRepository;
-
+import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
+import com.android.go4lunch.in_memory_repositories.InMemorySessionRepository;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.write.businesslogic.usecases.ToggleSelection;
+import com.android.go4lunch.repositories.InMemoryCurrentSelectionsRepository;
+import com.android.go4lunch.repositories.InMemoryHistoricOfSelectionsRepository;
 
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+
 public class ToggleSelectionTest {
 
     @Test
-    public void toggleShouldAddSelectionIfItDoesNotExist_caseListOfSelectionsIsEmpty() {
-
+    public void toggleShouldAddSelectionIfItDoesNotExist_caseListOfSelectionsIsEmpty() throws NoWorkmateForSessionException {
         // Create a session
-        /*
-        InMemorySessionQuery sessionQuery = new InMemorySessionQuery();
-        Workmate workmate = new Workmate("J");
-        sessionQuery.setWorkmate(workmate);
-
+        InMemorySessionRepository sessionQuerry = new InMemorySessionRepository();
+        sessionQuerry.setWorkmate(new Workmate("Janie"));
         // init selection
         InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        InMemoryCurrentSelectionsRepository selectionRepository = new InMemoryCurrentSelectionsRepository();
-        Restaurant restaurant = new Restaurant("O", "A");
+        InMemoryCurrentSelectionsRepository currentSelectionsRepository = new InMemoryCurrentSelectionsRepository();
+        // Create restaurant to select
+        Restaurant restaurant = new Restaurant("OooResto", "Place A l'Aller-Retour");
+        // Create the ToogleSelection
+        ToggleSelection toggleSelection = new ToggleSelection(
+                currentSelectionsRepository,
+                new GetSession(sessionQuerry),
+                historicRepository
+        );
+        // SUT
+        toggleSelection.toggle(restaurant);
 
-        new ToggleSelection(selectionRepository, new RetrieveSession(sessionQuery), historicRepository).toggle(restaurant);
-        assert(selectionRepository.getSelections().size() == 1);
-
-*/
+        Observable<List<Selection>> observableSelections = currentSelectionsRepository.getSelections();
+        List<Selection> results = new ArrayList<>();
+        observableSelections.subscribe(results::addAll);
+        assert(results.size() == 1);
     }
 
     @Test

@@ -1,4 +1,4 @@
-package com.android.go4lunch.write.businesslogic.usecases.events;
+package com.android.go4lunch.ui.events;
 
 import com.android.go4lunch.models.Restaurant;
 

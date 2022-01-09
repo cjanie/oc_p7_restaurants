@@ -1,7 +1,7 @@
 package com.android.go4lunch.usecases;
 
 import com.android.go4lunch.models.Restaurant;
-import com.android.go4lunch.InMemoryHistoricOfSelectionsRepository;
+import com.android.go4lunch.repositories.InMemoryHistoricOfSelectionsRepository;
 import com.android.go4lunch.usecases.decorators.VoteResult;
 import com.android.go4lunch.usecases.enums.Vote;
 

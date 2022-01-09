@@ -1,4 +1,4 @@
-package com.android.go4lunch.read.businesslogic.gateways;
+package com.android.go4lunch.gateways;
 
 import com.android.go4lunch.models.Restaurant;
 

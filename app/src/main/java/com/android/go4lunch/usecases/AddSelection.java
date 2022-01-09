@@ -1,17 +1,21 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.SelectionRepository;
+import com.android.go4lunch.gateways.DistanceQuery;
+import com.android.go4lunch.gateways.SelectionCommand;
 import com.android.go4lunch.models.Selection;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddSelection {
 
-    private SelectionRepository selectionRepository;
+    private SelectionCommand selectionCommand;
 
-    public AddSelection(SelectionRepository selectionRepository) {
-        this.selectionRepository = selectionRepository;
+    public AddSelection(SelectionCommand selectionCommand) {
+        this.selectionCommand = selectionCommand;
     }
 
     public void add(Selection selection) {
-        this.selectionRepository.add(selection);
+        this.selectionCommand.add(selection);
     }
 }

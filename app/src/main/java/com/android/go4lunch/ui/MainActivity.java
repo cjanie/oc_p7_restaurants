@@ -15,9 +15,12 @@ import android.view.View;
 import com.android.go4lunch.R;
 
 
+import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
+import com.android.go4lunch.repositories.SessionRepository;
 import com.android.go4lunch.ui.adapters.ViewPagerAdapter;
 
 import com.facebook.AccessToken;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.AuthCredential;
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
            tab.setText(tabsTexts[position]);
            tab.setIcon(tabsIcons[position]);
         }).attach();
-
+        
     }
 
 }

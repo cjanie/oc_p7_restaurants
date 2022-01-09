@@ -1,4 +1,6 @@
-package com.android.go4lunch.providers;
+package com.android.go4lunch.deterministic_providers;
+
+import com.android.go4lunch.providers.TimeProvider;
 
 import java.time.LocalTime;
 

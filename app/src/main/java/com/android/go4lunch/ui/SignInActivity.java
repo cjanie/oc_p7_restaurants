@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.R;
-import com.android.go4lunch.apiFirebase.entities.UserService;
 import com.android.go4lunch.ui.viewmodels.SignInViewModel;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -46,9 +45,7 @@ public class SignInActivity extends AppCompatActivity {
                     // Handle the Firebase AuthUI Authentication Result
                     // Result is returned from launching the Intent;
                     if(result.getResultCode() == this.RESULT_OK) {
-                        // Successfully signed in
-                        Log.d(TAG, "name " + result.getIdpResponse().getUser().getName());
-                        Log.d(TAG, "email " + result.getIdpResponse().getUser().getEmail());
+                        // Successfully signed in:
                         // Save user signed in view model
                         this.signInViewModel.createSession();
                         // Go to Main Activity

@@ -2,7 +2,7 @@ package com.android.go4lunch.ui.viewmodels;
 
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.apiFirebase.entities.UserService;
+import com.android.go4lunch.apiFirebase.UserService;
 import com.android.go4lunch.models.Workmate;
 import com.android.go4lunch.repositories.WorkmateRepository;
 import com.android.go4lunch.usecases.AddWorkmate;

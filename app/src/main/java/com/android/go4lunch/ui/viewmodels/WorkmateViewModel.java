@@ -2,14 +2,11 @@ package com.android.go4lunch.ui.viewmodels;
 
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.InMemoryCurrentSelectionsRepository;
+import com.android.go4lunch.repositories.InMemoryCurrentSelectionsRepository;
 
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.models.Workmate;
-
-
-import java.util.Arrays;
 
 
 public class WorkmateViewModel extends ViewModel {

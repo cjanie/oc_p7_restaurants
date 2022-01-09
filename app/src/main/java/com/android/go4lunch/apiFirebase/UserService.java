@@ -1,4 +1,4 @@
-package com.android.go4lunch.apiFirebase.entities;
+package com.android.go4lunch.apiFirebase;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
@@ -56,7 +56,7 @@ public class UserService {
     }
 
     // Get User Data from Firestore
-    public Task<DocumentSnapshot> getUserData(){
+    private Task<DocumentSnapshot> getUserData(){
         if(this.user.getUid() != null) {
             return this.getCollection().document(this.user.getUid()).get();
         } else {
@@ -79,6 +79,18 @@ public class UserService {
                 }
             }
             return workmates;
+        });
+    }
+
+    public Task<Workmate> getUser() {
+        return this.getUserData().continueWith(task -> {
+            DocumentSnapshot documentSnapshot= task.getResult();
+            String username = "";
+            if (documentSnapshot.contains("name")) {
+                username = (String) documentSnapshot.get("name");
+            }
+            Workmate workmate = new Workmate(username);
+            return workmate;
         });
     }
 

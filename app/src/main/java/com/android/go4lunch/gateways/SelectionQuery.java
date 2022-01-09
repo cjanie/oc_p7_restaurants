@@ -9,6 +9,6 @@ import io.reactivex.Observable;
 
 public interface SelectionQuery {
 
-    Observable<Set<Selection>> getSelections();
+    Observable<List<Selection>> getSelections();
 
 }

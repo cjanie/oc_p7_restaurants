@@ -1,7 +1,9 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.providers.DeterministicDateProvider;
-import com.android.go4lunch.providers.DeterministicTimeProvider;
+import com.android.go4lunch.repositories.InMemoryCurrentSelectionsRepository;
+import com.android.go4lunch.repositories.InMemoryHistoricOfSelectionsRepository;
+import com.android.go4lunch.deterministic_providers.DeterministicDateProvider;
+import com.android.go4lunch.deterministic_providers.DeterministicTimeProvider;
 import com.android.go4lunch.usecases.enums.TimeInfo;
 import com.android.go4lunch.models.Geolocation;
 import com.android.go4lunch.models.Restaurant;
@@ -157,7 +159,9 @@ public class GetRestaurantsForListTest {
                 restaurantQuery,
                 new DeterministicTimeProvider(now),
                 new DeterministicDateProvider(1),
-                new InMemoryDistanceRepository(Observable.just(100L))
+                new InMemoryDistanceRepository(Observable.just(100L)),
+                new InMemoryCurrentSelectionsRepository(),
+                new InMemoryHistoricOfSelectionsRepository()
         );
         return getRestaurantsForList;
     }
@@ -188,6 +192,4 @@ public class GetRestaurantsForListTest {
         }
         return restaurants;
     }
-
-
 }
