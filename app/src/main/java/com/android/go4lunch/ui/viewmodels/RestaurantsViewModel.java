@@ -4,18 +4,18 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.repositories.InMemoryCurrentSelectionsRepository;
-import com.android.go4lunch.repositories.InMemoryHistoricOfSelectionsRepository;
+import com.android.go4lunch.gateways_impl.InMemoryCurrentSelectionsRepository;
+import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsRepository;
 import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.providers.RealTimeProvider;
 import com.android.go4lunch.providers.RealDateProvider;
-import com.android.go4lunch.repositories.SessionRepository;
+import com.android.go4lunch.gateways_impl.SessionRepository;
 import com.android.go4lunch.usecases.GetSession;
 import com.android.go4lunch.usecases.models_vo.RestaurantVO;
 import com.android.go4lunch.models.Geolocation;
-import com.android.go4lunch.repositories.DistanceRepository;
-import com.android.go4lunch.repositories.RestaurantRepository;
+import com.android.go4lunch.gateways_impl.DistanceQueryAdapter;
+import com.android.go4lunch.gateways_impl.RestaurantQueryAdapter;
 import com.android.go4lunch.usecases.GetRestaurantsForList;
 import com.android.go4lunch.usecases.ToggleSelection;
 
@@ -46,10 +46,10 @@ public class RestaurantsViewModel extends ViewModel {
     // Constructor
     public RestaurantsViewModel() {
         this.getRestaurantsForList = new GetRestaurantsForList(
-                new RestaurantRepository(),
+                new RestaurantQueryAdapter(),
                 new RealTimeProvider(),
                 new RealDateProvider(),
-                new DistanceRepository(),
+                new DistanceQueryAdapter(),
                 new InMemoryCurrentSelectionsRepository(),
                 new InMemoryHistoricOfSelectionsRepository()
                 );
@@ -73,7 +73,7 @@ public class RestaurantsViewModel extends ViewModel {
 
     public LiveData<List<RestaurantVO>> getRestaurants(Double myLatitude, Double myLongitude, int radius) {
         this.setRestaurants(
-                this.getRestaurantsForList.getRestaurantsNearbyAsValueObjectWithDistance(new Geolocation(myLatitude, myLongitude), radius)
+                this.getRestaurantsForList.getRestaurantsWithSelections(new Geolocation(myLatitude, myLongitude), radius)
         );
         return this.restaurants;
     }
@@ -84,7 +84,7 @@ public class RestaurantsViewModel extends ViewModel {
 
                     @Override
                     public void onNext(@io.reactivex.annotations.NonNull List<RestaurantVO> restaurants) {
-                        RestaurantsViewModel.this.restaurants.setValue(restaurants);
+                        RestaurantsViewModel.this.restaurants.postValue(restaurants);
                     }
 
                     @Override

@@ -1,6 +1,6 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.repositories.InMemoryHistoricOfSelectionsRepository;
+import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsRepository;
 import com.android.go4lunch.usecases.decorators.VoteInfoDecorator;
 import com.android.go4lunch.usecases.decorators.VoteResult;
 import com.android.go4lunch.usecases.models_vo.RestaurantVO;

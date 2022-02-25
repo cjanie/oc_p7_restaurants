@@ -50,7 +50,18 @@ public class GetRestaurantsForList {
         this.voteInfoDecorator = new VoteInfoDecorator(voteResult);
     }
 
-    public Observable<List<RestaurantVO>> getRestaurantsNearbyAsValueObjectWithDistance(Geolocation myPosition, int radius) {
+    public Observable<List<RestaurantVO>> getRestaurantsWithSelections(Geolocation myPosition, int radius) {
+        return this.getRestaurantsNearbyAsValueObjectWithDistance(myPosition, radius)
+                .flatMap(restaurants ->
+                        Observable.fromIterable(restaurants)
+                                .flatMap(restaurant ->
+                                        this.selectionInfoDecorator.decor(restaurant)
+                                )
+                                .toList().toObservable()
+                        );
+    }
+
+    private Observable<List<RestaurantVO>> getRestaurantsNearbyAsValueObjectWithDistance(Geolocation myPosition, int radius) {
         return getRestaurantsNearbyAsValueObject(myPosition, radius)
                 .flatMap(restaurants ->
                         Observable.fromIterable(restaurants)

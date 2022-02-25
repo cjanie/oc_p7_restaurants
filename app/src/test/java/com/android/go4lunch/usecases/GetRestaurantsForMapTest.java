@@ -2,7 +2,7 @@ package com.android.go4lunch.usecases;
 
 import com.android.go4lunch.models.Geolocation;
 import com.android.go4lunch.models.Restaurant;
-import com.android.go4lunch.in_memory_repositories.InMemoryRestaurantRepository;
+import com.android.go4lunch.in_memory_repositories.InMemoryRestaurantQuery;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.junit.Test;
@@ -67,9 +67,9 @@ public class GetRestaurantsForMapTest {
     }
 
     private GetRestaurantsForMap createGetRestaurantForMap(List<Restaurant> restaurantsInRepository) {
-        InMemoryRestaurantRepository inMemoryRestaurantRepository = new InMemoryRestaurantRepository();
-        inMemoryRestaurantRepository.setRestaurants(restaurantsInRepository);
-        return new GetRestaurantsForMap(inMemoryRestaurantRepository);
+        InMemoryRestaurantQuery inMemoryRestaurantQuery = new InMemoryRestaurantQuery();
+        inMemoryRestaurantQuery.setRestaurants(restaurantsInRepository);
+        return new GetRestaurantsForMap(inMemoryRestaurantQuery);
     }
 
     private List<MarkerOptions> getObservedResults(GetRestaurantsForMap getRestaurantsForMap) {

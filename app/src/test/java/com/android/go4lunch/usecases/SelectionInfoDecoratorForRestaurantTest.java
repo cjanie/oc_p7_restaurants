@@ -1,6 +1,6 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.repositories.InMemoryCurrentSelectionsRepository;
+import com.android.go4lunch.gateways_impl.InMemoryCurrentSelectionsRepository;
 import com.android.go4lunch.usecases.decorators.SelectionInfoDecoratorForRestaurant;
 import com.android.go4lunch.usecases.models_vo.RestaurantVO;
 import com.android.go4lunch.models.Restaurant;

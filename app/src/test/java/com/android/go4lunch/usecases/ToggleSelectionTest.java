@@ -1,12 +1,12 @@
 package com.android.go4lunch.usecases;
 
 import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
-import com.android.go4lunch.in_memory_repositories.InMemorySessionRepository;
+import com.android.go4lunch.gateways_impl.InMemorySessionRepository;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.repositories.InMemoryCurrentSelectionsRepository;
-import com.android.go4lunch.repositories.InMemoryHistoricOfSelectionsRepository;
+import com.android.go4lunch.gateways_impl.InMemoryCurrentSelectionsRepository;
+import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsRepository;
 
 import org.junit.Test;
 

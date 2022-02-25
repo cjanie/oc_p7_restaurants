@@ -4,8 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.repositories.WorkmateRepository;
+import com.android.go4lunch.gateways_impl.WorkmateRepository;
 import com.android.go4lunch.usecases.GetWorkmates;
 import com.android.go4lunch.usecases.models_vo.WorkmateVO;
 
