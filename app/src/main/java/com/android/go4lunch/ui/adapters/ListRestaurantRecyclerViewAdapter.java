@@ -57,7 +57,7 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<List
                 .load(restaurant.getRestaurant().getPhotoUrl())
                 .apply(RequestOptions.centerCropTransform())
                 .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_launcher_foreground)
+                .error(R.drawable.ic_baseline_error_24)
                 .into(holder.photo);
         holder.name.setText(restaurant.getRestaurant().getName());
         holder.address.setText(restaurant.getRestaurant().getAddress());

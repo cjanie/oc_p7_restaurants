@@ -7,6 +7,7 @@ import com.android.go4lunch.gateways.WorkmateGateway;
 import com.android.go4lunch.models.Workmate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -14,12 +15,23 @@ import io.reactivex.annotations.NonNull;
 
 public class WorkmateGatewayImpl implements WorkmateGateway {
 
-    private String TAG = "WORKMATE REPOSITORY";
+    private String TAG = "WORKMATE GATEWAY IMPL";
 
     private Observable<List<Workmate>> workmates;
 
+
+
     public WorkmateGatewayImpl() {
-        this.workmates = Observable.just(new ArrayList<>());
+        Workmate janie = new Workmate("Janie");
+        janie.setId("1");
+        janie.setPhone("06 59 12 12 12");
+        janie.setEmail("janie.chun@hotmail.fr");
+        janie.setUrlPhoto("https://i.pravatar.cc/150?u=a042581f4e29026704d");
+
+        List<Workmate> workmates = new ArrayList<>();
+        workmates.add(janie);
+        workmates.add(janie);
+        this.workmates = Observable.just(workmates);
         this.fetchUsers();
     }
 
@@ -40,7 +52,7 @@ public class WorkmateGatewayImpl implements WorkmateGateway {
                 this.workmates = Observable.just(task);
             }
         }).addOnFailureListener(error -> {
-            Log.e(TAG, "task fetch users error: " + error); //  ex: PERMISSION_DENIED: Missing or insufficient permissions.
+            Log.e(this.TAG, "task fetch users error: " + error); //  ex: PERMISSION_DENIED: Missing or insufficient permissions.
         });
     }
 

@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_half"
-    android:paddingVertical="@dimen/margin">
+    >
 
     <ImageView
         android:id="@+id/workmate_avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/photo_size"
+        android:layout_height="@dimen/photo_size"
+        android:padding="@dimen/margin_half"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -21,9 +21,20 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="TextView"
+        android:textSize="@dimen/text_size_big"
         android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin_half"
         app:layout_constraintBottom_toBottomOf="@+id/workmate_avatar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/workmate_avatar"
         app:layout_constraintTop_toTopOf="@+id/workmate_avatar" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/workmate_avatar" />
 </androidx.constraintlayout.widget.ConstraintLayout>

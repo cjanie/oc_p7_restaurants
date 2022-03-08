@@ -34,7 +34,7 @@ public class Launch extends Application {
         DistanceRepository distanceRepository = new DistanceRepository(httpClientProvider);
         RestaurantGatewayImpl restaurantGateway = new RestaurantGatewayImpl(restaurantRepository);
         DistanceGatewayImpl distanceGateway = new DistanceGatewayImpl(distanceRepository);
-        InMemorySelectionGateway selectionGateway = new InMemorySelectionGateway();//SelectionGatewayImpl selectionGateway = new SelectionGatewayImpl();
+        SelectionGatewayImpl selectionGateway = new SelectionGatewayImpl();
         HistoricOfSelectionsGatewayImpl historicOfSelectionsGateway = new HistoricOfSelectionsGatewayImpl();
         RealTimeProvider timeProvider = new RealTimeProvider();
         RealDateProvider dateProvider = new RealDateProvider();
