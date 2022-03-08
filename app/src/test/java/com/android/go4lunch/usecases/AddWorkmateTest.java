@@ -1,6 +1,6 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.in_memory_repositories.InMemoryWorkmateRepository;
+import com.android.go4lunch.in_memory_repositories.InMemoryWorkmateGateway;
 import com.android.go4lunch.models.Workmate;
 
 import org.junit.Test;
@@ -14,7 +14,7 @@ public class AddWorkmateTest {
 
     @Test
     public void shouldIncrementListWhenNewWorkmate() {
-        InMemoryWorkmateRepository workmateRepository = new InMemoryWorkmateRepository();
+        InMemoryWorkmateGateway workmateRepository = new InMemoryWorkmateGateway();
         // SUT
         Workmate workmate = new Workmate("janie");
         workmate.setEmail("janie@gmail.com");
@@ -28,7 +28,7 @@ public class AddWorkmateTest {
 
     @Test
     public void shouldBe2WorkmatesWhenThoAreAdded() {
-        InMemoryWorkmateRepository workmateRepository = new InMemoryWorkmateRepository();
+        InMemoryWorkmateGateway workmateRepository = new InMemoryWorkmateGateway();
         // SUT
         Workmate workmate1 = new Workmate("janie");
         workmate1.setEmail("janie@gmail.com");
@@ -46,7 +46,7 @@ public class AddWorkmateTest {
 
     @Test
     public void shouldNotBeAddedWhenAlreadyInTheList() {
-        InMemoryWorkmateRepository workmateRepository = new InMemoryWorkmateRepository();
+        InMemoryWorkmateGateway workmateRepository = new InMemoryWorkmateGateway();
         // SUT
         Workmate workmateFirstTime = new Workmate("janie");
         workmateFirstTime.setEmail("janie@gmail.com");
@@ -68,7 +68,7 @@ public class AddWorkmateTest {
 
     @Test
     public void workmakeNameShouldBeUpdatedIfChanged() {
-        InMemoryWorkmateRepository workmateRepository = new InMemoryWorkmateRepository();
+        InMemoryWorkmateGateway workmateRepository = new InMemoryWorkmateGateway();
         // register as Janie first time
         Workmate workmateFirstTime = new Workmate("janie");
         workmateFirstTime.setEmail("janie@gmail.com");

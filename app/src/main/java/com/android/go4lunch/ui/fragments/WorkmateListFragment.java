@@ -36,7 +36,6 @@ public class WorkmateListFragment extends Fragment {
         this.recyclerView = (RecyclerView) root;
         Context context = root.getContext();
         this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        this.recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
 
         return root;
     }
