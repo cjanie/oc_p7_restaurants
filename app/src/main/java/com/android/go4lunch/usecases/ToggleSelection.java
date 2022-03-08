@@ -1,31 +1,30 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways.DistanceQuery;
-import com.android.go4lunch.gateways.HistoricOfSelectionsRepository;
+
 import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
-import com.android.go4lunch.gateways.SelectionCommand;
+import com.android.go4lunch.gateways.HistoricOfSelectionsGateway;
+import com.android.go4lunch.gateways.SelectionGateway;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Selection;
 
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
 
 public class ToggleSelection {
 
-    private final SelectionCommand selectionCommand;
+    private final SelectionGateway selectionGateway;
 
     private final GetSession getSession;
 
-    private final HistoricOfSelectionsRepository historicRepository;
+    private final HistoricOfSelectionsGateway historicOfSelectionsGateway;
 
-    public ToggleSelection(SelectionCommand selectionCommand,
+    public ToggleSelection(SelectionGateway selectionGateway,
                            GetSession getSession,
-                           HistoricOfSelectionsRepository historicRepository) {
-        this.selectionCommand = selectionCommand;
+                           HistoricOfSelectionsGateway historicOfSelectionsGateway) {
+        this.selectionGateway = selectionGateway;
         this.getSession = getSession;
-        this.historicRepository = historicRepository;
+        this.historicOfSelectionsGateway = historicOfSelectionsGateway;
     }
 
     public Observable<List<Selection>> toggle(Restaurant restaurant) throws NoWorkmateForSessionException {
@@ -37,7 +36,7 @@ public class ToggleSelection {
 
     private Observable<List<Selection>> handle(Selection selection) {
 
-        return this.selectionCommand.getSelections().map(selections -> {
+        return this.selectionGateway.getSelections().map(selections -> {
             if(selections.isEmpty()) {
                 this.add(selection);
             } else {
@@ -72,12 +71,12 @@ public class ToggleSelection {
     }
 
     private void add(Selection selection) {
-        this.selectionCommand.add(selection);
-        new UpdateHistoric(this.historicRepository, selection.getRestaurant()).handle();
+        this.selectionGateway.add(selection);
+        new UpdateHistoric(this.historicOfSelectionsGateway, selection.getRestaurant()).handle();
     }
 
     private void remove(Selection selection) {
-        this.selectionCommand.remove(selection);
+        this.selectionGateway.remove(selection);
     }
 
 }

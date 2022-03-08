@@ -1,6 +1,6 @@
 package com.android.go4lunch.gateways_impl;
 
-import com.android.go4lunch.gateways.HistoricOfSelectionsRepository;
+import com.android.go4lunch.gateways.HistoricOfSelectionsGateway;
 import com.android.go4lunch.models.Restaurant;
 
 import java.util.ArrayList;
@@ -9,11 +9,11 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 
-public class InMemoryHistoricOfSelectionsRepository implements HistoricOfSelectionsRepository {
+public class InMemoryHistoricOfSelectionsGateway implements HistoricOfSelectionsGateway {
 
     List<Map<Restaurant, Integer>> list;
 
-    public InMemoryHistoricOfSelectionsRepository() {
+    public InMemoryHistoricOfSelectionsGateway() {
         this.list = new ArrayList<>();
     }
 

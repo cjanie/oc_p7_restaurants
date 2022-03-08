@@ -1,6 +1,6 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways_impl.InMemoryCurrentSelectionsRepository;
+import com.android.go4lunch.gateways_impl.InMemorySelectionGateway;
 import com.android.go4lunch.usecases.decorators.SelectionInfoDecoratorForRestaurant;
 import com.android.go4lunch.usecases.models_vo.RestaurantVO;
 import com.android.go4lunch.models.Restaurant;
@@ -18,13 +18,13 @@ import io.reactivex.Observable;
 
 public class SelectionInfoDecoratorForRestaurantTest {
 
-    private InMemoryCurrentSelectionsRepository selectionQuery;
+    private InMemorySelectionGateway selectionQuery;
 
     private Restaurant restaurant;
 
     @Before
     public void setUp() {
-        this.selectionQuery = new InMemoryCurrentSelectionsRepository();
+        this.selectionQuery = new InMemorySelectionGateway();
         this.restaurant = new Restaurant("Aa", "Ou");
     }
 
@@ -38,9 +38,9 @@ public class SelectionInfoDecoratorForRestaurantTest {
     }
 
     private SelectionInfoDecoratorForRestaurant createDecorator(List<Selection> selections) {
-        InMemoryCurrentSelectionsRepository inMemoryCurrentSelectionsRepository = new InMemoryCurrentSelectionsRepository();
-        inMemoryCurrentSelectionsRepository.setSelections(selections);
-        return new SelectionInfoDecoratorForRestaurant(inMemoryCurrentSelectionsRepository);
+        InMemorySelectionGateway inMemorySelectionGateway = new InMemorySelectionGateway();
+        inMemorySelectionGateway.setSelections(selections);
+        return new SelectionInfoDecoratorForRestaurant(inMemorySelectionGateway);
     }
 
     private void assertMatchesSelectionCount(int expectedCount) {

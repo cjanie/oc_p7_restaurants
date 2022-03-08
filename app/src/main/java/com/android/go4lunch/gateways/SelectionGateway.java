@@ -7,8 +7,12 @@ import java.util.Set;
 
 import io.reactivex.Observable;
 
-public interface SelectionQuery {
+public interface SelectionGateway {
 
     Observable<List<Selection>> getSelections();
+
+    void add(Selection selection);
+
+    void remove(Selection selection);
 
 }

@@ -11,10 +11,12 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
 import com.android.go4lunch.ui.events.InitMyPositionEvent;
 import com.android.go4lunch.ui.viewmodels.MapViewModel;
+import com.android.go4lunch.ui.viewmodels.MapViewModelFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,7 +47,8 @@ public class MapRestaurantFragment extends WithLocationPermissionFragment implem
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // Data
-        this.mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
+        MapViewModelFactory mapViewModelFactory = ((Launch) this.getActivity().getApplication()).mapViewModelFactory();
+        this.mapViewModel = new ViewModelProvider(this, mapViewModelFactory).get(MapViewModel.class);
         this.markers = new MutableLiveData<>(new ArrayList<>());
 
         // UI

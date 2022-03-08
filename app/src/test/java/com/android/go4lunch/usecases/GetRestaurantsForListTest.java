@@ -2,15 +2,15 @@ package com.android.go4lunch.usecases;
 
 import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.gateways_impl.InMemoryCurrentSelectionsRepository;
-import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsRepository;
+import com.android.go4lunch.gateways_impl.InMemorySelectionGateway;
+import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsGateway;
 import com.android.go4lunch.deterministic_providers.DeterministicDateProvider;
 import com.android.go4lunch.deterministic_providers.DeterministicTimeProvider;
 import com.android.go4lunch.usecases.enums.TimeInfo;
 import com.android.go4lunch.models.Geolocation;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.in_memory_repositories.InMemoryDistanceRepository;
-import com.android.go4lunch.in_memory_repositories.InMemoryRestaurantQuery;
+import com.android.go4lunch.in_memory_repositories.InMemoryRestaurantGateway;
 import com.android.go4lunch.usecases.models_vo.RestaurantVO;
 
 import org.junit.Test;
@@ -155,7 +155,7 @@ public class GetRestaurantsForListTest {
 
     private GetRestaurantsForList createGetRestaurantsForList(LocalTime now, int today, List<Restaurant> restaurantsToSetInRepository) {
         // Prepare repository
-        InMemoryRestaurantQuery restaurantQuery = new InMemoryRestaurantQuery();
+        InMemoryRestaurantGateway restaurantQuery = new InMemoryRestaurantGateway();
         restaurantQuery.setRestaurants(restaurantsToSetInRepository);
         // Prepare use case under test
         GetRestaurantsForList getRestaurantsForList = new GetRestaurantsForList(
@@ -163,8 +163,8 @@ public class GetRestaurantsForListTest {
                 new DeterministicTimeProvider(now),
                 new DeterministicDateProvider(1),
                 new InMemoryDistanceRepository(Observable.just(100L)),
-                new InMemoryCurrentSelectionsRepository(),
-                new InMemoryHistoricOfSelectionsRepository()
+                new InMemorySelectionGateway(),
+                new InMemoryHistoricOfSelectionsGateway()
         );
         return getRestaurantsForList;
     }
@@ -199,7 +199,7 @@ public class GetRestaurantsForListTest {
     // Tests selections
     @Test
     public void shouldShowSelectionWhenRestaurantHasSelection() {
-        InMemoryCurrentSelectionsRepository currentSelectionsRepository = new InMemoryCurrentSelectionsRepository();
+        InMemorySelectionGateway currentSelectionsRepository = new InMemorySelectionGateway();
         Restaurant selectedRestaurant = new Restaurant("Au Blé", "Allée des champs");
         selectedRestaurant.setId("uuid1");
 
@@ -216,14 +216,14 @@ public class GetRestaurantsForListTest {
 
         Restaurant restaurant = new Restaurant("Au Blé", "Allée des champs");
         restaurant.setId("uuid1");
-        InMemoryRestaurantQuery restaurantRepository = new InMemoryRestaurantQuery();
+        InMemoryRestaurantGateway restaurantRepository = new InMemoryRestaurantGateway();
         restaurantRepository.setRestaurants(Arrays.asList(restaurant));
         GetRestaurantsForList getRestaurantsForList = new GetRestaurantsForList(
                 restaurantRepository,
                 new DeterministicTimeProvider(LocalTime.now()), new DeterministicDateProvider(1),
                 new InMemoryDistanceRepository(Observable.just(10L)),
                 currentSelectionsRepository,
-                new InMemoryHistoricOfSelectionsRepository()
+                new InMemoryHistoricOfSelectionsGateway()
         );
 
         Observable<List<RestaurantVO>> observableRestaurants = getRestaurantsForList.getRestaurantsWithSelections(

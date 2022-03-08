@@ -7,7 +7,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public interface RestaurantQuery {
+public interface RestaurantGateway {
 
     Observable<List<Restaurant>> getRestaurantsNearby(
             Geolocation myPosition,

@@ -5,7 +5,7 @@ import com.android.go4lunch.models.Workmate;
 
 import io.reactivex.Observable;
 
-public interface SessionQuery {
+public interface SessionGateway {
 
     Observable<Workmate> getWorkmate() throws NoWorkmateForSessionException;
 

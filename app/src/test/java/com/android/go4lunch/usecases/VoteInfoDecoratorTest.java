@@ -1,6 +1,6 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsRepository;
+import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsGateway;
 import com.android.go4lunch.usecases.decorators.VoteInfoDecorator;
 import com.android.go4lunch.usecases.decorators.VoteResult;
 import com.android.go4lunch.usecases.models_vo.RestaurantVO;
@@ -18,14 +18,14 @@ public class VoteInfoDecoratorTest {
 
     private void assertMatchesVoteRules(int selectionsCount, Vote expected) {
         RestaurantVO restaurantVO = new RestaurantVO(new Restaurant("AA", "LOC"));
-        InMemoryHistoricOfSelectionsRepository inMemoryHistoricOfSelectionsRepository = new InMemoryHistoricOfSelectionsRepository();
+        InMemoryHistoricOfSelectionsGateway inMemoryHistoricOfSelectionsGateway = new InMemoryHistoricOfSelectionsGateway();
         List<Map<Restaurant, Integer>> list = new ArrayList<>();
         Map<Restaurant, Integer> map = new HashMap<>();
         map.put(restaurantVO.getRestaurant(), selectionsCount);
         list.add(map);
-        inMemoryHistoricOfSelectionsRepository.setList(list);
+        inMemoryHistoricOfSelectionsGateway.setList(list);
 
-        VoteResult voteResult = new VoteResult(inMemoryHistoricOfSelectionsRepository);
+        VoteResult voteResult = new VoteResult(inMemoryHistoricOfSelectionsGateway);
         restaurantVO = new VoteInfoDecorator(voteResult).decor(restaurantVO);
 
         assert(restaurantVO.getVoteInfo().equals(expected));
@@ -35,8 +35,8 @@ public class VoteInfoDecoratorTest {
     public void shouldReturnVoteMinimumWhenRestaurantHasNoSelection() {
 
         RestaurantVO restaurantVO = new RestaurantVO(new Restaurant("AA", "LOC"));
-        InMemoryHistoricOfSelectionsRepository inMemoryHistoricOfSelectionsRepository = new InMemoryHistoricOfSelectionsRepository();
-        VoteResult voteResult = new VoteResult(inMemoryHistoricOfSelectionsRepository);
+        InMemoryHistoricOfSelectionsGateway inMemoryHistoricOfSelectionsGateway = new InMemoryHistoricOfSelectionsGateway();
+        VoteResult voteResult = new VoteResult(inMemoryHistoricOfSelectionsGateway);
         restaurantVO = new VoteInfoDecorator(voteResult).decor(restaurantVO);
         assert(restaurantVO.getVoteInfo().equals(Vote.MINIMUM));
     }

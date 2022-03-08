@@ -1,6 +1,6 @@
 package com.android.go4lunch.gateways_impl;
 
-import com.android.go4lunch.gateways.RestaurantQuery;
+import com.android.go4lunch.gateways.RestaurantGateway;
 import com.android.go4lunch.apis.apiGoogleMaps.repositories.RestaurantRepository;
 import com.android.go4lunch.models.Geolocation;
 import com.android.go4lunch.models.Restaurant;
@@ -10,12 +10,12 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class RestaurantQueryAdapter implements RestaurantQuery {
+public class RestaurantGatewayImpl implements RestaurantGateway {
 
     private RestaurantRepository restaurantRepository;
 
-    public RestaurantQueryAdapter() {
-        this.restaurantRepository = new RestaurantRepository();
+    public RestaurantGatewayImpl(RestaurantRepository restaurantRepository) {
+        this.restaurantRepository = restaurantRepository;
     }
 
     @Override

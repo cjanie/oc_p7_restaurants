@@ -1,5 +1,6 @@
 package com.android.go4lunch.apis.apiGoogleMaps.repositories;
 
+import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsHttpClientProvider;
 import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsRequestConfig;
 import com.android.go4lunch.apis.apiGoogleMaps.deserializers.place.Result;
 import com.android.go4lunch.apis.apiGoogleMaps.factories.PlanningFactory;
@@ -16,15 +17,15 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class RestaurantRepository extends GoogleMapsApiClient {
+public class RestaurantRepository {
 
     private NearbySearchRequest nearbySearchRequest;
 
     private DetailsRequest detailsRequest;
 
-    public RestaurantRepository() {
-        this.nearbySearchRequest = super.getRetrofit().create(NearbySearchRequest.class);
-        this.detailsRequest = super.getRetrofit().create(DetailsRequest.class);
+    public RestaurantRepository(GoogleMapsHttpClientProvider httpClientProvider) {
+        this.nearbySearchRequest = httpClientProvider.getRetrofit().create(NearbySearchRequest.class);
+        this.detailsRequest = httpClientProvider.getRetrofit().create(DetailsRequest.class);
     }
 
     public Observable<List<Restaurant>> getRestaurantsNearby(Double latitude, Double longitude, int radius) {

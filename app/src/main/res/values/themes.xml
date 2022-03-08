@@ -17,11 +17,12 @@
 
     <!-- STYLE SIGN-IN ACTIVITY -->
     <style name="LoginTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="android:windowBackground">@drawable/background</item>
+        <item name="android:windowBackground">@drawable/go4lunch_blurred</item>
         <item name="android:title">@string/app_title</item>
         <item name="android:text">@string/app_subtitle</item>
-        <item name="windowActionBar">false</item>
+        <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
+
     </style>
 
 </resources>

@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.android.go4lunch.apis.apiFirebase.UserRepository;
 import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
-import com.android.go4lunch.gateways.SessionQuery;
+import com.android.go4lunch.gateways.SessionGateway;
 import com.android.go4lunch.models.Workmate;
 
 import java.util.ArrayList;
@@ -13,13 +13,13 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class SessionRepository implements SessionQuery {
+public class SessionGatewayImpl implements SessionGateway {
 
     private String TAG = "SessionRepository";
 
     private Observable<List<Workmate>> workmates;
 
-    public SessionRepository() {
+    public SessionGatewayImpl() {
         this.workmates = Observable.just(new ArrayList<>());
         this.fetchSession();
     }
@@ -37,7 +37,7 @@ public class SessionRepository implements SessionQuery {
 
     private void fetchSession() {
         UserRepository userRepository = new UserRepository();
-        userRepository.getUser().addOnSuccessListener(task -> {
+        userRepository.getAuthUser().addOnSuccessListener(task -> {
             this.workmates = Observable.just(Arrays.asList(task));
         });
     }

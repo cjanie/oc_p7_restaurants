@@ -1,6 +1,6 @@
 package com.android.go4lunch.in_memory_repositories;
 
-import com.android.go4lunch.gateways.RestaurantQuery;
+import com.android.go4lunch.gateways.RestaurantGateway;
 import com.android.go4lunch.models.Geolocation;
 import com.android.go4lunch.models.Restaurant;
 
@@ -9,11 +9,11 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class InMemoryRestaurantQuery implements RestaurantQuery {
+public class InMemoryRestaurantGateway implements RestaurantGateway {
 
     private List<Restaurant> restaurants;
 
-    public InMemoryRestaurantQuery() {
+    public InMemoryRestaurantGateway() {
         this.restaurants = new ArrayList<>();
     }
 

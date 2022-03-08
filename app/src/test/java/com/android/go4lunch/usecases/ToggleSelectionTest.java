@@ -1,12 +1,12 @@
 package com.android.go4lunch.usecases;
 
 import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
-import com.android.go4lunch.gateways_impl.InMemorySessionRepository;
+import com.android.go4lunch.gateways_impl.InMemorySessionGateway;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.gateways_impl.InMemoryCurrentSelectionsRepository;
-import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsRepository;
+import com.android.go4lunch.gateways_impl.InMemorySelectionGateway;
+import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsGateway;
 
 import org.junit.Test;
 
@@ -20,11 +20,11 @@ public class ToggleSelectionTest {
     @Test
     public void toggleShouldAddSelectionIfItDoesNotExist_caseListOfSelectionsIsEmpty() throws NoWorkmateForSessionException {
         // Create a session
-        InMemorySessionRepository sessionQuerry = new InMemorySessionRepository();
+        InMemorySessionGateway sessionQuerry = new InMemorySessionGateway();
         sessionQuerry.setWorkmate(new Workmate("Janie"));
         // init selection
-        InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        InMemoryCurrentSelectionsRepository currentSelectionsRepository = new InMemoryCurrentSelectionsRepository();
+        InMemoryHistoricOfSelectionsGateway historicRepository = new InMemoryHistoricOfSelectionsGateway();
+        InMemorySelectionGateway currentSelectionsRepository = new InMemorySelectionGateway();
         // Create restaurant to select
         Restaurant restaurant = new Restaurant("OooResto", "Place A l'Aller-Retour");
         // Create the ToogleSelection

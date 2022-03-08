@@ -17,8 +17,8 @@ import com.android.go4lunch.R;
 import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.gateways_impl.InMemoryCurrentSelectionsRepository;
-import com.android.go4lunch.gateways_impl.InMemorySessionRepository;
+import com.android.go4lunch.gateways_impl.InMemorySelectionGateway;
+import com.android.go4lunch.gateways_impl.InMemorySessionGateway;
 import com.android.go4lunch.usecases.AddSelection;
 import com.android.go4lunch.usecases.GetSession;
 import com.android.go4lunch.usecases.models_vo.RestaurantVO;
@@ -94,8 +94,8 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<List
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddSelection addSelection = new AddSelection(new InMemoryCurrentSelectionsRepository());
-                InMemorySessionRepository sessionRepository = new InMemorySessionRepository();
+                AddSelection addSelection = new AddSelection(new InMemorySelectionGateway());
+                InMemorySessionGateway sessionRepository = new InMemorySessionGateway();
                 sessionRepository.setWorkmate(new Workmate("Janie"));
                 GetSession getSession = new GetSession(sessionRepository);
                 try {

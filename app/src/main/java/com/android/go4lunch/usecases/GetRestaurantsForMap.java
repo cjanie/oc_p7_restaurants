@@ -1,6 +1,6 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways.RestaurantQuery;
+import com.android.go4lunch.gateways.RestaurantGateway;
 import com.android.go4lunch.models.Geolocation;
 import com.android.go4lunch.models.Restaurant;
 
@@ -14,14 +14,14 @@ import io.reactivex.Observable;
 
 public class GetRestaurantsForMap {
 
-    private RestaurantQuery restaurantQuery;
+    private RestaurantGateway restaurantGateway;
 
-    public GetRestaurantsForMap(RestaurantQuery restaurantQuery) {
-        this.restaurantQuery = restaurantQuery;
+    public GetRestaurantsForMap(RestaurantGateway restaurantGateway) {
+        this.restaurantGateway = restaurantGateway;
     }
 
     public Observable<List<MarkerOptions>> getRestaurantsMarkers(Geolocation myPosition, int radius) {
-        return this.restaurantQuery.getRestaurantsNearbyWithDetails(myPosition, radius).map(restaurants -> {
+        return this.restaurantGateway.getRestaurantsNearbyWithDetails(myPosition, radius).map(restaurants -> {
             List<MarkerOptions> markersOptions = new ArrayList<>();
             if(!restaurants.isEmpty()) {
                 for(Restaurant restaurant: restaurants) {

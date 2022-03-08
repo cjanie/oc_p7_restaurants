@@ -1,6 +1,7 @@
 package com.android.go4lunch.gateways_impl;
 
-import com.android.go4lunch.gateways.SelectionCommand;
+
+import com.android.go4lunch.gateways.SelectionGateway;
 import com.android.go4lunch.models.Selection;
 
 import java.util.ArrayList;
@@ -8,11 +9,11 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class InMemoryCurrentSelectionsRepository implements SelectionCommand {
+public class InMemorySelectionGateway implements SelectionGateway {
 
     private Observable<List<Selection>> selections;
 
-    public InMemoryCurrentSelectionsRepository() {
+    public InMemorySelectionGateway() {
 
         this.selections = Observable.just(new ArrayList<>());
     }

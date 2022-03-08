@@ -1,7 +1,7 @@
 package com.android.go4lunch.usecases;
 
 import com.android.go4lunch.models.Restaurant;
-import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsRepository;
+import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsGateway;
 import com.android.go4lunch.usecases.decorators.VoteResult;
 import com.android.go4lunch.usecases.enums.Vote;
 
@@ -23,13 +23,13 @@ public class VoteResultTest {
     }
 
     private void assertMatchesData(int selectionsCount, Vote expected) {
-        InMemoryHistoricOfSelectionsRepository inMemoryHistoricOfSelectionsRepository = new InMemoryHistoricOfSelectionsRepository();
+        InMemoryHistoricOfSelectionsGateway inMemoryHistoricOfSelectionsGateway = new InMemoryHistoricOfSelectionsGateway();
         List<Map<Restaurant, Integer>> list = new ArrayList<>();
         Map<Restaurant, Integer> map = new HashMap<>();
         map.put(this.restaurant, selectionsCount);
         list.add(map);
-        inMemoryHistoricOfSelectionsRepository.setList(list);
-        assert(new VoteResult(inMemoryHistoricOfSelectionsRepository).get(this.restaurant).equals(expected));
+        inMemoryHistoricOfSelectionsGateway.setList(list);
+        assert(new VoteResult(inMemoryHistoricOfSelectionsGateway).get(this.restaurant).equals(expected));
     }
     @Test
     public void shouldReturnOneStarAccordingToVoteRule() {

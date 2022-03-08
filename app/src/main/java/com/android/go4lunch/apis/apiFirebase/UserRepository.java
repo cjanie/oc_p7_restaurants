@@ -1,6 +1,8 @@
 package com.android.go4lunch.apis.apiFirebase;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
+import android.util.Log;
 
 import com.android.go4lunch.models.Workmate;
 import com.firebase.ui.auth.data.model.User;
@@ -13,18 +15,21 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UserRepository {
 
-    private String TAG = "USER SERVICE";
+    private final String TAG = "USER REPOSITORY";
 
-    private FirebaseUser user;
+    private FirebaseUser authUser;
 
     private static final String COLLECTION_NAME = "users";
 
     public UserRepository() {
-        this.user = FirebaseAuth.getInstance().getCurrentUser();
+        this.authUser = FirebaseAuth.getInstance().getCurrentUser();
+        Log.d(this.TAG, "Constructor: FirebaseAuth current auth user = " + this.authUser);
     }
 
     // Get the Collection Reference using FirebaseFireStore from Firebase SDK
@@ -32,29 +37,29 @@ public class UserRepository {
         return FirebaseFirestore.getInstance().collection(COLLECTION_NAME);
     }
 
-    // Create User in Firestore
-    public void createUser() {
-        if(this.user != null){
-            @SuppressLint("RestrictedApi")
-            User userToCreate = new User.Builder(this.user.getProviderId(), this.user.getEmail())
-                    .setName(this.user.getDisplayName())
-                    .setPhoneNumber(this.user.getPhoneNumber())
-                    //.setPhotoUri(Uri.parse(this.user.getPhotoUrl() != null ? this.user.getPhotoUrl().toString() : null))
-                    .build();
-
-            Task<DocumentSnapshot> userData = this.getUserData();
-            // If the user already exist in Firestore, we get his data (username)
+    // Create a User entity in Firestore from auth user's data
+    public void updateUser() {
+        if(this.authUser != null){
+            // If the auth user already exists in Firestore, we get his data (username)
+            Task<DocumentSnapshot> userData = this.getAuthUserData();
+            // Then we update his data
             userData.addOnSuccessListener(documentSnapshot -> {
-                this.getCollection().document(this.user.getUid()).set(userToCreate);
+                Map<String, Object> map = new HashMap();
+                map.put("name", this.authUser.getDisplayName());
+                map.put("phoneNumber", this.authUser.getPhoneNumber());
+                if(this.authUser.getPhotoUrl() != null) {
+                    map.put("photoUri", this.authUser.getPhotoUrl().toString());
+                }
 
+                documentSnapshot.getReference().update(map);
             });
         }
     }
 
-    // Get User Data from Firestore
-    private Task<DocumentSnapshot> getUserData(){
-        if(this.user.getUid() != null) {
-            return this.getCollection().document(this.user.getUid()).get();
+    // Get the auth User's data from Firestore if he exists
+    private Task<DocumentSnapshot> getAuthUserData(){
+        if(this.authUser.getUid() != null) {
+            return this.getCollection().document(this.authUser.getUid()).get();
         } else {
             return null;
         }
@@ -78,8 +83,8 @@ public class UserRepository {
         });
     }
 
-    public Task<Workmate> getUser() {
-        return this.getUserData().continueWith(task -> {
+    public Task<Workmate> getAuthUser() {
+        return this.getAuthUserData().continueWith(task -> {
             DocumentSnapshot documentSnapshot= task.getResult();
             String username = "";
             if (documentSnapshot.contains("name")) {

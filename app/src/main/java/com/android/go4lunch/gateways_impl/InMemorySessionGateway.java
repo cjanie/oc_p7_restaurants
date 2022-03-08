@@ -1,12 +1,12 @@
 package com.android.go4lunch.gateways_impl;
 
 import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
-import com.android.go4lunch.gateways.SessionQuery;
+import com.android.go4lunch.gateways.SessionGateway;
 import com.android.go4lunch.models.Workmate;
 
 import io.reactivex.Observable;
 
-public class InMemorySessionRepository implements SessionQuery {
+public class InMemorySessionGateway implements SessionGateway {
 
     private Workmate workmate;
 

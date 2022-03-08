@@ -1,11 +1,11 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways.HistoricOfSelectionsRepository;
-import com.android.go4lunch.gateways.RestaurantQuery;
+import com.android.go4lunch.gateways.HistoricOfSelectionsGateway;
+import com.android.go4lunch.gateways.RestaurantGateway;
 
-import com.android.go4lunch.gateways.SelectionQuery;
+import com.android.go4lunch.gateways.SelectionGateway;
 import com.android.go4lunch.providers.DateProvider;
-import com.android.go4lunch.gateways.DistanceQuery;
+import com.android.go4lunch.gateways.DistanceGateway;
 import com.android.go4lunch.providers.TimeProvider;
 import com.android.go4lunch.usecases.decorators.DistanceInfoDecorator;
 import com.android.go4lunch.usecases.decorators.SelectionInfoDecoratorForRestaurant;
@@ -23,7 +23,7 @@ import io.reactivex.Observable;
 
 public class GetRestaurantsForList {
 
-    private final RestaurantQuery restaurantQuery;
+    private final RestaurantGateway restaurantGateway;
 
     private final TimeInfoDecorator timeInfoDecorator;
 
@@ -34,19 +34,19 @@ public class GetRestaurantsForList {
     private final VoteInfoDecorator voteInfoDecorator;
 
     public GetRestaurantsForList(
-            RestaurantQuery restaurantQuery,
+            RestaurantGateway restaurantGateway,
             TimeProvider timeProvider,
             DateProvider dateProvider,
-            DistanceQuery distanceQuery,
-            SelectionQuery currentSelectionQuery,
-            HistoricOfSelectionsRepository historicOfSelectionsQuery
+            DistanceGateway distanceGateway,
+            SelectionGateway selectionGateway,
+            HistoricOfSelectionsGateway historicOfSelectionsGateway
     ) {
-        this.restaurantQuery = restaurantQuery;
+        this.restaurantGateway = restaurantGateway;
         this.timeInfoDecorator = new TimeInfoDecorator(timeProvider, dateProvider);
-        this.distanceInfoDecorator = new DistanceInfoDecorator(distanceQuery);
-        this.selectionInfoDecorator = new SelectionInfoDecoratorForRestaurant(currentSelectionQuery);
+        this.distanceInfoDecorator = new DistanceInfoDecorator(distanceGateway);
+        this.selectionInfoDecorator = new SelectionInfoDecoratorForRestaurant(selectionGateway);
         // Vote
-        VoteResult voteResult = new VoteResult(historicOfSelectionsQuery);
+        VoteResult voteResult = new VoteResult(historicOfSelectionsGateway);
         this.voteInfoDecorator = new VoteInfoDecorator(voteResult);
     }
 
@@ -80,7 +80,7 @@ public class GetRestaurantsForList {
     }
 
     private Observable<List<Restaurant>> handleRestaurants(Geolocation myPosition, int radius) {
-        return this.restaurantQuery.getRestaurantsNearbyWithDetails(myPosition, radius);
+        return this.restaurantGateway.getRestaurantsNearbyWithDetails(myPosition, radius);
     }
 
     private List<RestaurantVO> formatRestaurants(List<Restaurant> restaurants) {

@@ -1,16 +1,16 @@
 package com.android.go4lunch.usecases.decorators;
 
 
-import com.android.go4lunch.gateways.HistoricOfSelectionsQuery;
+import com.android.go4lunch.gateways.HistoricOfSelectionsGateway;
 import com.android.go4lunch.usecases.enums.Vote;
 import com.android.go4lunch.models.Restaurant;
 
 public class VoteResult {
 
-    private HistoricOfSelectionsQuery historicOfSelectionsQuery;
+    private HistoricOfSelectionsGateway historicOfSelectionsGateway;
 
-    public VoteResult(HistoricOfSelectionsQuery historicOfSelectionsQuery) {
-        this.historicOfSelectionsQuery = historicOfSelectionsQuery;
+    public VoteResult(HistoricOfSelectionsGateway historicOfSelectionsGateway) {
+        this.historicOfSelectionsGateway = historicOfSelectionsGateway;
     }
 
     public Vote get(Restaurant restaurant) {

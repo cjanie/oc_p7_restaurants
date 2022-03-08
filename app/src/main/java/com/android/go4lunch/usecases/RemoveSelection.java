@@ -1,18 +1,18 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways.SelectionCommand;
+import com.android.go4lunch.gateways.SelectionGateway;
 import com.android.go4lunch.models.Selection;
 
 
 public class RemoveSelection {
 
-    private SelectionCommand selectionCommand;
+    private SelectionGateway selectionGateway;
 
-    public RemoveSelection(SelectionCommand selectionCommand) {
-        this.selectionCommand = selectionCommand;
+    public RemoveSelection(SelectionGateway selectionGateway) {
+        this.selectionGateway = selectionGateway;
     }
 
     public void remove(Selection selection) {
-        this.selectionCommand.remove(selection);
+        this.selectionGateway.remove(selection);
     }
 }

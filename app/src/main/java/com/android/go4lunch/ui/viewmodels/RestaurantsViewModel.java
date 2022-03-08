@@ -4,18 +4,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.gateways_impl.InMemoryCurrentSelectionsRepository;
-import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsRepository;
+import com.android.go4lunch.gateways_impl.InMemorySelectionGateway;
+import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsGateway;
 import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.models.Restaurant;
-import com.android.go4lunch.providers.RealTimeProvider;
-import com.android.go4lunch.providers.RealDateProvider;
-import com.android.go4lunch.gateways_impl.SessionRepository;
+import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
 import com.android.go4lunch.usecases.GetSession;
 import com.android.go4lunch.usecases.models_vo.RestaurantVO;
 import com.android.go4lunch.models.Geolocation;
-import com.android.go4lunch.gateways_impl.DistanceQueryAdapter;
-import com.android.go4lunch.gateways_impl.RestaurantQueryAdapter;
 import com.android.go4lunch.usecases.GetRestaurantsForList;
 import com.android.go4lunch.usecases.ToggleSelection;
 
@@ -44,23 +40,16 @@ public class RestaurantsViewModel extends ViewModel {
 
 
     // Constructor
-    public RestaurantsViewModel() {
-        this.getRestaurantsForList = new GetRestaurantsForList(
-                new RestaurantQueryAdapter(),
-                new RealTimeProvider(),
-                new RealDateProvider(),
-                new DistanceQueryAdapter(),
-                new InMemoryCurrentSelectionsRepository(),
-                new InMemoryHistoricOfSelectionsRepository()
-                );
+    public RestaurantsViewModel(GetRestaurantsForList getRestaurantsForList) {
+        this.getRestaurantsForList = getRestaurantsForList;
         this.restaurants = new MutableLiveData<>(new ArrayList<>());
-        this.getSession = new GetSession(new SessionRepository());
+        this.getSession = new GetSession(new SessionGatewayImpl());
 
         // Select
         this.toggleSelection = new ToggleSelection(
-                new InMemoryCurrentSelectionsRepository(),
+                new InMemorySelectionGateway(),
                 this.getSession,
-                new InMemoryHistoricOfSelectionsRepository()
+                new InMemoryHistoricOfSelectionsGateway()
                 );
     }
 

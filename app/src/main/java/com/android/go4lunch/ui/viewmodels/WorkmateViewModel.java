@@ -2,7 +2,7 @@ package com.android.go4lunch.ui.viewmodels;
 
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.gateways_impl.InMemoryCurrentSelectionsRepository;
+import com.android.go4lunch.gateways_impl.InMemorySelectionGateway;
 
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Selection;
@@ -13,7 +13,7 @@ public class WorkmateViewModel extends ViewModel {
 
     //private final RetrieveWorkmates retrieveWorkmates;
 
-    private final InMemoryCurrentSelectionsRepository selectionQuery;
+    private final InMemorySelectionGateway selectionQuery;
 
     public WorkmateViewModel() {
         //InMemoryWorkmateQuery workmateQuery = new InMemoryWorkmateQuery();
@@ -21,7 +21,7 @@ public class WorkmateViewModel extends ViewModel {
         Workmate cyril = new Workmate("Cyril");
         //workmateQuery.setWorkmates(Arrays.asList(new Workmate[]{janie, cyril}));
         //this.retrieveWorkmates = new RetrieveWorkmates(workmateQuery);
-        this.selectionQuery = new InMemoryCurrentSelectionsRepository();
+        this.selectionQuery = new InMemorySelectionGateway();
         Selection selection = new Selection(new Restaurant("AIOU", "loc"), janie);
         //selectionQuery.setSelections(Arrays.asList()new Selection[] {selection}));
     }

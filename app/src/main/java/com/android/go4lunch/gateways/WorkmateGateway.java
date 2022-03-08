@@ -5,9 +5,12 @@ import com.android.go4lunch.models.Workmate;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
 
-public interface WorkMateQuery {
+public interface WorkmateGateway {
 
     Observable<List<Workmate>> getWorkmates();
+
+    void setWorkmates(@NonNull Observable<List<Workmate>> workmates);
 
 }

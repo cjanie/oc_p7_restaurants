@@ -1,5 +1,6 @@
 package com.android.go4lunch.apis.apiGoogleMaps.repositories;
 
+import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsHttpClientProvider;
 import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsRequestConfig;
 import com.android.go4lunch.apis.apiGoogleMaps.requests.DistanceRequest;
 import com.android.go4lunch.exceptions.NullDistanceResponseException;
@@ -13,12 +14,12 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class DistanceRepository extends GoogleMapsApiClient {
+public class DistanceRepository {
 
     private DistanceRequest distanceRequest;
 
-    public DistanceRepository() {
-        this.distanceRequest = super.getRetrofit().create(DistanceRequest.class);
+    public DistanceRepository(GoogleMapsHttpClientProvider httpClientProvider) {
+        this.distanceRequest = httpClientProvider.getRetrofit().create(DistanceRequest.class);
     }
 
     public Observable<Integer> getDistanceInMeter(

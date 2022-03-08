@@ -1,6 +1,6 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways.WorkmateCommand;
+import com.android.go4lunch.gateways.WorkmateGateway;
 import com.android.go4lunch.models.Workmate;
 
 import java.util.List;
@@ -9,14 +9,14 @@ import io.reactivex.Observable;
 
 public class AddWorkmate {
 
-    private WorkmateCommand workmateCommand;
+    private WorkmateGateway workmateGateway;
 
-    public AddWorkmate(WorkmateCommand workmateCommand) {
-        this.workmateCommand = workmateCommand;
+    public AddWorkmate(WorkmateGateway workmateGateway) {
+        this.workmateGateway = workmateGateway;
     }
 
     private Observable<List<Workmate>> add(Workmate workmate) {
-        return this.workmateCommand.getWorkmates().map(workmates -> {
+        return this.workmateGateway.getWorkmates().map(workmates -> {
             if(workmates.isEmpty()) {
                 workmates.add(workmate);
             } else {
@@ -35,6 +35,6 @@ public class AddWorkmate {
     }
 
     public void save(Workmate workmate) {
-        this.workmateCommand.setWorkmates(this.add(workmate));
+        this.workmateGateway.setWorkmates(this.add(workmate));
     }
 }

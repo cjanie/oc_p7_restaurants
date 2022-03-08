@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 
+import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
 
@@ -51,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
                 this.getResources().getString(R.string.workmates)
         };
         Drawable[] tabsIcons = new Drawable[] {
-                this.getResources().getDrawable(R.drawable.ic_baseline_map_24),
-                this.getResources().getDrawable(R.drawable.ic_baseline_view_list_24),
-                this.getResources().getDrawable(R.drawable.ic_baseline_group_24)
+                this.getApplicationContext().getDrawable(R.drawable.ic_baseline_map_24),
+                this.getApplicationContext().getDrawable(R.drawable.ic_baseline_view_list_24),
+                this.getApplicationContext().getDrawable(R.drawable.ic_baseline_group_24)
         };
 
         new TabLayoutMediator(this.tabLayout, this.viewPager,

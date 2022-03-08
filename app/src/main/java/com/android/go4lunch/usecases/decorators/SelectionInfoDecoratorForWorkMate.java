@@ -1,6 +1,6 @@
 package com.android.go4lunch.usecases.decorators;
 
-import com.android.go4lunch.gateways.SelectionQuery;
+import com.android.go4lunch.gateways.SelectionGateway;
 import com.android.go4lunch.usecases.models_vo.WorkmateVO;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Selection;
@@ -9,10 +9,10 @@ import io.reactivex.Observable;
 
 public class SelectionInfoDecoratorForWorkMate {
 
-    private SelectionQuery selectionQuery;
+    private SelectionGateway selectionGateway;
 
-    public SelectionInfoDecoratorForWorkMate(SelectionQuery selectionQuery) {
-        this.selectionQuery = selectionQuery;
+    public SelectionInfoDecoratorForWorkMate(SelectionGateway selectionGateway) {
+        this.selectionGateway = selectionGateway;
     }
 
     public Observable<WorkmateVO> decor(WorkmateVO workmate) {
@@ -23,7 +23,7 @@ public class SelectionInfoDecoratorForWorkMate {
     }
 
     private Observable<Restaurant> getSelection(WorkmateVO workmate) {
-        return this.selectionQuery.getSelections().map(selections -> {
+        return this.selectionGateway.getSelections().map(selections -> {
             Restaurant selected = null;
             if(!selections.isEmpty()) {
                 for(Selection s: selections) {

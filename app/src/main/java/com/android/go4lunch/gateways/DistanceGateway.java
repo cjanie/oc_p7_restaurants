@@ -6,7 +6,7 @@ import com.android.go4lunch.models.Selection;
 
 import io.reactivex.Observable;
 
-public interface DistanceQuery {
+public interface DistanceGateway {
 
     Observable<Long> getDistanceInMeter(
             Geolocation myPosition,

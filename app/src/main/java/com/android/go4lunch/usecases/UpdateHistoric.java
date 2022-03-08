@@ -1,18 +1,18 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways.HistoricOfSelectionsRepository;
+import com.android.go4lunch.gateways.HistoricOfSelectionsGateway;
 import com.android.go4lunch.models.Restaurant;
 
 import java.util.Map;
 
 public class UpdateHistoric {
 
-    private HistoricOfSelectionsRepository historicRepository;
+    private HistoricOfSelectionsGateway historicOfSelectionsGateway;
 
     private Restaurant restaurant;
 
-    public UpdateHistoric(HistoricOfSelectionsRepository historicRepository, Restaurant restaurant) {
-        this.historicRepository = historicRepository;
+    public UpdateHistoric(HistoricOfSelectionsGateway historicOfSelectionsGateway, Restaurant restaurant) {
+        this.historicOfSelectionsGateway = historicOfSelectionsGateway;
         this.restaurant = restaurant;
     }
 

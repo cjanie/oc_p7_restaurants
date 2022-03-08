@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.gateways_impl.WorkmateRepository;
+import com.android.go4lunch.gateways_impl.WorkmateGatewayImpl;
 import com.android.go4lunch.usecases.GetWorkmates;
 import com.android.go4lunch.usecases.models_vo.WorkmateVO;
 
@@ -26,7 +26,7 @@ public class WorkmatesViewModel extends ViewModel {
 
     public WorkmatesViewModel() {
         this.getWorkmates = new GetWorkmates(
-                new WorkmateRepository()
+                new WorkmateGatewayImpl()
         );
         this.workmates = new MutableLiveData<>(new ArrayList<>());
     }
