@@ -1,8 +1,12 @@
 package com.android.go4lunch.usecases.models_vo;
 
+import com.android.go4lunch.models.Workmate;
 import com.android.go4lunch.usecases.enums.TimeInfo;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.usecases.enums.Vote;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RestaurantVO {
 
@@ -12,12 +16,13 @@ public class RestaurantVO {
 
     private Long distanceInfo;
 
-    private int selectionCountInfo;
+    private List<Workmate> selections;
 
     private Vote voteInfo;
 
     public RestaurantVO(Restaurant restaurant) {
         this.restaurant = restaurant;
+        this.selections = new ArrayList<>();
     }
 
     public RestaurantVO(Restaurant restaurant, TimeInfo timeInfo) {
@@ -60,16 +65,16 @@ public class RestaurantVO {
         return this.distanceInfo;
     }
 
-    public void setSelectionsCountInfo(int selectionCountInfo) {
-        this.selectionCountInfo = selectionCountInfo;
+    public void setSelections(List<Workmate> selections) {
+        this.selections = selections;
+    }
+
+    public List<Workmate> getSelections() {
+        return this.selections;
     }
 
     public int getSelectionCountInfo() {
-        return selectionCountInfo;
-    }
-
-    public void setSelectionCountInfo(int selectionCountInfo) {
-        this.selectionCountInfo = selectionCountInfo;
+        return this.selections.size();
     }
 
     public Vote getVoteInfo() {

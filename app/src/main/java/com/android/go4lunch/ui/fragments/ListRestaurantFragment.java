@@ -15,12 +15,16 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
+import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.ui.adapters.ListRestaurantRecyclerViewAdapter;
 import com.android.go4lunch.ui.events.InitMyPositionEvent;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModel;
-import com.android.go4lunch.write.businesslogic.usecases.events.ToggleSelectionEvent;
+import com.android.go4lunch.ui.events.ToggleSelectionEvent;
+import com.android.go4lunch.ui.viewmodels.RestaurantsViewModelFactory;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -36,7 +40,10 @@ public class ListRestaurantFragment extends WithLocationPermissionFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Data
-        this.restaurantsViewModel = new ViewModelProvider(ListRestaurantFragment.this).get(RestaurantsViewModel.class);
+        this.restaurantsViewModel = new ViewModelProvider(
+                this,
+                ((Launch) this.getActivity().getApplication()).restaurantsViewModelFactory()
+        ).get(RestaurantsViewModel.class);
 
         // UI
         View root = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
@@ -73,6 +80,10 @@ public class ListRestaurantFragment extends WithLocationPermissionFragment {
 
     @Subscribe
     public void toggleSelection(ToggleSelectionEvent event) {
-        //this.restaurantViewModel.toggleSelection(event.restaurant);
+        try {
+            this.restaurantsViewModel.toggleSelection(event.restaurant);
+        } catch (NoWorkmateForSessionException e) {
+            Snackbar.make(this.recyclerView, e.getMessage(), Snackbar.LENGTH_LONG).show();
+        }
     }
 }

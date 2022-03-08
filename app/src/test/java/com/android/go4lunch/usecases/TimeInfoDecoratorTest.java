@@ -1,7 +1,7 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.providers.DeterministicDateProvider;
-import com.android.go4lunch.providers.DeterministicTimeProvider;
+import com.android.go4lunch.deterministic_providers.DeterministicDateProvider;
+import com.android.go4lunch.deterministic_providers.DeterministicTimeProvider;
 import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.TimeProvider;
 import com.android.go4lunch.usecases.decorators.TimeInfoDecorator;

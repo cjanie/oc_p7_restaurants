@@ -4,26 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.view.View;
 
 
+import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
 
 import com.android.go4lunch.ui.adapters.ViewPagerAdapter;
 
-import com.facebook.AccessToken;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.FacebookAuthProvider;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
                 this.getResources().getString(R.string.workmates)
         };
         Drawable[] tabsIcons = new Drawable[] {
-                this.getResources().getDrawable(R.drawable.ic_baseline_map_24),
-                this.getResources().getDrawable(R.drawable.ic_baseline_view_list_24),
-                this.getResources().getDrawable(R.drawable.ic_baseline_group_24)
+                this.getApplicationContext().getDrawable(R.drawable.ic_baseline_map_24),
+                this.getApplicationContext().getDrawable(R.drawable.ic_baseline_view_list_24),
+                this.getApplicationContext().getDrawable(R.drawable.ic_baseline_group_24)
         };
 
         new TabLayoutMediator(this.tabLayout, this.viewPager,
@@ -70,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
            tab.setText(tabsTexts[position]);
            tab.setIcon(tabsIcons[position]);
         }).attach();
-
+        
     }
 
 }

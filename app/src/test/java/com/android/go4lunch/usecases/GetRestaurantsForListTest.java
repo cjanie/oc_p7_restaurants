@@ -1,18 +1,23 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.providers.DeterministicDateProvider;
-import com.android.go4lunch.providers.DeterministicTimeProvider;
+import com.android.go4lunch.models.Selection;
+import com.android.go4lunch.models.Workmate;
+import com.android.go4lunch.gateways_impl.InMemorySelectionGateway;
+import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsGateway;
+import com.android.go4lunch.deterministic_providers.DeterministicDateProvider;
+import com.android.go4lunch.deterministic_providers.DeterministicTimeProvider;
 import com.android.go4lunch.usecases.enums.TimeInfo;
 import com.android.go4lunch.models.Geolocation;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.in_memory_repositories.InMemoryDistanceRepository;
-import com.android.go4lunch.in_memory_repositories.InMemoryRestaurantRepository;
+import com.android.go4lunch.in_memory_repositories.InMemoryRestaurantGateway;
 import com.android.go4lunch.usecases.models_vo.RestaurantVO;
 
 import org.junit.Test;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,7 +147,7 @@ public class GetRestaurantsForListTest {
 
     private List<RestaurantVO> getObservedResult(GetRestaurantsForList getRestaurantsForList) {
         Observable<List<RestaurantVO>> observableRestaurants = getRestaurantsForList
-                .getRestaurantsNearbyAsValueObjectWithDistance(new Geolocation(1111.1, 1111.2), 1000);
+                .getRestaurantsWithSelections(new Geolocation(1111.1, 1111.2), 1000);
         List<RestaurantVO> results = new ArrayList<>();
         observableRestaurants.subscribe(results::addAll);
         return results;
@@ -150,14 +155,16 @@ public class GetRestaurantsForListTest {
 
     private GetRestaurantsForList createGetRestaurantsForList(LocalTime now, int today, List<Restaurant> restaurantsToSetInRepository) {
         // Prepare repository
-        InMemoryRestaurantRepository restaurantQuery = new InMemoryRestaurantRepository();
+        InMemoryRestaurantGateway restaurantQuery = new InMemoryRestaurantGateway();
         restaurantQuery.setRestaurants(restaurantsToSetInRepository);
         // Prepare use case under test
         GetRestaurantsForList getRestaurantsForList = new GetRestaurantsForList(
                 restaurantQuery,
                 new DeterministicTimeProvider(now),
                 new DeterministicDateProvider(1),
-                new InMemoryDistanceRepository(Observable.just(100L))
+                new InMemoryDistanceRepository(Observable.just(100L)),
+                new InMemorySelectionGateway(),
+                new InMemoryHistoricOfSelectionsGateway()
         );
         return getRestaurantsForList;
     }
@@ -189,5 +196,41 @@ public class GetRestaurantsForListTest {
         return restaurants;
     }
 
+    // Tests selections
+    @Test
+    public void shouldShowSelectionWhenRestaurantHasSelection() {
+        InMemorySelectionGateway currentSelectionsRepository = new InMemorySelectionGateway();
+        Restaurant selectedRestaurant = new Restaurant("Au Blé", "Allée des champs");
+        selectedRestaurant.setId("uuid1");
 
+        currentSelectionsRepository.setSelections(Arrays.asList(
+                new Selection(
+                        selectedRestaurant,
+                        new Workmate("Janie")
+                ),
+                new Selection(
+                        selectedRestaurant,
+                        new Workmate("Cyril")
+                )
+        ));
+
+        Restaurant restaurant = new Restaurant("Au Blé", "Allée des champs");
+        restaurant.setId("uuid1");
+        InMemoryRestaurantGateway restaurantRepository = new InMemoryRestaurantGateway();
+        restaurantRepository.setRestaurants(Arrays.asList(restaurant));
+        GetRestaurantsForList getRestaurantsForList = new GetRestaurantsForList(
+                restaurantRepository,
+                new DeterministicTimeProvider(LocalTime.now()), new DeterministicDateProvider(1),
+                new InMemoryDistanceRepository(Observable.just(10L)),
+                currentSelectionsRepository,
+                new InMemoryHistoricOfSelectionsGateway()
+        );
+
+        Observable<List<RestaurantVO>> observableRestaurants = getRestaurantsForList.getRestaurantsWithSelections(
+                new Geolocation(111.111, 122.22), 1000
+        );
+        List<RestaurantVO> results = new ArrayList<>();
+        observableRestaurants.subscribe(results::addAll);
+        assert(results.get(0).getSelectionCountInfo() == 2);
+    }
 }

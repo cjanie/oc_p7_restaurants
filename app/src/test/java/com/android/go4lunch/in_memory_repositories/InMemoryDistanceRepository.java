@@ -1,13 +1,13 @@
 package com.android.go4lunch.in_memory_repositories;
 
 import com.android.go4lunch.exceptions.NullDistanceResponseException;
-import com.android.go4lunch.gateways.DistanceQuery;
+import com.android.go4lunch.gateways.DistanceGateway;
 import com.android.go4lunch.models.Geolocation;
 
 import io.reactivex.Observable;
 
 
-public class InMemoryDistanceRepository implements DistanceQuery {
+public class InMemoryDistanceRepository implements DistanceGateway {
 
     private Observable<Long> distance;
 

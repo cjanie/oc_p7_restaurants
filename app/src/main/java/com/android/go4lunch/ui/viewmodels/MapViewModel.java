@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.android.go4lunch.models.Geolocation;
-import com.android.go4lunch.repositories.RestaurantRepository;
+import com.android.go4lunch.gateways_impl.RestaurantGatewayImpl;
 import com.android.go4lunch.usecases.GetRestaurantsForMap;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -29,8 +29,8 @@ public class MapViewModel extends ViewModel {
     private Disposable disposable;
 
     // Constructor
-    public MapViewModel() {
-        this.getRestaurantsForMap = new GetRestaurantsForMap(new RestaurantRepository());
+    public MapViewModel(GetRestaurantsForMap getRestaurantsForMap) {
+        this.getRestaurantsForMap = getRestaurantsForMap;
         this.markers = new MutableLiveData<>(new ArrayList<>());
     }
 

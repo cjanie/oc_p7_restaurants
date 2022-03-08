@@ -1,17 +1,17 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.SelectionRepository;
+import com.android.go4lunch.gateways.SelectionGateway;
 import com.android.go4lunch.models.Selection;
 
 public class AddSelection {
 
-    private SelectionRepository selectionRepository;
+    private SelectionGateway selectionGateway;
 
-    public AddSelection(SelectionRepository selectionRepository) {
-        this.selectionRepository = selectionRepository;
+    public AddSelection(SelectionGateway selectionGateway) {
+        this.selectionGateway = selectionGateway;
     }
 
     public void add(Selection selection) {
-        this.selectionRepository.add(selection);
+        this.selectionGateway.add(selection);
     }
 }

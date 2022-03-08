@@ -1,6 +1,7 @@
 package com.android.go4lunch.ui.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,19 +14,25 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
+import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
+import com.android.go4lunch.models.Selection;
+import com.android.go4lunch.models.Workmate;
+import com.android.go4lunch.gateways_impl.InMemorySelectionGateway;
+import com.android.go4lunch.gateways_impl.InMemorySessionGateway;
+import com.android.go4lunch.usecases.AddSelection;
+import com.android.go4lunch.usecases.GetSession;
 import com.android.go4lunch.usecases.models_vo.RestaurantVO;
 import com.android.go4lunch.ui.utils.TimeInfoTextHandler;
 import com.android.go4lunch.usecases.enums.Vote;
-import com.android.go4lunch.write.businesslogic.usecases.events.ToggleSelectionEvent;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
-import org.greenrobot.eventbus.EventBus;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
 
 public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<ListRestaurantRecyclerViewAdapter.ViewHolder> {
 
@@ -87,7 +94,23 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<List
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new ToggleSelectionEvent(restaurant.getRestaurant()));
+                AddSelection addSelection = new AddSelection(new InMemorySelectionGateway());
+                InMemorySessionGateway sessionRepository = new InMemorySessionGateway();
+                sessionRepository.setWorkmate(new Workmate("Janie"));
+                GetSession getSession = new GetSession(sessionRepository);
+                try {
+                    Observable<Workmate> session = getSession.getWorkmate();
+                    List<Workmate> results = new ArrayList<>();
+                    session.subscribe(results::add);
+                    if(!results.isEmpty()) {
+                        addSelection.add(new Selection(restaurant.getRestaurant(), results.get(0)));
+                    }
+                } catch (NoWorkmateForSessionException e) {
+                    e.printStackTrace();
+                }
+                Log.d("RECYCLER VIEW ADAPTER", "click");
+
+                //EventBus.getDefault().post(new ToggleSelectionEvent(restaurant.getRestaurant()));
             }
         });
     }

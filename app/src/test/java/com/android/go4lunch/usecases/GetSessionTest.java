@@ -1,7 +1,7 @@
 package com.android.go4lunch.usecases;
 
 import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
-import com.android.go4lunch.in_memory_repositories.InMemorySessionRepository;
+import com.android.go4lunch.gateways_impl.InMemorySessionGateway;
 import com.android.go4lunch.models.Workmate;
 
 import org.junit.Test;
@@ -16,9 +16,9 @@ public class GetSessionTest {
     @Test
     public void shouldGetWorkmateOfCurrentSession() throws NoWorkmateForSessionException {
         Workmate workmate = new Workmate("Janie");
-        InMemorySessionRepository inMemorySessionRepository = new InMemorySessionRepository();
-        inMemorySessionRepository.setWorkmate(workmate);
-        GetSession getSession = new GetSession(inMemorySessionRepository);
+        InMemorySessionGateway inMemorySessionGateway = new InMemorySessionGateway();
+        inMemorySessionGateway.setWorkmate(workmate);
+        GetSession getSession = new GetSession(inMemorySessionGateway);
         Observable<Workmate> observableWorkmate = getSession.getWorkmate();
         List<Workmate> results = new ArrayList<>();
         observableWorkmate.subscribe(results::add);
@@ -27,9 +27,9 @@ public class GetSessionTest {
 
     @Test(expected = NoWorkmateForSessionException.class)
     public void shouldSendExceptionWhenNoWorkmateForSession() throws NoWorkmateForSessionException {
-        InMemorySessionRepository inMemorySessionRepository = new InMemorySessionRepository();
+        InMemorySessionGateway inMemorySessionGateway = new InMemorySessionGateway();
         // Dont set repository with workmate
-        GetSession getSession = new GetSession(inMemorySessionRepository);
+        GetSession getSession = new GetSession(inMemorySessionGateway);
         Observable<Workmate> observableWorkmate = getSession.getWorkmate();
     }
 }
