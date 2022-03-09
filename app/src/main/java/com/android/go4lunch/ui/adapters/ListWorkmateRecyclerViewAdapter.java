@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.go4lunch.R;
 import com.android.go4lunch.usecases.models_vo.WorkmateVO;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
@@ -37,13 +38,14 @@ public class ListWorkmateRecyclerViewAdapter extends RecyclerView.Adapter<ListWo
     @Override
     public void onBindViewHolder(@NonNull ListWorkmateRecyclerViewAdapter.ViewHolder holder, int position) {
         WorkmateVO workmate = this.workmates.get(position);
-        // TODO: holder.avatar
+        // Avatar
         Glide.with(holder.avatar.getContext())
                 .load(workmate.getWorkmate().getUrlPhoto())
                 .apply(RequestOptions.circleCropTransform())
                 .placeholder(R.drawable.ic_baseline_person_24)
                 .error(R.drawable.ic_baseline_error_24)
                 .into(holder.avatar);
+        // Text
         StringBuilder stringBuilder = new StringBuilder(workmate.getWorkmate().getName());
         if(workmate.getSelection() == null) {
             stringBuilder.append(" " + holder.itemView.getContext().getString(R.string.has_not_decided));
