@@ -34,85 +34,97 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
 
-public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<ListRestaurantRecyclerViewAdapter.ViewHolder> {
+public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int TYPE_EMPTY_VIEW = 0;
+
+    private static final int TYPE_ITEM_VIEW = 1;
 
     private final List<RestaurantVO> restaurantVOs;
 
     public ListRestaurantRecyclerViewAdapter(List<RestaurantVO> restaurantVOs) {
-
         this.restaurantVOs = restaurantVOs;
     }
 
     @NonNull
     @Override
-    public ListRestaurantRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_restaurant_list_item, parent, false);
-        return new ListRestaurantRecyclerViewAdapter.ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view;
+        if(viewType == TYPE_ITEM_VIEW) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_restaurant_list_item, parent, false);
+            return new ItemViewHolder(view);
+        } else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_restaurant_list_empty, parent, false);
+            return new EmptyViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ListRestaurantRecyclerViewAdapter.ViewHolder holder, int position) {
-        RestaurantVO restaurant = this.restaurantVOs.get(position);
-        Glide.with(holder.photo.getContext())
-                .load(restaurant.getRestaurant().getPhotoUrl())
-                .apply(RequestOptions.centerCropTransform())
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_baseline_error_24)
-                .into(holder.photo);
-        holder.name.setText(restaurant.getRestaurant().getName());
-        holder.address.setText(restaurant.getRestaurant().getAddress());
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if(holder instanceof ItemViewHolder) {
+            RestaurantVO restaurant = this.restaurantVOs.get(position);
+            Glide.with(((ItemViewHolder) holder).photo.getContext())
+                    .load(restaurant.getRestaurant().getPhotoUrl())
+                    .apply(RequestOptions.centerCropTransform())
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.ic_baseline_error_24)
+                    .into(((ItemViewHolder) holder).photo);
+            ((ItemViewHolder) holder).name.setText(restaurant.getRestaurant().getName());
+            ((ItemViewHolder)holder).address.setText(restaurant.getRestaurant().getAddress());
 
-        if(restaurant.getTimeInfo() != null) {
-            TimeInfoTextHandler timeInfoTextHandler = new TimeInfoTextHandler();
-            holder.info.setText(timeInfoTextHandler.getText(restaurant));
-            holder.info.setTextColor(timeInfoTextHandler.getColor(restaurant, holder.info));
-            holder.info.setTypeface(null, timeInfoTextHandler.getStyle(restaurant));
-        }
-
-        if(restaurant.getDistanceInfo() != null) {
-            holder.distance.setText(restaurant.getDistanceInfo().toString() + "m");
-        }
-        holder.selections.setText("(" + restaurant.getSelectionCountInfo() +")");
-
-        // Vote
-        Vote vote = restaurant.getVoteInfo();
-
-        if(vote == Vote.ONE_STAR) {
-            holder.starsContainer.addView(this.createStar(holder.itemView.getContext()));
-        }
-        if(vote == Vote.TWO_STARS) {
-            for(int i=0; i<2; i++) {
-                holder.starsContainer.addView(this.createStar(holder.itemView.getContext()));
+            if(restaurant.getTimeInfo() != null) {
+                TimeInfoTextHandler timeInfoTextHandler = new TimeInfoTextHandler();
+                ((ItemViewHolder)holder).info.setText(timeInfoTextHandler.getText(restaurant));
+                ((ItemViewHolder)holder).info.setTextColor(timeInfoTextHandler.getColor(restaurant, ((ItemViewHolder)holder).info));
+                ((ItemViewHolder)holder).info.setTypeface(null, timeInfoTextHandler.getStyle(restaurant));
             }
-        }
-        if(vote == Vote.THREE_STARS) {
-            for(int i=0; i<3; i++) {
-                holder.starsContainer.addView(this.createStar(holder.itemView.getContext()));
-            }
-        }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddSelection addSelection = new AddSelection(new InMemorySelectionGateway());
-                InMemorySessionGateway sessionRepository = new InMemorySessionGateway();
-                sessionRepository.setWorkmate(new Workmate("Janie"));
-                GetSession getSession = new GetSession(sessionRepository);
-                try {
-                    Observable<Workmate> session = getSession.getWorkmate();
-                    List<Workmate> results = new ArrayList<>();
-                    session.subscribe(results::add);
-                    if(!results.isEmpty()) {
-                        addSelection.add(new Selection(restaurant.getRestaurant(), results.get(0)));
-                    }
-                } catch (NoWorkmateForSessionException e) {
-                    e.printStackTrace();
+            if(restaurant.getDistanceInfo() != null) {
+                ((ItemViewHolder)holder).distance.setText(restaurant.getDistanceInfo().toString() + "m");
+            }
+            ((ItemViewHolder)holder).selections.setText("(" + restaurant.getSelectionCountInfo() +")");
+
+            // Vote
+            Vote vote = restaurant.getVoteInfo();
+
+            if(vote == Vote.ONE_STAR) {
+                ((ItemViewHolder)holder).starsContainer.addView(this.createStar(holder.itemView.getContext()));
+            }
+            if(vote == Vote.TWO_STARS) {
+                for(int i=0; i<2; i++) {
+                    ((ItemViewHolder)holder).starsContainer.addView(this.createStar(holder.itemView.getContext()));
                 }
-                Log.d("RECYCLER VIEW ADAPTER", "click");
-
-                //EventBus.getDefault().post(new ToggleSelectionEvent(restaurant.getRestaurant()));
             }
-        });
+            if(vote == Vote.THREE_STARS) {
+                for(int i=0; i<3; i++) {
+                    ((ItemViewHolder)holder).starsContainer.addView(this.createStar(holder.itemView.getContext()));
+                }
+            }
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AddSelection addSelection = new AddSelection(new InMemorySelectionGateway());
+                    InMemorySessionGateway sessionRepository = new InMemorySessionGateway();
+                    sessionRepository.setWorkmate(new Workmate("Janie"));
+                    GetSession getSession = new GetSession(sessionRepository);
+                    try {
+                        Observable<Workmate> session = getSession.getWorkmate();
+                        List<Workmate> results = new ArrayList<>();
+                        session.subscribe(results::add);
+                        if(!results.isEmpty()) {
+                            addSelection.add(new Selection(restaurant.getRestaurant(), results.get(0)));
+                        }
+                    } catch (NoWorkmateForSessionException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("RECYCLER VIEW ADAPTER", "click");
+
+                    //EventBus.getDefault().post(new ToggleSelectionEvent(restaurant.getRestaurant()));
+                }
+            });
+        }
+
     }
 
     private ConstraintLayout createStar(Context context) {
@@ -129,13 +141,23 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<List
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if(this.restaurantVOs.isEmpty() && position == 0) {
+            return TYPE_EMPTY_VIEW;
+        } else {
+            return TYPE_ITEM_VIEW;
+        }
+    }
+
+    @Override
     public int getItemCount() {
+        if(this.restaurantVOs.isEmpty()) {
+            return 1;
+        }
         return this.restaurantVOs.size();
     }
 
-
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ItemViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.restaurant_name)
         TextView name;
 
@@ -157,7 +179,7 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<List
         @BindView(R.id.photo)
         ImageView photo;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
