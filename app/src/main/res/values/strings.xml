@@ -33,6 +33,11 @@
     <string name="is_eating">is eating</string>
     <string name="has_not_decided">has not decided yet</string>
 
+    <!-- RESTAURANT -->
+    <string name="call">Call</string>
+    <string name="like">Like</string>
+    <string name="website">Website</string>
+
 
     <!-- PERMISSION -->
     <string name="location_rationale">You must grant permissions for location</string>
