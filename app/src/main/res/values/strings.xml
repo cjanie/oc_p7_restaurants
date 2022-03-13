@@ -37,6 +37,8 @@
     <string name="call">Call</string>
     <string name="like">Like</string>
     <string name="website">Website</string>
+    <string name="visitor">Visitor</string>
+    <string name="visitor_text"> is joining!</string>
 
 
     <!-- PERMISSION -->

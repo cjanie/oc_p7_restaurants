@@ -1,8 +1,12 @@
 package com.android.go4lunch.ui.listeners;
 
+import com.android.go4lunch.ui.events.LikeEvent;
+
+import org.greenrobot.eventbus.EventBus;
+
 public class LikeClickListener implements ButtonClickListener {
     @Override
     public void action() {
-        System.out.println("Like action on click");
+        EventBus.getDefault().post(new LikeEvent());
     }
 }

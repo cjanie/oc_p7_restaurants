@@ -21,10 +21,7 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Go4Lunch">
         <activity android:name=".ui.SignInActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity android:name=".ui.MainActivity">
             <intent-filter>
@@ -32,7 +29,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.RestaurantDetailsActivity"/>
+        <activity android:name=".ui.RestaurantDetailsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <!-- Map -->
         <meta-data

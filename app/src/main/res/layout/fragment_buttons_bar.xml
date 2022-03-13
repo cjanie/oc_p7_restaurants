@@ -11,6 +11,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:baselineAligned="false"
+        android:paddingTop="@dimen/margin"
+        android:paddingBottom="@dimen/margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

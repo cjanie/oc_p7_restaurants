@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
+import com.android.go4lunch.models.Workmate;
 import com.android.go4lunch.usecases.models_vo.WorkmateVO;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -38,7 +39,7 @@ public class ListWorkmateRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         View view;
         if(viewType == TYPE_ITEM_VIEW) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_workmate_list_item, parent, false);
-            return new ItemViewHolder(view);
+            return new WorkmateViewHolder(view);
         } else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_workmate_list_empty, parent, false);
             return new EmptyViewHolder(view);
@@ -48,15 +49,15 @@ public class ListWorkmateRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        if(holder instanceof ItemViewHolder) {
+        if(holder instanceof WorkmateViewHolder) {
             WorkmateVO workmate = this.workmates.get(position);
             // Avatar
-            Glide.with(((ItemViewHolder) holder).avatar.getContext())
+            Glide.with(((WorkmateViewHolder) holder).avatar.getContext())
                     .load(workmate.getWorkmate().getUrlPhoto())
                     .apply(RequestOptions.circleCropTransform())
                     .placeholder(R.drawable.ic_baseline_person_24)
                     .error(R.drawable.ic_baseline_error_24)
-                    .into(((ItemViewHolder) holder).avatar);
+                    .into(((WorkmateViewHolder) holder).avatar);
             // Text
             StringBuilder stringBuilder = new StringBuilder(workmate.getWorkmate().getName());
             if(workmate.getSelection() == null) {
@@ -64,7 +65,7 @@ public class ListWorkmateRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             } else {
                 stringBuilder.append(" " + holder.itemView.getContext().getString(R.string.is_eating)+ " (" + workmate.getSelection().getName() + ")");
             }
-            ((ItemViewHolder) holder).text.setText(stringBuilder.toString());
+            ((WorkmateViewHolder) holder).text.setText(stringBuilder.toString());
         }
     }
 
@@ -82,19 +83,6 @@ public class ListWorkmateRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             return 1;
         }
         return this.workmates.size();
-    }
-
-    class ItemViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.workmate_avatar)
-        ImageView avatar;
-        @BindView(R.id.workmate_text)
-        TextView text;
-
-        public ItemViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
     }
 
 }
