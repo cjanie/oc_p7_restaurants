@@ -6,11 +6,11 @@ import com.android.go4lunch.models.Workmate;
 
 import io.reactivex.Observable;
 
-public class GetSession {
+public class GetSessionUseCase {
 
     private SessionGateway sessionGateway;
 
-    public GetSession(SessionGateway sessionGateway) {
+    public GetSessionUseCase(SessionGateway sessionGateway) {
         this.sessionGateway = sessionGateway;
     }
 

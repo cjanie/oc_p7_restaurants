@@ -6,11 +6,11 @@ import com.android.go4lunch.models.Selection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ToggleSelection {
+public class ToggleSelectionUseCase {
 
     private SelectionGateway selectionGateway;
 
-    public ToggleSelection(SelectionGateway selectionGateway) {
+    public ToggleSelectionUseCase(SelectionGateway selectionGateway) {
         this.selectionGateway = selectionGateway;
     }
 

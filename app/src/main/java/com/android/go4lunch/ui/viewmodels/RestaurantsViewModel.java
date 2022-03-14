@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
-import com.android.go4lunch.usecases.GetSession;
+import com.android.go4lunch.usecases.GetSessionUseCase;
 import com.android.go4lunch.usecases.models_vo.RestaurantVO;
 import com.android.go4lunch.models.Geolocation;
-import com.android.go4lunch.usecases.GetRestaurantsForList;
+import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +20,9 @@ import io.reactivex.observers.DisposableObserver;
 public class RestaurantsViewModel extends ViewModel {
 
     // Use Cases
-    private final GetRestaurantsForList getRestaurantsForList;
+    private final GetRestaurantsForListUseCase getRestaurantsForListUseCase;
 
-    private final GetSession getSession;
+    private final GetSessionUseCase getSessionUseCase;
 
     // Restaurant List LiveData
     private final MutableLiveData<List<RestaurantVO>> restaurants;
@@ -32,17 +32,17 @@ public class RestaurantsViewModel extends ViewModel {
 
 
     // Constructor
-    public RestaurantsViewModel(GetRestaurantsForList getRestaurantsForList) {
-        this.getRestaurantsForList = getRestaurantsForList;
+    public RestaurantsViewModel(GetRestaurantsForListUseCase getRestaurantsForListUseCase) {
+        this.getRestaurantsForListUseCase = getRestaurantsForListUseCase;
         this.restaurants = new MutableLiveData<>(new ArrayList<>());
-        this.getSession = new GetSession(new SessionGatewayImpl());
+        this.getSessionUseCase = new GetSessionUseCase(new SessionGatewayImpl());
     }
 
     // GET methods
 
     public LiveData<List<RestaurantVO>> getRestaurants(Double myLatitude, Double myLongitude, int radius) {
         this.setRestaurants(
-                this.getRestaurantsForList.getRestaurantsWithSelections(new Geolocation(myLatitude, myLongitude), radius)
+                this.getRestaurantsForListUseCase.getRestaurantsWithSelections(new Geolocation(myLatitude, myLongitude), radius)
         );
         return this.restaurants;
     }

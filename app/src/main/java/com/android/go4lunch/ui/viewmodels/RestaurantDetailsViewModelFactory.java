@@ -4,18 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.android.go4lunch.usecases.ToggleSelection;
-import com.android.go4lunch.usecases.GetSession;
+import com.android.go4lunch.usecases.ToggleSelectionUseCase;
+import com.android.go4lunch.usecases.GetSessionUseCase;
 
 public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Factory {
 
-    private final ToggleSelection toggleSelection;
+    private final ToggleSelectionUseCase toggleSelectionUseCase;
 
-    private final GetSession getSession;
+    private final GetSessionUseCase getSessionUseCase;
 
-    public RestaurantDetailsViewModelFactory(ToggleSelection toggleSelection, GetSession getSession) {
-        this.toggleSelection = toggleSelection;
-        this.getSession = getSession;
+    public RestaurantDetailsViewModelFactory(ToggleSelectionUseCase toggleSelectionUseCase, GetSessionUseCase getSessionUseCase) {
+        this.toggleSelectionUseCase = toggleSelectionUseCase;
+        this.getSessionUseCase = getSessionUseCase;
     }
 
 
@@ -23,7 +23,7 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if(modelClass.isAssignableFrom(RestaurantDetailsViewModel.class)) {
-            return (T) new RestaurantDetailsViewModel(this.toggleSelection, this.getSession);
+            return (T) new RestaurantDetailsViewModel(this.toggleSelectionUseCase, this.getSessionUseCase);
         }
         throw new IllegalArgumentException("RestaurantDetailsViewModelFactory: Unknown ViewModel class");
     }

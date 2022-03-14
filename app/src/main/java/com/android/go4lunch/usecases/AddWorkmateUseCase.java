@@ -7,11 +7,11 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class AddWorkmate {
+public class AddWorkmateUseCase {
 
     private WorkmateGateway workmateGateway;
 
-    public AddWorkmate(WorkmateGateway workmateGateway) {
+    public AddWorkmateUseCase(WorkmateGateway workmateGateway) {
         this.workmateGateway = workmateGateway;
     }
 

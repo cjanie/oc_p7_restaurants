@@ -12,15 +12,15 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class GetWorkmatesTest {
+public class GetWorkmatesUseCaseTest {
 
     @Test
     public void listShouldHave1WorkmateWhenThereIs1Available() {
         InMemoryWorkmateGateway inMemoryWorkmateGateway = new InMemoryWorkmateGateway();
         inMemoryWorkmateGateway.setWorkmates(Arrays.asList(new Workmate("Janie")));
-        GetWorkmates getWorkmates = new GetWorkmates(inMemoryWorkmateGateway);
+        GetWorkmatesUseCase getWorkmatesUseCase = new GetWorkmatesUseCase(inMemoryWorkmateGateway);
 
-        Observable<List<WorkmateVO>> observableWormates = getWorkmates.list();
+        Observable<List<WorkmateVO>> observableWormates = getWorkmatesUseCase.list();
         List<WorkmateVO> results = new ArrayList<>();
         observableWormates.subscribe(results::addAll);
         assert(results.size() == 1);
@@ -33,8 +33,8 @@ public class GetWorkmatesTest {
                 new Workmate("Janie"),
                 new Workmate("Cyril")
         ));
-        GetWorkmates getWorkmates = new GetWorkmates(inMemoryWorkmateGateway);
-        Observable<List<WorkmateVO>> observableWormates = getWorkmates.list();
+        GetWorkmatesUseCase getWorkmatesUseCase = new GetWorkmatesUseCase(inMemoryWorkmateGateway);
+        Observable<List<WorkmateVO>> observableWormates = getWorkmatesUseCase.list();
         List<WorkmateVO> results = new ArrayList<>();
         observableWormates.subscribe(results::addAll);
         assert(results.size() == 2);
@@ -44,8 +44,8 @@ public class GetWorkmatesTest {
     public void listShouldBeEmptyWhenNoAvailableWorkmate() {
         InMemoryWorkmateGateway inMemoryWorkmateGateway = new InMemoryWorkmateGateway();
         // dont set any workmate in the repository
-        GetWorkmates getWorkmates = new GetWorkmates(inMemoryWorkmateGateway);
-        Observable<List<WorkmateVO>> observableWormates = getWorkmates.list();
+        GetWorkmatesUseCase getWorkmatesUseCase = new GetWorkmatesUseCase(inMemoryWorkmateGateway);
+        Observable<List<WorkmateVO>> observableWormates = getWorkmatesUseCase.list();
         List<WorkmateVO> results = new ArrayList<>();
         observableWormates.subscribe(results::addAll);
         assert(results.isEmpty());

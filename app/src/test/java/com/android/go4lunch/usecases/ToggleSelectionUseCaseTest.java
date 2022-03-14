@@ -15,14 +15,14 @@ import io.reactivex.Observable;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-public class ToggleSelectionTest {
+public class ToggleSelectionUseCaseTest {
 
     @Test
     public void toggleSelects() {
         InMemorySelectionGateway inMemorySelectionGateway = new InMemorySelectionGateway();
 
-        ToggleSelection toggleSelection = new ToggleSelection(inMemorySelectionGateway);
-        toggleSelection.handle(new Selection(
+        ToggleSelectionUseCase toggleSelectionUseCase = new ToggleSelectionUseCase(inMemorySelectionGateway);
+        toggleSelectionUseCase.handle(new Selection(
                 new Restaurant("Chez Jojo", "Avenue des Loulous"),
                 new Workmate("Janie")
         ));
@@ -41,8 +41,8 @@ public class ToggleSelectionTest {
                 new Restaurant("Chez Jojo", "Avenue des Loulous"),
                 new Workmate("Janie")
         ));
-        ToggleSelection toggleSelection = new ToggleSelection(inMemorySelectionGateway);
-        toggleSelection.handle(new Selection(
+        ToggleSelectionUseCase toggleSelectionUseCase = new ToggleSelectionUseCase(inMemorySelectionGateway);
+        toggleSelectionUseCase.handle(new Selection(
                 new Restaurant("Chez Jojo", "Avenue des Loulous"),
                 new Workmate("Janie")
         ));

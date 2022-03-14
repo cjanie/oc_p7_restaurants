@@ -15,10 +15,10 @@ import com.android.go4lunch.providers.RealTimeProvider;
 import com.android.go4lunch.ui.viewmodels.MapViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModelFactory;
-import com.android.go4lunch.usecases.ToggleSelection;
-import com.android.go4lunch.usecases.GetRestaurantsForList;
-import com.android.go4lunch.usecases.GetRestaurantsForMap;
-import com.android.go4lunch.usecases.GetSession;
+import com.android.go4lunch.usecases.ToggleSelectionUseCase;
+import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
+import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
+import com.android.go4lunch.usecases.GetSessionUseCase;
 
 public class Launch extends Application {
 
@@ -42,8 +42,8 @@ public class Launch extends Application {
         RealTimeProvider timeProvider = new RealTimeProvider();
         RealDateProvider dateProvider = new RealDateProvider();
         // USE CASES
-        GetRestaurantsForMap getRestaurantsForMap = new GetRestaurantsForMap(restaurantGateway);
-        GetRestaurantsForList getRestaurantsForList = new GetRestaurantsForList(
+        GetRestaurantsForMapUseCase getRestaurantsForMapUseCase = new GetRestaurantsForMapUseCase(restaurantGateway);
+        GetRestaurantsForListUseCase getRestaurantsForListUseCase = new GetRestaurantsForListUseCase(
                 restaurantGateway,
                 timeProvider,
                 dateProvider,
@@ -51,12 +51,12 @@ public class Launch extends Application {
                 selectionGateway,
                 historicOfSelectionsGateway
         );
-        ToggleSelection toggleSelection = new ToggleSelection(selectionGateway);
-        GetSession getSession = new GetSession(sessionGateway);
+        ToggleSelectionUseCase toggleSelectionUseCase = new ToggleSelectionUseCase(selectionGateway);
+        GetSessionUseCase getSessionUseCase = new GetSessionUseCase(sessionGateway);
         // VIEW MODELS FACTORIES
-        this.mapViewModelFactory = new MapViewModelFactory(getRestaurantsForMap);
-        this.restaurantsViewModelFactory = new RestaurantsViewModelFactory(getRestaurantsForList);
-        this.restaurantDetailsViewModelFactory = new RestaurantDetailsViewModelFactory(toggleSelection, getSession);
+        this.mapViewModelFactory = new MapViewModelFactory(getRestaurantsForMapUseCase);
+        this.restaurantsViewModelFactory = new RestaurantsViewModelFactory(getRestaurantsForListUseCase);
+        this.restaurantDetailsViewModelFactory = new RestaurantDetailsViewModelFactory(toggleSelectionUseCase, getSessionUseCase);
 
     }
 

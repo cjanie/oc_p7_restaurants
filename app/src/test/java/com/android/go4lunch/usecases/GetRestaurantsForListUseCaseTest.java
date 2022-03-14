@@ -1,7 +1,5 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.models.Selection;
-import com.android.go4lunch.models.Workmate;
 import com.android.go4lunch.gateways_impl.InMemorySelectionGateway;
 import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsGateway;
 import com.android.go4lunch.deterministic_providers.DeterministicDateProvider;
@@ -17,7 +15,6 @@ import org.junit.Test;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +25,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 
-public class GetRestaurantsForListTest {
+public class GetRestaurantsForListUseCaseTest {
 
     @Test
     public void shouldReturnListOfRestaurantsWhenAvailable() {
@@ -39,13 +36,13 @@ public class GetRestaurantsForListTest {
                 false
         );
         // Create the use case under test
-        GetRestaurantsForList getRestaurantsForList = this.createGetRestaurantsForList(
+        GetRestaurantsForListUseCase getRestaurantsForListUseCase = this.createGetRestaurantsForList(
                 LocalTime.of(12, 0), // now
                 1,
                 restaurantsToSetInRepository
         );
         // TEST
-        List<RestaurantVO> results = this.getObservedResult(getRestaurantsForList);
+        List<RestaurantVO> results = this.getObservedResult(getRestaurantsForListUseCase);
         assertThat(results, notNullValue());
         assert(results.size() == 2);
     }
@@ -53,13 +50,13 @@ public class GetRestaurantsForListTest {
     @Test
     public void listShouldBeEmptyWhenNoRestaurantIsAvailable() {
         // Prepare use case under test
-        GetRestaurantsForList getRestaurantsForList = this.createGetRestaurantsForList(
+        GetRestaurantsForListUseCase getRestaurantsForListUseCase = this.createGetRestaurantsForList(
                 LocalTime.now(),
                 1,
                 new ArrayList<>()
         );
         // TEST
-        List<RestaurantVO> results = this.getObservedResult(getRestaurantsForList);
+        List<RestaurantVO> results = this.getObservedResult(getRestaurantsForListUseCase);
         assertThat(results, notNullValue());
         assert(results.isEmpty());
     }
@@ -72,13 +69,13 @@ public class GetRestaurantsForListTest {
                 true
         );
         // Use case under test
-        GetRestaurantsForList getRestaurantsForList = this.createGetRestaurantsForList(
+        GetRestaurantsForListUseCase getRestaurantsForListUseCase = this.createGetRestaurantsForList(
                 LocalTime.of(12, 0),
                 1,
                 restaurantsToSetInRepository
         );
         // TEST
-        List<RestaurantVO> results = this.getObservedResult(getRestaurantsForList);
+        List<RestaurantVO> results = this.getObservedResult(getRestaurantsForListUseCase);
         assertThat(results, notNullValue());
         assert(results.size() == 1);
         assert(results.get(0).getTimeInfo().equals(TimeInfo.OPEN));
@@ -92,13 +89,13 @@ public class GetRestaurantsForListTest {
                 false,
                 false);
         // Use case under test
-        GetRestaurantsForList getRestaurantsForList = this.createGetRestaurantsForList(
+        GetRestaurantsForListUseCase getRestaurantsForListUseCase = this.createGetRestaurantsForList(
                 LocalTime.of(12, 0),
                 1,
                 restaurantsToSetInRepository
         );
         // TEST
-        List<RestaurantVO> results = this.getObservedResult(getRestaurantsForList);
+        List<RestaurantVO> results = this.getObservedResult(getRestaurantsForListUseCase);
         assertThat(results, notNullValue());
         assert(results.size() == 1);
         assert(results.get(0).getTimeInfo().equals(TimeInfo.DEFAULT_TIME_INFO));
@@ -112,13 +109,13 @@ public class GetRestaurantsForListTest {
                 true,
                 true);
         // Use case under test
-        GetRestaurantsForList getRestaurantsForList = this.createGetRestaurantsForList(
+        GetRestaurantsForListUseCase getRestaurantsForListUseCase = this.createGetRestaurantsForList(
                 LocalTime.of(12, 0),
                 1,
                 restaurantsToSetInRepository
         );
         // TEST
-        List<RestaurantVO> results = this.getObservedResult(getRestaurantsForList);
+        List<RestaurantVO> results = this.getObservedResult(getRestaurantsForListUseCase);
         assertThat(results, notNullValue());
         assert(results.size() == 1);
         assert(results.get(0).getDistanceInfo() == 100L);
@@ -133,32 +130,32 @@ public class GetRestaurantsForListTest {
                 false
         );
         // Use case under test
-        GetRestaurantsForList getRestaurantsForList = this.createGetRestaurantsForList(
+        GetRestaurantsForListUseCase getRestaurantsForListUseCase = this.createGetRestaurantsForList(
                 LocalTime.of(12, 0),
                 1,
                 restaurantsToSetInRepository
         );
         // TEST
-        List<RestaurantVO> results = this.getObservedResult(getRestaurantsForList);
+        List<RestaurantVO> results = this.getObservedResult(getRestaurantsForListUseCase);
         assertThat(results, notNullValue());
         assert(results.size() == 1);
         assert(results.get(0).getDistanceInfo() == null);
     }
 
-    private List<RestaurantVO> getObservedResult(GetRestaurantsForList getRestaurantsForList) {
-        Observable<List<RestaurantVO>> observableRestaurants = getRestaurantsForList
+    private List<RestaurantVO> getObservedResult(GetRestaurantsForListUseCase getRestaurantsForListUseCase) {
+        Observable<List<RestaurantVO>> observableRestaurants = getRestaurantsForListUseCase
                 .getRestaurantsWithSelections(new Geolocation(1111.1, 1111.2), 1000);
         List<RestaurantVO> results = new ArrayList<>();
         observableRestaurants.subscribe(results::addAll);
         return results;
     }
 
-    private GetRestaurantsForList createGetRestaurantsForList(LocalTime now, int today, List<Restaurant> restaurantsToSetInRepository) {
+    private GetRestaurantsForListUseCase createGetRestaurantsForList(LocalTime now, int today, List<Restaurant> restaurantsToSetInRepository) {
         // Prepare repository
         InMemoryRestaurantGateway restaurantQuery = new InMemoryRestaurantGateway();
         restaurantQuery.setRestaurants(restaurantsToSetInRepository);
         // Prepare use case under test
-        GetRestaurantsForList getRestaurantsForList = new GetRestaurantsForList(
+        GetRestaurantsForListUseCase getRestaurantsForListUseCase = new GetRestaurantsForListUseCase(
                 restaurantQuery,
                 new DeterministicTimeProvider(now),
                 new DeterministicDateProvider(1),
@@ -166,7 +163,7 @@ public class GetRestaurantsForListTest {
                 new InMemorySelectionGateway(),
                 new InMemoryHistoricOfSelectionsGateway()
         );
-        return getRestaurantsForList;
+        return getRestaurantsForListUseCase;
     }
 
 

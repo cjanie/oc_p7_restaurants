@@ -10,7 +10,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class AddWorkmateTest {
+public class AddWorkmateUseCaseTest {
 
     @Test
     public void shouldIncrementListWhenNewWorkmate() {
@@ -18,7 +18,7 @@ public class AddWorkmateTest {
         // SUT
         Workmate workmate = new Workmate("janie");
         workmate.setEmail("janie@gmail.com");
-        new AddWorkmate(workmateRepository).save(workmate);
+        new AddWorkmateUseCase(workmateRepository).save(workmate);
         // Check Result in repository
         Observable<List<Workmate>> observableWorkmates = workmateRepository.getWorkmates();
         List<Workmate> results = new ArrayList<>();
@@ -32,11 +32,11 @@ public class AddWorkmateTest {
         // SUT
         Workmate workmate1 = new Workmate("janie");
         workmate1.setEmail("janie@gmail.com");
-        new AddWorkmate(workmateRepository).save(workmate1);
+        new AddWorkmateUseCase(workmateRepository).save(workmate1);
 
         Workmate workmate2 = new Workmate("cyril");
         workmate2.setEmail("cyril@gmail.com");
-        new AddWorkmate(workmateRepository).save(workmate2);
+        new AddWorkmateUseCase(workmateRepository).save(workmate2);
         // Check Result in repository
         Observable<List<Workmate>> observableWorkmates = workmateRepository.getWorkmates();
         List<Workmate> results = new ArrayList<>();
@@ -50,15 +50,15 @@ public class AddWorkmateTest {
         // SUT
         Workmate workmateFirstTime = new Workmate("janie");
         workmateFirstTime.setEmail("janie@gmail.com");
-        new AddWorkmate(workmateRepository).save(workmateFirstTime);
+        new AddWorkmateUseCase(workmateRepository).save(workmateFirstTime);
 
         Workmate workmateSecondTime = new Workmate("janie");
         workmateSecondTime.setEmail("janie@gmail.com");
-        new AddWorkmate(workmateRepository).save(workmateSecondTime);
+        new AddWorkmateUseCase(workmateRepository).save(workmateSecondTime);
 
         Workmate workmate2 = new Workmate("cyril");
         workmate2.setEmail("cyril@gmail.com");
-        new AddWorkmate(workmateRepository).save(workmate2);
+        new AddWorkmateUseCase(workmateRepository).save(workmate2);
         // Check Result in repository
         Observable<List<Workmate>> observableWorkmates = workmateRepository.getWorkmates();
         List<Workmate> results = new ArrayList<>();
@@ -72,12 +72,12 @@ public class AddWorkmateTest {
         // register as Janie first time
         Workmate workmateFirstTime = new Workmate("janie");
         workmateFirstTime.setEmail("janie@gmail.com");
-        new AddWorkmate(workmateRepository).save(workmateFirstTime);
+        new AddWorkmateUseCase(workmateRepository).save(workmateFirstTime);
         // SUT
         // register as Jenny second time
         Workmate workmateSecondTime = new Workmate("jenny");
         workmateSecondTime.setEmail("janie@gmail.com");
-        new AddWorkmate(workmateRepository).save(workmateSecondTime);
+        new AddWorkmateUseCase(workmateRepository).save(workmateSecondTime);
 
         // Check Result in repository
         Observable<List<Workmate>> observableWorkmates = workmateRepository.getWorkmates();
