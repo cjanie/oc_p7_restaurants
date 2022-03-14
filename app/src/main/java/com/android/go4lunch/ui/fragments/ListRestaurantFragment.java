@@ -77,13 +77,4 @@ public class ListRestaurantFragment extends WithLocationPermissionFragment {
                     }
         });
     }
-
-    @Subscribe
-    public void toggleSelection(ToggleSelectionEvent event) {
-        try {
-            this.restaurantsViewModel.toggleSelection(event.restaurant);
-        } catch (NoWorkmateForSessionException e) {
-            Snackbar.make(this.recyclerView, e.getMessage(), Snackbar.LENGTH_LONG).show();
-        }
-    }
 }

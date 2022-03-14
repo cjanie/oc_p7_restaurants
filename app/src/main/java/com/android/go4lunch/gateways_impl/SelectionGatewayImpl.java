@@ -7,20 +7,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
 
 public class SelectionGatewayImpl implements SelectionGateway {
+
+    Observable<Selection> selection;
+
     @Override
-    public Observable<List<Selection>> getSelections() {
-        return Observable.just(new ArrayList<>());
+    public Observable<Selection> getSelection() {
+        return this.selection;
     }
 
     @Override
-    public void add(Selection selection) {
-
+    public void select(@NonNull Selection selection) {
+        this.selection = Observable.just(selection);
     }
 
     @Override
-    public void remove(Selection selection) {
-
+    public void unSelect() {
+        this.selection = null;
     }
 }

@@ -36,9 +36,13 @@ public class SessionGatewayImpl implements SessionGateway {
     }
 
     private void fetchSession() {
+        /*
         UserRepository userRepository = new UserRepository();
         userRepository.getAuthUser().addOnSuccessListener(task -> {
             this.workmates = Observable.just(Arrays.asList(task));
         });
+
+         */
+        this.workmates = Observable.just(Arrays.asList(new Workmate("Cyril")));
     }
 }

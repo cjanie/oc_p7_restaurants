@@ -196,41 +196,5 @@ public class GetRestaurantsForListTest {
         return restaurants;
     }
 
-    // Tests selections
-    @Test
-    public void shouldShowSelectionWhenRestaurantHasSelection() {
-        InMemorySelectionGateway currentSelectionsRepository = new InMemorySelectionGateway();
-        Restaurant selectedRestaurant = new Restaurant("Au Blé", "Allée des champs");
-        selectedRestaurant.setId("uuid1");
 
-        currentSelectionsRepository.setSelections(Arrays.asList(
-                new Selection(
-                        selectedRestaurant,
-                        new Workmate("Janie")
-                ),
-                new Selection(
-                        selectedRestaurant,
-                        new Workmate("Cyril")
-                )
-        ));
-
-        Restaurant restaurant = new Restaurant("Au Blé", "Allée des champs");
-        restaurant.setId("uuid1");
-        InMemoryRestaurantGateway restaurantRepository = new InMemoryRestaurantGateway();
-        restaurantRepository.setRestaurants(Arrays.asList(restaurant));
-        GetRestaurantsForList getRestaurantsForList = new GetRestaurantsForList(
-                restaurantRepository,
-                new DeterministicTimeProvider(LocalTime.now()), new DeterministicDateProvider(1),
-                new InMemoryDistanceRepository(Observable.just(10L)),
-                currentSelectionsRepository,
-                new InMemoryHistoricOfSelectionsGateway()
-        );
-
-        Observable<List<RestaurantVO>> observableRestaurants = getRestaurantsForList.getRestaurantsWithSelections(
-                new Geolocation(111.111, 122.22), 1000
-        );
-        List<RestaurantVO> results = new ArrayList<>();
-        observableRestaurants.subscribe(results::addAll);
-        assert(results.get(0).getSelectionCountInfo() == 2);
-    }
 }

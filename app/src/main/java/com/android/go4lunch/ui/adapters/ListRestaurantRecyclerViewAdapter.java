@@ -1,8 +1,6 @@
 package com.android.go4lunch.ui.adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,26 +13,16 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
-import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
-import com.android.go4lunch.models.Selection;
-import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.gateways_impl.InMemorySelectionGateway;
-import com.android.go4lunch.gateways_impl.InMemorySessionGateway;
-import com.android.go4lunch.ui.RestaurantDetailsActivity;
-import com.android.go4lunch.usecases.AddSelection;
-import com.android.go4lunch.usecases.GetSession;
 import com.android.go4lunch.usecases.models_vo.RestaurantVO;
 import com.android.go4lunch.ui.utils.TimeInfoTextHandler;
 import com.android.go4lunch.usecases.enums.Vote;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
 
 public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

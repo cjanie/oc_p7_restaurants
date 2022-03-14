@@ -23,16 +23,8 @@ public class SelectionInfoDecoratorForWorkMate {
     }
 
     private Observable<Restaurant> getSelection(WorkmateVO workmate) {
-        return this.selectionGateway.getSelections().map(selections -> {
-            Restaurant selected = null;
-            if(!selections.isEmpty()) {
-                for(Selection s: selections) {
-                    if(s.getWorkmate().equals(workmate.getWorkmate())) {
-                        selected = s.getRestaurant();
-                        break;
-                    }
-                }
-            }
+        return this.selectionGateway.getSelection().map(selection -> {
+            Restaurant selected = selection.getRestaurant();
             return selected;
         });
     }

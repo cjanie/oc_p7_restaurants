@@ -5,23 +5,24 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
+import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Workmate;
 import com.android.go4lunch.ui.adapters.ListVisitorRecyclerViewAdapter;
-import com.android.go4lunch.ui.adapters.ListWorkmateRecyclerViewAdapter;
 import com.android.go4lunch.ui.events.CallEvent;
 import com.android.go4lunch.ui.events.LikeEvent;
 import com.android.go4lunch.ui.events.WebsiteEvent;
-import com.android.go4lunch.usecases.models_vo.RestaurantVO;
-import com.android.go4lunch.usecases.models_vo.WorkmateVO;
+import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -35,6 +36,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RestaurantDetailsActivity extends BaseActivity {
+
+    private RestaurantDetailsViewModel restaurantDetailsViewModel;
 
     @BindView(R.id.details_restaurant_pastille)
     FrameLayout pastille;
@@ -54,8 +57,13 @@ public class RestaurantDetailsActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
 
+        this.restaurantDetailsViewModel = new ViewModelProvider(
+                this,
+                ((Launch) this.getApplication()).restaurantDetailsViewModelFactory())
+                .get(RestaurantDetailsViewModel.class);
+
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_restaurant_details);
         ButterKnife.bind(this);
 
@@ -112,10 +120,13 @@ public class RestaurantDetailsActivity extends BaseActivity {
     }
 
     private void handleClickLike() {
-        this.addSelection();
+        try {
+            this.restaurantDetailsViewModel.handleLike();
+            Toast.makeText(this, "Toggle selection success", Toast.LENGTH_LONG).show();
+        } catch (NoWorkmateForSessionException e) {
+            e.printStackTrace();
+            Toast.makeText(this, e.getClass().getName() + " " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
-    private void addSelection() {
-
-    }
 }

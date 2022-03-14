@@ -4,16 +4,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.gateways_impl.InMemorySelectionGateway;
-import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsGateway;
-import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
-import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
 import com.android.go4lunch.usecases.GetSession;
 import com.android.go4lunch.usecases.models_vo.RestaurantVO;
 import com.android.go4lunch.models.Geolocation;
 import com.android.go4lunch.usecases.GetRestaurantsForList;
-import com.android.go4lunch.usecases.ToggleSelection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +24,6 @@ public class RestaurantsViewModel extends ViewModel {
 
     private final GetSession getSession;
 
-    // Action
-    private final ToggleSelection toggleSelection;
-
     // Restaurant List LiveData
     private final MutableLiveData<List<RestaurantVO>> restaurants;
 
@@ -44,19 +36,7 @@ public class RestaurantsViewModel extends ViewModel {
         this.getRestaurantsForList = getRestaurantsForList;
         this.restaurants = new MutableLiveData<>(new ArrayList<>());
         this.getSession = new GetSession(new SessionGatewayImpl());
-
-        // Select
-        this.toggleSelection = new ToggleSelection(
-                new InMemorySelectionGateway(),
-                this.getSession,
-                new InMemoryHistoricOfSelectionsGateway()
-                );
     }
-
-    public void toggleSelection(Restaurant restaurant) throws NoWorkmateForSessionException {
-        this.toggleSelection.toggle(restaurant);
-    }
-
 
     // GET methods
 
