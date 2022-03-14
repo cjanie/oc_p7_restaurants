@@ -1,5 +1,6 @@
 package com.android.go4lunch.ui.viewmodels;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -24,12 +25,30 @@ public class RestaurantDetailsViewModel extends ViewModel {
 
     private MutableLiveData<Restaurant> restaurant;
 
+    private MutableLiveData<List<Workmate>> visitors;
+
     public RestaurantDetailsViewModel(
             ToggleSelectionUseCase toggleSelectionUseCase,
             GetSessionUseCase getSessionUseCase) {
         this.toggleSelectionUseCase = toggleSelectionUseCase;
         this.getSessionUseCase = getSessionUseCase;
         this.restaurant = new MutableLiveData<>();
+        Workmate janie = new Workmate("Janie");
+        List<Workmate> workmates = new ArrayList<>();
+        workmates.add(janie);
+        this.visitors = new MutableLiveData<>(workmates);
+    }
+
+    public LiveData<Restaurant> getRestaurant() {
+        return this.restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant.setValue(restaurant);
+    }
+
+    public LiveData<List<Workmate>> getVisitors() {
+        return this.visitors;
     }
 
     public void handleLike() throws NoWorkmateForSessionException {
@@ -38,4 +57,5 @@ public class RestaurantDetailsViewModel extends ViewModel {
         observableWorkmate.subscribe(results::add);
         this.toggleSelectionUseCase.handle(new Selection(this.restaurant.getValue(), results.get(0)));
     }
+
 }
