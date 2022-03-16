@@ -70,7 +70,9 @@ public class RestaurantDetailsActivity extends BaseActivity {
 
         // Data
         // RESTAURANT
-        this.restaurantDetailsViewModel.setRestaurant(new Restaurant("Chez Jojo", "12 allée des lilas"));
+        Restaurant restaurantMock = new Restaurant("Chez Lol", "23 sentier");
+        restaurantMock.setId("1");
+        this.restaurantDetailsViewModel.setRestaurant(restaurantMock);
         this.restaurantDetailsViewModel.getRestaurant().observe(this, restaurant -> {
             if(restaurant.getPhotoUrl() != null) {
                 Glide.with(this.restaurantImage.getContext())

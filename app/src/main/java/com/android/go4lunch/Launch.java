@@ -7,18 +7,24 @@ import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsHttpClientProvider;
 import com.android.go4lunch.apis.apiGoogleMaps.repositories.RestaurantRepository;
 import com.android.go4lunch.gateways_impl.DistanceGatewayImpl;
 import com.android.go4lunch.gateways_impl.HistoricOfSelectionsGatewayImpl;
+import com.android.go4lunch.gateways_impl.InMemoryVisitorsGateway;
 import com.android.go4lunch.gateways_impl.RestaurantGatewayImpl;
 import com.android.go4lunch.gateways_impl.SelectionGatewayImpl;
 import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
+import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.providers.RealDateProvider;
 import com.android.go4lunch.providers.RealTimeProvider;
 import com.android.go4lunch.ui.viewmodels.MapViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModelFactory;
+import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.usecases.ToggleSelectionUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Launch extends Application {
 
@@ -38,6 +44,11 @@ public class Launch extends Application {
         DistanceGatewayImpl distanceGateway = new DistanceGatewayImpl(distanceRepository);
         SelectionGatewayImpl selectionGateway = new SelectionGatewayImpl();
         SessionGatewayImpl sessionGateway = new SessionGatewayImpl();
+        InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
+        List<Selection> selections = new ArrayList<>();
+        Selection selection1= new Selection("1", "Restau", "1", "Jany");
+        selections.add(selection1);
+        inMemoryVisitorsGateway.setSelections(selections);
         HistoricOfSelectionsGatewayImpl historicOfSelectionsGateway = new HistoricOfSelectionsGatewayImpl();
         RealTimeProvider timeProvider = new RealTimeProvider();
         RealDateProvider dateProvider = new RealDateProvider();
@@ -51,12 +62,17 @@ public class Launch extends Application {
                 selectionGateway,
                 historicOfSelectionsGateway
         );
-        ToggleSelectionUseCase toggleSelectionUseCase = new ToggleSelectionUseCase(selectionGateway);
+        ToggleSelectionUseCase toggleSelectionUseCase = new ToggleSelectionUseCase(selectionGateway, inMemoryVisitorsGateway);
         GetSessionUseCase getSessionUseCase = new GetSessionUseCase(sessionGateway);
+        GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(inMemoryVisitorsGateway);
         // VIEW MODELS FACTORIES
         this.mapViewModelFactory = new MapViewModelFactory(getRestaurantsForMapUseCase);
         this.restaurantsViewModelFactory = new RestaurantsViewModelFactory(getRestaurantsForListUseCase);
-        this.restaurantDetailsViewModelFactory = new RestaurantDetailsViewModelFactory(toggleSelectionUseCase, getSessionUseCase);
+        this.restaurantDetailsViewModelFactory = new RestaurantDetailsViewModelFactory(
+                toggleSelectionUseCase,
+                getSessionUseCase,
+                getRestaurantVisitorsUseCase
+        );
 
     }
 

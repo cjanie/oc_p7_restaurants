@@ -22,7 +22,7 @@ public class WorkmateViewModel extends ViewModel {
         //workmateQuery.setWorkmates(Arrays.asList(new Workmate[]{janie, cyril}));
         //this.retrieveWorkmates = new RetrieveWorkmates(workmateQuery);
         this.selectionQuery = new InMemorySelectionGateway();
-        Selection selection = new Selection(new Restaurant("AIOU", "loc"), janie);
+        Selection selection = new Selection("1", "AIOU", "1", "loc");
         //selectionQuery.setSelections(Arrays.asList()new Selection[] {selection}));
     }
 /*

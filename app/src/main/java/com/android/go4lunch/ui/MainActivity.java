@@ -12,7 +12,6 @@ import com.android.go4lunch.R;
 
 import com.android.go4lunch.ui.adapters.ViewPagerAdapter;
 
-import com.android.go4lunch.ui.fragments.ButtonsBarFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 

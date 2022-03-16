@@ -24,7 +24,7 @@ public class SelectionInfoDecoratorForWorkMate {
 
     private Observable<Restaurant> getSelection(WorkmateVO workmate) {
         return this.selectionGateway.getSelection().map(selection -> {
-            Restaurant selected = selection.getRestaurant();
+            Restaurant selected = new Restaurant(selection.getRestaurantName(), "baba");
             return selected;
         });
     }
