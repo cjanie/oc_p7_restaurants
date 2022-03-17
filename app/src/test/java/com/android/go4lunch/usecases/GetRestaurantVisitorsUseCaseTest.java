@@ -21,15 +21,18 @@ public class GetRestaurantVisitorsUseCaseTest {
         selections.add(selection);
         restaurantVisitorGateway.setSelections(selections);
         GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(restaurantVisitorGateway);
-        assertFalse(getRestaurantVisitorsUseCase.handle("1").isEmpty());
+        List<Workmate> results = new ArrayList<>();
+        getRestaurantVisitorsUseCase.handle("1").subscribe(results::addAll);
+        assertFalse(results.isEmpty());
     }
 
     @Test
     public void doesNotReturnAnyVisitorWhenThereIsNone() {
         InMemoryVisitorsGateway visitorGateway = new InMemoryVisitorsGateway();
         GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(visitorGateway);
-        List<Workmate> visitors = getRestaurantVisitorsUseCase.handle("0");
-        assert(visitors.isEmpty());
+        List<Workmate> results = new ArrayList<>();
+        getRestaurantVisitorsUseCase.handle("0").subscribe(results::addAll);
+        assert(results.isEmpty());
     }
 
     @Test
@@ -50,8 +53,9 @@ public class GetRestaurantVisitorsUseCaseTest {
                 "2", "Cyril");
         selected.add(selection3);
         GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(visitorsGateway);
-        List<Workmate> visitors = getRestaurantVisitorsUseCase.handle("1");
-        assert(visitors.size() == 2);
+        List<Workmate> results = new ArrayList<>();
+        getRestaurantVisitorsUseCase.handle("1").subscribe(results::addAll);
+        assert(results.size() == 2);
     }
 
 }

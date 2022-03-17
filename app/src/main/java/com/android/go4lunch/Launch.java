@@ -53,6 +53,7 @@ public class Launch extends Application {
         RealTimeProvider timeProvider = new RealTimeProvider();
         RealDateProvider dateProvider = new RealDateProvider();
         // USE CASES
+        GetSessionUseCase getSessionUseCase = new GetSessionUseCase(sessionGateway);
         GetRestaurantsForMapUseCase getRestaurantsForMapUseCase = new GetRestaurantsForMapUseCase(restaurantGateway);
         GetRestaurantsForListUseCase getRestaurantsForListUseCase = new GetRestaurantsForListUseCase(
                 restaurantGateway,
@@ -62,8 +63,13 @@ public class Launch extends Application {
                 selectionGateway,
                 historicOfSelectionsGateway
         );
-        ToggleSelectionUseCase toggleSelectionUseCase = new ToggleSelectionUseCase(selectionGateway, inMemoryVisitorsGateway);
-        GetSessionUseCase getSessionUseCase = new GetSessionUseCase(sessionGateway);
+
+        ToggleSelectionUseCase toggleSelectionUseCase = new ToggleSelectionUseCase(
+                selectionGateway,
+                inMemoryVisitorsGateway,
+                getSessionUseCase
+        );
+
         GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(inMemoryVisitorsGateway);
         // VIEW MODELS FACTORIES
         this.mapViewModelFactory = new MapViewModelFactory(getRestaurantsForMapUseCase);

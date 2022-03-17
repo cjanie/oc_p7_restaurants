@@ -7,6 +7,8 @@ import com.android.go4lunch.models.Workmate;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+
 public class GetRestaurantVisitorsUseCase {
 
     private VisitorsGateway visitorsGateway;
@@ -15,18 +17,22 @@ public class GetRestaurantVisitorsUseCase {
         this.visitorsGateway = visitorsGateway;
     }
 
-    public List<Workmate> handle(String restaurantId) {
-        List<Workmate> visitors = new ArrayList<>();
-        if(!this.visitorsGateway.getSelections().isEmpty()) {
-            for(Selection selection: this.visitorsGateway.getSelections()) {
-                if(selection.getRestaurantId().equals(restaurantId)) {
-                    visitors.add(new Workmate(selection.getWorkmateName()));
-                }
-            }
-        }
-
-        return visitors;
+    public Observable<List<Workmate>> handle(String restaurantId) {
+        return this.getVisitors(restaurantId);
     }
 
+    private Observable<List<Workmate>> getVisitors(String restaurantId) {
+        return this.visitorsGateway.getSelections().map(selections -> {
+            List<Workmate> visitors = new ArrayList<>();
+            if(!selections.isEmpty()) {
+                for(Selection selection: selections) {
+                    if(selection.getRestaurantId().equals(restaurantId)) {
+                        visitors.add(new Workmate(selection.getWorkmateName()));
+                    }
+                }
+            }
+            return visitors;
+        });
+    }
 }
 

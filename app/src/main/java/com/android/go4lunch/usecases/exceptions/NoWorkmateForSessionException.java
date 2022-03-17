@@ -1,4 +1,4 @@
-package com.android.go4lunch.exceptions;
+package com.android.go4lunch.usecases.exceptions;
 
 public class NoWorkmateForSessionException extends Exception {
 }

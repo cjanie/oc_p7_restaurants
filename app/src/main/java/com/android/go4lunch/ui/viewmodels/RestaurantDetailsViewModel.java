@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
+import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.models.Workmate;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 
 public class RestaurantDetailsViewModel extends ViewModel {
 
@@ -30,6 +31,8 @@ public class RestaurantDetailsViewModel extends ViewModel {
 
     private MutableLiveData<List<Workmate>> visitors;
 
+    private Disposable disposable;
+
     public RestaurantDetailsViewModel(
             ToggleSelectionUseCase toggleSelectionUseCase,
             GetSessionUseCase getSessionUseCase,
@@ -39,12 +42,8 @@ public class RestaurantDetailsViewModel extends ViewModel {
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
 
         this.restaurant = new MutableLiveData<>();
-        List<Workmate> workmates = new ArrayList<>();
-        if(this.restaurant.getValue() != null) {
-            workmates = this.fetchVisitors(restaurant.getValue().getId());
-        }
-        workmates = this.fetchVisitors("1");
-        this.visitors = new MutableLiveData<>(workmates);
+        this.visitors = new MutableLiveData<>(new ArrayList<>());
+        this.fetchVisitors();
     }
 
     public LiveData<Restaurant> getRestaurant() {
@@ -70,8 +69,16 @@ public class RestaurantDetailsViewModel extends ViewModel {
                 results.get(0).getName()));
     }
 
-    private List<Workmate> fetchVisitors(String restaurantId) {
-        return this.getRestaurantVisitorsUseCase.handle(restaurantId);
+    private void fetchVisitors() {
+        if(this.restaurant.getValue() != null) {
+            List<Workmate> results = new ArrayList<>();
+            this.getRestaurantVisitorsUseCase.handle(this.restaurant.getValue().getId()).subscribe(results::addAll);
+            System.out.println("fetch visitors" + results.size());
+            this.visitors.setValue(results);
+        }
+
+
+
     }
 
 

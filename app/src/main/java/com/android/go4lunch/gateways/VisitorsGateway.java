@@ -5,13 +5,15 @@ import com.android.go4lunch.models.Workmate;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+
 public interface VisitorsGateway {
     void addSelection(Selection selection);
 
     void removeSelection(String workmateId);
 
-    List<Selection> getSelections();
+    Observable<List<Selection>> getSelections();
 
-    List<Selection> getVisitors(String restaurantId);
+    Observable<List<Selection>> getVisitors(String restaurantId);
 
 }

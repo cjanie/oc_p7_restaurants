@@ -1,6 +1,6 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
+import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.gateways.SessionGateway;
 import com.android.go4lunch.models.Workmate;
 
@@ -15,6 +15,8 @@ public class GetSessionUseCase {
     }
 
     public Observable<Workmate> getWorkmate() throws NoWorkmateForSessionException {
+        if(this.sessionGateway.getWorkmate() == null)
+            throw new NoWorkmateForSessionException();
         return this.sessionGateway.getWorkmate();
     }
 

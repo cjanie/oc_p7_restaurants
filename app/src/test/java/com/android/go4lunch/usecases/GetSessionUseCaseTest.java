@@ -1,6 +1,6 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
+import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.gateways_impl.InMemorySessionGateway;
 import com.android.go4lunch.models.Workmate;
 
@@ -30,6 +30,6 @@ public class GetSessionUseCaseTest {
         InMemorySessionGateway inMemorySessionGateway = new InMemorySessionGateway();
         // Dont set repository with workmate
         GetSessionUseCase getSessionUseCase = new GetSessionUseCase(inMemorySessionGateway);
-        Observable<Workmate> observableWorkmate = getSessionUseCase.getWorkmate();
+        getSessionUseCase.getWorkmate();
     }
 }
