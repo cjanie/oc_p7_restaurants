@@ -23,11 +23,13 @@ public class ToggleSelectionUseCaseTest {
 
 
 
-    private List<Selection> commandSelect(Selection selection) throws NoWorkmateForSessionException {
+    private List<Selection> commandSelect(String restaurantId, String restaurantName) throws NoWorkmateForSessionException {
         InMemorySelectionGateway inMemorySelectionGateway = new InMemorySelectionGateway();
         InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
         InMemorySessionGateway inMemorySessionGateway = new InMemorySessionGateway();
-        inMemorySessionGateway.setWorkmate(new Workmate("Janie"));
+        Workmate session = new Workmate("Janie");
+        session.setId("1");
+        inMemorySessionGateway.setWorkmate(session);
         GetSessionUseCase getSessionUseCase = new GetSessionUseCase(inMemorySessionGateway);
 
         ToggleSelectionUseCase toggleSelectionUseCase = new ToggleSelectionUseCase(
@@ -35,7 +37,10 @@ public class ToggleSelectionUseCaseTest {
                 inMemoryVisitorsGateway,
                 getSessionUseCase
         );
-        toggleSelectionUseCase.handle(selection);
+        toggleSelectionUseCase.handle(
+                restaurantId,
+                restaurantName
+        );
         Observable<Selection> observableSelection = inMemorySelectionGateway.getSelection();
         assertNotNull(observableSelection);
         List<Selection> results = new ArrayList<>();
@@ -43,12 +48,18 @@ public class ToggleSelectionUseCaseTest {
         return results;
     }
 
-    private Observable<Selection> commandUnselect(Selection selection) throws NoWorkmateForSessionException {
+    private Observable<Selection> commandUnselect(String restaurantId, String restaurantName) throws NoWorkmateForSessionException {
         InMemorySelectionGateway inMemorySelectionGateway = new InMemorySelectionGateway();
-        inMemorySelectionGateway.setSelection(selection);
+        inMemorySelectionGateway.setSelection(new Selection(
+                restaurantId,
+                restaurantName,
+                "1",
+                "Janie"
+        ));
         InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
         Workmate session = new Workmate("Janie");
         session.setId("1");
+
         InMemorySessionGateway inMemorySessionGateway = new InMemorySessionGateway();
         inMemorySessionGateway.setWorkmate(session);
         GetSessionUseCase getSessionUseCase = new GetSessionUseCase(inMemorySessionGateway);
@@ -57,7 +68,7 @@ public class ToggleSelectionUseCaseTest {
                 inMemoryVisitorsGateway,
                 getSessionUseCase
         );
-        toggleSelectionUseCase.handle(selection);
+        toggleSelectionUseCase.handle(restaurantId, restaurantName);
 
         return inMemorySelectionGateway.getSelection();
     }
@@ -66,18 +77,12 @@ public class ToggleSelectionUseCaseTest {
 
     @Test
     public void toggleSelects() throws NoWorkmateForSessionException {
-        Selection selection = new Selection(
-                "1", "Chez Jojo",
-                "1", "janie");
-        assert(this.commandSelect(selection).size() == 1);
+        assert(this.commandSelect("1", "Chez Jojo").size() == 1);
     }
 
     @Test
     public void toggleUnselects() throws NoWorkmateForSessionException {
-        Selection selection = new Selection(
-                "1", "Chez Jojo",
-                "1", "janie");
-        assertNull(this.commandUnselect(selection));
+        assertNull(this.commandUnselect("1", "Chez Jojo"));
     }
 
     @Test
@@ -98,9 +103,7 @@ public class ToggleSelectionUseCaseTest {
                 inMemoryVisitorsGateway,
                 getSessionUseCase
         );
-        toggleSelectionUseCase.handle(new Selection(
-                "1", "Chez Jojo",
-                "1", "Janie"));
+        toggleSelectionUseCase.handle("1", "Chez Jojo");
 
         List<Selection> savedSelections = new ArrayList<>();
         inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);
@@ -122,13 +125,10 @@ public class ToggleSelectionUseCaseTest {
                 inMemoryVisitorsGateway,
                 getSessionUseCase
         );
-        toggleSelectionUseCase.handle(new Selection(
-                "1", "Chez Jojo",
-                "1", "janie"));
+        toggleSelectionUseCase.handle("1", "Chez Jojo");
 
-        toggleSelectionUseCase.handle(new Selection(
-                "1", "Chez Jojo",
-                "1", "janie"));
+        toggleSelectionUseCase.handle(
+                "1", "Chez Jojo");
 
         List<Selection> savedSelections = new ArrayList<>();
         inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);
@@ -160,13 +160,8 @@ public class ToggleSelectionUseCaseTest {
                 inMemoryVisitorsGateway,
                 getSessionUseCase
         );
-                toggleSelectionUseCase.handle(new Selection(
-
-                        "2","Chez Jojo",
-                        "2", "Janie"));
-        toggleSelectionUseCase.handle(new Selection(
-                "2", "Chez Jojo",
-                "2", "Janie"));
+                toggleSelectionUseCase.handle("2","Chez Jojo");
+        toggleSelectionUseCase.handle("2", "Chez Jojo");
         List<Selection> savedSelections = new ArrayList<>();
         inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);
         assert(savedSelections.size() == 1);

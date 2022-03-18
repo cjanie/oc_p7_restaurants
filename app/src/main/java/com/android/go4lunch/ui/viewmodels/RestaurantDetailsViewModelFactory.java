@@ -12,8 +12,6 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
 
     private final ToggleSelectionUseCase toggleSelectionUseCase;
 
-    private final GetSessionUseCase getSessionUseCase;
-
     private final GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
 
 
@@ -23,7 +21,6 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
             GetSessionUseCase getSessionUseCase,
             GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase) {
         this.toggleSelectionUseCase = toggleSelectionUseCase;
-        this.getSessionUseCase = getSessionUseCase;
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
     }
 
@@ -34,7 +31,6 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
         if(modelClass.isAssignableFrom(RestaurantDetailsViewModel.class)) {
             return (T) new RestaurantDetailsViewModel(
                     this.toggleSelectionUseCase,
-                    this.getSessionUseCase,
                     this.getRestaurantVisitorsUseCase
             );
         }

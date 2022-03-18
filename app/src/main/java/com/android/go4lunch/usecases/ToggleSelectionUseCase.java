@@ -28,20 +28,16 @@ public class ToggleSelectionUseCase {
         this.getSessionUseCase = getSessionUseCase;
     }
 
-    public void handle(Selection selection) throws NoWorkmateForSessionException {
-        this.handle(new Restaurant("", ""));
-    }
-
-    public void handle(Restaurant restaurant) throws NoWorkmateForSessionException {
-        if(restaurant != null) {
-            List<Workmate> results = new ArrayList<>();
-            this.getSessionUseCase.getWorkmate().subscribe(results::add);
-            if(!results.isEmpty()) {
+    public void handle(String restaurantId, String restaurantName) throws NoWorkmateForSessionException {
+        if(restaurantId != null && restaurantName !=null) {
+            List<Workmate> resultsSession = new ArrayList<>();
+            this.getSessionUseCase.getWorkmate().subscribe(resultsSession::add);
+            if(!resultsSession.isEmpty()) {
                 Selection selection = new Selection(
-                        restaurant.getId(),
-                        restaurant.getName(),
-                        results.get(0).getId(),
-                        results.get(0).getId()
+                        restaurantId,
+                        restaurantName,
+                        resultsSession.get(0).getId(),
+                        resultsSession.get(0).getId()
                 );
                 if (this.selectionGateway.getSelection() == null) {
                     this.selectionGateway.select(selection);

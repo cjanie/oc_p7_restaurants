@@ -23,8 +23,6 @@ public class RestaurantDetailsViewModel extends ViewModel {
     // Use cases
     private ToggleSelectionUseCase toggleSelectionUseCase;
 
-    private GetSessionUseCase getSessionUseCase;
-
     private GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
 
     private MutableLiveData<Restaurant> restaurant;
@@ -35,10 +33,8 @@ public class RestaurantDetailsViewModel extends ViewModel {
 
     public RestaurantDetailsViewModel(
             ToggleSelectionUseCase toggleSelectionUseCase,
-            GetSessionUseCase getSessionUseCase,
             GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase) {
         this.toggleSelectionUseCase = toggleSelectionUseCase;
-        this.getSessionUseCase = getSessionUseCase;
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
 
         this.restaurant = new MutableLiveData<>();
@@ -59,14 +55,9 @@ public class RestaurantDetailsViewModel extends ViewModel {
     }
 
     public void handleLike() throws NoWorkmateForSessionException {
-        Observable<Workmate> observableWorkmate = this.getSessionUseCase.getWorkmate();
-        List<Workmate> results = new ArrayList<>();
-        observableWorkmate.subscribe(results::add);
-        this.toggleSelectionUseCase.handle(new Selection(
+        this.toggleSelectionUseCase.handle(
                 this.restaurant.getValue().getId(),
-                this.restaurant.getValue().getName(),
-                results.get(0).getId(),
-                results.get(0).getName()));
+                this.restaurant.getValue().getName());
     }
 
     private void fetchVisitors() {
