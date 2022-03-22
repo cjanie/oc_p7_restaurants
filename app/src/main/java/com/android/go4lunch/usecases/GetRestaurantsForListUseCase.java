@@ -1,6 +1,5 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways.HistoricOfSelectionsGateway;
 import com.android.go4lunch.gateways.RestaurantGateway;
 
 import com.android.go4lunch.gateways.SelectionGateway;
@@ -12,8 +11,6 @@ import com.android.go4lunch.usecases.decorators.SelectionInfoDecoratorForRestaur
 import com.android.go4lunch.usecases.decorators.TimeInfoDecorator;
 import com.android.go4lunch.models.Geolocation;
 import com.android.go4lunch.models.Restaurant;
-import com.android.go4lunch.usecases.decorators.VoteInfoDecorator;
-import com.android.go4lunch.usecases.decorators.VoteResult;
 import com.android.go4lunch.usecases.models_vo.RestaurantVO;
 
 import java.util.ArrayList;
@@ -31,23 +28,17 @@ public class GetRestaurantsForListUseCase {
 
     private final SelectionInfoDecoratorForRestaurant selectionInfoDecorator;
 
-    private final VoteInfoDecorator voteInfoDecorator;
-
     public GetRestaurantsForListUseCase(
             RestaurantGateway restaurantGateway,
             TimeProvider timeProvider,
             DateProvider dateProvider,
             DistanceGateway distanceGateway,
-            SelectionGateway selectionGateway,
-            HistoricOfSelectionsGateway historicOfSelectionsGateway
+            SelectionGateway selectionGateway
     ) {
         this.restaurantGateway = restaurantGateway;
         this.timeInfoDecorator = new TimeInfoDecorator(timeProvider, dateProvider);
         this.distanceInfoDecorator = new DistanceInfoDecorator(distanceGateway);
         this.selectionInfoDecorator = new SelectionInfoDecoratorForRestaurant(selectionGateway);
-        // Vote
-        VoteResult voteResult = new VoteResult(historicOfSelectionsGateway);
-        this.voteInfoDecorator = new VoteInfoDecorator(voteResult);
     }
 
     public Observable<List<RestaurantVO>> getRestaurantsWithSelections(Geolocation myPosition, int radius) {
@@ -90,7 +81,6 @@ public class GetRestaurantsForListUseCase {
                 RestaurantVO restaurantVO = new RestaurantVO(restaurant);
                 this.timeInfoDecorator.decor(restaurantVO);
                 this.selectionInfoDecorator.decor(restaurantVO);
-                this.voteInfoDecorator.decor(restaurantVO);
                 restaurantVOs.add(restaurantVO);
             }
         }

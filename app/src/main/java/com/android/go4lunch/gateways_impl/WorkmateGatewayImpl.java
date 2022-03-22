@@ -22,16 +22,9 @@ public class WorkmateGatewayImpl implements WorkmateGateway {
 
 
     public WorkmateGatewayImpl() {
-        Workmate janie = new Workmate("Janie");
-        janie.setId("1");
-        janie.setPhone("06 59 12 12 12");
-        janie.setEmail("janie.chun@hotmail.fr");
-        janie.setUrlPhoto("https://i.pravatar.cc/150?u=a042581f4e29026704d");
 
-        List<Workmate> workmates = new ArrayList<>();
-        workmates.add(janie);
-        workmates.add(janie);
-        this.workmates = Observable.just(new ArrayList<>());
+
+        this.workmates = Observable.just(new Mock().workmates());
         this.fetchUsers();
     }
 

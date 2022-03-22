@@ -6,11 +6,11 @@ import com.android.go4lunch.apis.apiGoogleMaps.repositories.DistanceRepository;
 import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsHttpClientProvider;
 import com.android.go4lunch.apis.apiGoogleMaps.repositories.RestaurantRepository;
 import com.android.go4lunch.gateways_impl.DistanceGatewayImpl;
-import com.android.go4lunch.gateways_impl.HistoricOfSelectionsGatewayImpl;
 import com.android.go4lunch.gateways_impl.InMemoryVisitorsGateway;
 import com.android.go4lunch.gateways_impl.RestaurantGatewayImpl;
 import com.android.go4lunch.gateways_impl.SelectionGatewayImpl;
 import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
+import com.android.go4lunch.gateways_impl.VisitorsGatewayImpl;
 import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.providers.RealDateProvider;
 import com.android.go4lunch.providers.RealTimeProvider;
@@ -49,14 +49,7 @@ public class Launch extends Application {
         DistanceGatewayImpl distanceGateway = new DistanceGatewayImpl(distanceRepository);
         SelectionGatewayImpl selectionGateway = new SelectionGatewayImpl();
         SessionGatewayImpl sessionGateway = new SessionGatewayImpl();
-        InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
-        List<Selection> selections = new ArrayList<>();
-        Selection selection1= new Selection("1", "Chez Lol", "2", "Cyril");
-        selections.add(selection1);
-        Selection selection2= new Selection("1", "Chez Lol", "3", "Sylvaine");
-        selections.add(selection2);
-        inMemoryVisitorsGateway.setSelections(selections);
-        HistoricOfSelectionsGatewayImpl historicOfSelectionsGateway = new HistoricOfSelectionsGatewayImpl();
+        VisitorsGatewayImpl visitorsGateway = new VisitorsGatewayImpl();
         RealTimeProvider timeProvider = new RealTimeProvider();
         RealDateProvider dateProvider = new RealDateProvider();
         // USE CASES
@@ -67,20 +60,19 @@ public class Launch extends Application {
                 timeProvider,
                 dateProvider,
                 distanceGateway,
-                selectionGateway,
-                historicOfSelectionsGateway
+                selectionGateway
         );
 
         LikeForLunchUseCase likeForLunchUseCase = new LikeForLunchUseCase(
                 selectionGateway,
-                inMemoryVisitorsGateway
+                visitorsGateway
         );
 
-        GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(inMemoryVisitorsGateway);
+        GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(visitorsGateway);
 
-        IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase = new IsTheCurrentSelectionUseCase(inMemoryVisitorsGateway);
+        IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase = new IsTheCurrentSelectionUseCase(visitorsGateway);
 
-        GetWorkmateSelectionUseCase getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(inMemoryVisitorsGateway);
+        GetWorkmateSelectionUseCase getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorsGateway);
         // VIEW MODELS FACTORIES
         this.mapViewModelFactory = new MapViewModelFactory(getRestaurantsForMapUseCase);
         this.restaurantsViewModelFactory = new RestaurantsViewModelFactory(getRestaurantsForListUseCase);

@@ -1,7 +1,6 @@
 package com.android.go4lunch.usecases;
 
 import com.android.go4lunch.gateways_impl.InMemorySelectionGateway;
-import com.android.go4lunch.gateways_impl.InMemoryHistoricOfSelectionsGateway;
 import com.android.go4lunch.deterministic_providers.DeterministicDateProvider;
 import com.android.go4lunch.deterministic_providers.DeterministicTimeProvider;
 import com.android.go4lunch.usecases.enums.TimeInfo;
@@ -160,8 +159,7 @@ public class GetRestaurantsForListUseCaseTest {
                 new DeterministicTimeProvider(now),
                 new DeterministicDateProvider(1),
                 new InMemoryDistanceRepository(Observable.just(100L)),
-                new InMemorySelectionGateway(),
-                new InMemoryHistoricOfSelectionsGateway()
+                new InMemorySelectionGateway()
         );
         return getRestaurantsForListUseCase;
     }
