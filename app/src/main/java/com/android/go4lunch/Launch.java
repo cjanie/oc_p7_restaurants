@@ -7,15 +7,25 @@ import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsHttpClientProvider;
 import com.android.go4lunch.apis.apiGoogleMaps.repositories.RestaurantRepository;
 import com.android.go4lunch.gateways_impl.DistanceGatewayImpl;
 import com.android.go4lunch.gateways_impl.HistoricOfSelectionsGatewayImpl;
-import com.android.go4lunch.gateways_impl.InMemorySelectionGateway;
+import com.android.go4lunch.gateways_impl.InMemoryVisitorsGateway;
 import com.android.go4lunch.gateways_impl.RestaurantGatewayImpl;
 import com.android.go4lunch.gateways_impl.SelectionGatewayImpl;
+import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
+import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.providers.RealDateProvider;
 import com.android.go4lunch.providers.RealTimeProvider;
 import com.android.go4lunch.ui.viewmodels.MapViewModelFactory;
+import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModelFactory;
-import com.android.go4lunch.usecases.GetRestaurantsForList;
-import com.android.go4lunch.usecases.GetRestaurantsForMap;
+import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
+import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
+import com.android.go4lunch.usecases.LikeForLunchUseCase;
+import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
+import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
+import com.android.go4lunch.usecases.GetSessionUseCase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Launch extends Application {
 
@@ -24,10 +34,9 @@ public class Launch extends Application {
 
     private final RestaurantsViewModelFactory restaurantsViewModelFactory;
 
-
+    private final RestaurantDetailsViewModelFactory restaurantDetailsViewModelFactory;
 
     public Launch() {
-        // RESTAURANTS
         // DEPENDENCIES
         GoogleMapsHttpClientProvider httpClientProvider = new GoogleMapsHttpClientProvider();
         RestaurantRepository restaurantRepository = new RestaurantRepository(httpClientProvider);
@@ -35,12 +44,21 @@ public class Launch extends Application {
         RestaurantGatewayImpl restaurantGateway = new RestaurantGatewayImpl(restaurantRepository);
         DistanceGatewayImpl distanceGateway = new DistanceGatewayImpl(distanceRepository);
         SelectionGatewayImpl selectionGateway = new SelectionGatewayImpl();
+        SessionGatewayImpl sessionGateway = new SessionGatewayImpl();
+        InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
+        List<Selection> selections = new ArrayList<>();
+        Selection selection1= new Selection("1", "Chez Lol", "2", "Cyril");
+        selections.add(selection1);
+        Selection selection2= new Selection("1", "Chez Lol", "3", "Sylvaine");
+        selections.add(selection2);
+        inMemoryVisitorsGateway.setSelections(selections);
         HistoricOfSelectionsGatewayImpl historicOfSelectionsGateway = new HistoricOfSelectionsGatewayImpl();
         RealTimeProvider timeProvider = new RealTimeProvider();
         RealDateProvider dateProvider = new RealDateProvider();
         // USE CASES
-        GetRestaurantsForMap getRestaurantsForMap = new GetRestaurantsForMap(restaurantGateway);
-        GetRestaurantsForList getRestaurantsForList = new GetRestaurantsForList(
+        GetSessionUseCase getSessionUseCase = new GetSessionUseCase(sessionGateway);
+        GetRestaurantsForMapUseCase getRestaurantsForMapUseCase = new GetRestaurantsForMapUseCase(restaurantGateway);
+        GetRestaurantsForListUseCase getRestaurantsForListUseCase = new GetRestaurantsForListUseCase(
                 restaurantGateway,
                 timeProvider,
                 dateProvider,
@@ -48,9 +66,24 @@ public class Launch extends Application {
                 selectionGateway,
                 historicOfSelectionsGateway
         );
+
+        LikeForLunchUseCase likeForLunchUseCase = new LikeForLunchUseCase(
+                selectionGateway,
+                inMemoryVisitorsGateway
+        );
+
+        GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(inMemoryVisitorsGateway);
+
+        IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase = new IsTheCurrentSelectionUseCase(inMemoryVisitorsGateway);
         // VIEW MODELS FACTORIES
-        this.mapViewModelFactory = new MapViewModelFactory(getRestaurantsForMap);
-        this.restaurantsViewModelFactory = new RestaurantsViewModelFactory(getRestaurantsForList);
+        this.mapViewModelFactory = new MapViewModelFactory(getRestaurantsForMapUseCase);
+        this.restaurantsViewModelFactory = new RestaurantsViewModelFactory(getRestaurantsForListUseCase);
+        this.restaurantDetailsViewModelFactory = new RestaurantDetailsViewModelFactory(
+                getSessionUseCase,
+                likeForLunchUseCase,
+                getRestaurantVisitorsUseCase,
+                isTheCurrentSelectionUseCase
+        );
 
     }
 
@@ -62,5 +95,8 @@ public class Launch extends Application {
         return this.restaurantsViewModelFactory;
     }
 
+    public RestaurantDetailsViewModelFactory restaurantDetailsViewModelFactory() {
+        return this.restaurantDetailsViewModelFactory;
+    }
 
 }

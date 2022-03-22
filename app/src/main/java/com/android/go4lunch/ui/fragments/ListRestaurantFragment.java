@@ -18,13 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
-import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.ui.adapters.ListRestaurantRecyclerViewAdapter;
 import com.android.go4lunch.ui.events.InitMyPositionEvent;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModel;
-import com.android.go4lunch.ui.events.ToggleSelectionEvent;
-import com.android.go4lunch.ui.viewmodels.RestaurantsViewModelFactory;
-import com.google.android.material.snackbar.Snackbar;
+
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -76,14 +73,5 @@ public class ListRestaurantFragment extends WithLocationPermissionFragment {
                         this.recyclerView.setAdapter(adapter);
                     }
         });
-    }
-
-    @Subscribe
-    public void toggleSelection(ToggleSelectionEvent event) {
-        try {
-            this.restaurantsViewModel.toggleSelection(event.restaurant);
-        } catch (NoWorkmateForSessionException e) {
-            Snackbar.make(this.recyclerView, e.getMessage(), Snackbar.LENGTH_LONG).show();
-        }
     }
 }

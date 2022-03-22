@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
 
     <FrameLayout
-        android:id="@+id/workmate_avatar_frame"
+        android:id="@+id/visitor_avatar_frame"
         android:layout_width="@dimen/photo_size"
         android:layout_height="@dimen/photo_size"
         android:background="@drawable/card_circle_background"
@@ -17,31 +16,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <ImageView
-            android:id="@+id/workmate_avatar"
+            android:id="@+id/visitor_avatar"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>
 
 
     <TextView
-        android:id="@+id/workmate_text"
-        android:layout_width="0dp"
+        android:id="@+id/visitor_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="@string/visitor"
         android:textSize="@dimen/text_size_big"
         android:layout_marginLeft="@dimen/margin"
-        android:layout_marginRight="@dimen/margin_half"
-        app:layout_constraintBottom_toBottomOf="@+id/workmate_avatar_frame"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/workmate_avatar_frame"
-        app:layout_constraintTop_toTopOf="@+id/workmate_avatar_frame" />
-
-    <View
-        android:id="@+id/divider"
+        app:layout_constraintBottom_toBottomOf="@+id/visitor_avatar_frame"
+        app:layout_constraintStart_toEndOf="@+id/visitor_avatar_frame"
+        app:layout_constraintTop_toTopOf="@+id/visitor_avatar_frame" />
+    <TextView
+        android:id="@+id/visitor_text"
         android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        android:text="@string/visitor_text"
+        android:textSize="@dimen/text_size_big"
+        android:layout_marginLeft="@dimen/space"
+        android:layout_marginRight="@dimen/margin"
+        app:layout_constraintBottom_toBottomOf="@+id/visitor_avatar_frame"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/workmate_avatar_frame" />
+        app:layout_constraintStart_toEndOf="@+id/visitor_name"
+        app:layout_constraintTop_toTopOf="@+id/visitor_avatar_frame" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

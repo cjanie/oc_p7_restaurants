@@ -11,46 +11,31 @@ import io.reactivex.Observable;
 
 public class InMemorySelectionGateway implements SelectionGateway {
 
-    private Observable<List<Selection>> selections;
+    private Observable<Selection> selection;
 
-    public InMemorySelectionGateway() {
-
-        this.selections = Observable.just(new ArrayList<>());
-    }
-
-    public void setSelections(List<Selection> selections) {
-        if(selections != null) {
-            this.selections = Observable.just(selections);
+    public void setSelection(Selection selection) {
+        if(selection != null) {
+            this.selection = Observable.just(selection);
         }
     }
 
     @Override
-    public Observable<List<Selection>> getSelections() {
-        return this.selections;
+    public Observable<Selection> getSelection() {
+        return this.selection;
     }
 
 
     @Override
-    public void add(Selection selection) {
-        List<Selection> results = new ArrayList<>();
-        this.selections.subscribe(results::addAll);
-        results.add(selection);
-        this.selections = Observable.just(results);
-    }
-
-    @Override
-    public void remove(Selection selection) {
-        List<Selection> results = new ArrayList<>();
-        this.selections.subscribe(results::addAll);
-        if(!results.isEmpty()) {
-            for(int i=0; i<results.size(); i++) {
-                if(results.get(i).getRestaurant().getId() == selection.getRestaurant().getId()) {
-                    results.remove(i);
-                    break;
-                }
-            }
+    public void select(Selection selection) {
+        if(selection != null) {
+            this.selection = Observable.just(selection);
         }
-        this.selections = Observable.just(results);
+
+    }
+
+    @Override
+    public void unSelect() {
+        this.selection = null;
     }
 
 

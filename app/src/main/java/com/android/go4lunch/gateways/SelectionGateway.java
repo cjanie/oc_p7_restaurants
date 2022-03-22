@@ -9,10 +9,10 @@ import io.reactivex.Observable;
 
 public interface SelectionGateway {
 
-    Observable<List<Selection>> getSelections();
+    Observable<Selection> getSelection();
 
-    void add(Selection selection);
+    void select(Selection selection);
 
-    void remove(Selection selection);
+    void unSelect();
 
 }

@@ -1,14 +1,12 @@
 package com.android.go4lunch.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-
-import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
 
@@ -21,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     // UI
     @BindView(R.id.tabs)
@@ -62,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
            tab.setText(tabsTexts[position]);
            tab.setIcon(tabsIcons[position]);
         }).attach();
+
         
     }
 

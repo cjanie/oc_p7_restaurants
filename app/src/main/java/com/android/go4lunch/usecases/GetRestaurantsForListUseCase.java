@@ -21,7 +21,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class GetRestaurantsForList {
+public class GetRestaurantsForListUseCase {
 
     private final RestaurantGateway restaurantGateway;
 
@@ -33,7 +33,7 @@ public class GetRestaurantsForList {
 
     private final VoteInfoDecorator voteInfoDecorator;
 
-    public GetRestaurantsForList(
+    public GetRestaurantsForListUseCase(
             RestaurantGateway restaurantGateway,
             TimeProvider timeProvider,
             DateProvider dateProvider,

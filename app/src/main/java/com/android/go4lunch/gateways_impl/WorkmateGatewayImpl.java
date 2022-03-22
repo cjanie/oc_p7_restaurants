@@ -31,7 +31,7 @@ public class WorkmateGatewayImpl implements WorkmateGateway {
         List<Workmate> workmates = new ArrayList<>();
         workmates.add(janie);
         workmates.add(janie);
-        this.workmates = Observable.just(workmates);
+        this.workmates = Observable.just(new ArrayList<>());
         this.fetchUsers();
     }
 

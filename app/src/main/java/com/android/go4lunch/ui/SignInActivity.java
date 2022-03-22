@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.go4lunch.R;
 
@@ -19,7 +18,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.Arrays;
 import java.util.List;
 
-public class SignInActivity extends AppCompatActivity {
+public class SignInActivity extends BaseActivity {
 
     // https://firebaseopensource.com/projects/firebase/firebaseui-android/auth/readme/
     // 1. Build a sign in Intent

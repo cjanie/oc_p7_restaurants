@@ -9,11 +9,11 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class GetWorkmates {
+public class GetWorkmatesUseCase {
 
     private WorkmateGateway workmateGateway;
 
-    public GetWorkmates(WorkmateGateway workmateGateway) {
+    public GetWorkmatesUseCase(WorkmateGateway workmateGateway) {
         this.workmateGateway = workmateGateway;
     }
 

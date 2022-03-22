@@ -5,8 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.android.go4lunch.models.Geolocation;
-import com.android.go4lunch.gateways_impl.RestaurantGatewayImpl;
-import com.android.go4lunch.usecases.GetRestaurantsForMap;
+import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ import io.reactivex.observers.DisposableObserver;
 public class MapViewModel extends ViewModel {
 
     // Use Case
-    private GetRestaurantsForMap getRestaurantsForMap;
+    private GetRestaurantsForMapUseCase getRestaurantsForMapUseCase;
 
     // Data
     private final MutableLiveData<List<MarkerOptions>> markers;
@@ -29,14 +28,14 @@ public class MapViewModel extends ViewModel {
     private Disposable disposable;
 
     // Constructor
-    public MapViewModel(GetRestaurantsForMap getRestaurantsForMap) {
-        this.getRestaurantsForMap = getRestaurantsForMap;
+    public MapViewModel(GetRestaurantsForMapUseCase getRestaurantsForMapUseCase) {
+        this.getRestaurantsForMapUseCase = getRestaurantsForMapUseCase;
         this.markers = new MutableLiveData<>(new ArrayList<>());
     }
 
     public LiveData<List<MarkerOptions>> getMarkers(Double myLatitude, Double myLongitude, int radius) {
         this.setMarkers(
-                this.getRestaurantsForMap.getRestaurantsMarkers(new Geolocation(myLatitude, myLongitude), radius)
+                this.getRestaurantsForMapUseCase.getRestaurantsMarkers(new Geolocation(myLatitude, myLongitude), radius)
         );
         return this.markers;
     }

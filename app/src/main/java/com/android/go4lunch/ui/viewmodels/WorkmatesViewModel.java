@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.android.go4lunch.gateways_impl.WorkmateGatewayImpl;
-import com.android.go4lunch.usecases.GetWorkmates;
+import com.android.go4lunch.usecases.GetWorkmatesUseCase;
 import com.android.go4lunch.usecases.models_vo.WorkmateVO;
 
 import java.util.ArrayList;
@@ -18,21 +18,21 @@ import io.reactivex.observers.DisposableObserver;
 
 public class WorkmatesViewModel extends ViewModel {
 
-    private GetWorkmates getWorkmates;
+    private GetWorkmatesUseCase getWorkmatesUseCase;
 
     private MutableLiveData<List<WorkmateVO>> workmates;
 
     private Disposable disposable;
 
     public WorkmatesViewModel() {
-        this.getWorkmates = new GetWorkmates(
+        this.getWorkmatesUseCase = new GetWorkmatesUseCase(
                 new WorkmateGatewayImpl()
         );
         this.workmates = new MutableLiveData<>(new ArrayList<>());
     }
 
     public LiveData<List<WorkmateVO>> list() {
-        this.setWorkmates(this.getWorkmates.list());
+        this.setWorkmates(this.getWorkmatesUseCase.list());
         return this.workmates;
     }
 

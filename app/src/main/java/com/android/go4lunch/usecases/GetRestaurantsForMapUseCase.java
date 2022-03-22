@@ -12,11 +12,11 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class GetRestaurantsForMap {
+public class GetRestaurantsForMapUseCase {
 
     private RestaurantGateway restaurantGateway;
 
-    public GetRestaurantsForMap(RestaurantGateway restaurantGateway) {
+    public GetRestaurantsForMapUseCase(RestaurantGateway restaurantGateway) {
         this.restaurantGateway = restaurantGateway;
     }
 

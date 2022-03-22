@@ -4,20 +4,20 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.android.go4lunch.usecases.GetRestaurantsForList;
+import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 
 public class RestaurantsViewModelFactory implements ViewModelProvider.Factory {
 
-    private final GetRestaurantsForList getRestaurantsForList;
+    private final GetRestaurantsForListUseCase getRestaurantsForListUseCase;
 
-    public RestaurantsViewModelFactory(GetRestaurantsForList getRestaurantsForList) {
-        this.getRestaurantsForList = getRestaurantsForList;
+    public RestaurantsViewModelFactory(GetRestaurantsForListUseCase getRestaurantsForListUseCase) {
+        this.getRestaurantsForListUseCase = getRestaurantsForListUseCase;
     }
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if(modelClass.isAssignableFrom(RestaurantsViewModel.class)) {
-            return (T) new RestaurantsViewModel(this.getRestaurantsForList);
+            return (T) new RestaurantsViewModel(this.getRestaurantsForListUseCase);
         }
         throw new IllegalArgumentException("RestaurantsViewModelFactory: Unknown ViewModel class");
     }

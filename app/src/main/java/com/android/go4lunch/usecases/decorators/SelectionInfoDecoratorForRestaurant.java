@@ -20,9 +20,10 @@ public class SelectionInfoDecoratorForRestaurant {
     }
 
     public Observable<RestaurantVO> decor(RestaurantVO restaurant) {
-        return this.selectionGateway.getSelections().map(selections -> {
+        return this.selectionGateway.getSelection().map(selections -> {
             // search restaurant selections
             List<Workmate> workmatesForRestaurant = new ArrayList<>();
+            /*
             if(!selections.isEmpty()) {
                 for(Selection selection: selections) {
                     if(selection.getRestaurant().getId() != null && restaurant.getRestaurant().getId() != null) {
@@ -33,14 +34,17 @@ public class SelectionInfoDecoratorForRestaurant {
                 }
             }
             restaurant.setSelections(workmatesForRestaurant);
+
+             */
             return restaurant;
         });
     }
 
     private Observable<Integer> getSelectionsCount(RestaurantVO restaurant) {
 
-        return this.selectionGateway.getSelections().map(selections -> {
+        return this.selectionGateway.getSelection().map(selection -> {
             int count = 0;
+            /*
             if(!selections.isEmpty()) {
                 for(Selection selection: selections) {
                     if(selection.getRestaurant().equals(restaurant.getRestaurant())) {
@@ -48,6 +52,8 @@ public class SelectionInfoDecoratorForRestaurant {
                     }
                 }
             }
+
+             */
             return count;
         });
     }

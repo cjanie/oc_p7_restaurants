@@ -5,13 +5,13 @@ import com.android.go4lunch.models.Restaurant;
 
 import java.util.Map;
 
-public class UpdateHistoric {
+public class UpdateHistoricUseCase {
 
     private HistoricOfSelectionsGateway historicOfSelectionsGateway;
 
     private Restaurant restaurant;
 
-    public UpdateHistoric(HistoricOfSelectionsGateway historicOfSelectionsGateway, Restaurant restaurant) {
+    public UpdateHistoricUseCase(HistoricOfSelectionsGateway historicOfSelectionsGateway, Restaurant restaurant) {
         this.historicOfSelectionsGateway = historicOfSelectionsGateway;
         this.restaurant = restaurant;
     }

@@ -15,13 +15,13 @@ import io.reactivex.Observable;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class GetRestaurantsForMapTest {
+public class GetRestaurantsForMapUseCaseTest {
 
     @Test
     public void shouldReturn1MarkerOptionsWhen1RestaurantWithGeolocationIsAvailable() {
         List<Restaurant> restaurants = this.createListOfRestaurantsForRepository(1, true);
-        GetRestaurantsForMap getRestaurantsForMap = this.createGetRestaurantForMap(restaurants);
-        List<MarkerOptions> results = this.getObservedResults(getRestaurantsForMap);
+        GetRestaurantsForMapUseCase getRestaurantsForMapUseCase = this.createGetRestaurantForMap(restaurants);
+        List<MarkerOptions> results = this.getObservedResults(getRestaurantsForMapUseCase);
         assert(results.size() == 1);
         assert(results.get(0).getTitle().equals("Resto U"));
     }
@@ -29,17 +29,17 @@ public class GetRestaurantsForMapTest {
     @Test
     public void shouldReturn2MarkersOptionsWhen2RestaurantsWithGeolocationAreAvailable() {
         List<Restaurant> restaurants = this.createListOfRestaurantsForRepository(2, true);
-        GetRestaurantsForMap getRestaurantsForMap = this.createGetRestaurantForMap(restaurants);
-        List<MarkerOptions> results = this.getObservedResults(getRestaurantsForMap);
+        GetRestaurantsForMapUseCase getRestaurantsForMapUseCase = this.createGetRestaurantForMap(restaurants);
+        List<MarkerOptions> results = this.getObservedResults(getRestaurantsForMapUseCase);
         assert(results.size() == 2);
         assert(results.get(0).getTitle().equals("Resto U"));
     }
 
     @Test
     public void shouldReturnNoMarkerOptionsWhenNoRestaurantIsAvailable() {
-        GetRestaurantsForMap getRestaurantsForMap =
+        GetRestaurantsForMapUseCase getRestaurantsForMapUseCase =
                 this.createGetRestaurantForMap(new ArrayList<>());
-        List<MarkerOptions> results = this.getObservedResults(getRestaurantsForMap);
+        List<MarkerOptions> results = this.getObservedResults(getRestaurantsForMapUseCase);
         assert(results.isEmpty());
     }
 
@@ -47,9 +47,9 @@ public class GetRestaurantsForMapTest {
     public void shouldReturnNoMarkerOptionsWhenRestaurantHasNoAvailableGeolocation() {
         List<Restaurant> restaurantsToSetInRepository =
                 this.createListOfRestaurantsForRepository(1, false);
-        GetRestaurantsForMap getRestaurantsForMap = this.createGetRestaurantForMap(restaurantsToSetInRepository);
+        GetRestaurantsForMapUseCase getRestaurantsForMapUseCase = this.createGetRestaurantForMap(restaurantsToSetInRepository);
 
-        List<MarkerOptions> results = this.getObservedResults(getRestaurantsForMap);
+        List<MarkerOptions> results = this.getObservedResults(getRestaurantsForMapUseCase);
 
         assert(results.isEmpty());
     }
@@ -66,14 +66,14 @@ public class GetRestaurantsForMapTest {
         return restaurants;
     }
 
-    private GetRestaurantsForMap createGetRestaurantForMap(List<Restaurant> restaurantsInRepository) {
+    private GetRestaurantsForMapUseCase createGetRestaurantForMap(List<Restaurant> restaurantsInRepository) {
         InMemoryRestaurantGateway inMemoryRestaurantQuery = new InMemoryRestaurantGateway();
         inMemoryRestaurantQuery.setRestaurants(restaurantsInRepository);
-        return new GetRestaurantsForMap(inMemoryRestaurantQuery);
+        return new GetRestaurantsForMapUseCase(inMemoryRestaurantQuery);
     }
 
-    private List<MarkerOptions> getObservedResults(GetRestaurantsForMap getRestaurantsForMap) {
-        Observable<List<MarkerOptions>> observableMarkersOptions = getRestaurantsForMap
+    private List<MarkerOptions> getObservedResults(GetRestaurantsForMapUseCase getRestaurantsForMapUseCase) {
+        Observable<List<MarkerOptions>> observableMarkersOptions = getRestaurantsForMapUseCase
                 .getRestaurantsMarkers(new Geolocation(222.2, 22.22), 1000);
         List<MarkerOptions> results = new ArrayList<>();
         observableMarkersOptions.subscribe(results::addAll);
