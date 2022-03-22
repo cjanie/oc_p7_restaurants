@@ -18,7 +18,8 @@ import com.android.go4lunch.ui.viewmodels.MapViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModelFactory;
 import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
-import com.android.go4lunch.usecases.ToggleSelectionUseCase;
+import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
+import com.android.go4lunch.usecases.LikeForLunchUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
@@ -46,8 +47,10 @@ public class Launch extends Application {
         SessionGatewayImpl sessionGateway = new SessionGatewayImpl();
         InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
         List<Selection> selections = new ArrayList<>();
-        Selection selection1= new Selection("1", "Restau", "1", "Jany");
+        Selection selection1= new Selection("1", "Chez Lol", "2", "Cyril");
         selections.add(selection1);
+        Selection selection2= new Selection("1", "Chez Lol", "3", "Sylvaine");
+        selections.add(selection2);
         inMemoryVisitorsGateway.setSelections(selections);
         HistoricOfSelectionsGatewayImpl historicOfSelectionsGateway = new HistoricOfSelectionsGatewayImpl();
         RealTimeProvider timeProvider = new RealTimeProvider();
@@ -64,20 +67,22 @@ public class Launch extends Application {
                 historicOfSelectionsGateway
         );
 
-        ToggleSelectionUseCase toggleSelectionUseCase = new ToggleSelectionUseCase(
+        LikeForLunchUseCase likeForLunchUseCase = new LikeForLunchUseCase(
                 selectionGateway,
-                inMemoryVisitorsGateway,
-                getSessionUseCase
+                inMemoryVisitorsGateway
         );
 
         GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(inMemoryVisitorsGateway);
+
+        IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase = new IsTheCurrentSelectionUseCase(inMemoryVisitorsGateway);
         // VIEW MODELS FACTORIES
         this.mapViewModelFactory = new MapViewModelFactory(getRestaurantsForMapUseCase);
         this.restaurantsViewModelFactory = new RestaurantsViewModelFactory(getRestaurantsForListUseCase);
         this.restaurantDetailsViewModelFactory = new RestaurantDetailsViewModelFactory(
-                toggleSelectionUseCase,
                 getSessionUseCase,
-                getRestaurantVisitorsUseCase
+                likeForLunchUseCase,
+                getRestaurantVisitorsUseCase,
+                isTheCurrentSelectionUseCase
         );
 
     }

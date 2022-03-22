@@ -26,6 +26,8 @@ public class SessionGatewayImpl implements SessionGateway {
         });
 
          */
-        this.workmate = Observable.just(new Workmate("Cyril"));
+        Workmate session = new Workmate("Janie");
+        session.setId("1");
+        this.workmate = Observable.just(session);
     }
 }

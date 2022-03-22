@@ -41,6 +41,9 @@ public class RestaurantDetailsActivity extends BaseActivity {
     @BindView(R.id.details_restaurant_address)
     TextView restaurantAddress;
 
+    @BindView(R.id.details_start)
+    ImageView star;
+
     @BindView(R.id.button_call_container)
     ConstraintLayout buttonCall;
 
@@ -68,20 +71,20 @@ public class RestaurantDetailsActivity extends BaseActivity {
 
         // Data
         // RESTAURANT
-        Restaurant restaurantMock = new Restaurant("Chez Lol", "23 sentier");
-        restaurantMock.setId("1");
-        this.restaurantDetailsViewModel.setRestaurant(restaurantMock);
-        this.restaurantDetailsViewModel.getRestaurant().observe(this, restaurant -> {
-            if(restaurant.getPhotoUrl() != null) {
-                Glide.with(this.restaurantImage.getContext())
-                        .load(restaurant.getPhotoUrl())
-                        .apply(RequestOptions.circleCropTransform())
-                        .error(R.drawable.ic_baseline_error_24)
-                        .into(this.restaurantImage);
-            }
-            this.restaurantName.setText(restaurant.getName());
-            this.restaurantAddress.setText(restaurant.getAddress());
-        });
+        Restaurant restaurant = new Restaurant("Chez Lol", "23 sentier");
+        restaurant.setId("1");
+        this.restaurantDetailsViewModel.setRestaurant(restaurant);
+
+        if(restaurant.getPhotoUrl() != null) {
+            Glide.with(this.restaurantImage.getContext())
+                    .load(restaurant.getPhotoUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .error(R.drawable.ic_baseline_error_24)
+                    .into(this.restaurantImage);
+        }
+        this.restaurantName.setText(restaurant.getName());
+        this.restaurantAddress.setText(restaurant.getAddress());
+
 
         // VISITORS
         this.restaurantDetailsViewModel.getVisitors().observe(this, visitors -> {
@@ -89,10 +92,17 @@ public class RestaurantDetailsActivity extends BaseActivity {
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(adapter);
 
-            if(visitors.isEmpty()) {
-                pastille.setVisibility(View.INVISIBLE);
-            }
+            this.pastille.setVisibility(visitors.isEmpty() ? View.INVISIBLE : View.VISIBLE);
         });
+
+        // IS THE CURRENT SELECTION
+        try {
+            this.restaurantDetailsViewModel.getIsTheCurrentSelection().observe(this, isTheCurrentSelection -> {
+                this.star.setVisibility(isTheCurrentSelection ? View.VISIBLE : View.INVISIBLE);
+            });
+        } catch (NoWorkmateForSessionException e) {
+            Toast.makeText(this, e.getClass().getName(), Toast.LENGTH_SHORT).show();
+        }
 
         // CLICK CALL
         this.buttonCall.setOnClickListener(new View.OnClickListener() {
@@ -120,12 +130,10 @@ public class RestaurantDetailsActivity extends BaseActivity {
 
     }
 
-
-
     private void handleClickLike() {
         try {
             this.restaurantDetailsViewModel.handleLike();
-            Toast.makeText(this, "Toggle selection success", Toast.LENGTH_LONG).show();
+            
         } catch (NoWorkmateForSessionException e) {
             e.printStackTrace();
             Toast.makeText(this, e.getClass().getName() + " " + e.getMessage(), Toast.LENGTH_LONG).show();
