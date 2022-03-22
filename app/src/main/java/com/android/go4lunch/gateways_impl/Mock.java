@@ -1,5 +1,6 @@
 package com.android.go4lunch.gateways_impl;
 
+import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.models.Workmate;
 
@@ -8,9 +9,18 @@ import java.util.List;
 
 public class Mock {
 
+    private List<Restaurant> restaurants;
+
     private List<Workmate> workmates;
 
     public Mock() {
+        Restaurant lol = new Restaurant("Chez Lol", "2 rue des lilas");
+        lol.setId("1");
+        Restaurant bon = new Restaurant("Chez Bon", "2, rue des presses");
+        bon.setId("2");
+
+        this.restaurants = Arrays.asList(lol, bon);
+
         Workmate janie = new Workmate("Janie");
         janie.setId("1");
         janie.setPhone("06 59 12 12 12");
@@ -29,6 +39,10 @@ public class Mock {
         sylvaine.setUrlPhoto("https://i.pravatar.cc/150?u=a042581f4e29026704f");
 
         this.workmates = Arrays.asList(janie, cyril, sylvaine);
+    }
+
+    public List<Restaurant> restaurants() {
+        return this.restaurants;
     }
 
     public Workmate session() {

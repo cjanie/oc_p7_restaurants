@@ -51,11 +51,7 @@ public class Launch extends Application {
         GetSessionUseCase getSessionUseCase = new GetSessionUseCase(sessionGateway);
         GetRestaurantsForMapUseCase getRestaurantsForMapUseCase = new GetRestaurantsForMapUseCase(restaurantGateway);
         GetRestaurantsForListUseCase getRestaurantsForListUseCase = new GetRestaurantsForListUseCase(
-                restaurantGateway,
-                timeProvider,
-                dateProvider,
-                distanceGateway,
-                selectionGateway
+                restaurantGateway
         );
 
         LikeForLunchUseCase likeForLunchUseCase = new LikeForLunchUseCase(

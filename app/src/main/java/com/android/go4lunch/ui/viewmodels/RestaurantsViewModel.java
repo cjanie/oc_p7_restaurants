@@ -42,7 +42,7 @@ public class RestaurantsViewModel extends ViewModel {
 
     public LiveData<List<RestaurantVO>> getRestaurants(Double myLatitude, Double myLongitude, int radius) {
         this.setRestaurants(
-                this.getRestaurantsForListUseCase.getRestaurantsWithSelections(new Geolocation(myLatitude, myLongitude), radius)
+                this.getRestaurantsForListUseCase.getRestaurantsNearbyAsValueObject(new Geolocation(myLatitude, myLongitude), radius)
         );
         return this.restaurants;
     }

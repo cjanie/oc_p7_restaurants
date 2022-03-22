@@ -1,5 +1,7 @@
 package com.android.go4lunch.ui.viewmodels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -17,6 +19,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
 public class MapViewModel extends ViewModel {
+
+    private String TAG = "MAP VIEW MODEL";
 
     // Use Case
     private GetRestaurantsForMapUseCase getRestaurantsForMapUseCase;
@@ -50,7 +54,7 @@ public class MapViewModel extends ViewModel {
 
             @Override
             public void onError(@NonNull Throwable e) {
-
+                Log.e(TAG, e.getMessage());
             }
 
             @Override
