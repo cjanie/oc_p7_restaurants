@@ -17,7 +17,9 @@ import com.android.go4lunch.providers.RealTimeProvider;
 import com.android.go4lunch.ui.viewmodels.MapViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModelFactory;
+import com.android.go4lunch.ui.viewmodels.WorkmatesViewModelFactory;
 import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
+import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
 import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
 import com.android.go4lunch.usecases.LikeForLunchUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
@@ -35,6 +37,8 @@ public class Launch extends Application {
     private final RestaurantsViewModelFactory restaurantsViewModelFactory;
 
     private final RestaurantDetailsViewModelFactory restaurantDetailsViewModelFactory;
+
+    private final WorkmatesViewModelFactory workmatesViewModelFactory;
 
     public Launch() {
         // DEPENDENCIES
@@ -75,6 +79,8 @@ public class Launch extends Application {
         GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(inMemoryVisitorsGateway);
 
         IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase = new IsTheCurrentSelectionUseCase(inMemoryVisitorsGateway);
+
+        GetWorkmateSelectionUseCase getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(inMemoryVisitorsGateway);
         // VIEW MODELS FACTORIES
         this.mapViewModelFactory = new MapViewModelFactory(getRestaurantsForMapUseCase);
         this.restaurantsViewModelFactory = new RestaurantsViewModelFactory(getRestaurantsForListUseCase);
@@ -84,7 +90,9 @@ public class Launch extends Application {
                 getRestaurantVisitorsUseCase,
                 isTheCurrentSelectionUseCase
         );
-
+        this.workmatesViewModelFactory = new WorkmatesViewModelFactory(
+                getWorkmateSelectionUseCase
+        );
     }
 
     public MapViewModelFactory mapViewModelFactory() {
@@ -97,6 +105,10 @@ public class Launch extends Application {
 
     public RestaurantDetailsViewModelFactory restaurantDetailsViewModelFactory() {
         return this.restaurantDetailsViewModelFactory;
+    }
+
+    public WorkmatesViewModelFactory workmatesViewModelFactory() {
+        return this.workmatesViewModelFactory;
     }
 
 }
