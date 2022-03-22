@@ -1,4 +1,4 @@
-package com.android.go4lunch.gateways_impl;
+package com.android.go4lunch.in_memory_repositories;
 
 import com.android.go4lunch.gateways.VisitorsGateway;
 import com.android.go4lunch.models.Selection;

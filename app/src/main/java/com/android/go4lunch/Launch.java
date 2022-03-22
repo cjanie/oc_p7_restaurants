@@ -6,12 +6,10 @@ import com.android.go4lunch.apis.apiGoogleMaps.repositories.DistanceRepository;
 import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsHttpClientProvider;
 import com.android.go4lunch.apis.apiGoogleMaps.repositories.RestaurantRepository;
 import com.android.go4lunch.gateways_impl.DistanceGatewayImpl;
-import com.android.go4lunch.gateways_impl.InMemoryVisitorsGateway;
 import com.android.go4lunch.gateways_impl.RestaurantGatewayImpl;
 import com.android.go4lunch.gateways_impl.SelectionGatewayImpl;
 import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
 import com.android.go4lunch.gateways_impl.VisitorsGatewayImpl;
-import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.providers.RealDateProvider;
 import com.android.go4lunch.providers.RealTimeProvider;
 import com.android.go4lunch.ui.viewmodels.MapViewModelFactory;
@@ -25,9 +23,6 @@ import com.android.go4lunch.usecases.LikeForLunchUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Launch extends Application {
 

@@ -9,6 +9,7 @@ import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
 import com.android.go4lunch.usecases.GetWorkmatesUseCase;
+import com.android.go4lunch.usecases.decorators.SelectionInfoDecoratorForWorkMate;
 import com.android.go4lunch.usecases.models_vo.WorkmateVO;
 
 import java.util.ArrayList;

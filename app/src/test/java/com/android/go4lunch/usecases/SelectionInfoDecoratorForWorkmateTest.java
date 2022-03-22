@@ -1,39 +1,40 @@
 package com.android.go4lunch.usecases;
 
+import com.android.go4lunch.models.Selection;
+import com.android.go4lunch.models.Workmate;
+import com.android.go4lunch.usecases.decorators.SelectionInfoDecoratorForWorkMate;
+import com.android.go4lunch.usecases.models_vo.WorkmateVO;
+
+import org.junit.Test;
+
+import java.util.Arrays;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public class SelectionInfoDecoratorForWorkmateTest {
-/*
+
     @Test
-    public void janieHasSelectedRestaurant1() {
-        InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        InMemoryCurrentSelectionsRepository selectionQuery = new InMemoryCurrentSelectionsRepository();
-        Restaurant restaurant = new Restaurant("r1", "loc");
-        Workmate workmate = new Workmate("Janie");
-        Selection selection = new Selection(restaurant, workmate);
-        selectionQuery.setSelections(Arrays.asList(new Selection[]{selection}));
+    public void workmateHasSelectedARestaurant() {
+        Workmate workmate1 = new Workmate("Workmate1");
+        workmate1.setId("1");
 
-        WorkmateVO workmateVO = new SelectionInfoDecoratorForWorkMate(selectionQuery)
-                .decor(new WorkmateVO(workmate));
+        Selection selection = new Selection(
+                "1", "resto1",
+                "1", "workmate1"
+                );
+        SelectionInfoDecoratorForWorkMate decorator = new SelectionInfoDecoratorForWorkMate(Arrays.asList(selection));
 
-        assert(workmateVO.getSelection().getName().equals(restaurant.getName()));
+        assert(decorator.decor(workmate1).getSelection().getName().equals("resto1"));
     }
 
     @Test
-    public void janieHasSelectedRestaurant2() {
-        InMemoryHistoricOfSelectionsRepository historicRepository = new InMemoryHistoricOfSelectionsRepository();
-        InMemoryCurrentSelectionsRepository selectionQuery = new InMemoryCurrentSelectionsRepository();
-        Restaurant restaurant = new Restaurant("r2", "loc");
-        Workmate workmate = new Workmate("Janie");
-        Selection selection = new Selection(restaurant, workmate);
-        selectionQuery.setSelections(Arrays.asList(new Selection[]{selection}));
+    public void workmateHasNoSelection() {
+        Workmate workmate1 = new Workmate("Workmate1");
+        workmate1.setId("1");
 
-        WorkmateVO workmateVO = new SelectionInfoDecoratorForWorkMate(selectionQuery)
-                .decor(new WorkmateVO(workmate));
+        SelectionInfoDecoratorForWorkMate decorator = new SelectionInfoDecoratorForWorkMate(Arrays.asList());
 
-        assert(workmateVO.getSelection().equals(restaurant));
+        assertNull(decorator.decor(workmate1).getSelection());
     }
-
- */
 }
