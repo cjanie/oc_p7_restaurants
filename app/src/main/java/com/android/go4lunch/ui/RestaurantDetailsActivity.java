@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
+import com.android.go4lunch.gateways_impl.Mock;
 import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.ui.adapters.ListVisitorRecyclerViewAdapter;
@@ -71,8 +72,7 @@ public class RestaurantDetailsActivity extends BaseActivity {
 
         // Data
         // RESTAURANT
-        Restaurant restaurant = new Restaurant("Chez Lol", "23 sentier");
-        restaurant.setId("1");
+        Restaurant restaurant = new Mock().restaurants().get(0);
         this.restaurantDetailsViewModel.setRestaurant(restaurant);
 
         if(restaurant.getPhotoUrl() != null) {

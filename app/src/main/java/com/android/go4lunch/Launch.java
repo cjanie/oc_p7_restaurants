@@ -5,11 +5,13 @@ import android.app.Application;
 import com.android.go4lunch.apis.apiGoogleMaps.repositories.DistanceRepository;
 import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsHttpClientProvider;
 import com.android.go4lunch.apis.apiGoogleMaps.repositories.RestaurantRepository;
+import com.android.go4lunch.gateways.WorkmateGateway;
 import com.android.go4lunch.gateways_impl.DistanceGatewayImpl;
 import com.android.go4lunch.gateways_impl.RestaurantGatewayImpl;
 import com.android.go4lunch.gateways_impl.SelectionGatewayImpl;
 import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
 import com.android.go4lunch.gateways_impl.VisitorsGatewayImpl;
+import com.android.go4lunch.gateways_impl.WorkmateGatewayImpl;
 import com.android.go4lunch.providers.RealDateProvider;
 import com.android.go4lunch.providers.RealTimeProvider;
 import com.android.go4lunch.ui.viewmodels.MapViewModelFactory;
@@ -17,6 +19,7 @@ import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.WorkmatesViewModelFactory;
 import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
+import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
 import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
 import com.android.go4lunch.usecases.LikeForLunchUseCase;
@@ -46,6 +49,7 @@ public class Launch extends Application {
         SelectionGatewayImpl selectionGateway = new SelectionGatewayImpl();
         SessionGatewayImpl sessionGateway = new SessionGatewayImpl();
         VisitorsGatewayImpl visitorsGateway = new VisitorsGatewayImpl();
+        WorkmateGatewayImpl workmateGateway = new WorkmateGatewayImpl();
         RealTimeProvider timeProvider = new RealTimeProvider();
         RealDateProvider dateProvider = new RealDateProvider();
         // USE CASES
@@ -65,6 +69,9 @@ public class Launch extends Application {
         IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase = new IsTheCurrentSelectionUseCase(visitorsGateway);
 
         GetWorkmateSelectionUseCase getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorsGateway);
+
+        GetWorkmateByIdUseCase getWorkmateByIdUseCase = new GetWorkmateByIdUseCase(workmateGateway);
+
         // VIEW MODELS FACTORIES
         this.mapViewModelFactory = new MapViewModelFactory(getRestaurantsForMapUseCase);
         this.restaurantsViewModelFactory = new RestaurantsViewModelFactory(
@@ -77,7 +84,8 @@ public class Launch extends Application {
                 getSessionUseCase,
                 likeForLunchUseCase,
                 getRestaurantVisitorsUseCase,
-                isTheCurrentSelectionUseCase
+                isTheCurrentSelectionUseCase,
+                getWorkmateByIdUseCase
         );
         this.workmatesViewModelFactory = new WorkmatesViewModelFactory(
                 getWorkmateSelectionUseCase
@@ -99,5 +107,6 @@ public class Launch extends Application {
     public WorkmatesViewModelFactory workmatesViewModelFactory() {
         return this.workmatesViewModelFactory;
     }
+
 
 }

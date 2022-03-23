@@ -19,7 +19,6 @@ public class Mock {
     public Mock() {
         Restaurant lol = new Restaurant("Chez Lol", "2 rue des lilas");
         lol.setId("1");
-        lol.setPhotoUrl("https://i.pravatar.cc/150?u=a042581f4e29026704d");
         // Prepare planning for a restaurant
         Map<Integer, Map<String, LocalTime>> planning = new HashMap<>();
         // Prepare the times map of the planning
@@ -81,9 +80,11 @@ public class Mock {
     }
 
     public List<Selection> selections() {
-        Selection cyril = new Selection("1", "Chez Lol", "2", "Cyril");
-        Selection sylvaine = new Selection("1", "Chez Lol", "3", "Sylvaine");
-        return Arrays.asList(cyril, sylvaine);
+        Restaurant restaurant = restaurants.get(0);
+        Selection janie = new Selection(restaurant.getId(), restaurant.getName(), "1", "Janie");
+        Selection cyril = new Selection(restaurant.getId(), restaurant.getName(), "2", "Cyril");
+        Selection sylvaine = new Selection(restaurant.getId(), restaurant.getName(), "3", "Sylvaine");
+        return Arrays.asList(janie, cyril, sylvaine);
     }
 
 }

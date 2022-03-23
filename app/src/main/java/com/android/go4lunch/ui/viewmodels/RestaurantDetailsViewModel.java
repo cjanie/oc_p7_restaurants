@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.usecases.GetSessionUseCase;
+import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
 import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.models.Restaurant;
@@ -29,6 +29,8 @@ public class RestaurantDetailsViewModel extends ViewModel {
 
     private IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase;
 
+    private GetWorkmateByIdUseCase getWorkmateByIdUsecase;
+
     private Restaurant restaurant;
 
     private Workmate session;
@@ -43,12 +45,15 @@ public class RestaurantDetailsViewModel extends ViewModel {
             GetSessionUseCase getSessionUseCase,
             LikeForLunchUseCase likeForLunchUseCase,
             GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase,
-            IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase
+            IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase,
+            GetWorkmateByIdUseCase getWorkmateByIdUsecase
     ) {
         this.getSessionUseCase = getSessionUseCase;
         this.likeForLunchUseCase = likeForLunchUseCase;
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
         this.isTheCurrentSelectionUseCase = isTheCurrentSelectionUseCase;
+        this.getWorkmateByIdUsecase = getWorkmateByIdUsecase;
+
         this.visitors = new MutableLiveData<>(new ArrayList<>());
         this.isTheCurrentSelection = new MutableLiveData<>();
     }

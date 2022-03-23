@@ -102,12 +102,15 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
                 public void onClick(View v) {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, RestaurantDetailsActivity.class);
+                    /*
                     intent.putExtra("id", restaurant.getRestaurant().getId());
                     intent.putExtra("name", restaurant.getRestaurant().getName());
                     intent.putExtra("address", restaurant.getRestaurant().getAddress());
                     intent.putExtra("photoUrl", restaurant.getRestaurant().getPhotoUrl());
                     intent.putExtra("phone", restaurant.getRestaurant().getPhone());
                     intent.putExtra("website", restaurant.getRestaurant().getWebSite());
+
+                     */
                     context.startActivity(intent);
                 }
             });
