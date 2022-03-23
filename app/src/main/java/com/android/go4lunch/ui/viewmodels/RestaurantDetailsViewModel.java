@@ -11,7 +11,7 @@ import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Workmate;
 import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
-import com.android.go4lunch.usecases.LikeForLunchUseCase;
+import com.android.go4lunch.usecases.LikeUseCase;
 import com.android.go4lunch.usecases.exceptions.NotFoundException;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
     // Use cases
     private GetSessionUseCase getSessionUseCase;
 
-    private LikeForLunchUseCase likeForLunchUseCase;
+    private LikeUseCase likeUseCase;
 
     private GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
 
@@ -44,13 +44,13 @@ public class RestaurantDetailsViewModel extends ViewModel {
 
     public RestaurantDetailsViewModel(
             GetSessionUseCase getSessionUseCase,
-            LikeForLunchUseCase likeForLunchUseCase,
+            LikeUseCase likeUseCase,
             GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase,
             IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase,
             GetWorkmateByIdUseCase getWorkmateByIdUsecase
     ) {
         this.getSessionUseCase = getSessionUseCase;
-        this.likeForLunchUseCase = likeForLunchUseCase;
+        this.likeUseCase = likeUseCase;
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
         this.isTheCurrentSelectionUseCase = isTheCurrentSelectionUseCase;
         this.getWorkmateByIdUsecase = getWorkmateByIdUsecase;
@@ -83,7 +83,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
     public void handleLike() throws NoWorkmateForSessionException, NotFoundException {
         this.setSession();
         if(this.session != null) {
-            this.likeForLunchUseCase.handle(
+            this.likeUseCase.handle(
                     this.restaurant.getId(),
                     this.restaurant.getName(),
                     this.session.getId()

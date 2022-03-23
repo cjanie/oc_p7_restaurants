@@ -10,7 +10,7 @@ import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LikeForLunchUseCase {
+public class LikeUseCase {
 
     private final SelectionGateway selectionGateway;
 
@@ -18,7 +18,7 @@ public class LikeForLunchUseCase {
 
 
 
-    public LikeForLunchUseCase(
+    public LikeUseCase(
             SelectionGateway selectionGateway,
             VisitorsGateway visitorsGateway
     ) {

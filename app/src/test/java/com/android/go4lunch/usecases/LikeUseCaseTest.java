@@ -15,7 +15,7 @@ import io.reactivex.Observable;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-public class LikeForLunchUseCaseTest {
+public class LikeUseCaseTest {
 
 
 
@@ -23,11 +23,11 @@ public class LikeForLunchUseCaseTest {
         InMemorySelectionGateway inMemorySelectionGateway = new InMemorySelectionGateway();
         InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
 
-        LikeForLunchUseCase likeForLunchUseCase = new LikeForLunchUseCase(
+        LikeUseCase likeUseCase = new LikeUseCase(
                 inMemorySelectionGateway,
                 inMemoryVisitorsGateway
         );
-        likeForLunchUseCase.handle(
+        likeUseCase.handle(
                 restaurantId,
                 restaurantName,
                 "1"
@@ -47,11 +47,11 @@ public class LikeForLunchUseCaseTest {
         ));
         InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
 
-        LikeForLunchUseCase likeForLunchUseCase = new LikeForLunchUseCase(
+        LikeUseCase likeUseCase = new LikeUseCase(
                 inMemorySelectionGateway,
                 inMemoryVisitorsGateway
         );
-        likeForLunchUseCase.handle(restaurantId, restaurantName,"1");
+        likeUseCase.handle(restaurantId, restaurantName,"1");
 
         return inMemorySelectionGateway.getSelection();
     }
@@ -75,11 +75,11 @@ public class LikeForLunchUseCaseTest {
         selections.add(selection);
         inMemoryVisitorsGateway.setSelections(selections);
 
-        LikeForLunchUseCase likeForLunchUseCase = new LikeForLunchUseCase(
+        LikeUseCase likeUseCase = new LikeUseCase(
                 inMemorySelectionGateway,
                 inMemoryVisitorsGateway
         );
-        likeForLunchUseCase.handle("1", "Chez Jojo", "1");
+        likeUseCase.handle("1", "Chez Jojo", "1");
 
         List<Selection> savedSelections = new ArrayList<>();
         inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);
@@ -92,13 +92,13 @@ public class LikeForLunchUseCaseTest {
         InMemorySelectionGateway inMemorySelectionGateway = new InMemorySelectionGateway();
         InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
 
-        LikeForLunchUseCase likeForLunchUseCase = new LikeForLunchUseCase(
+        LikeUseCase likeUseCase = new LikeUseCase(
                 inMemorySelectionGateway,
                 inMemoryVisitorsGateway
         );
-        likeForLunchUseCase.handle("1", "Chez Jojo", "1");
+        likeUseCase.handle("1", "Chez Jojo", "1");
 
-        likeForLunchUseCase.handle(
+        likeUseCase.handle(
                 "1", "Chez Jojo", "1");
 
         List<Selection> savedSelections = new ArrayList<>();
@@ -118,12 +118,12 @@ public class LikeForLunchUseCaseTest {
         selections.add(selection);
         inMemoryVisitorsGateway.setSelections(selections);
 
-        LikeForLunchUseCase likeForLunchUseCase = new LikeForLunchUseCase(
+        LikeUseCase likeUseCase = new LikeUseCase(
                 inMemorySelectionGateway,
                 inMemoryVisitorsGateway
         );
-        likeForLunchUseCase.handle("2","Chez Jojo", "2");
-        likeForLunchUseCase.handle("2", "Chez Jojo", "2");
+        likeUseCase.handle("2","Chez Jojo", "2");
+        likeUseCase.handle("2", "Chez Jojo", "2");
         List<Selection> savedSelections = new ArrayList<>();
         inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);
         assert(savedSelections.size() == 1);

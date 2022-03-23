@@ -5,7 +5,6 @@ import android.app.Application;
 import com.android.go4lunch.apis.apiGoogleMaps.repositories.DistanceRepository;
 import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsHttpClientProvider;
 import com.android.go4lunch.apis.apiGoogleMaps.repositories.RestaurantRepository;
-import com.android.go4lunch.gateways.WorkmateGateway;
 import com.android.go4lunch.gateways_impl.DistanceGatewayImpl;
 import com.android.go4lunch.gateways_impl.RestaurantGatewayImpl;
 import com.android.go4lunch.gateways_impl.SelectionGatewayImpl;
@@ -24,11 +23,10 @@ import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
 import com.android.go4lunch.usecases.GetWorkmatesUseCase;
 import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
-import com.android.go4lunch.usecases.LikeForLunchUseCase;
+import com.android.go4lunch.usecases.LikeUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
-import com.android.go4lunch.usecases.decorators.TimeInfoDecorator;
 
 public class Launch extends Application {
 
@@ -61,7 +59,7 @@ public class Launch extends Application {
                 restaurantGateway
         );
 
-        LikeForLunchUseCase likeForLunchUseCase = new LikeForLunchUseCase(
+        LikeUseCase likeUseCase = new LikeUseCase(
                 selectionGateway,
                 visitorsGateway
         );
@@ -88,7 +86,7 @@ public class Launch extends Application {
         );
         this.restaurantDetailsViewModelFactory = new RestaurantDetailsViewModelFactory(
                 getSessionUseCase,
-                likeForLunchUseCase,
+                likeUseCase,
                 getRestaurantVisitorsUseCase,
                 isTheCurrentSelectionUseCase,
                 getWorkmateByIdUseCase

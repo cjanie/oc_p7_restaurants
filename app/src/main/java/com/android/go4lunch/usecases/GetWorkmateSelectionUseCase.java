@@ -16,15 +16,15 @@ public class GetWorkmateSelectionUseCase {
         this.visitorsGateway = visitorsGateway;
     }
 
-    public Observable<Selection> handle(String workmateId) {
-        Selection selection = null;
+    public Observable<String> handle(String workmateId) {
+        String selectionId = null;
         List<Selection> selectionsResults = new ArrayList<>();
         this.visitorsGateway.getSelections().subscribe(selectionsResults::addAll);
         if(!selectionsResults.isEmpty()) {
             for(Selection s: selectionsResults) {
                 if(s.getWorkmateId() == workmateId) {
-                    selection = s;
-                    return Observable.just(selection);
+                    selectionId = s.getRestaurantId();
+                    return Observable.just(selectionId);
                 }
             }
         }

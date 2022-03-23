@@ -7,14 +7,14 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
-import com.android.go4lunch.usecases.LikeForLunchUseCase;
+import com.android.go4lunch.usecases.LikeUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
 
 public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Factory {
 
     private final GetSessionUseCase getSessionUseCase;
 
-    private final LikeForLunchUseCase likeForLunchUseCase;
+    private final LikeUseCase likeUseCase;
 
     private final GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
 
@@ -26,12 +26,12 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
 
     public RestaurantDetailsViewModelFactory(
             GetSessionUseCase getSessionUseCase,
-            LikeForLunchUseCase likeForLunchUseCase,
+            LikeUseCase likeUseCase,
             GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase,
             IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase,
             GetWorkmateByIdUseCase getWorkmateByIdUseCase) {
         this.getSessionUseCase = getSessionUseCase;
-        this.likeForLunchUseCase = likeForLunchUseCase;
+        this.likeUseCase = likeUseCase;
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
         this.isTheCurrentSelectionUseCase = isTheCurrentSelectionUseCase;
         this.getWorkmateByIdUseCase = getWorkmateByIdUseCase;
@@ -44,7 +44,7 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
         if(modelClass.isAssignableFrom(RestaurantDetailsViewModel.class)) {
             return (T) new RestaurantDetailsViewModel(
                     this.getSessionUseCase,
-                    this.likeForLunchUseCase,
+                    this.likeUseCase,
                     this.getRestaurantVisitorsUseCase,
                     this.isTheCurrentSelectionUseCase,
                     this.getWorkmateByIdUseCase

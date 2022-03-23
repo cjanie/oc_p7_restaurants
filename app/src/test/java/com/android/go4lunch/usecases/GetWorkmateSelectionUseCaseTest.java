@@ -26,9 +26,9 @@ public class GetWorkmateSelectionUseCaseTest {
         );
         visitorsGateway.setSelections(Arrays.asList(selection1, selection2));
         GetWorkmateSelectionUseCase getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorsGateway);
-        List<Selection> selectionResults = new ArrayList<>();
+        List<String> selectionResults = new ArrayList<>();
         getWorkmateSelectionUseCase.handle("2").subscribe(selectionResults::add);
-        assert(selectionResults.get(0).getRestaurantId().equals("2") && selectionResults.get(0).getWorkmateId().equals("2"));
+        assert(selectionResults.get(0).equals("2"));
     }
 
     @Test

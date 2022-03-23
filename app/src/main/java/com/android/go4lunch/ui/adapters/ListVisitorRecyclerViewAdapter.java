@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.go4lunch.R;
 import com.android.go4lunch.models.Workmate;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class ListVisitorRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             if(workmate.getUrlPhoto() != null) {
                 Glide.with(((VisitorViewHolder) holder).avatar.getContext())
                         .load(workmate.getUrlPhoto())
+                        .apply(RequestOptions.circleCropTransform())
                         .error(R.drawable.ic_baseline_error_24)
                         .into(((VisitorViewHolder) holder).avatar);
             } else {

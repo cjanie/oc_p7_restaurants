@@ -68,10 +68,10 @@ public class WorkmatesViewModel extends ViewModel {
 
     private WorkmateModel decorWorkmate(Workmate workmate) {
         WorkmateModel workmateModel = new WorkmateModel(workmate);
-        List<Selection> selectionResults = new ArrayList<>();
+        List<String> selectionResults = new ArrayList<>();
         this.getWorkmateSelectionUseCase.handle(workmate.getId()).subscribe(selectionResults::add);
         if(!selectionResults.isEmpty()) {
-            String restaurantId = selectionResults.get(0).getRestaurantId();
+            String restaurantId = selectionResults.get(0);
             try {
                 List<Restaurant> restaurantResults = new ArrayList<>();
                 this.getRestaurantByIdUseCase.handle(restaurantId).subscribe(restaurantResults::add);
