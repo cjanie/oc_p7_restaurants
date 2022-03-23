@@ -82,8 +82,8 @@ public class Mock {
 
     public List<Selection> selections() {
         Selection cyril = new Selection("1", "Chez Lol", "2", "Cyril");
-
-        return Arrays.asList(cyril);
+        Selection sylvaine = new Selection("1", "Chez Lol", "3", "Sylvaine");
+        return Arrays.asList(cyril, sylvaine);
     }
 
 }

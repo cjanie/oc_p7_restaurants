@@ -9,6 +9,7 @@ import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Workmate;
 import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.TimeProvider;
+import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
 import com.android.go4lunch.usecases.decorators.TimeInfoDecorator;
 import com.android.go4lunch.usecases.models.RestaurantModel;
@@ -28,6 +29,8 @@ public class RestaurantsViewModel extends ViewModel {
     // Use Cases
     private final GetRestaurantsForListUseCase getRestaurantsForListUseCase;
 
+    private final GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
+
     // Dependencies
     private final TimeProvider timeProvider;
 
@@ -43,9 +46,11 @@ public class RestaurantsViewModel extends ViewModel {
     // Constructor
     public RestaurantsViewModel(
             GetRestaurantsForListUseCase getRestaurantsForListUseCase,
+            GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase,
             TimeProvider timeProvider,
             DateProvider dateProvider) {
         this.getRestaurantsForListUseCase = getRestaurantsForListUseCase;
+        this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
         this.timeProvider = timeProvider;
         this.dateProvider = dateProvider;
         this.restaurants = new MutableLiveData<>(new ArrayList<>());
@@ -60,7 +65,13 @@ public class RestaurantsViewModel extends ViewModel {
         List<RestaurantModel> restaurantModels = new ArrayList<>();
         if(!restaurantsResults.isEmpty()) {
             for(Restaurant r: restaurantsResults) {
-                RestaurantModel restaurantModel = new RestaurantModel(r, this.timeProvider, this.dateProvider, Arrays.asList(new Workmate("Janie")));
+                List<Workmate> visitorsResults = new ArrayList<>();
+                this.getRestaurantVisitorsUseCase.handle(r.getId()).subscribe(visitorsResults::addAll);
+                RestaurantModel restaurantModel = new RestaurantModel(
+                        r,
+                        this.timeProvider,
+                        this.dateProvider,
+                        visitorsResults);
                 restaurantModels.add(restaurantModel);
             }
         }

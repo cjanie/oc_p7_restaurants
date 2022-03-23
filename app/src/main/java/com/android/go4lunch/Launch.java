@@ -69,6 +69,7 @@ public class Launch extends Application {
         this.mapViewModelFactory = new MapViewModelFactory(getRestaurantsForMapUseCase);
         this.restaurantsViewModelFactory = new RestaurantsViewModelFactory(
                 getRestaurantsForListUseCase,
+                getRestaurantVisitorsUseCase,
                 timeProvider,
                 dateProvider
         );
