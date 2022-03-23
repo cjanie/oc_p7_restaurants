@@ -18,13 +18,11 @@ public class GetWorkmateSelectionUseCaseTest {
         InMemoryVisitorsGateway visitorsGateway = new InMemoryVisitorsGateway();
         Selection selection1 = new Selection(
                 "1",
-                "Chez Jojo",
-                "1",
-                "Janie"
+                "1"
                 );
         Selection selection2 = new Selection(
-                "2", "Chez Jojo",
-                "2", "Cyril"
+                "2",
+                "2"
         );
         visitorsGateway.setSelections(Arrays.asList(selection1, selection2));
         GetWorkmateSelectionUseCase getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorsGateway);

@@ -18,9 +18,11 @@ import com.android.go4lunch.ui.viewmodels.MapViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.WorkmatesViewModelFactory;
+import com.android.go4lunch.usecases.GetRestaurantByIdUseCase;
 import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
+import com.android.go4lunch.usecases.GetWorkmatesUseCase;
 import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
 import com.android.go4lunch.usecases.LikeForLunchUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
@@ -68,9 +70,13 @@ public class Launch extends Application {
 
         IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase = new IsTheCurrentSelectionUseCase(visitorsGateway);
 
+        GetWorkmatesUseCase getWorkmatesUseCase = new GetWorkmatesUseCase(workmateGateway);
+
         GetWorkmateSelectionUseCase getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorsGateway);
 
         GetWorkmateByIdUseCase getWorkmateByIdUseCase = new GetWorkmateByIdUseCase(workmateGateway);
+
+        GetRestaurantByIdUseCase getRestaurantByIdUseCase = new GetRestaurantByIdUseCase(restaurantGateway);
 
         // VIEW MODELS FACTORIES
         this.mapViewModelFactory = new MapViewModelFactory(getRestaurantsForMapUseCase);
@@ -88,7 +94,9 @@ public class Launch extends Application {
                 getWorkmateByIdUseCase
         );
         this.workmatesViewModelFactory = new WorkmatesViewModelFactory(
-                getWorkmateSelectionUseCase
+                getWorkmatesUseCase,
+                getWorkmateSelectionUseCase,
+                getRestaurantByIdUseCase
         );
     }
 

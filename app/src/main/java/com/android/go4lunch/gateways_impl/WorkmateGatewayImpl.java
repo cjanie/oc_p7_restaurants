@@ -25,7 +25,7 @@ public class WorkmateGatewayImpl implements WorkmateGateway {
 
 
         this.workmates = Observable.just(new Mock().workmates());
-        this.fetchUsers();
+        //this.fetchUsers();
     }
 
     @Override

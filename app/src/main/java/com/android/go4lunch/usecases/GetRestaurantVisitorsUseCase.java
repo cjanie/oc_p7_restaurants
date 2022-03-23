@@ -17,21 +17,21 @@ public class GetRestaurantVisitorsUseCase {
         this.visitorsGateway = visitorsGateway;
     }
 
-    public Observable<List<Workmate>> handle(String restaurantId) {
-        return this.getVisitors(restaurantId);
+    public Observable<List<String>> handle(String restaurantId) {
+        return this.getVisitorsId(restaurantId);
     }
 
-    private Observable<List<Workmate>> getVisitors(String restaurantId) {
+    private Observable<List<String>> getVisitorsId(String restaurantId) {
         return this.visitorsGateway.getSelections().map(selections -> {
-            List<Workmate> visitors = new ArrayList<>();
+            List<String> visitorsId = new ArrayList<>();
             if(!selections.isEmpty()) {
                 for(Selection selection: selections) {
                     if(selection.getRestaurantId().equals(restaurantId)) {
-                        visitors.add(new Workmate(selection.getWorkmateName()));
+                        visitorsId.add(selection.getWorkmateId());
                     }
                 }
             }
-            return visitors;
+            return visitorsId;
         });
     }
 }

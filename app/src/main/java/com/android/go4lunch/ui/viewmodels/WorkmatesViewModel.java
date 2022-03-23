@@ -4,11 +4,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.gateways_impl.WorkmateGatewayImpl;
+import com.android.go4lunch.gateways_impl.Mock;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Selection;
+import com.android.go4lunch.models.Workmate;
+import com.android.go4lunch.usecases.GetRestaurantByIdUseCase;
 import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
 import com.android.go4lunch.usecases.GetWorkmatesUseCase;
+import com.android.go4lunch.usecases.exceptions.NotFoundException;
 import com.android.go4lunch.usecases.models.WorkmateModel;
 
 import java.util.ArrayList;
@@ -21,62 +24,61 @@ import io.reactivex.observers.DisposableObserver;
 
 public class WorkmatesViewModel extends ViewModel {
 
-    private GetWorkmatesUseCase getWorkmatesUseCase;
+    private final GetWorkmatesUseCase getWorkmatesUseCase;
 
-    private GetWorkmateSelectionUseCase getWorkmateSelectionUseCase;
+    private final GetWorkmateSelectionUseCase getWorkmateSelectionUseCase;
 
-    private MutableLiveData<List<WorkmateModel>> workmates;
+    private final GetRestaurantByIdUseCase getRestaurantByIdUseCase;
 
-    private Disposable disposable;
+    private final MutableLiveData<List<WorkmateModel>> workmates;
 
-    public WorkmatesViewModel(GetWorkmateSelectionUseCase getWorkmateSelectionUseCase) {
-        this.getWorkmatesUseCase = new GetWorkmatesUseCase(
-                new WorkmateGatewayImpl()
-        );
+    public WorkmatesViewModel(
+            GetWorkmatesUseCase getWorkmatesUseCase,
+            GetWorkmateSelectionUseCase getWorkmateSelectionUseCase,
+            GetRestaurantByIdUseCase getRestaurantByIdUseCase
+
+    ) {
+        this.getWorkmatesUseCase = getWorkmatesUseCase;
         this.getWorkmateSelectionUseCase = getWorkmateSelectionUseCase;
+        this.getRestaurantByIdUseCase = getRestaurantByIdUseCase;
+
         this.workmates = new MutableLiveData<>(new ArrayList<>());
     }
 
-    public LiveData<List<WorkmateModel>> list() {
-        this.setWorkmates(this.getWorkmatesUseCase.list());
+    public LiveData<List<WorkmateModel>> list() throws NotFoundException {
+        this.fetchWorkmates();
         return this.workmates;
     }
 
-    private void setWorkmates(Observable<List<WorkmateModel>> observableWorkmates) {
-        this.disposable = observableWorkmates.subscribeWith(new DisposableObserver<List<WorkmateModel>>() {
-            @Override
-            public void onNext(@NonNull List<WorkmateModel> list) {
-                for(WorkmateModel w: list) {
-                    w = decorWorkmate(w);
-                }
-                workmates.setValue(list);
+    private void fetchWorkmates() {
+        List<Workmate> workmatesResults = new ArrayList<>();
+        this.getWorkmatesUseCase.handle().subscribe(workmatesResults::addAll);
+
+        List<WorkmateModel> workmatesModels = new ArrayList<>();
+        if(!workmatesResults.isEmpty()) {
+            for(Workmate w: workmatesResults) {
+                WorkmateModel workmateModel = this.decorWorkmate(w);
+                workmatesModels.add(workmateModel);
             }
+        }
+        this.workmates.postValue(workmatesModels);
 
-            @Override
-            public void onError(@NonNull Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
     }
 
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        if(this.disposable != null && !this.disposable.isDisposed())
-            this.disposable.dispose();
-    }
 
-    private WorkmateModel decorWorkmate(WorkmateModel workmateModel) {
-        Observable<Selection> selectionObservable = this.getWorkmateSelectionUseCase.handle(workmateModel.getWorkmate().getId());
-        if(selectionObservable != null) {
-            List<Selection> selectionResults = new ArrayList<>();
-            selectionObservable.subscribe(selectionResults::add);
-            workmateModel.setSelection(new Restaurant(selectionResults.get(0).getRestaurantName(), "address"));
+    private WorkmateModel decorWorkmate(Workmate workmate) {
+        WorkmateModel workmateModel = new WorkmateModel(workmate);
+        List<Selection> selectionResults = new ArrayList<>();
+        this.getWorkmateSelectionUseCase.handle(workmate.getId()).subscribe(selectionResults::add);
+        if(!selectionResults.isEmpty()) {
+            String restaurantId = selectionResults.get(0).getRestaurantId();
+            try {
+                List<Restaurant> restaurantResults = new ArrayList<>();
+                this.getRestaurantByIdUseCase.handle(restaurantId).subscribe(restaurantResults::add);
+                workmateModel.setSelection(restaurantResults.get(0));
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
         return workmateModel;

@@ -12,6 +12,7 @@ import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Workmate;
 import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.usecases.LikeForLunchUseCase;
+import com.android.go4lunch.usecases.exceptions.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
     }
 
 
-    public void setRestaurant(Restaurant restaurant) {
+    public void setRestaurant(Restaurant restaurant) throws NotFoundException {
         this.restaurant = restaurant;
         this.fetchVisitors();
     }
@@ -79,25 +80,38 @@ public class RestaurantDetailsViewModel extends ViewModel {
         return this.fetchIsTheCurrentSelection();
     };
 
-    public void handleLike() throws NoWorkmateForSessionException {
+    public void handleLike() throws NoWorkmateForSessionException, NotFoundException {
         this.setSession();
         if(this.session != null) {
             this.likeForLunchUseCase.handle(
                     this.restaurant.getId(),
                     this.restaurant.getName(),
-                    this.session.getId(),
-                    this.session.getName()
+                    this.session.getId()
                     );
         }
         this.fetchVisitors();
         this.fetchIsTheCurrentSelection();
     }
 
-    private void fetchVisitors() {
+    private void fetchVisitors() throws NotFoundException {
         if(this.restaurant != null) {
-            List<Workmate> results = new ArrayList<>();
-            this.getRestaurantVisitorsUseCase.handle(this.restaurant.getId()).subscribe(results::addAll);
-            this.visitors.postValue(results);
+            List<String> workmateIdsResults = new ArrayList<>();
+            this.getRestaurantVisitorsUseCase.handle(this.restaurant.getId()).subscribe(workmateIdsResults::addAll);
+
+            List<Workmate> workmates = new ArrayList<>();
+            if(!workmateIdsResults.isEmpty()) {
+                for(String id: workmateIdsResults) {
+                    List<Workmate> workmateResults = new ArrayList<>();
+                    try {
+                        this.getWorkmateByIdUsecase.handle(id).subscribe(workmateResults::add);
+                        Workmate workmate = workmateResults.get(0);
+                        workmates.add(workmate);
+                    } catch (NotFoundException e) {
+                        throw e;
+                    }
+                }
+            }
+            this.visitors.postValue(workmates);
         }
     }
 

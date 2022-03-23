@@ -19,8 +19,8 @@ public class SelectionInfoDecoratorForWorkmateTest {
         workmate1.setId("1");
 
         Selection selection = new Selection(
-                "1", "resto1",
-                "1", "workmate1"
+                "1",
+                "1"
                 );
         SelectionInfoDecoratorForWorkMate decorator = new SelectionInfoDecoratorForWorkMate(Arrays.asList(selection));
 

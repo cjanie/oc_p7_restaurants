@@ -81,9 +81,10 @@ public class Mock {
 
     public List<Selection> selections() {
         Restaurant restaurant = restaurants.get(0);
-        Selection janie = new Selection(restaurant.getId(), restaurant.getName(), "1", "Janie");
-        Selection cyril = new Selection(restaurant.getId(), restaurant.getName(), "2", "Cyril");
-        Selection sylvaine = new Selection(restaurant.getId(), restaurant.getName(), "3", "Sylvaine");
+
+        Selection janie = new Selection(restaurant.getId(), "1");
+        Selection cyril = new Selection(restaurant.getId(),  "2");
+        Selection sylvaine = new Selection(restaurant.getId(),  "3");
         return Arrays.asList(janie, cyril, sylvaine);
     }
 

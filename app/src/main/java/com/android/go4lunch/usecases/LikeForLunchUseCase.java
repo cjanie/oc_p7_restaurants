@@ -26,12 +26,10 @@ public class LikeForLunchUseCase {
         this.visitorsGateway = visitorsGateway;
     }
 
-    public void handle(String restaurantId, String restaurantName, String workmateId, String workmateName) {
+    public void handle(String restaurantId, String restaurantName, String workmateId) {
         Selection selection = new Selection(
                 restaurantId,
-                restaurantName,
-                workmateId,
-                workmateName
+                workmateId
         );
 
         if (this.selectionGateway.getSelection() == null) {

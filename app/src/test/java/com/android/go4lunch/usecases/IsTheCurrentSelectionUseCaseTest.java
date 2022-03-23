@@ -31,8 +31,8 @@ public class IsTheCurrentSelectionUseCaseTest {
     public void isTheCurrentSelectionWhenRestaurantIsSelectedByTheCurrentSession() {
         InMemoryVisitorsGateway visitorsGateway = new InMemoryVisitorsGateway();
         visitorsGateway.setSelections(Arrays.asList(new Selection(
-                "1", "resto1",
-                "1", "workmate1"
+                "1",
+                "1"
         )));
         IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase = new IsTheCurrentSelectionUseCase(visitorsGateway);
         List<Boolean> isTheCurrentSelectionResults = new ArrayList<>();

@@ -20,6 +20,7 @@ import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.ui.adapters.ListVisitorRecyclerViewAdapter;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
+import com.android.go4lunch.usecases.exceptions.NotFoundException;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -72,8 +73,26 @@ public class RestaurantDetailsActivity extends BaseActivity {
 
         // Data
         // RESTAURANT
-        Restaurant restaurant = new Mock().restaurants().get(0);
-        this.restaurantDetailsViewModel.setRestaurant(restaurant);
+        Restaurant restaurant;
+
+        String id = getIntent().getStringExtra("id");
+        String name = getIntent().getStringExtra("name");
+        String address = getIntent().getStringExtra("address");
+        String photoUrl = getIntent().getStringExtra("photoUrl");
+        String phone = getIntent().getStringExtra("phone");
+        String website = getIntent().getStringExtra("website");
+
+        restaurant = new Restaurant(name, address);
+        restaurant.setId(id);
+        restaurant.setPhotoUrl(photoUrl);
+        restaurant.setPhone(phone);
+        restaurant.setWebSite(website);
+
+        try {
+            this.restaurantDetailsViewModel.setRestaurant(restaurant);
+        } catch (NotFoundException e) {
+            Toast.makeText(this, e.getClass().getName(), Toast.LENGTH_LONG);
+        }
 
         if(restaurant.getPhotoUrl() != null) {
             Glide.with(this.restaurantImage.getContext())
@@ -101,7 +120,7 @@ public class RestaurantDetailsActivity extends BaseActivity {
                 this.star.setVisibility(isTheCurrentSelection ? View.VISIBLE : View.INVISIBLE);
             });
         } catch (NoWorkmateForSessionException e) {
-            Toast.makeText(this, e.getClass().getName(), Toast.LENGTH_SHORT).show();
+            this.handleError(e);
         }
 
         // CLICK CALL
@@ -116,7 +135,7 @@ public class RestaurantDetailsActivity extends BaseActivity {
         this.buttonLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handleClickLike();
+                handleLike();
             }
         });
 
@@ -130,14 +149,17 @@ public class RestaurantDetailsActivity extends BaseActivity {
 
     }
 
-    private void handleClickLike() {
+    private void handleLike() {
         try {
             this.restaurantDetailsViewModel.handleLike();
             
-        } catch (NoWorkmateForSessionException e) {
-            e.printStackTrace();
-            Toast.makeText(this, e.getClass().getName() + " " + e.getMessage(), Toast.LENGTH_LONG).show();
+        } catch (NotFoundException e) {
+            this.handleError(e);
         }
+    }
+
+    private void handleError(Exception e) {
+        Toast.makeText(this, e.getClass().getName() + " " + e.getMessage(), Toast.LENGTH_LONG).show();
     }
 
 }

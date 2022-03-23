@@ -36,4 +36,5 @@ public class GetWorkmateByIdUseCaseTest {
             getWorkmateByIdUsecase.handle("3");
         });
     }
+
 }

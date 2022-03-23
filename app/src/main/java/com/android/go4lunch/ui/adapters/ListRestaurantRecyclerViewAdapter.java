@@ -2,6 +2,8 @@ package com.android.go4lunch.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,15 +104,12 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
                 public void onClick(View v) {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, RestaurantDetailsActivity.class);
-                    /*
                     intent.putExtra("id", restaurant.getRestaurant().getId());
                     intent.putExtra("name", restaurant.getRestaurant().getName());
                     intent.putExtra("address", restaurant.getRestaurant().getAddress());
-                    intent.putExtra("photoUrl", restaurant.getRestaurant().getPhotoUrl());
                     intent.putExtra("phone", restaurant.getRestaurant().getPhone());
                     intent.putExtra("website", restaurant.getRestaurant().getWebSite());
-
-                     */
+                    intent.putExtra("photoUrl", restaurant.getRestaurant().getPhotoUrl());
                     context.startActivity(intent);
                 }
             });

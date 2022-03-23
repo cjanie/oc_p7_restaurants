@@ -17,16 +17,7 @@ public class GetWorkmatesUseCase {
         this.workmateGateway = workmateGateway;
     }
 
-    public Observable<List<WorkmateModel>> list() {
-        return this.workmateGateway.getWorkmates().map(workmates -> {
-            List<WorkmateModel> workmateModels = new ArrayList<>();
-            if(!workmates.isEmpty()) {
-                for(Workmate workmate: workmates) {
-                    WorkmateModel workmateModel = new WorkmateModel(workmate);
-                    workmateModels.add(workmateModel);
-                }
-            }
-            return workmateModels;
-        });
+    public Observable<List<Workmate>> handle() {
+        return this.workmateGateway.getWorkmates();
     }
 }

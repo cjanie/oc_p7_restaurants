@@ -20,8 +20,8 @@ public class GetWorkmatesUseCaseTest {
         inMemoryWorkmateGateway.setWorkmates(Arrays.asList(new Workmate("Janie")));
         GetWorkmatesUseCase getWorkmatesUseCase = new GetWorkmatesUseCase(inMemoryWorkmateGateway);
 
-        Observable<List<WorkmateModel>> observableWormates = getWorkmatesUseCase.list();
-        List<WorkmateModel> results = new ArrayList<>();
+        Observable<List<Workmate>> observableWormates = getWorkmatesUseCase.handle();
+        List<Workmate> results = new ArrayList<>();
         observableWormates.subscribe(results::addAll);
         assert(results.size() == 1);
     }
@@ -34,8 +34,8 @@ public class GetWorkmatesUseCaseTest {
                 new Workmate("Cyril")
         ));
         GetWorkmatesUseCase getWorkmatesUseCase = new GetWorkmatesUseCase(inMemoryWorkmateGateway);
-        Observable<List<WorkmateModel>> observableWormates = getWorkmatesUseCase.list();
-        List<WorkmateModel> results = new ArrayList<>();
+        Observable<List<Workmate>> observableWormates = getWorkmatesUseCase.handle();
+        List<Workmate> results = new ArrayList<>();
         observableWormates.subscribe(results::addAll);
         assert(results.size() == 2);
     }
@@ -45,8 +45,8 @@ public class GetWorkmatesUseCaseTest {
         InMemoryWorkmateGateway inMemoryWorkmateGateway = new InMemoryWorkmateGateway();
         // dont set any workmate in the repository
         GetWorkmatesUseCase getWorkmatesUseCase = new GetWorkmatesUseCase(inMemoryWorkmateGateway);
-        Observable<List<WorkmateModel>> observableWormates = getWorkmatesUseCase.list();
-        List<WorkmateModel> results = new ArrayList<>();
+        Observable<List<Workmate>> observableWormates = getWorkmatesUseCase.handle();
+        List<Workmate> results = new ArrayList<>();
         observableWormates.subscribe(results::addAll);
         assert(results.isEmpty());
     }

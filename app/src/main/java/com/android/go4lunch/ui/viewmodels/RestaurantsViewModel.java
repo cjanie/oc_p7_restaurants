@@ -65,7 +65,7 @@ public class RestaurantsViewModel extends ViewModel {
         List<RestaurantModel> restaurantModels = new ArrayList<>();
         if(!restaurantsResults.isEmpty()) {
             for(Restaurant r: restaurantsResults) {
-                List<Workmate> visitorsResults = new ArrayList<>();
+                List<String> visitorsResults = new ArrayList<>();
                 this.getRestaurantVisitorsUseCase.handle(r.getId()).subscribe(visitorsResults::addAll);
                 RestaurantModel restaurantModel = new RestaurantModel(
                         r,

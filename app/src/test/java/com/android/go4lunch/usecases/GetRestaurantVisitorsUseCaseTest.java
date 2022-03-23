@@ -17,11 +17,11 @@ public class GetRestaurantVisitorsUseCaseTest {
     public void returnsVisitorsWhenThereAreSome () {
         InMemoryVisitorsGateway restaurantVisitorGateway = new InMemoryVisitorsGateway();
         List<Selection> selections = new ArrayList<>();
-        Selection selection = new Selection("1", "Resto", "1", "Janie");
+        Selection selection = new Selection("1", "1");
         selections.add(selection);
         restaurantVisitorGateway.setSelections(selections);
         GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(restaurantVisitorGateway);
-        List<Workmate> results = new ArrayList<>();
+        List<String> results = new ArrayList<>();
         getRestaurantVisitorsUseCase.handle("1").subscribe(results::addAll);
         assertFalse(results.isEmpty());
     }
@@ -30,7 +30,7 @@ public class GetRestaurantVisitorsUseCaseTest {
     public void doesNotReturnAnyVisitorWhenThereIsNone() {
         InMemoryVisitorsGateway visitorGateway = new InMemoryVisitorsGateway();
         GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(visitorGateway);
-        List<Workmate> results = new ArrayList<>();
+        List<String> results = new ArrayList<>();
         getRestaurantVisitorsUseCase.handle("0").subscribe(results::addAll);
         assert(results.isEmpty());
     }
@@ -39,21 +39,15 @@ public class GetRestaurantVisitorsUseCaseTest {
     public void returnsVisitorsOfARestaurantAmongOthers() {
         InMemoryVisitorsGateway visitorsGateway = new InMemoryVisitorsGateway();
         List<Selection> selected = new ArrayList<>();
-        Selection selection1 = new Selection(
-                "1", "Resto",
-                "1", "Janie");
+        Selection selection1 = new Selection("1", "1");
         selected.add(selection1);
-        Selection selection2 = new Selection(
-                "2", "Miam",
-                "2", "Cyril");
+        Selection selection2 = new Selection("2", "2");
         selected.add(selection2);
         visitorsGateway.setSelections(selected);
-        Selection selection3 = new Selection(
-                "1", "Resto",
-                "2", "Cyril");
+        Selection selection3 = new Selection("1", "2");
         selected.add(selection3);
         GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(visitorsGateway);
-        List<Workmate> results = new ArrayList<>();
+        List<String> results = new ArrayList<>();
         getRestaurantVisitorsUseCase.handle("1").subscribe(results::addAll);
         assert(results.size() == 2);
     }

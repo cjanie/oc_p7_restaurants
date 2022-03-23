@@ -2,16 +2,12 @@ package com.android.go4lunch.usecases.models;
 
 import com.android.go4lunch.models.Workmate;
 import com.android.go4lunch.providers.DateProvider;
-import com.android.go4lunch.providers.RealDateProvider;
 import com.android.go4lunch.providers.TimeProvider;
 import com.android.go4lunch.usecases.decorators.TimeInfoDecorator;
 import com.android.go4lunch.usecases.enums.TimeInfo;
 import com.android.go4lunch.models.Restaurant;
-import com.android.go4lunch.usecases.enums.Vote;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RestaurantModel {
@@ -22,7 +18,7 @@ public class RestaurantModel {
 
     private DateProvider dateProvider;
 
-    private List<Workmate> visitors;
+    private List<String> visitorsId;
 
     private Long distance;
 
@@ -31,31 +27,16 @@ public class RestaurantModel {
             TimeProvider timeProvider,
             DateProvider dateProvider,
             Long distance,
-            List<Workmate> visitors
+            List<String> visitorsId
     ) {
         this.restaurant = restaurant;
         this.timeProvider = timeProvider;
         this.dateProvider = dateProvider;
         this.distance = distance;
-        this.visitors = visitors;
+        this.visitorsId = visitorsId;
 
     }
 
-/*
-    public RestaurantModel(Restaurant restaurant, TimeInfo timeInfo, Long distanceInfo) {
-        this(restaurant, timeInfo);
-        this.distanceInfo = distanceInfo;
-    }
-
-    public RestaurantModel(Restaurant restaurant, Long distanceInfo) {
-        this(restaurant);
-        this.distanceInfo = distanceInfo;
-    }
-
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
-    }
-*/
     public Restaurant getRestaurant() {
         return this.restaurant;
     }
@@ -77,7 +58,7 @@ public class RestaurantModel {
 
 
     public int getVisitorsCount() {
-        return this.visitors.size();
+        return this.visitorsId.size();
     }
 
 }
