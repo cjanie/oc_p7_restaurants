@@ -27,6 +27,7 @@
     <string name="open_until">Open until</string>
 
     <string name="distance">Distance</string>
+    <string name="meter_abbrev">m</string>
 
     <!-- WORKMATES -->
     <string name="selections">Selections</string>

@@ -1,6 +1,7 @@
 package com.android.go4lunch.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
+import com.android.go4lunch.ui.RestaurantDetailsActivity;
 import com.android.go4lunch.usecases.models.RestaurantModel;
 import com.android.go4lunch.ui.utils.TimeInfoTextHandler;
 import com.android.go4lunch.usecases.enums.Vote;
@@ -69,13 +71,12 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
                 ((ItemViewHolder)holder).info.setTypeface(null, timeInfoTextHandler.getStyle(restaurant));
             }
 
-
-
-            /*
-            if(restaurant.getDistanceInfo() != null) {
-                ((ItemViewHolder)holder).distance.setText(restaurant.getDistanceInfo().toString() + "m");
+            if(restaurant.getDistance() != null) {
+                ((ItemViewHolder)holder).distance.setText(
+                        restaurant.getDistance().toString()
+                                + ((ItemViewHolder) holder).distance.getContext().getString(R.string.meter_abbrev));
             }
-            */
+
             ((ItemViewHolder)holder).selections.setText("(" + restaurant.getVisitorsCount() +")");
 
             /*
@@ -96,7 +97,20 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
             }
 
              */
-
+            ((ItemViewHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Context context = v.getContext();
+                    Intent intent = new Intent(context, RestaurantDetailsActivity.class);
+                    intent.putExtra("id", restaurant.getRestaurant().getId());
+                    intent.putExtra("name", restaurant.getRestaurant().getName());
+                    intent.putExtra("address", restaurant.getRestaurant().getAddress());
+                    intent.putExtra("photoUrl", restaurant.getRestaurant().getPhotoUrl());
+                    intent.putExtra("phone", restaurant.getRestaurant().getPhone());
+                    intent.putExtra("website", restaurant.getRestaurant().getWebSite());
+                    context.startActivity(intent);
+                }
+            });
         }
 
     }

@@ -71,6 +71,7 @@ public class RestaurantsViewModel extends ViewModel {
                         r,
                         this.timeProvider,
                         this.dateProvider,
+                        100L,
                         visitorsResults);
                 restaurantModels.add(restaurantModel);
             }

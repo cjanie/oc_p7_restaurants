@@ -24,23 +24,19 @@ public class RestaurantModel {
 
     private List<Workmate> visitors;
 
-    public RestaurantModel(
-            Restaurant restaurant,
-            TimeProvider timeProvider,
-            DateProvider dateProvider
-    ) {
-        this.restaurant = restaurant;
-        this.timeProvider = timeProvider;
-        this.dateProvider = dateProvider;
-    }
+    private Long distance;
 
     public RestaurantModel(
             Restaurant restaurant,
             TimeProvider timeProvider,
             DateProvider dateProvider,
+            Long distance,
             List<Workmate> visitors
     ) {
-        this(restaurant, timeProvider, dateProvider);
+        this.restaurant = restaurant;
+        this.timeProvider = timeProvider;
+        this.dateProvider = dateProvider;
+        this.distance = distance;
         this.visitors = visitors;
 
     }
@@ -74,17 +70,11 @@ public class RestaurantModel {
         return this.restaurant.getPlanning().get(this.dateProvider.today()).get("close");
     }
 
-
-/*
-    public void setDistanceInfo(Long distanceInfo) {
-        this.distanceInfo = distanceInfo;
+    public Long getDistance() {
+        return this.distance;
     }
 
-    public Long getDistanceInfo() {
-        return this.distanceInfo;
-    }
 
- */
 
     public int getVisitorsCount() {
         return this.visitors.size();
