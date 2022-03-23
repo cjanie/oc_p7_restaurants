@@ -5,12 +5,18 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
+import com.android.go4lunch.models.Restaurant;
+import com.android.go4lunch.models.Workmate;
+import com.android.go4lunch.providers.DateProvider;
+import com.android.go4lunch.providers.TimeProvider;
 import com.android.go4lunch.usecases.GetSessionUseCase;
-import com.android.go4lunch.usecases.models_vo.RestaurantVO;
+import com.android.go4lunch.usecases.decorators.TimeInfoDecorator;
+import com.android.go4lunch.usecases.models.RestaurantModel;
 import com.android.go4lunch.models.Geolocation;
 import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -22,37 +28,55 @@ public class RestaurantsViewModel extends ViewModel {
     // Use Cases
     private final GetRestaurantsForListUseCase getRestaurantsForListUseCase;
 
-    private final GetSessionUseCase getSessionUseCase;
+    // Dependencies
+    private final TimeProvider timeProvider;
+
+    private final DateProvider dateProvider;
 
     // Restaurant List LiveData
-    private final MutableLiveData<List<RestaurantVO>> restaurants;
+    private final MutableLiveData<List<RestaurantModel>> restaurants;
 
     // For stream data (Observable)
     private Disposable disposable;
 
 
     // Constructor
-    public RestaurantsViewModel(GetRestaurantsForListUseCase getRestaurantsForListUseCase) {
+    public RestaurantsViewModel(
+            GetRestaurantsForListUseCase getRestaurantsForListUseCase,
+            TimeProvider timeProvider,
+            DateProvider dateProvider) {
         this.getRestaurantsForListUseCase = getRestaurantsForListUseCase;
+        this.timeProvider = timeProvider;
+        this.dateProvider = dateProvider;
         this.restaurants = new MutableLiveData<>(new ArrayList<>());
-        this.getSessionUseCase = new GetSessionUseCase(new SessionGatewayImpl());
     }
 
     // GET methods
 
-    public LiveData<List<RestaurantVO>> getRestaurants(Double myLatitude, Double myLongitude, int radius) {
+    public LiveData<List<RestaurantModel>> getRestaurants(Double myLatitude, Double myLongitude, int radius) {
+        List<Restaurant> restaurantsResults = new ArrayList<>();
+        this.getRestaurantsForListUseCase.handle(new Geolocation(myLatitude, myLongitude), radius)
+                .subscribe(restaurantsResults::addAll);
+        List<RestaurantModel> restaurantModels = new ArrayList<>();
+        if(!restaurantsResults.isEmpty()) {
+            for(Restaurant r: restaurantsResults) {
+                RestaurantModel restaurantModel = new RestaurantModel(r, this.timeProvider, this.dateProvider, Arrays.asList(new Workmate("Janie")));
+                restaurantModels.add(restaurantModel);
+            }
+        }
         this.setRestaurants(
-                this.getRestaurantsForListUseCase.getRestaurantsNearbyAsValueObject(new Geolocation(myLatitude, myLongitude), radius)
+                Observable.just(restaurantModels)
         );
         return this.restaurants;
     }
 
-    private void setRestaurants(Observable<List<RestaurantVO>> observableWithRestaurants) {
+    private void setRestaurants(Observable<List<RestaurantModel>> observableWithRestaurants) {
         this.disposable = observableWithRestaurants
-                .subscribeWith(new DisposableObserver<List<RestaurantVO>>() {
+                .subscribeWith(new DisposableObserver<List<RestaurantModel>>() {
 
                     @Override
-                    public void onNext(@io.reactivex.annotations.NonNull List<RestaurantVO> restaurants) {
+                    public void onNext(@io.reactivex.annotations.NonNull List<RestaurantModel> restaurants) {
+
                         RestaurantsViewModel.this.restaurants.postValue(restaurants);
                     }
 

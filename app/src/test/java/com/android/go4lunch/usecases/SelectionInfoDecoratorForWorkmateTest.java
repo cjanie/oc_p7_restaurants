@@ -3,7 +3,6 @@ package com.android.go4lunch.usecases;
 import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.models.Workmate;
 import com.android.go4lunch.usecases.decorators.SelectionInfoDecoratorForWorkMate;
-import com.android.go4lunch.usecases.models_vo.WorkmateVO;
 
 import org.junit.Test;
 

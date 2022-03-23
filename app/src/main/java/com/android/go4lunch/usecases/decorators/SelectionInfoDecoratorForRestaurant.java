@@ -2,8 +2,7 @@ package com.android.go4lunch.usecases.decorators;
 
 import com.android.go4lunch.gateways.SelectionGateway;
 import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.usecases.models_vo.RestaurantVO;
-import com.android.go4lunch.models.Selection;
+import com.android.go4lunch.usecases.models.RestaurantModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ public class SelectionInfoDecoratorForRestaurant {
         this.selectionGateway = selectionGateway;
     }
 
-    public Observable<RestaurantVO> decor(RestaurantVO restaurant) {
+    public Observable<RestaurantModel> decor(RestaurantModel restaurant) {
         return this.selectionGateway.getSelection().map(selections -> {
             // search restaurant selections
             List<Workmate> workmatesForRestaurant = new ArrayList<>();
@@ -40,7 +39,7 @@ public class SelectionInfoDecoratorForRestaurant {
         });
     }
 
-    private Observable<Integer> getSelectionsCount(RestaurantVO restaurant) {
+    private Observable<Integer> getSelectionsCount(RestaurantModel restaurant) {
 
         return this.selectionGateway.getSelection().map(selection -> {
             int count = 0;

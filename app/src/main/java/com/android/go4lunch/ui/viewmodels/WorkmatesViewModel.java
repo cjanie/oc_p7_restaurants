@@ -9,8 +9,7 @@ import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
 import com.android.go4lunch.usecases.GetWorkmatesUseCase;
-import com.android.go4lunch.usecases.decorators.SelectionInfoDecoratorForWorkMate;
-import com.android.go4lunch.usecases.models_vo.WorkmateVO;
+import com.android.go4lunch.usecases.models.WorkmateModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ public class WorkmatesViewModel extends ViewModel {
 
     private GetWorkmateSelectionUseCase getWorkmateSelectionUseCase;
 
-    private MutableLiveData<List<WorkmateVO>> workmates;
+    private MutableLiveData<List<WorkmateModel>> workmates;
 
     private Disposable disposable;
 
@@ -38,16 +37,16 @@ public class WorkmatesViewModel extends ViewModel {
         this.workmates = new MutableLiveData<>(new ArrayList<>());
     }
 
-    public LiveData<List<WorkmateVO>> list() {
+    public LiveData<List<WorkmateModel>> list() {
         this.setWorkmates(this.getWorkmatesUseCase.list());
         return this.workmates;
     }
 
-    private void setWorkmates(Observable<List<WorkmateVO>> observableWorkmates) {
-        this.disposable = observableWorkmates.subscribeWith(new DisposableObserver<List<WorkmateVO>>() {
+    private void setWorkmates(Observable<List<WorkmateModel>> observableWorkmates) {
+        this.disposable = observableWorkmates.subscribeWith(new DisposableObserver<List<WorkmateModel>>() {
             @Override
-            public void onNext(@NonNull List<WorkmateVO> list) {
-                for(WorkmateVO w: list) {
+            public void onNext(@NonNull List<WorkmateModel> list) {
+                for(WorkmateModel w: list) {
                     w = decorWorkmate(w);
                 }
                 workmates.setValue(list);
@@ -72,15 +71,15 @@ public class WorkmatesViewModel extends ViewModel {
             this.disposable.dispose();
     }
 
-    private WorkmateVO decorWorkmate(WorkmateVO workmateVO) {
-        Observable<Selection> selectionObservable = this.getWorkmateSelectionUseCase.handle(workmateVO.getWorkmate().getId());
+    private WorkmateModel decorWorkmate(WorkmateModel workmateModel) {
+        Observable<Selection> selectionObservable = this.getWorkmateSelectionUseCase.handle(workmateModel.getWorkmate().getId());
         if(selectionObservable != null) {
             List<Selection> selectionResults = new ArrayList<>();
             selectionObservable.subscribe(selectionResults::add);
-            workmateVO.setSelection(new Restaurant(selectionResults.get(0).getRestaurantName(), "address"));
+            workmateModel.setSelection(new Restaurant(selectionResults.get(0).getRestaurantName(), "address"));
         }
 
-        return workmateVO;
+        return workmateModel;
 
     }
 }

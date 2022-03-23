@@ -13,7 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
-import com.android.go4lunch.usecases.models_vo.RestaurantVO;
+import com.android.go4lunch.usecases.models.RestaurantModel;
 import com.android.go4lunch.ui.utils.TimeInfoTextHandler;
 import com.android.go4lunch.usecases.enums.Vote;
 import com.bumptech.glide.Glide;
@@ -30,10 +30,10 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
     private static final int TYPE_ITEM_VIEW = 1;
 
-    private final List<RestaurantVO> restaurantVOs;
+    private final List<RestaurantModel> restaurantModels;
 
-    public ListRestaurantRecyclerViewAdapter(List<RestaurantVO> restaurantVOs) {
-        this.restaurantVOs = restaurantVOs;
+    public ListRestaurantRecyclerViewAdapter(List<RestaurantModel> restaurantModels) {
+        this.restaurantModels = restaurantModels;
     }
 
     @NonNull
@@ -52,7 +52,7 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof ItemViewHolder) {
-            RestaurantVO restaurant = this.restaurantVOs.get(position);
+            RestaurantModel restaurant = this.restaurantModels.get(position);
             Glide.with(((ItemViewHolder) holder).photo.getContext())
                     .load(restaurant.getRestaurant().getPhotoUrl())
                     .apply(RequestOptions.centerCropTransform())
@@ -64,17 +64,21 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
             if(restaurant.getTimeInfo() != null) {
                 TimeInfoTextHandler timeInfoTextHandler = new TimeInfoTextHandler();
-                ((ItemViewHolder)holder).info.setText(timeInfoTextHandler.getText(restaurant));
+                ((ItemViewHolder)holder).info.setText(timeInfoTextHandler.getText(restaurant, ((ItemViewHolder) holder).info.getContext()));
                 ((ItemViewHolder)holder).info.setTextColor(timeInfoTextHandler.getColor(restaurant, ((ItemViewHolder)holder).info));
                 ((ItemViewHolder)holder).info.setTypeface(null, timeInfoTextHandler.getStyle(restaurant));
             }
 
+
+
+            /*
             if(restaurant.getDistanceInfo() != null) {
                 ((ItemViewHolder)holder).distance.setText(restaurant.getDistanceInfo().toString() + "m");
             }
-            ((ItemViewHolder)holder).selections.setText("(" + restaurant.getSelectionCountInfo() +")");
+            */
+            ((ItemViewHolder)holder).selections.setText("(" + restaurant.getVisitorsCount() +")");
 
-            // Vote
+            /*
             Vote vote = restaurant.getVoteInfo();
 
             if(vote == Vote.ONE_STAR) {
@@ -90,6 +94,8 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
                     ((ItemViewHolder)holder).starsContainer.addView(this.createStar(holder.itemView.getContext()));
                 }
             }
+
+             */
 
         }
 
@@ -110,7 +116,7 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
     @Override
     public int getItemViewType(int position) {
-        if(this.restaurantVOs.isEmpty() && position == 0) {
+        if(this.restaurantModels.isEmpty() && position == 0) {
             return TYPE_EMPTY_VIEW;
         } else {
             return TYPE_ITEM_VIEW;
@@ -119,10 +125,10 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
     @Override
     public int getItemCount() {
-        if(this.restaurantVOs.isEmpty()) {
+        if(this.restaurantModels.isEmpty()) {
             return 1;
         }
-        return this.restaurantVOs.size();
+        return this.restaurantModels.size();
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {

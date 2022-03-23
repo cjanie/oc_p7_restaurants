@@ -3,7 +3,6 @@ package com.android.go4lunch.usecases;
 import com.android.go4lunch.models.Geolocation;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.in_memory_repositories.InMemoryRestaurantGateway;
-import com.android.go4lunch.usecases.models_vo.RestaurantVO;
 
 import org.junit.Test;
 import java.util.ArrayList;
@@ -29,10 +28,10 @@ public class GetRestaurantsForListUseCaseTest {
         );
     }
 
-    private List<RestaurantVO> getObservedResult(GetRestaurantsForListUseCase getRestaurantsForListUseCase) {
-        Observable<List<RestaurantVO>> observableRestaurants = getRestaurantsForListUseCase
-                .getRestaurantsNearbyAsValueObject(new Geolocation(1111.1, 1111.2), 1000);
-        List<RestaurantVO> results = new ArrayList<>();
+    private List<Restaurant> getObservedResult(GetRestaurantsForListUseCase getRestaurantsForListUseCase) {
+        Observable<List<Restaurant>> observableRestaurants = getRestaurantsForListUseCase
+                .handle(new Geolocation(1111.1, 1111.2), 1000);
+        List<Restaurant> results = new ArrayList<>();
         observableRestaurants.subscribe(results::addAll);
         return results;
     }

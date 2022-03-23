@@ -1,15 +1,15 @@
-package com.android.go4lunch.usecases.models_vo;
+package com.android.go4lunch.usecases.models;
 
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Workmate;
 
-public class WorkmateVO {
+public class WorkmateModel {
 
     private Workmate workmate;
 
     private Restaurant selection;
 
-    public WorkmateVO(Workmate workmate) {
+    public WorkmateModel(Workmate workmate) {
         this.workmate = workmate;
     }
 

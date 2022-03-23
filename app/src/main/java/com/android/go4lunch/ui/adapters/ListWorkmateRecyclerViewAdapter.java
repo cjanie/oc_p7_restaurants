@@ -3,23 +3,16 @@ package com.android.go4lunch.ui.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
-import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.usecases.models_vo.WorkmateVO;
+import com.android.go4lunch.usecases.models.WorkmateModel;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ListWorkmateRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -27,9 +20,9 @@ public class ListWorkmateRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
     private static final int TYPE_ITEM_VIEW = 1;
 
-    private List<WorkmateVO> workmates;
+    private List<WorkmateModel> workmates;
 
-    public ListWorkmateRecyclerViewAdapter(List<WorkmateVO> workmates) {
+    public ListWorkmateRecyclerViewAdapter(List<WorkmateModel> workmates) {
         this.workmates = workmates;
     }
 
@@ -50,7 +43,7 @@ public class ListWorkmateRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         if(holder instanceof WorkmateViewHolder) {
-            WorkmateVO workmate = this.workmates.get(position);
+            WorkmateModel workmate = this.workmates.get(position);
             // Avatar
             Glide.with(((WorkmateViewHolder) holder).avatar.getContext())
                     .load(workmate.getWorkmate().getUrlPhoto())

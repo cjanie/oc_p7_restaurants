@@ -2,7 +2,7 @@ package com.android.go4lunch.usecases;
 
 import com.android.go4lunch.in_memory_repositories.InMemoryWorkmateGateway;
 import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.usecases.models_vo.WorkmateVO;
+import com.android.go4lunch.usecases.models.WorkmateModel;
 
 import org.junit.Test;
 
@@ -20,8 +20,8 @@ public class GetWorkmatesUseCaseTest {
         inMemoryWorkmateGateway.setWorkmates(Arrays.asList(new Workmate("Janie")));
         GetWorkmatesUseCase getWorkmatesUseCase = new GetWorkmatesUseCase(inMemoryWorkmateGateway);
 
-        Observable<List<WorkmateVO>> observableWormates = getWorkmatesUseCase.list();
-        List<WorkmateVO> results = new ArrayList<>();
+        Observable<List<WorkmateModel>> observableWormates = getWorkmatesUseCase.list();
+        List<WorkmateModel> results = new ArrayList<>();
         observableWormates.subscribe(results::addAll);
         assert(results.size() == 1);
     }
@@ -34,8 +34,8 @@ public class GetWorkmatesUseCaseTest {
                 new Workmate("Cyril")
         ));
         GetWorkmatesUseCase getWorkmatesUseCase = new GetWorkmatesUseCase(inMemoryWorkmateGateway);
-        Observable<List<WorkmateVO>> observableWormates = getWorkmatesUseCase.list();
-        List<WorkmateVO> results = new ArrayList<>();
+        Observable<List<WorkmateModel>> observableWormates = getWorkmatesUseCase.list();
+        List<WorkmateModel> results = new ArrayList<>();
         observableWormates.subscribe(results::addAll);
         assert(results.size() == 2);
     }
@@ -45,8 +45,8 @@ public class GetWorkmatesUseCaseTest {
         InMemoryWorkmateGateway inMemoryWorkmateGateway = new InMemoryWorkmateGateway();
         // dont set any workmate in the repository
         GetWorkmatesUseCase getWorkmatesUseCase = new GetWorkmatesUseCase(inMemoryWorkmateGateway);
-        Observable<List<WorkmateVO>> observableWormates = getWorkmatesUseCase.list();
-        List<WorkmateVO> results = new ArrayList<>();
+        Observable<List<WorkmateModel>> observableWormates = getWorkmatesUseCase.list();
+        List<WorkmateModel> results = new ArrayList<>();
         observableWormates.subscribe(results::addAll);
         assert(results.isEmpty());
     }

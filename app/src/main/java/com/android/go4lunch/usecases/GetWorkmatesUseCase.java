@@ -2,7 +2,7 @@ package com.android.go4lunch.usecases;
 
 import com.android.go4lunch.gateways.WorkmateGateway;
 import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.usecases.models_vo.WorkmateVO;
+import com.android.go4lunch.usecases.models.WorkmateModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +17,16 @@ public class GetWorkmatesUseCase {
         this.workmateGateway = workmateGateway;
     }
 
-    public Observable<List<WorkmateVO>> list() {
+    public Observable<List<WorkmateModel>> list() {
         return this.workmateGateway.getWorkmates().map(workmates -> {
-            List<WorkmateVO> workmateVOs = new ArrayList<>();
+            List<WorkmateModel> workmateModels = new ArrayList<>();
             if(!workmates.isEmpty()) {
                 for(Workmate workmate: workmates) {
-                    WorkmateVO workmateVO = new WorkmateVO(workmate);
-                    workmateVOs.add(workmateVO);
+                    WorkmateModel workmateModel = new WorkmateModel(workmate);
+                    workmateModels.add(workmateModel);
                 }
             }
-            return workmateVOs;
+            return workmateModels;
         });
     }
 }

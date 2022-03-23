@@ -23,6 +23,7 @@ import com.android.go4lunch.usecases.LikeForLunchUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
+import com.android.go4lunch.usecases.decorators.TimeInfoDecorator;
 
 public class Launch extends Application {
 
@@ -66,7 +67,11 @@ public class Launch extends Application {
         GetWorkmateSelectionUseCase getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorsGateway);
         // VIEW MODELS FACTORIES
         this.mapViewModelFactory = new MapViewModelFactory(getRestaurantsForMapUseCase);
-        this.restaurantsViewModelFactory = new RestaurantsViewModelFactory(getRestaurantsForListUseCase);
+        this.restaurantsViewModelFactory = new RestaurantsViewModelFactory(
+                getRestaurantsForListUseCase,
+                timeProvider,
+                dateProvider
+        );
         this.restaurantDetailsViewModelFactory = new RestaurantDetailsViewModelFactory(
                 getSessionUseCase,
                 likeForLunchUseCase,
