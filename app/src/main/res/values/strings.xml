@@ -10,6 +10,8 @@
     <string name="sign_in_cancelled">Sign in cancelled</string>
     <string name="no_internet_connection">No internet connection</string>
 
+    <string name="permission_rationale_text">We need permission to get your location</string>
+
     <!-- MENU -->
     <string name="map_view">Map View</string>
     <string name="list_view">List View</string>

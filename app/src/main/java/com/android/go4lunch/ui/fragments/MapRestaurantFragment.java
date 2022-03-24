@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -31,7 +32,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MapRestaurantFragment extends WithLocationPermissionFragment implements OnMapReadyCallback {
+public class MapRestaurantFragment extends Fragment implements OnMapReadyCallback {
 
     private MapViewModel mapViewModel;
 

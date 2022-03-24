@@ -6,6 +6,8 @@ import com.android.go4lunch.apis.apiGoogleMaps.repositories.DistanceRepository;
 import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsHttpClientProvider;
 import com.android.go4lunch.apis.apiGoogleMaps.repositories.RestaurantRepository;
 import com.android.go4lunch.gateways_impl.DistanceGatewayImpl;
+import com.android.go4lunch.gateways_impl.InMemoryVisitorsGateway;
+import com.android.go4lunch.gateways_impl.Mock;
 import com.android.go4lunch.gateways_impl.RestaurantGatewayImpl;
 import com.android.go4lunch.gateways_impl.SelectionGatewayImpl;
 import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
@@ -28,6 +30,8 @@ import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
 
+import java.util.Arrays;
+
 public class Launch extends Application {
 
     // view models factories
@@ -46,23 +50,20 @@ public class Launch extends Application {
         DistanceRepository distanceRepository = new DistanceRepository(httpClientProvider);
         RestaurantGatewayImpl restaurantGateway = new RestaurantGatewayImpl(restaurantRepository);
         DistanceGatewayImpl distanceGateway = new DistanceGatewayImpl(distanceRepository);
-        SelectionGatewayImpl selectionGateway = new SelectionGatewayImpl();
         SessionGatewayImpl sessionGateway = new SessionGatewayImpl();
-        VisitorsGatewayImpl visitorsGateway = new VisitorsGatewayImpl();
+        //VisitorsGatewayImpl visitorsGateway = new VisitorsGatewayImpl();
+
+        InMemoryVisitorsGateway visitorsGateway = new InMemoryVisitorsGateway();
+        visitorsGateway.setSelections(new Mock().selections());
         WorkmateGatewayImpl workmateGateway = new WorkmateGatewayImpl();
         RealTimeProvider timeProvider = new RealTimeProvider();
         RealDateProvider dateProvider = new RealDateProvider();
         // USE CASES
         GetSessionUseCase getSessionUseCase = new GetSessionUseCase(sessionGateway);
         GetRestaurantsForMapUseCase getRestaurantsForMapUseCase = new GetRestaurantsForMapUseCase(restaurantGateway);
-        GetRestaurantsForListUseCase getRestaurantsForListUseCase = new GetRestaurantsForListUseCase(
-                restaurantGateway
-        );
+        GetRestaurantsForListUseCase getRestaurantsForListUseCase = new GetRestaurantsForListUseCase(restaurantGateway);
 
-        LikeUseCase likeUseCase = new LikeUseCase(
-                selectionGateway,
-                visitorsGateway
-        );
+        LikeUseCase likeUseCase = new LikeUseCase(visitorsGateway);
 
         GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(visitorsGateway);
 

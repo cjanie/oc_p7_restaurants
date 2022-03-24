@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,13 +22,20 @@ import com.android.go4lunch.R;
 import com.android.go4lunch.ui.adapters.ListRestaurantRecyclerViewAdapter;
 import com.android.go4lunch.ui.events.InitMyPositionEvent;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModel;
+import com.android.go4lunch.ui.viewmodels.SharedViewModel;
 
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 
-public class ListRestaurantFragment extends WithLocationPermissionFragment {
+public class ListRestaurantFragment extends Fragment {
+
+    private SharedViewModel sharedViewModel;
+
+    public ListRestaurantFragment(SharedViewModel sharedViewModel) {
+        this.sharedViewModel = sharedViewModel;
+    }
 
     private RestaurantsViewModel restaurantsViewModel;
 
@@ -49,20 +57,23 @@ public class ListRestaurantFragment extends WithLocationPermissionFragment {
         this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
         this.recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
 
+        this.sharedViewModel.getGeolocation().observe(this.getViewLifecycleOwner(), geolocation -> {
+            if(geolocation != null) {
+                this.restaurantsViewModel.getRestaurants(
+                        geolocation.getLatitude(),
+                        geolocation.getLongitude(),
+                        1000
+                ).observe(this.getViewLifecycleOwner(), restaurants -> {
+                    ListRestaurantRecyclerViewAdapter adapter = new ListRestaurantRecyclerViewAdapter(restaurants);
+                    this.recyclerView.setAdapter(adapter);
+                });
+            }
+        });
+
         return root;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
+/*
 
     @Subscribe
     public void setListWhenInitMyPosition(InitMyPositionEvent event) {
@@ -74,4 +85,6 @@ public class ListRestaurantFragment extends WithLocationPermissionFragment {
                     }
         });
     }
+
+ */
 }

@@ -1,7 +1,8 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.in_memory_repositories.InMemoryVisitorsGateway;
+import com.android.go4lunch.gateways_impl.InMemoryVisitorsGateway;
 import com.android.go4lunch.models.Selection;
+import com.android.go4lunch.usecases.exceptions.NotFoundException;
 
 import org.junit.Test;
 
@@ -10,11 +11,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 
 public class GetWorkmateSelectionUseCaseTest {
 
     @Test
-    public void retrievesWorkmateSelectionWhenThereIsOne() {
+    public void retrievesWorkmateSelectionWhenThereIsOne() throws NotFoundException {
         InMemoryVisitorsGateway visitorsGateway = new InMemoryVisitorsGateway();
         Selection selection1 = new Selection(
                 "1",
@@ -25,6 +27,7 @@ public class GetWorkmateSelectionUseCaseTest {
                 "2"
         );
         visitorsGateway.setSelections(Arrays.asList(selection1, selection2));
+
         GetWorkmateSelectionUseCase getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorsGateway);
         List<String> selectionResults = new ArrayList<>();
         getWorkmateSelectionUseCase.handle("2").subscribe(selectionResults::add);
@@ -35,6 +38,6 @@ public class GetWorkmateSelectionUseCaseTest {
     public void nothingWhenWormateHasNoSelection() {
         InMemoryVisitorsGateway visitorsGateway = new InMemoryVisitorsGateway();
         GetWorkmateSelectionUseCase getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorsGateway);
-        assertNull(getWorkmateSelectionUseCase.handle("1"));
+        assertThrows(NotFoundException.class, () -> getWorkmateSelectionUseCase.handle("1"));
     }
 }

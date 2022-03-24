@@ -80,12 +80,12 @@ public class RestaurantDetailsViewModel extends ViewModel {
         return this.fetchIsTheCurrentSelection();
     };
 
-    public void handleLike() throws NoWorkmateForSessionException, NotFoundException {
+    public void handleLike() throws NotFoundException {
         this.setSession();
         if(this.session != null) {
+        this.fetchIsTheCurrentSelection();
             this.likeUseCase.handle(
                     this.restaurant.getId(),
-                    this.restaurant.getName(),
                     this.session.getId()
                     );
         }

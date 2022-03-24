@@ -2,6 +2,7 @@ package com.android.go4lunch.usecases;
 
 import com.android.go4lunch.gateways.VisitorsGateway;
 import com.android.go4lunch.models.Selection;
+import com.android.go4lunch.usecases.exceptions.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class GetWorkmateSelectionUseCase {
         this.visitorsGateway = visitorsGateway;
     }
 
-    public Observable<String> handle(String workmateId) {
+    public Observable<String> handle(String workmateId) throws NotFoundException {
         String selectionId = null;
         List<Selection> selectionsResults = new ArrayList<>();
         this.visitorsGateway.getSelections().subscribe(selectionsResults::addAll);
@@ -28,7 +29,7 @@ public class GetWorkmateSelectionUseCase {
                 }
             }
         }
-        return null;
+        throw new NotFoundException();
     }
 
 

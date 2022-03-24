@@ -1,6 +1,6 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.in_memory_repositories.InMemoryVisitorsGateway;
+import com.android.go4lunch.gateways_impl.InMemoryVisitorsGateway;
 import com.android.go4lunch.models.Selection;
 
 import org.junit.Test;
