@@ -54,7 +54,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new MapRestaurantFragment();
+                return new MapRestaurantFragment(this.sharedViewModel);
             case 1:
                 return new ListRestaurantFragment(this.sharedViewModel);
             case 2:

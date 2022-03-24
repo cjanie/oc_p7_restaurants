@@ -1,4 +1,4 @@
-package com.android.go4lunch.ui.viewmodels;
+package com.android.go4lunch.ui.viewmodels.factories;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.TimeProvider;
+import com.android.go4lunch.ui.viewmodels.RestaurantsViewModel;
 import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 import com.android.go4lunch.usecases.decorators.TimeInfoDecorator;

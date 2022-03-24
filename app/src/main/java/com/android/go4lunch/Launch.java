@@ -9,16 +9,14 @@ import com.android.go4lunch.gateways_impl.DistanceGatewayImpl;
 import com.android.go4lunch.gateways_impl.InMemoryVisitorsGateway;
 import com.android.go4lunch.gateways_impl.Mock;
 import com.android.go4lunch.gateways_impl.RestaurantGatewayImpl;
-import com.android.go4lunch.gateways_impl.SelectionGatewayImpl;
 import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
-import com.android.go4lunch.gateways_impl.VisitorsGatewayImpl;
 import com.android.go4lunch.gateways_impl.WorkmateGatewayImpl;
 import com.android.go4lunch.providers.RealDateProvider;
 import com.android.go4lunch.providers.RealTimeProvider;
-import com.android.go4lunch.ui.viewmodels.MapViewModelFactory;
-import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModelFactory;
-import com.android.go4lunch.ui.viewmodels.RestaurantsViewModelFactory;
-import com.android.go4lunch.ui.viewmodels.WorkmatesViewModelFactory;
+import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
+import com.android.go4lunch.ui.viewmodels.factories.RestaurantDetailsViewModelFactory;
+import com.android.go4lunch.ui.viewmodels.factories.RestaurantsViewModelFactory;
+import com.android.go4lunch.ui.viewmodels.factories.WorkmatesViewModelFactory;
 import com.android.go4lunch.usecases.GetRestaurantByIdUseCase;
 import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
@@ -29,8 +27,6 @@ import com.android.go4lunch.usecases.LikeUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
-
-import java.util.Arrays;
 
 public class Launch extends Application {
 

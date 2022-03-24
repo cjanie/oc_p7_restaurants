@@ -1,5 +1,6 @@
 package com.android.go4lunch.gateways_impl;
 
+import com.android.go4lunch.models.Geolocation;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.models.Workmate;
@@ -34,6 +35,7 @@ public class Mock {
 
         Restaurant bon = new Restaurant("Chez Bon", "2, rue des presses");
         bon.setId("2");
+        bon.setGeolocation(new Geolocation(43.610769, 3.876716));
 
         Map<Integer, Map<String, LocalTime>> planningNight = new HashMap<>();
         // Prepare the times map of the planning

@@ -20,14 +20,8 @@ import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
 import com.android.go4lunch.ui.adapters.ListRestaurantRecyclerViewAdapter;
-import com.android.go4lunch.ui.events.InitMyPositionEvent;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModel;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
-
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
 
 public class ListRestaurantFragment extends Fragment {
 
@@ -73,18 +67,4 @@ public class ListRestaurantFragment extends Fragment {
         return root;
     }
 
-/*
-
-    @Subscribe
-    public void setListWhenInitMyPosition(InitMyPositionEvent event) {
-        this.restaurantsViewModel.getRestaurants(event.getLatitude(), event.getLongitude(), 1000)
-                .observe(this, restaurants -> {
-                    if(!restaurants.isEmpty()) {
-                        ListRestaurantRecyclerViewAdapter adapter = new ListRestaurantRecyclerViewAdapter(restaurants);
-                        this.recyclerView.setAdapter(adapter);
-                    }
-        });
-    }
-
- */
 }

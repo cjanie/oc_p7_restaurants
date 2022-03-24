@@ -23,14 +23,10 @@ import com.android.go4lunch.R;
 import com.android.go4lunch.models.Geolocation;
 import com.android.go4lunch.ui.adapters.ViewPagerAdapter;
 
-import com.android.go4lunch.ui.events.InitMyPositionEvent;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
-
-import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

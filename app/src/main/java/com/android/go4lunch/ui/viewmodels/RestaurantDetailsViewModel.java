@@ -56,7 +56,8 @@ public class RestaurantDetailsViewModel extends ViewModel {
         this.getWorkmateByIdUsecase = getWorkmateByIdUsecase;
 
         this.visitors = new MutableLiveData<>(new ArrayList<>());
-        this.isTheCurrentSelection = new MutableLiveData<>();
+        this.isTheCurrentSelection = new MutableLiveData<>(false);
+
     }
 
 
@@ -77,26 +78,31 @@ public class RestaurantDetailsViewModel extends ViewModel {
     }
 
     public LiveData<Boolean> getIsTheCurrentSelection() throws NoWorkmateForSessionException {
-        return this.fetchIsTheCurrentSelection();
+        //this.fetchIsTheCurrentSelection(); // !!!!!
+        return this.isTheCurrentSelection;
     };
 
     public void handleLike() throws NotFoundException {
         this.setSession();
         if(this.session != null) {
-        this.fetchIsTheCurrentSelection();
             this.likeUseCase.handle(
                     this.restaurant.getId(),
                     this.session.getId()
                     );
+            //this.fetchIsTheCurrentSelection(); // !!!!!
         }
         this.fetchVisitors();
-        this.fetchIsTheCurrentSelection();
+        //this.fetchIsTheCurrentSelection(); // !!!!
     }
 
     private void fetchVisitors() throws NotFoundException {
         if(this.restaurant != null) {
             List<String> workmateIdsResults = new ArrayList<>();
             this.getRestaurantVisitorsUseCase.handle(this.restaurant.getId()).subscribe(workmateIdsResults::addAll);
+
+            if(workmateIdsResults.isEmpty()) {
+                isTheCurrentSelection.setValue(false);
+            }
 
             List<Workmate> workmates = new ArrayList<>();
             if(!workmateIdsResults.isEmpty()) {
@@ -106,16 +112,26 @@ public class RestaurantDetailsViewModel extends ViewModel {
                         this.getWorkmateByIdUsecase.handle(id).subscribe(workmateResults::add);
                         Workmate workmate = workmateResults.get(0);
                         workmates.add(workmate);
+                        this.setSession();
+                        if(this.session != null) {
+                            if(workmate.getId().equals(this.session.getId())) {
+                                this.isTheCurrentSelection.setValue(true);
+                            } else {
+                                this.isTheCurrentSelection.setValue(false);
+                            }
+                        }
+
                     } catch (NotFoundException e) {
                         throw e;
                     }
                 }
             }
+
             this.visitors.postValue(workmates);
         }
     }
-
-    private LiveData<Boolean> fetchIsTheCurrentSelection() throws NoWorkmateForSessionException {
+/*
+    private void fetchIsTheCurrentSelection() throws NoWorkmateForSessionException {
         this.setSession();
         if(this.restaurant != null && this.session != null) {
             List<Boolean> isTheCurrentSelectionResults = new ArrayList<>();
@@ -126,7 +142,6 @@ public class RestaurantDetailsViewModel extends ViewModel {
             if(!isTheCurrentSelectionResults.isEmpty())
                 this.isTheCurrentSelection.postValue(isTheCurrentSelectionResults.get(0));
         }
-        return this.isTheCurrentSelection;
     }
-
+*/
 }
