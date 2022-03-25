@@ -16,9 +16,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
+import com.android.go4lunch.models.Workmate;
 import com.android.go4lunch.ui.adapters.ListWorkmateRecyclerViewAdapter;
 import com.android.go4lunch.ui.viewmodels.WorkmatesViewModel;
 import com.android.go4lunch.usecases.exceptions.NotFoundException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.Observable;
 
 public class WorkmateListFragment extends Fragment {
 
@@ -32,7 +44,7 @@ public class WorkmateListFragment extends Fragment {
 
         this.workmatesViewModel = new ViewModelProvider(
                 this,
-                ((Launch) this.getActivity().getApplication()).workmatesViewModelFactory()
+                ((Launch) this.getActivity().getApplication()).workmatesViewModelFactory(this.getContext())
         ).get(WorkmatesViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_workmate_list, container, false);
@@ -40,6 +52,8 @@ public class WorkmateListFragment extends Fragment {
         this.recyclerView = (RecyclerView) root;
         Context context = root.getContext();
         this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+
 
         return root;
     }

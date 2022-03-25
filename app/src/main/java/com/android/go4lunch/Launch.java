@@ -1,10 +1,16 @@
 package com.android.go4lunch;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.android.go4lunch.apis.apiGoogleMaps.repositories.DistanceRepository;
 import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsHttpClientProvider;
 import com.android.go4lunch.apis.apiGoogleMaps.repositories.RestaurantRepository;
+import com.android.go4lunch.gateways.RestaurantGateway;
+import com.android.go4lunch.gateways.SessionGateway;
+import com.android.go4lunch.gateways.VisitorsGateway;
+import com.android.go4lunch.gateways.WorkmateGateway;
+import com.android.go4lunch.gateways_impl.DI;
 import com.android.go4lunch.gateways_impl.DistanceGatewayImpl;
 import com.android.go4lunch.gateways_impl.InMemoryVisitorsGateway;
 import com.android.go4lunch.gateways_impl.Mock;
@@ -27,6 +33,8 @@ import com.android.go4lunch.usecases.LikeUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Launch extends Application {
 
@@ -35,43 +43,34 @@ public class Launch extends Application {
 
     private final RestaurantsViewModelFactory restaurantsViewModelFactory;
 
-    private final RestaurantDetailsViewModelFactory restaurantDetailsViewModelFactory;
+    private RestaurantDetailsViewModelFactory restaurantDetailsViewModelFactory;
 
-    private final WorkmatesViewModelFactory workmatesViewModelFactory;
+    private WorkmatesViewModelFactory workmatesViewModelFactory;
+
+    private final RestaurantGateway restaurantGateway;
+
+    private WorkmateGatewayImpl workmateGateway;
+
+    private final VisitorsGateway visitorsGateway;
+
+    private final SessionGateway sessionGateway;
+
 
     public Launch() {
         // DEPENDENCIES
-        GoogleMapsHttpClientProvider httpClientProvider = new GoogleMapsHttpClientProvider();
-        RestaurantRepository restaurantRepository = new RestaurantRepository(httpClientProvider);
-        DistanceRepository distanceRepository = new DistanceRepository(httpClientProvider);
-        RestaurantGatewayImpl restaurantGateway = new RestaurantGatewayImpl(restaurantRepository);
-        DistanceGatewayImpl distanceGateway = new DistanceGatewayImpl(distanceRepository);
-        SessionGatewayImpl sessionGateway = new SessionGatewayImpl();
-        //VisitorsGatewayImpl visitorsGateway = new VisitorsGatewayImpl();
+        this.restaurantGateway = DI.restaurantGatewayInstance();
+        this.visitorsGateway = DI.visitorsGatewayInstance();
+        this.sessionGateway = DI.sessionGatewayInstance();
 
-        InMemoryVisitorsGateway visitorsGateway = new InMemoryVisitorsGateway();
-        visitorsGateway.setSelections(new Mock().selections());
-        WorkmateGatewayImpl workmateGateway = new WorkmateGatewayImpl();
         RealTimeProvider timeProvider = new RealTimeProvider();
         RealDateProvider dateProvider = new RealDateProvider();
         // USE CASES
-        GetSessionUseCase getSessionUseCase = new GetSessionUseCase(sessionGateway);
-        GetRestaurantsForMapUseCase getRestaurantsForMapUseCase = new GetRestaurantsForMapUseCase(restaurantGateway);
-        GetRestaurantsForListUseCase getRestaurantsForListUseCase = new GetRestaurantsForListUseCase(restaurantGateway);
 
-        LikeUseCase likeUseCase = new LikeUseCase(visitorsGateway);
+        GetRestaurantsForMapUseCase getRestaurantsForMapUseCase = new GetRestaurantsForMapUseCase(this.restaurantGateway);
+        GetRestaurantsForListUseCase getRestaurantsForListUseCase = new GetRestaurantsForListUseCase(this.restaurantGateway);
 
-        GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(visitorsGateway);
 
-        IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase = new IsTheCurrentSelectionUseCase(visitorsGateway);
-
-        GetWorkmatesUseCase getWorkmatesUseCase = new GetWorkmatesUseCase(workmateGateway);
-
-        GetWorkmateSelectionUseCase getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorsGateway);
-
-        GetWorkmateByIdUseCase getWorkmateByIdUseCase = new GetWorkmateByIdUseCase(workmateGateway);
-
-        GetRestaurantByIdUseCase getRestaurantByIdUseCase = new GetRestaurantByIdUseCase(restaurantGateway);
+        GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(this.visitorsGateway);
 
         // VIEW MODELS FACTORIES
         this.mapViewModelFactory = new MapViewModelFactory(getRestaurantsForMapUseCase);
@@ -80,18 +79,6 @@ public class Launch extends Application {
                 getRestaurantVisitorsUseCase,
                 timeProvider,
                 dateProvider
-        );
-        this.restaurantDetailsViewModelFactory = new RestaurantDetailsViewModelFactory(
-                getSessionUseCase,
-                likeUseCase,
-                getRestaurantVisitorsUseCase,
-                isTheCurrentSelectionUseCase,
-                getWorkmateByIdUseCase
-        );
-        this.workmatesViewModelFactory = new WorkmatesViewModelFactory(
-                getWorkmatesUseCase,
-                getWorkmateSelectionUseCase,
-                getRestaurantByIdUseCase
         );
     }
 
@@ -103,13 +90,47 @@ public class Launch extends Application {
         return this.restaurantsViewModelFactory;
     }
 
-    public RestaurantDetailsViewModelFactory restaurantDetailsViewModelFactory() {
+    public RestaurantDetailsViewModelFactory restaurantDetailsViewModelFactory(Context context) {
+        GetSessionUseCase getSessionUseCase = new GetSessionUseCase(this.sessionGateway);
+        LikeUseCase likeUseCase = new LikeUseCase(this.visitorsGateway);
+        IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase = new IsTheCurrentSelectionUseCase(this.visitorsGateway);
+
+        this.workmateGateway = (WorkmateGatewayImpl) DI.workmateGatewayInstance(context);
+        GetWorkmateByIdUseCase getWorkmateByIdUseCase = new GetWorkmateByIdUseCase(workmateGateway);
+
+
+        this.restaurantDetailsViewModelFactory = new RestaurantDetailsViewModelFactory(
+                getSessionUseCase,
+                likeUseCase,
+                new GetRestaurantVisitorsUseCase(this.visitorsGateway),
+                isTheCurrentSelectionUseCase,
+                getWorkmateByIdUseCase
+        );
         return this.restaurantDetailsViewModelFactory;
     }
 
-    public WorkmatesViewModelFactory workmatesViewModelFactory() {
+    public WorkmatesViewModelFactory workmatesViewModelFactory(Context context) {
+        this.workmateGateway = (WorkmateGatewayImpl) DI.workmateGatewayInstance(context);
+        GetWorkmatesUseCase getWorkmatesUseCase = new GetWorkmatesUseCase(this.workmateGateway);
+
+        GetWorkmateSelectionUseCase getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(this.visitorsGateway);
+        GetRestaurantByIdUseCase getRestaurantByIdUseCase = new GetRestaurantByIdUseCase(this.restaurantGateway);
+
+        this.workmatesViewModelFactory = new WorkmatesViewModelFactory(
+                getWorkmatesUseCase,
+                getWorkmateSelectionUseCase,
+                getRestaurantByIdUseCase
+        );
         return this.workmatesViewModelFactory;
+
     }
+
+    private FirebaseFirestore initDatabase(Context context) {
+        FirebaseApp.initializeApp(context);
+        return FirebaseFirestore.getInstance();
+    }
+
+
 
 
 }

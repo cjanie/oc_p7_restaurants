@@ -1,5 +1,7 @@
 package com.android.go4lunch.ui.viewmodels.factories;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -8,6 +10,8 @@ import com.android.go4lunch.ui.viewmodels.WorkmatesViewModel;
 import com.android.go4lunch.usecases.GetRestaurantByIdUseCase;
 import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
 import com.android.go4lunch.usecases.GetWorkmatesUseCase;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class WorkmatesViewModelFactory implements ViewModelProvider.Factory {
 
