@@ -64,7 +64,7 @@ public class RestaurantDetailsActivity extends BaseActivity {
 
         this.restaurantDetailsViewModel = new ViewModelProvider(
                 this,
-                ((Launch) this.getApplication()).restaurantDetailsViewModelFactory(this))
+                ((Launch) this.getApplication()).restaurantDetailsViewModelFactory())
                 .get(RestaurantDetailsViewModel.class);
 
         getSupportActionBar().hide();

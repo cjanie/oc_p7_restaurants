@@ -44,7 +44,7 @@ public class WorkmateListFragment extends Fragment {
 
         this.workmatesViewModel = new ViewModelProvider(
                 this,
-                ((Launch) this.getActivity().getApplication()).workmatesViewModelFactory(this.getContext())
+                ((Launch) this.getActivity().getApplication()).workmatesViewModelFactory()
         ).get(WorkmatesViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_workmate_list, container, false);
@@ -54,21 +54,14 @@ public class WorkmateListFragment extends Fragment {
         this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
 
+        this.workmatesViewModel.getWorkmates().observe(this.getViewLifecycleOwner(), workmates -> {
+            ListWorkmateRecyclerViewAdapter adapter = new ListWorkmateRecyclerViewAdapter(workmates);
+            this.recyclerView.setAdapter(adapter);
+        });
+
 
         return root;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        try {
-            this.workmatesViewModel.list().observe(WorkmateListFragment.this, workmates -> {
-                ListWorkmateRecyclerViewAdapter adapter = new ListWorkmateRecyclerViewAdapter(workmates);
-                this.recyclerView.setAdapter(adapter);
-            });
-        } catch (NotFoundException e) {
-            Toast.makeText(this.getContext(), e.getClass().getName(), Toast.LENGTH_LONG).show();
-        }
-    }
 }
 

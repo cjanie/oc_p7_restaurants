@@ -39,7 +39,7 @@ public class RestaurantsViewModel extends ViewModel {
     // Restaurant List LiveData
     private final MutableLiveData<List<RestaurantModel>> restaurants;
 
-    // For stream data (Observable)
+    // Data observer
     private Disposable disposable;
 
 
@@ -53,6 +53,7 @@ public class RestaurantsViewModel extends ViewModel {
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
         this.timeProvider = timeProvider;
         this.dateProvider = dateProvider;
+
         this.restaurants = new MutableLiveData<>(new ArrayList<>());
     }
 
