@@ -1,4 +1,4 @@
-package com.android.go4lunch.apis.apiGoogleMaps;
+package com.android.go4lunch.apis.apiGoogleMaps.repositories;
 
 import com.android.go4lunch.BuildConfig;
 

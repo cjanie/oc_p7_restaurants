@@ -1,6 +1,6 @@
 package com.android.go4lunch.apis.apiGoogleMaps.requests;
 
-import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsRequestConfig;
+import com.android.go4lunch.apis.apiGoogleMaps.repositories.GoogleMapsRequestConfig;
 import com.android.go4lunch.apis.apiGoogleMaps.deserializers.place.PhotoResponseRoot;
 
 import io.reactivex.Observable;

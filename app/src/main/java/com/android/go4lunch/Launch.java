@@ -72,6 +72,11 @@ public class Launch extends Application {
     private WorkmatesViewModelFactory workmatesViewModelFactory;
 
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        this.database();
+    }
     // INSTANTIATIONS
     // Date time providers
     private TimeProvider timeProvider() {
@@ -97,7 +102,7 @@ public class Launch extends Application {
         return this.database;
     }
 
-    private GoogleMapsHttpClientProvider googleMapsHttpClientProvider() {
+    private synchronized GoogleMapsHttpClientProvider googleMapsHttpClientProvider() {
         if(this.googleMapsHttpClientProvider == null) {
             this.googleMapsHttpClientProvider = new GoogleMapsHttpClientProvider();
         }

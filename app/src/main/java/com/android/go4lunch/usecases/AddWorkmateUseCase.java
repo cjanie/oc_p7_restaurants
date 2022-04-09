@@ -35,6 +35,6 @@ public class AddWorkmateUseCase {
     }
 
     public void save(Workmate workmate) {
-        this.workmateGateway.setWorkmates(this.add(workmate));
+       // this.workmateGateway.setWorkmates(this.add(workmate));
     }
 }

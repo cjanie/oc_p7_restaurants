@@ -11,6 +11,4 @@ public interface WorkmateGateway {
 
     Observable<List<Workmate>> getWorkmates();
 
-    void setWorkmates(@NonNull Observable<List<Workmate>> workmates);
-
 }

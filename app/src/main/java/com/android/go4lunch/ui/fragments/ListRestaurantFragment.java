@@ -39,6 +39,7 @@ public class ListRestaurantFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Data
+        //this.sharedViewModel = new ViewModelProvider(this.requireActivity()).get(SharedViewModel.class);
         this.restaurantsViewModel = new ViewModelProvider(
                 this,
                 ((Launch) this.getActivity().getApplication()).restaurantsViewModelFactory()

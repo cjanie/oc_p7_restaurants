@@ -1,6 +1,6 @@
 package com.android.go4lunch.apis.apiGoogleMaps;
 
-import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsRequestConfig;
+import com.android.go4lunch.apis.apiGoogleMaps.repositories.GoogleMapsRequestConfig;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;

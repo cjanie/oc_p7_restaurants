@@ -1,7 +1,6 @@
 package com.android.go4lunch.apis.apiGoogleMaps.repositories;
 
 import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsHttpClientProvider;
-import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsRequestConfig;
 import com.android.go4lunch.apis.apiGoogleMaps.requests.DistanceRequest;
 import com.android.go4lunch.exceptions.NullDistanceResponseException;
 import com.android.go4lunch.apis.apiGoogleMaps.deserializers.distance.Element;

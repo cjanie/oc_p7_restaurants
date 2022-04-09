@@ -36,8 +36,6 @@ public class WorkmatesViewModel extends ViewModel {
 
     private final MutableLiveData<List<WorkmateModel>> workmates;
 
-    private Disposable disposable;
-
     public WorkmatesViewModel(
             GetWorkmatesUseCase getWorkmatesUseCase,
             GetWorkmateSelectionUseCase getWorkmateSelectionUseCase,
@@ -52,97 +50,19 @@ public class WorkmatesViewModel extends ViewModel {
     }
 
     public LiveData<List<WorkmateModel>> getWorkmates() {
-
-        List<Workmate> workmatesResults = new ArrayList<>();
-        this.getWorkmatesUseCase.handle().subscribe(workmatesResults::addAll);
-
-        List<WorkmateModel> workmateModels = new ArrayList<>();
-        if(!workmatesResults.isEmpty()) {
-            for(Workmate w: workmatesResults) {
-                WorkmateModel workmateModel = new WorkmateModel(w);
-                try {
-                    List<String> selectionResults = new ArrayList<>();
-                    this.getWorkmateSelectionUseCase.handle(w.getId()).subscribe(selectionResults::add);
-
-                    List<Restaurant> restaurantResults = new ArrayList<>();
-                    this.getRestaurantByIdUseCase.handle(selectionResults.get(0)).subscribe(restaurantResults::add);
-
-                    workmateModel.setSelection(restaurantResults.get(0));
-
-                } catch (NotFoundException e) {
-                    Log.e(this.TAG, "getWorkmateSelectionUseCase: " + e.getClass().getName());
+        Disposable disposable = this.getWorkmatesUseCase.handle().subscribe(
+            workmates -> {
+                List<WorkmateModel> workmateModels = new ArrayList<>();
+                for(Workmate w: workmates) {
+                    WorkmateModel workmateModel = this.decorWorkmate(w);
+                    workmateModels.add(workmateModel);
                 }
-
-                workmateModels.add(workmateModel);
-            }
-        }
-        this.setWorkmates(Observable.just(workmateModels));
-
+                this.workmates.postValue(workmateModels);
+            },
+                Throwable::printStackTrace
+        );
         return this.workmates;
     }
-
-    private void setWorkmates(Observable<List<WorkmateModel>> workmateModelsObservable) {
-        this.disposable = workmateModelsObservable.subscribeWith(new DisposableObserver<List<WorkmateModel>>() {
-            @Override
-            public void onNext(@NonNull List<WorkmateModel> workmates) {
-                WorkmatesViewModel.this.workmates.postValue(workmates);
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
-    }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        if(this.disposable != null && !this.disposable.isDisposed())
-            this.disposable.dispose();
-    }
-
-    /*
-
-    public LiveData<List<WorkmateModel>> list() {
-        this.workmates.postValue(this.getWorkmates());
-        return this.workmates;
-    }
-
-    private void fetchWorkmates() {
-        List<Workmate> workmatesResults = new ArrayList<>();
-        this.getWorkmatesUseCase.handle().subscribe(workmatesResults::addAll);
-
-        List<WorkmateModel> workmatesModels = new ArrayList<>();
-        if(!workmatesResults.isEmpty()) {
-            for(Workmate w: workmatesResults) {
-                //WorkmateModel workmateModel = this.decorWorkmate(w);
-                WorkmateModel workmateModel = new WorkmateModel(w);
-                workmatesModels.add(workmateModel);
-            }
-        }
-        this.workmates.setValue(workmatesModels);
-    }
-
-    public List<WorkmateModel> getWorkmates() {
-        List<Workmate> workmatesResults = new ArrayList<>();
-        this.getWorkmatesUseCase.handle().subscribe(workmatesResults::addAll);
-        List<WorkmateModel> workmatesModels = new ArrayList<>();
-        if(!workmatesResults.isEmpty()) {
-            for(Workmate w: workmatesResults) {
-                WorkmateModel workmateModel = this.decorWorkmate(w);
-                workmatesModels.add(workmateModel);
-            }
-        }
-
-        return workmatesModels;
-    }
-
 
     private WorkmateModel decorWorkmate(Workmate workmate) {
         WorkmateModel workmateModel = new WorkmateModel(workmate);
@@ -162,10 +82,7 @@ public class WorkmatesViewModel extends ViewModel {
                 Log.e(this.TAG, "get restaurant by id: not found: " + e.getClass().getName());
             }
         }
-
         return workmateModel;
-
     }
 
-     */
 }

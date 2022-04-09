@@ -2,52 +2,46 @@ package com.android.go4lunch.gateways_impl;
 
 import android.util.Log;
 
-import com.android.go4lunch.apis.apiFirebase.UserRepository;
 import com.android.go4lunch.gateways.WorkmateGateway;
 import com.android.go4lunch.models.Workmate;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.subjects.PublishSubject;
 
 public class WorkmateGatewayImpl implements WorkmateGateway {
 
     private String TAG = "WORKMATE GATEWAY IMPL";
 
-    private Observable<List<Workmate>> workmates;
-
     private FirebaseFirestore database;
 
+    private PublishSubject<List<Workmate>> subject;
+
     public WorkmateGatewayImpl(FirebaseFirestore database) {
-
         this.database = database;
-        this.workmates = Observable.just(new ArrayList<>());
-        //this.fetchWorkmates();
-
-        this.workmates = Observable.just(new Mock().workmates());
+        this.subject = PublishSubject.create();
+        this.fetchWorkmates();
     }
 
     @Override
-    public Observable<List<Workmate>> getWorkmates() {
-        return this.workmates;
+    public Observable<List<Workmate>> getWorkmates() { // Renommer prefixe subscribe ou suffixe observable
+        return this.subject.hide();
     }
 
-    @Override
-    public void setWorkmates(@NonNull Observable<List<Workmate>> workmates) {
-        this.workmates = workmates;
+    private void updateWorkmates(List<Workmate> workmates) {
+        this.subject.onNext(workmates);
     }
 
     private void fetchWorkmates() {
@@ -69,14 +63,13 @@ public class WorkmateGatewayImpl implements WorkmateGateway {
                             workmate.setUrlPhoto((String) doc.getData().get("urlPhoto"));
 
                             list.add(workmate);
-                            System.out.println("doc id: " + doc.getId());
                         }
                     }
 
 
                     Log.d("list size", String.valueOf(list.size()));
                     System.out.println("docs list size in firebase: " + docs.size());
-                    workmates = Observable.just(list);
+                    updateWorkmates(list);
                 }
             }
         });
