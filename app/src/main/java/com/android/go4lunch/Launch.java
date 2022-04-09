@@ -72,21 +72,17 @@ public class Launch extends Application {
     private WorkmatesViewModelFactory workmatesViewModelFactory;
 
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        this.database();
-    }
     // INSTANTIATIONS
+
     // Date time providers
-    private TimeProvider timeProvider() {
+    private synchronized TimeProvider timeProvider() {
         if(this.timeProvider == null) {
             this.timeProvider = new RealTimeProvider();
         }
         return this.timeProvider;
     }
 
-    private DateProvider dateProvider() {
+    private synchronized DateProvider dateProvider() {
         if(this.dateProvider == null) {
             this.dateProvider = new RealDateProvider();
         }
@@ -94,7 +90,7 @@ public class Launch extends Application {
     }
 
     // Dependencies
-    private FirebaseFirestore database() {
+    private synchronized FirebaseFirestore database() {
         if(this.database == null) {
             FirebaseApp.initializeApp(this.getApplicationContext());
             this.database = FirebaseFirestore.getInstance();
@@ -110,7 +106,7 @@ public class Launch extends Application {
     }
 
     // Gateways
-    private RestaurantGateway restaurantGateway() {
+    private synchronized RestaurantGateway restaurantGateway() {
         if(this.restaurantGateway == null) {
             RestaurantRepository restaurantRepository = new RestaurantRepository(googleMapsHttpClientProvider());
             this.restaurantGateway = new RestaurantGatewayImpl(restaurantRepository);
@@ -118,7 +114,7 @@ public class Launch extends Application {
         return this.restaurantGateway;
     }
 
-    private DistanceGateway distanceGateway() {
+    private synchronized DistanceGateway distanceGateway() {
         if(this.distanceGateway == null) {
             DistanceRepository distanceRepository = new DistanceRepository(googleMapsHttpClientProvider());
             distanceGateway = new DistanceGatewayImpl(distanceRepository);
@@ -127,14 +123,14 @@ public class Launch extends Application {
         return this.distanceGateway;
     }
 
-    private WorkmateGateway workmateGateway() {
+    private synchronized WorkmateGateway workmateGateway() {
         if(this.workmateGateway == null) {
             this.workmateGateway = new WorkmateGatewayImpl(database());
         }
         return this.workmateGateway;
     }
 
-    private InMemoryVisitorsGateway visitorsGateway() {
+    private synchronized InMemoryVisitorsGateway visitorsGateway() {
         if(this.visitorsGateway == null) {
             this.visitorsGateway = new InMemoryVisitorsGateway();
             this.visitorsGateway.setSelections(new Mock().selections());
@@ -142,7 +138,7 @@ public class Launch extends Application {
         return visitorsGateway;
     }
 
-    private SessionGateway sessionGateway() {
+    private synchronized SessionGateway sessionGateway() {
         if(this.sessionGateway == null) {
             this.sessionGateway = new SessionGatewayImpl();
         }
@@ -150,70 +146,70 @@ public class Launch extends Application {
     }
 
     // Use cases
-    private GetRestaurantsForMapUseCase getGetRestaurantsForMapUseCase() {
+    private synchronized GetRestaurantsForMapUseCase getGetRestaurantsForMapUseCase() {
         if(this.getRestaurantsForMapUseCase == null) {
             this.getRestaurantsForMapUseCase = new GetRestaurantsForMapUseCase(restaurantGateway());
         }
         return this.getRestaurantsForMapUseCase;
     }
 
-    private GetRestaurantsForListUseCase getGetRestaurantsForListUseCase() {
+    private synchronized GetRestaurantsForListUseCase getGetRestaurantsForListUseCase() {
         if(this.getRestaurantsForListUseCase == null) {
             this.getRestaurantsForListUseCase = new GetRestaurantsForListUseCase(restaurantGateway());
         }
         return this.getRestaurantsForListUseCase;
     }
 
-    private GetWorkmatesUseCase getWorkmatesUseCase() {
+    private synchronized GetWorkmatesUseCase getWorkmatesUseCase() {
         if(this.getWorkmatesUseCase == null) {
             this.getWorkmatesUseCase = new GetWorkmatesUseCase(workmateGateway());
         }
         return this.getWorkmatesUseCase;
     }
 
-    private GetWorkmateSelectionUseCase getWorkmateSelectionUseCase() {
+    private synchronized GetWorkmateSelectionUseCase getWorkmateSelectionUseCase() {
         if(this.getWorkmateSelectionUseCase == null) {
             this.getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorsGateway());
         }
         return this.getWorkmateSelectionUseCase;
     }
 
-    private GetWorkmateByIdUseCase getWorkmateByIdUseCase() {
+    private synchronized GetWorkmateByIdUseCase getWorkmateByIdUseCase() {
         if(this.getWorkmateByIdUseCase == null) {
             this.getWorkmateByIdUseCase = new GetWorkmateByIdUseCase(workmateGateway());
         }
         return this.getWorkmateByIdUseCase;
     }
 
-    private GetRestaurantByIdUseCase getRestaurantByIdUseCase() {
+    private synchronized GetRestaurantByIdUseCase getRestaurantByIdUseCase() {
         if(this.getRestaurantByIdUseCase == null) {
             this.getRestaurantByIdUseCase = new GetRestaurantByIdUseCase(restaurantGateway());
         }
         return this.getRestaurantByIdUseCase;
     }
 
-    private GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase() {
+    private synchronized GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase() {
         if(this.getRestaurantVisitorsUseCase == null) {
             this.getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(visitorsGateway());
         }
         return this.getRestaurantVisitorsUseCase;
     }
 
-    private GetSessionUseCase getSessionUseCase() {
+    private synchronized GetSessionUseCase getSessionUseCase() {
         if(this.getSessionUseCase == null) {
             this.getSessionUseCase = new GetSessionUseCase(sessionGateway());
         }
         return this.getSessionUseCase;
     }
 
-    private LikeUseCase likeUseCase() {
+    private synchronized LikeUseCase likeUseCase() {
         if(this.likeUseCase == null) {
             this.likeUseCase = new LikeUseCase(visitorsGateway());
         }
         return this.likeUseCase;
     }
 
-    private IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase() {
+    private synchronized IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase() {
         if(isTheCurrentSelectionUseCase == null) {
             this.isTheCurrentSelectionUseCase = new IsTheCurrentSelectionUseCase(visitorsGateway());
         }
@@ -222,14 +218,14 @@ public class Launch extends Application {
 
     // View model factories
 
-    public MapViewModelFactory mapViewModelFactory() {
+    public synchronized MapViewModelFactory mapViewModelFactory() {
         if(this.mapViewModelFactory == null) {
             this.mapViewModelFactory = new MapViewModelFactory(this.getGetRestaurantsForMapUseCase());
         }
         return this.mapViewModelFactory;
     }
 
-    public RestaurantsViewModelFactory restaurantsViewModelFactory() {
+    public synchronized RestaurantsViewModelFactory restaurantsViewModelFactory() {
         if(this.restaurantsViewModelFactory == null) {
             this.restaurantsViewModelFactory = new RestaurantsViewModelFactory(
                     this.getGetRestaurantsForListUseCase(),
@@ -241,7 +237,7 @@ public class Launch extends Application {
         return this.restaurantsViewModelFactory;
     }
 
-    public RestaurantDetailsViewModelFactory restaurantDetailsViewModelFactory() {
+    public synchronized RestaurantDetailsViewModelFactory restaurantDetailsViewModelFactory() {
         if(this.restaurantDetailsViewModelFactory == null) {
             this.restaurantDetailsViewModelFactory = new RestaurantDetailsViewModelFactory(
                     getSessionUseCase(),
@@ -254,7 +250,7 @@ public class Launch extends Application {
         return this.restaurantDetailsViewModelFactory;
     }
 
-    public WorkmatesViewModelFactory workmatesViewModelFactory() {
+    public synchronized WorkmatesViewModelFactory workmatesViewModelFactory() {
         if(this.workmatesViewModelFactory == null) {
             this.workmatesViewModelFactory = new WorkmatesViewModelFactory(
                     getWorkmatesUseCase(),
