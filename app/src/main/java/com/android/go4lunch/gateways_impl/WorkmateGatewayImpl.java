@@ -67,7 +67,7 @@ public class WorkmateGatewayImpl implements WorkmateGateway {
                     }
 
 
-                    Log.d("list size", String.valueOf(list.size()));
+                    Log.d("list size get 0 get id", String.valueOf(list.get(0).getId()));
                     System.out.println("docs list size in firebase: " + docs.size());
                     updateWorkmates(list);
                 }

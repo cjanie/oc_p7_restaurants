@@ -24,9 +24,4 @@ public class InMemoryWorkmateGateway implements WorkmateGateway {
     public void setWorkmates(List<Workmate> workmates) {
         this.workmates = Observable.just(workmates);
     }
-
-    @Override
-    public void setWorkmates(Observable<List<Workmate>> workmates) {
-        this.workmates = workmates;
-    }
 }

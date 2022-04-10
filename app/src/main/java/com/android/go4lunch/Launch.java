@@ -39,8 +39,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class Launch extends Application {
 
     // Date time providers
-    TimeProvider timeProvider;
-    DateProvider dateProvider;
+    private TimeProvider timeProvider;
+    private DateProvider dateProvider;
 
     // Dependencies
     private FirebaseFirestore database;
