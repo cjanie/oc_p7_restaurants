@@ -41,13 +41,10 @@ public class SignInActivity extends BaseActivity {
                 ((Launch) this.getApplication()).signInViewModelFactory()
         ).get(SignInViewModel.class);
         this.handleSignIn();
-        this.handleIsSignedIn();
     }
 
     private void handleSignIn() {
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            this.startActivityForResult();
-        }
+        this.startActivityForResult();
     }
 
     private void handleIsSignedIn() {
