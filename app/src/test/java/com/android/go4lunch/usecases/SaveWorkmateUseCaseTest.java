@@ -1,6 +1,6 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.in_memory_repositories.InMemoryWorkmateGateway;
+import com.android.go4lunch.in_memory_gateways.InMemoryWorkmateGateway;
 import com.android.go4lunch.models.Workmate;
 
 import org.junit.Test;
@@ -10,7 +10,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class AddWorkmateUseCaseTest {
+public class SaveWorkmateUseCaseTest {
 
     @Test
     public void shouldIncrementListWhenNewWorkmate() {
@@ -18,7 +18,7 @@ public class AddWorkmateUseCaseTest {
         // SUT
         Workmate workmate = new Workmate("janie");
         workmate.setEmail("janie@gmail.com");
-        new AddWorkmateUseCase(workmateRepository).save(workmate);
+        new SaveWorkmateUseCase(workmateRepository).save(workmate);
         // Check Result in repository
         Observable<List<Workmate>> observableWorkmates = workmateRepository.getWorkmates();
         List<Workmate> results = new ArrayList<>();
@@ -32,11 +32,11 @@ public class AddWorkmateUseCaseTest {
         // SUT
         Workmate workmate1 = new Workmate("janie");
         workmate1.setEmail("janie@gmail.com");
-        new AddWorkmateUseCase(workmateRepository).save(workmate1);
+        new SaveWorkmateUseCase(workmateRepository).save(workmate1);
 
         Workmate workmate2 = new Workmate("cyril");
         workmate2.setEmail("cyril@gmail.com");
-        new AddWorkmateUseCase(workmateRepository).save(workmate2);
+        new SaveWorkmateUseCase(workmateRepository).save(workmate2);
         // Check Result in repository
         Observable<List<Workmate>> observableWorkmates = workmateRepository.getWorkmates();
         List<Workmate> results = new ArrayList<>();
@@ -50,15 +50,15 @@ public class AddWorkmateUseCaseTest {
         // SUT
         Workmate workmateFirstTime = new Workmate("janie");
         workmateFirstTime.setEmail("janie@gmail.com");
-        new AddWorkmateUseCase(workmateRepository).save(workmateFirstTime);
+        new SaveWorkmateUseCase(workmateRepository).save(workmateFirstTime);
 
         Workmate workmateSecondTime = new Workmate("janie");
         workmateSecondTime.setEmail("janie@gmail.com");
-        new AddWorkmateUseCase(workmateRepository).save(workmateSecondTime);
+        new SaveWorkmateUseCase(workmateRepository).save(workmateSecondTime);
 
         Workmate workmate2 = new Workmate("cyril");
         workmate2.setEmail("cyril@gmail.com");
-        new AddWorkmateUseCase(workmateRepository).save(workmate2);
+        new SaveWorkmateUseCase(workmateRepository).save(workmate2);
         // Check Result in repository
         Observable<List<Workmate>> observableWorkmates = workmateRepository.getWorkmates();
         List<Workmate> results = new ArrayList<>();
@@ -72,12 +72,12 @@ public class AddWorkmateUseCaseTest {
         // register as Janie first time
         Workmate workmateFirstTime = new Workmate("janie");
         workmateFirstTime.setEmail("janie@gmail.com");
-        new AddWorkmateUseCase(workmateRepository).save(workmateFirstTime);
+        new SaveWorkmateUseCase(workmateRepository).save(workmateFirstTime);
         // SUT
         // register as Jenny second time
         Workmate workmateSecondTime = new Workmate("jenny");
         workmateSecondTime.setEmail("janie@gmail.com");
-        new AddWorkmateUseCase(workmateRepository).save(workmateSecondTime);
+        new SaveWorkmateUseCase(workmateRepository).save(workmateSecondTime);
 
         // Check Result in repository
         Observable<List<Workmate>> observableWorkmates = workmateRepository.getWorkmates();

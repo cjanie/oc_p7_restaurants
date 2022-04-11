@@ -50,19 +50,19 @@ public class Mock {
         this.restaurants = Arrays.asList(lol, bon);
 
         Workmate janie = new Workmate("Janie");
-        janie.setId("1");
+        janie.setId("janie.chun@hotmail.fr");
         janie.setPhone("06 59 12 12 12");
         janie.setEmail("janie.chun@hotmail.fr");
         janie.setUrlPhoto("https://i.pravatar.cc/150?u=a042581f4e29026704d");
 
         Workmate cyril = new Workmate("Cyril");
-        cyril.setId("2");
+        cyril.setId("cyril@hotmail.fr");
         cyril.setPhone("06 59 13 13 13");
         cyril.setEmail("cyril@hotmail.fr");
         cyril.setUrlPhoto("https://i.pravatar.cc/150?u=a042581f4e29026704e");
 
         Workmate sylvaine = new Workmate("Sylvaine");
-        sylvaine.setId("3");
+        sylvaine.setId("sylvaine@gmail.com");
         sylvaine.setEmail("sylvaine@gmail.com");
         sylvaine.setUrlPhoto("https://i.pravatar.cc/150?u=a042581f4e29026704f");
 
@@ -84,8 +84,8 @@ public class Mock {
     public List<Selection> selections() {
         Restaurant restaurant = restaurants.get(0);
 
-        Selection cyril = new Selection(restaurant.getId(),  "2");
-        Selection sylvaine = new Selection(restaurant.getId(),  "3");
+        Selection cyril = new Selection(restaurant.getId(),  "cyril@hotmail.fr");
+        Selection sylvaine = new Selection(restaurant.getId(),  "sylvaine@gmail.com");
         return Arrays.asList(cyril, sylvaine);
     }
 

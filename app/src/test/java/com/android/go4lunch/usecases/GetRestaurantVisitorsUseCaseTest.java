@@ -1,6 +1,6 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways_impl.InMemoryVisitorsGateway;
+import com.android.go4lunch.gateways_impl.InMemoryVisitorGateway;
 import com.android.go4lunch.models.Selection;
 
 import org.junit.Test;
@@ -14,7 +14,7 @@ public class GetRestaurantVisitorsUseCaseTest {
 
     @Test
     public void returnsVisitorsWhenThereAreSome () {
-        InMemoryVisitorsGateway restaurantVisitorGateway = new InMemoryVisitorsGateway();
+        InMemoryVisitorGateway restaurantVisitorGateway = new InMemoryVisitorGateway();
         List<Selection> selections = new ArrayList<>();
         Selection selection = new Selection("1", "1");
         selections.add(selection);
@@ -27,7 +27,7 @@ public class GetRestaurantVisitorsUseCaseTest {
 
     @Test
     public void doesNotReturnAnyVisitorWhenThereIsNone() {
-        InMemoryVisitorsGateway visitorGateway = new InMemoryVisitorsGateway();
+        InMemoryVisitorGateway visitorGateway = new InMemoryVisitorGateway();
         GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(visitorGateway);
         List<String> results = new ArrayList<>();
         getRestaurantVisitorsUseCase.handle("0").subscribe(results::addAll);
@@ -36,7 +36,7 @@ public class GetRestaurantVisitorsUseCaseTest {
 
     @Test
     public void returnsVisitorsOfARestaurantAmongOthers() {
-        InMemoryVisitorsGateway visitorsGateway = new InMemoryVisitorsGateway();
+        InMemoryVisitorGateway visitorsGateway = new InMemoryVisitorGateway();
         List<Selection> selected = new ArrayList<>();
         Selection selection1 = new Selection("1", "1");
         selected.add(selection1);

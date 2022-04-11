@@ -64,8 +64,8 @@ public class RestaurantDetailsActivity extends BaseActivity {
 
         this.restaurantDetailsViewModel = new ViewModelProvider(
                 this,
-                ((Launch) this.getApplication()).restaurantDetailsViewModelFactory())
-                .get(RestaurantDetailsViewModel.class);
+                ((Launch) this.getApplication()).restaurantDetailsViewModelFactory()
+        ).get(RestaurantDetailsViewModel.class);
 
         getSupportActionBar().hide();
         setContentView(R.layout.activity_restaurant_details);
@@ -115,13 +115,11 @@ public class RestaurantDetailsActivity extends BaseActivity {
         });
 
         // IS THE CURRENT SELECTION
-        try {
-            this.restaurantDetailsViewModel.getIsTheCurrentSelection().observe(this, isTheCurrentSelection -> {
-                this.star.setVisibility(isTheCurrentSelection ? View.VISIBLE : View.INVISIBLE);
-            });
-        } catch (NoWorkmateForSessionException e) {
-            this.handleError(e);
-        }
+
+        this.restaurantDetailsViewModel.getIsTheCurrentSelection().observe(this, isTheCurrentSelection -> {
+            this.star.setVisibility(isTheCurrentSelection ? View.VISIBLE : View.INVISIBLE);
+        });
+
 
         // CLICK CALL
         this.buttonCall.setOnClickListener(new View.OnClickListener() {

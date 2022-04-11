@@ -1,13 +1,12 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways_impl.InMemoryVisitorsGateway;
+import com.android.go4lunch.gateways_impl.InMemoryVisitorGateway;
 import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.models.Workmate;
 
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
@@ -18,7 +17,7 @@ public class LikeUseCaseTest {
 
     @Test
     public void likeForLunchIncrementsVisitors() {
-        InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
+        InMemoryVisitorGateway inMemoryVisitorsGateway = new InMemoryVisitorGateway();
         List<Selection> selections = new ArrayList<>();
         Selection selection = new Selection("2", "2");
         selections.add(selection);
@@ -37,7 +36,7 @@ public class LikeUseCaseTest {
 
     @Test
     public void cancelSelectionDecrementsVisitors() {
-        InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
+        InMemoryVisitorGateway inMemoryVisitorsGateway = new InMemoryVisitorGateway();
         LikeUseCase likeUseCase = new LikeUseCase(inMemoryVisitorsGateway);
         // Increments
         likeUseCase.handle("1",  "1");
@@ -51,7 +50,7 @@ public class LikeUseCaseTest {
 
     @Test
     public void cancelSelectionDeletesTheSelectionOfTheUser() {
-        InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
+        InMemoryVisitorGateway inMemoryVisitorsGateway = new InMemoryVisitorGateway();
         List<Selection> selections = new ArrayList<>();
         Workmate cyril = new Workmate("Cyril");
         cyril.setId("1");
@@ -72,7 +71,7 @@ public class LikeUseCaseTest {
 
     @Test
     public void workmateCannotHaveManySelections() {
-        InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
+        InMemoryVisitorGateway inMemoryVisitorsGateway = new InMemoryVisitorGateway();
         List<Selection> selections = new ArrayList<>();
         Selection selection = new Selection("2", "2");
         selections.add(selection);
