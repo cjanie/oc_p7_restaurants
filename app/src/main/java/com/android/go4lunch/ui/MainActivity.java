@@ -4,6 +4,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -14,6 +16,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -26,6 +29,8 @@ import com.android.go4lunch.ui.adapters.ViewPagerAdapter;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
 import butterknife.BindView;
@@ -37,6 +42,15 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class MainActivity extends BaseActivity {
 
     // UI
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+
+    @BindView(R.id.navigation_view)
+    NavigationView navigationView;
+
+    @BindView(R.id.top_app_bar)
+    MaterialToolbar toolbar;
+
     @BindView(R.id.tabs)
     TabLayout tabLayout;
 
@@ -55,6 +69,24 @@ public class MainActivity extends BaseActivity {
         // UI
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        this.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+        this.navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if(item.isChecked()) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         this.sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
 
