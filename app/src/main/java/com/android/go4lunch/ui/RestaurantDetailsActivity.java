@@ -67,7 +67,6 @@ public class RestaurantDetailsActivity extends BaseActivity {
                 ((Launch) this.getApplication()).restaurantDetailsViewModelFactory()
         ).get(RestaurantDetailsViewModel.class);
 
-        getSupportActionBar().hide();
         setContentView(R.layout.activity_restaurant_details);
         ButterKnife.bind(this);
 

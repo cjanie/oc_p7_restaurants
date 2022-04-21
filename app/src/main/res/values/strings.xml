@@ -11,7 +11,7 @@
     <string name="no_internet_connection">No internet connection</string>
 
     <string name="permission_rationale_text">We need permission to get your location</string>
-    
+
     <!-- NAV DRAWER -->
     <string name="your_lunch">Your lunch</string>
     <string name="settings">Settings</string>
@@ -59,5 +59,7 @@
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
     <string name="facebook_application_id" translatable="false">570389354021189</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb570389354021189</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

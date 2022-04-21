@@ -1,42 +1,25 @@
 package com.android.go4lunch.ui;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager2.widget.ViewPager2;
-
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.android.go4lunch.R;
 
-
-import com.android.go4lunch.models.Geolocation;
-import com.android.go4lunch.ui.adapters.ViewPagerAdapter;
-
-import com.android.go4lunch.ui.viewmodels.SharedViewModel;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
 
 
 public class MainActivity extends BaseActivity {
@@ -45,111 +28,64 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
+    NavController navController;
+
     @BindView(R.id.navigation_view)
     NavigationView navigationView;
 
-    @BindView(R.id.top_app_bar)
-    MaterialToolbar toolbar;
 
-    @BindView(R.id.tabs)
-    TabLayout tabLayout;
 
-    @BindView(R.id.container)
-    ViewPager2 viewPager;
-
-    private final String[] permissions = new String[] {Manifest.permission.ACCESS_FINE_LOCATION};
-
-    public final int requestCode = 123;
-
-    private SharedViewModel sharedViewModel;
+    private AppBarConfiguration appBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // UI
-        setContentView(R.layout.activity_main);
+        this.setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        this.setSupportActionBar(toolbar);
 
+        /*
+        this.appBarConfiguration = new AppBarConfiguration.Builder(
+                Stream.of(R.id.your_lunch, R.id.settings, R.id.logout).collect(Collectors.toSet())
+        )
+                .setOpenableLayout(this.drawerLayout)
+                .build();
+        this.navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        //NavigationUI.setupActionBarWithNavController(this, this.navController, this.appBarConfiguration);
+        //NavigationUI.setupWithNavController(this.navigationView, this.navController);
+        */
         this.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                drawerLayout.openDrawer(GravityCompat.START);
+                drawerLayout.open();
             }
         });
-
+        this.navigationView.setCheckedItem(R.id.your_lunch);
         this.navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if(item.isChecked()) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    return true;
+                if(item.getItemId() == R.id.settings) {
+
                 }
+                if(item.getItemId() == R.id.logout) {
+
+                }
+                drawerLayout.close();
                 return false;
             }
         });
 
-        this.sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
-
-        // ViewPagerAdapter attachs ViewPager to Tablaout
-        new ViewPagerAdapter(this.getSupportFragmentManager(), this.getLifecycle(), this.tabLayout, this.viewPager, this.sharedViewModel);
-
-        // Location
-        this.requestLocationPermission();
-
     }
+
+
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        this.initMyPosition();
+    public boolean onSupportNavigateUp() {
+        return super.onSupportNavigateUp();
+        //return this.navController.navigateUp();
     }
-
-    private void requestLocationPermission() {
-        ActivityResultLauncher launcher = this.registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                isGranted -> {
-                    if(isGranted) {
-                        EasyPermissions.onRequestPermissionsResult(
-                                this.requestCode,
-                                this.permissions,
-                                new int[]{PackageManager.PERMISSION_GRANTED},
-                                this);
-                    } else {
-                        EasyPermissions.onRequestPermissionsResult(
-                                this.requestCode,
-                                this.permissions,
-                                new int[]{PackageManager.PERMISSION_DENIED},
-                                this);
-                    }
-                }
-        );
-        launcher.launch(this.permissions[0]);
-    }
-
-    @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(123)
-    private void initMyPosition() {
-        // Control
-        if(EasyPermissions.hasPermissions(this, this.permissions)) {
-            // Get location when permission is not missing
-            FusedLocationProviderClient fusedlocationProviderClient =
-                    LocationServices.getFusedLocationProviderClient(this);
-            fusedlocationProviderClient.getLastLocation().addOnSuccessListener(this, location -> {
-                if(location != null) {
-                    this.sharedViewModel.setGeolocation(new Geolocation(
-                            location.getLatitude(),
-                            location.getLongitude())
-                    );
-                }
-            });
-        } else {
-            // Demand permission if missing, explaining that a permission is needed to get the user location
-            EasyPermissions.requestPermissions(
-                    this,
-                    this.getString(R.string.permission_rationale_text),
-                    123,
-                    this.permissions);
-        }
-    }
-
 }
