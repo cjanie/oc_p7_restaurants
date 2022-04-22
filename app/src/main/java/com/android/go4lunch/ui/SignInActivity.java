@@ -3,6 +3,7 @@ package com.android.go4lunch.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.lifecycle.ViewModelProvider;
@@ -71,6 +72,9 @@ public class SignInActivity extends BaseActivity {
                             // User pressed back button for cancel
                             Log.e(this.TAG, this.getResources().getString(R.string.sign_in_cancelled));
                             Snackbar.make(getWindow().getDecorView().getRootView(), R.string.sign_in_cancelled, Snackbar.LENGTH_LONG).show();
+                            Intent intent = new Intent(this, SignInActivity.class);
+                            startActivity(intent);
+                            finish();
                             return;
                         }
                         if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
