@@ -1,7 +1,6 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways.RestaurantGateway;
-import com.android.go4lunch.in_memory_repositories.InMemoryRestaurantGateway;
+import com.android.go4lunch.in_memory_gateways.InMemoryRestaurantGateway;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.usecases.exceptions.NotFoundException;
 

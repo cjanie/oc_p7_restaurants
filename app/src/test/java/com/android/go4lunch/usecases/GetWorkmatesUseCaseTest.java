@@ -1,8 +1,7 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.in_memory_repositories.InMemoryWorkmateGateway;
+import com.android.go4lunch.in_memory_gateways.InMemoryWorkmateGateway;
 import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.usecases.models.WorkmateModel;
 
 import org.junit.Test;
 

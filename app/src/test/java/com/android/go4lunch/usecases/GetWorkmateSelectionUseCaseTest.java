@@ -1,6 +1,6 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways_impl.InMemoryVisitorsGateway;
+import com.android.go4lunch.gateways_impl.InMemoryVisitorGateway;
 import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.usecases.exceptions.NotFoundException;
 
@@ -17,7 +17,7 @@ public class GetWorkmateSelectionUseCaseTest {
 
     @Test
     public void retrievesWorkmateSelectionWhenThereIsOne() throws NotFoundException {
-        InMemoryVisitorsGateway visitorsGateway = new InMemoryVisitorsGateway();
+        InMemoryVisitorGateway visitorsGateway = new InMemoryVisitorGateway();
         Selection selection1 = new Selection(
                 "1",
                 "1"
@@ -36,7 +36,7 @@ public class GetWorkmateSelectionUseCaseTest {
 
     @Test
     public void nothingWhenWormateHasNoSelection() {
-        InMemoryVisitorsGateway visitorsGateway = new InMemoryVisitorsGateway();
+        InMemoryVisitorGateway visitorsGateway = new InMemoryVisitorGateway();
         GetWorkmateSelectionUseCase getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorsGateway);
         assertThrows(NotFoundException.class, () -> getWorkmateSelectionUseCase.handle("1"));
     }

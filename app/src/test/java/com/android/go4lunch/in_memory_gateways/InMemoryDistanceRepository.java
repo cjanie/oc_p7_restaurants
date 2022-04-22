@@ -1,4 +1,4 @@
-package com.android.go4lunch.in_memory_repositories;
+package com.android.go4lunch.in_memory_gateways;
 
 import com.android.go4lunch.exceptions.NullDistanceResponseException;
 import com.android.go4lunch.gateways.DistanceGateway;

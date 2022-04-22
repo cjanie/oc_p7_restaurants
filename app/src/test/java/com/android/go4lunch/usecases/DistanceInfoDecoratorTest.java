@@ -1,19 +1,5 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.exceptions.NullDistanceResponseException;
-import com.android.go4lunch.in_memory_repositories.InMemoryDistanceRepository;
-import com.android.go4lunch.usecases.decorators.DistanceInfoDecorator;
-import com.android.go4lunch.usecases.models.RestaurantModel;
-import com.android.go4lunch.models.Geolocation;
-import com.android.go4lunch.models.Restaurant;
-
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import io.reactivex.Observable;
-
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 

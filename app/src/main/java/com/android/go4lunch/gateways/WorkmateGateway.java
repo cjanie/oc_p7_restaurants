@@ -11,4 +11,6 @@ public interface WorkmateGateway {
 
     Observable<List<Workmate>> getWorkmates();
 
+    void saveWorkmate(Workmate workmate);
+
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public interface VisitorsGateway {
+public interface VisitorGateway {
     void addSelection(Selection selection);
 
     void removeSelection(String workmateId);

@@ -1,7 +1,7 @@
 package com.android.go4lunch.usecases;
 
 import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
-import com.android.go4lunch.in_memory_repositories.InMemorySessionGateway;
+import com.android.go4lunch.in_memory_gateways.InMemorySessionGateway;
 import com.android.go4lunch.models.Workmate;
 
 import org.junit.Test;

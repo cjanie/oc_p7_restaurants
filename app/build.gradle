@@ -57,6 +57,10 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.navigation:navigation-fragment:2.3.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.navigation:navigation-ui:2.3.0'
+
 
     // support for the new language APIs, cf. compile options
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'

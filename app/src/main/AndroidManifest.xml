@@ -20,14 +20,15 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Go4Lunch">
-        <activity android:name=".ui.SignInActivity">
-
-        </activity>
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.SignInActivity"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".ui.MainActivity">
+
         </activity>
         <activity android:name=".ui.RestaurantDetailsActivity">
 
