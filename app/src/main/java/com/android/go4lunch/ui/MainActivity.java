@@ -8,10 +8,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.go4lunch.R;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,6 +50,19 @@ public class MainActivity extends BaseActivity {
                 drawerLayout.open();
             }
         });
+
+        Glide.with(
+                (ImageView) this.navigationView.getHeaderView(0).findViewById(R.id.photo_session)
+        )
+                .load("https://i.pravatar.cc/150?u=a042581f4e29026704d")
+                .apply(RequestOptions.circleCropTransform())
+                .error(R.drawable.ic_baseline_error_24)
+                .into(
+                        (ImageView) this.navigationView.getHeaderView(0).findViewById(R.id.photo_session)
+                );
+        ((TextView) this.navigationView.getHeaderView(0).findViewById(R.id.name_session)).setText("Jojo");
+        ((TextView) this.navigationView.getHeaderView(0).findViewById(R.id.email_session)).setText("Jojo@com");
+
         this.navigationView.setCheckedItem(R.id.your_lunch);
         this.navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
