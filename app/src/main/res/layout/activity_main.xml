@@ -4,7 +4,7 @@
 ______________________________________________
 DrawerLayout as Root contains:
 1. Toolbar,
-2. NavHostFragment,
+2. MainFragment,
 3. NavigationView.
 -->
 
@@ -43,17 +43,16 @@ DrawerLayout as Root contains:
         android:layout_height="match_parent"
         >
         <fragment
-            android:id="@+id/nav_host_fragment"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:id="@+id/main_fragment"
+            android:name="com.android.go4lunch.ui.fragments.MainFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="?attr/actionBarSize"
-            app:defaultNavHost="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:navGraph="@navigation/nav_graph" />
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
