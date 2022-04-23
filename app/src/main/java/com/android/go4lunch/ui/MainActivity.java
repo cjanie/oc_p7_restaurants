@@ -5,9 +5,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BlurMaskFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,13 +19,17 @@ import android.widget.Toast;
 import com.android.go4lunch.R;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import eightbitlab.com.blurview.BlurView;
+import eightbitlab.com.blurview.RenderScriptBlur;
 
 
 public class MainActivity extends BaseActivity {
@@ -51,17 +59,21 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        Glide.with(
-                (ImageView) this.navigationView.getHeaderView(0).findViewById(R.id.photo_session)
-        )
-                .load("https://i.pravatar.cc/150?u=a042581f4e29026704d")
-                .apply(RequestOptions.circleCropTransform())
-                .error(R.drawable.ic_baseline_error_24)
-                .into(
-                        (ImageView) this.navigationView.getHeaderView(0).findViewById(R.id.photo_session)
-                );
-        ((TextView) this.navigationView.getHeaderView(0).findViewById(R.id.name_session)).setText("Jojo");
-        ((TextView) this.navigationView.getHeaderView(0).findViewById(R.id.email_session)).setText("Jojo@com");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null) {
+            Glide.with(
+                    (ImageView) this.navigationView.getHeaderView(0).findViewById(R.id.photo_session)
+            )
+                    .load(user.getPhotoUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .error(R.drawable.ic_baseline_error_24)
+                    .into(
+                            (ImageView) this.navigationView.getHeaderView(0).findViewById(R.id.photo_session)
+                    );
+            ((TextView) this.navigationView.getHeaderView(0).findViewById(R.id.name_session)).setText(user.getDisplayName());
+            ((TextView) this.navigationView.getHeaderView(0).findViewById(R.id.email_session)).setText(user.getEmail());
+
+        }
 
         this.navigationView.setCheckedItem(R.id.your_lunch);
         this.navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -81,10 +93,23 @@ public class MainActivity extends BaseActivity {
                 return false; // corresponds to is checked
             }
         });
+
+        this.blurNavigationViewHeaderBackground();
     }
 
     @Override
     public void onBackPressed() {
         Snackbar.make(getWindow().getDecorView().getRootView(), R.string.on_back_pressed_disabled, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void blurNavigationViewHeaderBackground() {
+        BlurView blurView = this.navigationView.getHeaderView(0).findViewById(R.id.blur_layout);
+        ViewGroup viewGroup = (ViewGroup) this.navigationView.getHeaderView(0);
+        blurView.setupWith(viewGroup)
+                .setBlurAlgorithm(new RenderScriptBlur(this));
+
+
+
+
     }
 }
