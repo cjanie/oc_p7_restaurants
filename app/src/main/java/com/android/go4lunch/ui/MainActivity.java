@@ -3,6 +3,8 @@ package com.android.go4lunch.ui;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,9 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
+import com.android.go4lunch.models.Workmate;
+import com.android.go4lunch.ui.viewmodels.MainViewModel;
+import com.android.go4lunch.ui.viewmodels.SignInViewModel;
+import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.navigation.NavigationView;
@@ -29,6 +37,9 @@ import eightbitlab.com.blurview.RenderScriptBlur;
 
 public class MainActivity extends BaseActivity {
 
+    // DATA
+    private MainViewModel mainViewModel;
+
     // UI
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
@@ -42,11 +53,18 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // UI
+        // Instantiate data provider
+        this.mainViewModel = new ViewModelProvider(
+                this,
+                ((Launch) this.getApplication()).mainViewModelFactory()
+        ).get(MainViewModel.class);
+
+        // Instantiate UI
         this.setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        this.setSupportActionBar(toolbar);
 
+        //Toolbar
+        this.setSupportActionBar(toolbar);
         this.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,22 +72,28 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null) {
-            Glide.with(
-                    (ImageView) this.navigationView.getHeaderView(0).findViewById(R.id.photo_session)
-            )
-                    .load(user.getPhotoUrl())
-                    .apply(RequestOptions.circleCropTransform())
-                    .error(R.drawable.ic_baseline_error_24)
-                    .into(
-                            (ImageView) this.navigationView.getHeaderView(0).findViewById(R.id.photo_session)
-                    );
-            ((TextView) this.navigationView.getHeaderView(0).findViewById(R.id.name_session)).setText(user.getDisplayName());
-            ((TextView) this.navigationView.getHeaderView(0).findViewById(R.id.email_session)).setText(user.getEmail());
-
+        // Navigation view header showing session data
+        try {
+            this.mainViewModel.getSession().observe(this, workmateSession -> {
+                Glide.with(
+                        (ImageView) navigationView.getHeaderView(0).findViewById(R.id.photo_session)
+                )
+                        .load(workmateSession.getUrlPhoto())
+                        .apply(RequestOptions.circleCropTransform())
+                        .error(R.drawable.ic_baseline_error_24)
+                        .into(
+                                (ImageView) navigationView.getHeaderView(0).findViewById(R.id.photo_session)
+                        );
+                ((TextView) navigationView.getHeaderView(0).findViewById(R.id.name_session)).setText(workmateSession.getName());
+                ((TextView) navigationView.getHeaderView(0).findViewById(R.id.email_session)).setText(workmateSession.getEmail());
+            });
+        } catch (NoWorkmateForSessionException e) {
+            Toast.makeText(this, e.getClass().getCanonicalName(), Toast.LENGTH_LONG);
         }
 
+        this.blurNavigationViewHeaderBackground();
+
+        // Navigation view menu
         this.navigationView.setCheckedItem(R.id.your_lunch);
         this.navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -88,8 +112,6 @@ public class MainActivity extends BaseActivity {
                 return false; // corresponds to is checked
             }
         });
-
-        this.blurNavigationViewHeaderBackground();
     }
 
     @Override

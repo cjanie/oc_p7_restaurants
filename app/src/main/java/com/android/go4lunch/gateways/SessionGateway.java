@@ -6,6 +6,6 @@ import io.reactivex.Observable;
 
 public interface SessionGateway {
 
-    Observable<Workmate> getWorkmate();
+    Observable<Workmate> getSession();
 
 }

@@ -10,7 +10,7 @@ public class InMemorySessionGateway implements SessionGateway {
     private Observable<Workmate> workmate;
 
     @Override
-    public Observable<Workmate> getWorkmate() {
+    public Observable<Workmate> getSession() {
         return this.workmate;
     }
 
