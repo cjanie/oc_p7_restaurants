@@ -20,6 +20,7 @@ import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.RealDateProvider;
 import com.android.go4lunch.providers.RealTimeProvider;
 import com.android.go4lunch.providers.TimeProvider;
+import com.android.go4lunch.ui.viewmodels.factories.MainViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.RestaurantDetailsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.RestaurantsViewModelFactory;
@@ -36,6 +37,7 @@ import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
 import com.android.go4lunch.usecases.SaveWorkmateUseCase;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Launch extends Application {
@@ -45,6 +47,7 @@ public class Launch extends Application {
     private DateProvider dateProvider;
 
     // Dependencies
+    private FirebaseAuth auth;
     private FirebaseFirestore database;
     private GoogleMapsHttpClientProvider googleMapsHttpClientProvider;
 
@@ -73,6 +76,7 @@ public class Launch extends Application {
     private RestaurantDetailsViewModelFactory restaurantDetailsViewModelFactory;
     private WorkmatesViewModelFactory workmatesViewModelFactory;
     private SignInViewModelFactory signInViewModelFactory;
+    private MainViewModelFactory mainViewModelFactory;
 
 
     // INSTANTIATIONS
@@ -93,6 +97,14 @@ public class Launch extends Application {
     }
 
     // Dependencies
+    private synchronized FirebaseAuth auth() {
+        if(this.auth == null) {
+            FirebaseApp.initializeApp(this.getApplicationContext());
+            this.auth = FirebaseAuth.getInstance();
+        }
+        return this.auth;
+    }
+
     private synchronized FirebaseFirestore database() {
         if(this.database == null) {
             FirebaseApp.initializeApp(this.getApplicationContext());
@@ -143,7 +155,7 @@ public class Launch extends Application {
 
     private synchronized SessionGateway sessionGateway() {
         if(this.sessionGateway == null) {
-            this.sessionGateway = new SessionGatewayImpl();
+            this.sessionGateway = new SessionGatewayImpl(this.auth());
         }
         return this.sessionGateway;
     }
@@ -271,4 +283,14 @@ public class Launch extends Application {
         }
         return this.signInViewModelFactory;
     }
+
+    public synchronized MainViewModelFactory mainViewModelFactory() {
+        if(this.mainViewModelFactory == null) {
+            this.mainViewModelFactory = new MainViewModelFactory(
+                    this.getSessionUseCase()
+            );
+        }
+        return this.mainViewModelFactory;
+    }
+
 }

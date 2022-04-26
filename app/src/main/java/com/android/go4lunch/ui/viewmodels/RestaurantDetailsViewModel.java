@@ -16,8 +16,6 @@ import com.android.go4lunch.usecases.exceptions.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.disposables.Disposable;
-
 public class RestaurantDetailsViewModel extends ViewModel {
 
     // Use cases
@@ -61,7 +59,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
 
     private void setSession() throws NoWorkmateForSessionException {
         List<Workmate> sessionResults = new ArrayList<>();
-        this.getSessionUseCase.getWorkmate().subscribe(sessionResults::add);
+        this.getSessionUseCase.handle().subscribe(sessionResults::add);
         if(!sessionResults.isEmpty())
             this.session = sessionResults.get(0);
     }

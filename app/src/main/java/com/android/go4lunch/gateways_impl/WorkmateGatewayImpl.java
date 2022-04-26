@@ -85,36 +85,23 @@ public class WorkmateGatewayImpl implements WorkmateGateway {
         workmateMap.put(WorkmateDatabaseConfig.URL_PHOTO, workmate.getUrlPhoto());
         this.database.collection(WorkmateDatabaseConfig.COLLECTION_PATH).document(workmate.getId())
                 .set(workmateMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                    }
-                });
+                .addOnSuccessListener((Void aVoid) ->
+                        Log.d(TAG, "DocumentSnapshot successfully written!")
+                )
+                .addOnFailureListener((Exception e) ->
+                        Log.w(TAG, "Error writing document", e)
+                );
     }
-
 
     public void deleteWorkmate(Workmate workmate) {
         this.database.collection(WorkmateDatabaseConfig.COLLECTION_PATH).document(workmate.getId())
                 .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error deleting document", e);
-                    }
-                });
+                .addOnSuccessListener((Void aVoid) ->
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!")
+                )
+                .addOnFailureListener((Exception e) ->
+                        Log.w(TAG, "Error deleting document", e)
+                );
     }
 
 }
