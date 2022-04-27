@@ -14,6 +14,11 @@ public class InMemorySessionGateway implements SessionGateway {
         return this.workmate;
     }
 
+    @Override
+    public void signOut() {
+
+    }
+
     public void setWorkmate(Workmate workmate) {
         this.workmate = Observable.just(workmate);
     }

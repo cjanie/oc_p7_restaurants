@@ -38,7 +38,6 @@ public class LikeUseCase {
                         break;
                     }
                 }
-
             }
             if(!found) {
                 this.visitorGateway.addSelection(selection);
@@ -46,19 +45,5 @@ public class LikeUseCase {
 
         }
 
-
-
-
-
-
-        /*
-        if (isTheCurrentSelection == false) {
-            this.visitorsGateway.addSelection(selection);
-
-        } else {
-
-        }
-
-         */
     }
 }
