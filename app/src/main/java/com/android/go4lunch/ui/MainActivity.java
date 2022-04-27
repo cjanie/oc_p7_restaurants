@@ -3,7 +3,6 @@ package com.android.go4lunch.ui;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -18,16 +17,13 @@ import android.widget.Toast;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
-import com.android.go4lunch.models.Workmate;
 import com.android.go4lunch.ui.viewmodels.MainViewModel;
-import com.android.go4lunch.ui.viewmodels.SignInViewModel;
+
 import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -103,7 +99,7 @@ public class MainActivity extends BaseActivity {
                     startActivity(intent);
                 }
                 if(item.getItemId() == R.id.logout) {
-                    FirebaseAuth.getInstance().signOut();
+                    mainViewModel.signOut();
                     Intent intent = new Intent(MainActivity.this, SignInActivity.class);
                     startActivity(intent);
                     finish();

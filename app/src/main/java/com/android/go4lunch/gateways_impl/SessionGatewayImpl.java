@@ -26,6 +26,11 @@ public class SessionGatewayImpl implements SessionGateway {
         return this.workmateSessionObservable;
     }
 
+    @Override
+    public void signOut() {
+        this.auth.signOut();
+    }
+
     private void fetchSession() {
         FirebaseUser authUser = this.auth.getCurrentUser();
         if(authUser != null) {

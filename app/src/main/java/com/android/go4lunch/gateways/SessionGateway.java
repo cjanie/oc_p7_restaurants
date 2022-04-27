@@ -8,4 +8,6 @@ public interface SessionGateway {
 
     Observable<Workmate> getSession();
 
+    void signOut();
+
 }

@@ -36,6 +36,7 @@ import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
 import com.android.go4lunch.usecases.SaveWorkmateUseCase;
+import com.android.go4lunch.usecases.SignOutUseCase;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -69,6 +70,7 @@ public class Launch extends Application {
     private GetSessionUseCase getSessionUseCase;
     private LikeUseCase likeUseCase;
     private SaveWorkmateUseCase saveWorkmateUseCase;
+    private SignOutUseCase signOutUseCase;
 
     // view models factories
     private MapViewModelFactory mapViewModelFactory;
@@ -231,6 +233,13 @@ public class Launch extends Application {
         return this.saveWorkmateUseCase;
     }
 
+    private synchronized SignOutUseCase signOutUseCase() {
+        if(this.signOutUseCase == null) {
+            this.signOutUseCase = new SignOutUseCase(this.sessionGateway());
+        }
+        return this.signOutUseCase;
+    }
+
     // View model factories
 
     public synchronized MapViewModelFactory mapViewModelFactory() {
@@ -287,7 +296,8 @@ public class Launch extends Application {
     public synchronized MainViewModelFactory mainViewModelFactory() {
         if(this.mainViewModelFactory == null) {
             this.mainViewModelFactory = new MainViewModelFactory(
-                    this.getSessionUseCase()
+                    this.getSessionUseCase(),
+                    this.signOutUseCase()
             );
         }
         return this.mainViewModelFactory;
