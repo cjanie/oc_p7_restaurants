@@ -11,10 +11,10 @@ import com.android.go4lunch.gateways.SessionGateway;
 import com.android.go4lunch.gateways.VisitorGateway;
 import com.android.go4lunch.gateways.WorkmateGateway;
 import com.android.go4lunch.gateways_impl.DistanceGatewayImpl;
-import com.android.go4lunch.gateways_impl.InMemoryVisitorGateway;
 import com.android.go4lunch.gateways_impl.Mock;
 import com.android.go4lunch.gateways_impl.RestaurantGatewayImpl;
 import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
+import com.android.go4lunch.gateways_impl.VisitorGatewayImpl;
 import com.android.go4lunch.gateways_impl.WorkmateGatewayImpl;
 import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.RealDateProvider;
@@ -31,7 +31,7 @@ import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
 import com.android.go4lunch.usecases.GetWorkmatesUseCase;
-import com.android.go4lunch.usecases.LikeUseCase;
+import com.android.go4lunch.usecases.GoForLunchUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
@@ -56,7 +56,7 @@ public class Launch extends Application {
     private RestaurantGateway restaurantGateway;
     private DistanceGateway distanceGateway;
     private WorkmateGateway workmateGateway;
-    private InMemoryVisitorGateway visitorsGateway;
+    private VisitorGateway visitorsGateway;
     private SessionGateway sessionGateway;
 
     // Use cases
@@ -68,7 +68,7 @@ public class Launch extends Application {
     private GetRestaurantByIdUseCase getRestaurantByIdUseCase;
     private GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
     private GetSessionUseCase getSessionUseCase;
-    private LikeUseCase likeUseCase;
+    private GoForLunchUseCase goForLunchUseCase;
     private SaveWorkmateUseCase saveWorkmateUseCase;
     private SignOutUseCase signOutUseCase;
 
@@ -149,8 +149,7 @@ public class Launch extends Application {
 
     private synchronized VisitorGateway visitorsGateway() {
         if(this.visitorsGateway == null) {
-            this.visitorsGateway = new InMemoryVisitorGateway();
-            this.visitorsGateway.setSelections(new Mock().selections());
+            this.visitorsGateway = new VisitorGatewayImpl(this.database());
         }
         return visitorsGateway;
     }
@@ -219,11 +218,11 @@ public class Launch extends Application {
         return this.getSessionUseCase;
     }
 
-    private synchronized LikeUseCase likeUseCase() {
-        if(this.likeUseCase == null) {
-            this.likeUseCase = new LikeUseCase(visitorsGateway());
+    private synchronized GoForLunchUseCase likeUseCase() {
+        if(this.goForLunchUseCase == null) {
+            this.goForLunchUseCase = new GoForLunchUseCase(visitorsGateway());
         }
-        return this.likeUseCase;
+        return this.goForLunchUseCase;
     }
 
     private synchronized SaveWorkmateUseCase saveWorkmateUseCase() {

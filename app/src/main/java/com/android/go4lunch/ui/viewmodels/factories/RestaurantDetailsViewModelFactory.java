@@ -7,14 +7,14 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
 import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
-import com.android.go4lunch.usecases.LikeUseCase;
+import com.android.go4lunch.usecases.GoForLunchUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
 
 public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Factory {
 
     private final GetSessionUseCase getSessionUseCase;
 
-    private final LikeUseCase likeUseCase;
+    private final GoForLunchUseCase goForLunchUseCase;
 
     private final GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
 
@@ -24,11 +24,11 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
 
     public RestaurantDetailsViewModelFactory(
             GetSessionUseCase getSessionUseCase,
-            LikeUseCase likeUseCase,
+            GoForLunchUseCase goForLunchUseCase,
             GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase,
             GetWorkmateByIdUseCase getWorkmateByIdUseCase) {
         this.getSessionUseCase = getSessionUseCase;
-        this.likeUseCase = likeUseCase;
+        this.goForLunchUseCase = goForLunchUseCase;
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
         this.getWorkmateByIdUseCase = getWorkmateByIdUseCase;
     }
@@ -40,7 +40,7 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
         if(modelClass.isAssignableFrom(RestaurantDetailsViewModel.class)) {
             return (T) new RestaurantDetailsViewModel(
                     this.getSessionUseCase,
-                    this.likeUseCase,
+                    this.goForLunchUseCase,
                     this.getRestaurantVisitorsUseCase,
                     this.getWorkmateByIdUseCase
             );

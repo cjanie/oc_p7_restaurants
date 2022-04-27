@@ -12,7 +12,7 @@ import java.util.List;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-public class LikeUseCaseTest {
+public class GoForLunchUseCaseTest {
 
 
     @Test
@@ -23,10 +23,10 @@ public class LikeUseCaseTest {
         selections.add(selection);
         inMemoryVisitorsGateway.setSelections(selections);
 
-        LikeUseCase likeUseCase = new LikeUseCase(inMemoryVisitorsGateway);
+        GoForLunchUseCase goForLunchUseCase = new GoForLunchUseCase(inMemoryVisitorsGateway);
 
         // LAUNCH LIKE
-        likeUseCase.handle("1", "1");
+        goForLunchUseCase.handle("1", "1");
 
         List<Selection> savedSelections = new ArrayList<>();
         inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);
@@ -37,11 +37,11 @@ public class LikeUseCaseTest {
     @Test
     public void cancelSelectionDecrementsVisitors() {
         InMemoryVisitorGateway inMemoryVisitorsGateway = new InMemoryVisitorGateway();
-        LikeUseCase likeUseCase = new LikeUseCase(inMemoryVisitorsGateway);
+        GoForLunchUseCase goForLunchUseCase = new GoForLunchUseCase(inMemoryVisitorsGateway);
         // Increments
-        likeUseCase.handle("1",  "1");
+        goForLunchUseCase.handle("1",  "1");
         // Decrements
-        likeUseCase.handle("1", "1");
+        goForLunchUseCase.handle("1", "1");
 
         List<Selection> savedSelections = new ArrayList<>();
         inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);
@@ -58,11 +58,11 @@ public class LikeUseCaseTest {
         selections.add(selection);
         inMemoryVisitorsGateway.setSelections(selections);
 
-        LikeUseCase likeUseCase = new LikeUseCase(
+        GoForLunchUseCase goForLunchUseCase = new GoForLunchUseCase(
                 inMemoryVisitorsGateway
         );
-        likeUseCase.handle("2", "2");
-        likeUseCase.handle("2", "2");
+        goForLunchUseCase.handle("2", "2");
+        goForLunchUseCase.handle("2", "2");
         List<Selection> savedSelections = new ArrayList<>();
         inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);
         assert(savedSelections.size() == 1);
@@ -77,10 +77,10 @@ public class LikeUseCaseTest {
         selections.add(selection);
         inMemoryVisitorsGateway.setSelections(selections);
 
-        LikeUseCase likeUseCase = new LikeUseCase(inMemoryVisitorsGateway);
+        GoForLunchUseCase goForLunchUseCase = new GoForLunchUseCase(inMemoryVisitorsGateway);
 
         // LAUNCH LIKE
-        likeUseCase.handle("1", "2");
+        goForLunchUseCase.handle("1", "2");
 
         List<Selection> savedSelections = new ArrayList<>();
         inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);
