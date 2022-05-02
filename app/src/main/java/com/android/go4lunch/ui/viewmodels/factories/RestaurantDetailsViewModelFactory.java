@@ -9,6 +9,7 @@ import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.usecases.GoForLunchUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
+import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
 
 public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Factory {
 
@@ -20,17 +21,21 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
 
     private final GetWorkmateByIdUseCase getWorkmateByIdUseCase;
 
+    private final IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase;
 
 
     public RestaurantDetailsViewModelFactory(
             GetSessionUseCase getSessionUseCase,
             GoForLunchUseCase goForLunchUseCase,
             GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase,
-            GetWorkmateByIdUseCase getWorkmateByIdUseCase) {
+            GetWorkmateByIdUseCase getWorkmateByIdUseCase,
+            IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase
+    ) {
         this.getSessionUseCase = getSessionUseCase;
         this.goForLunchUseCase = goForLunchUseCase;
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
         this.getWorkmateByIdUseCase = getWorkmateByIdUseCase;
+        this.isTheCurrentSelectionUseCase = isTheCurrentSelectionUseCase;
     }
 
 
@@ -42,7 +47,8 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
                     this.getSessionUseCase,
                     this.goForLunchUseCase,
                     this.getRestaurantVisitorsUseCase,
-                    this.getWorkmateByIdUseCase
+                    this.getWorkmateByIdUseCase,
+                    this.isTheCurrentSelectionUseCase
             );
         }
         throw new IllegalArgumentException("RestaurantDetailsViewModelFactory: Unknown ViewModel class");

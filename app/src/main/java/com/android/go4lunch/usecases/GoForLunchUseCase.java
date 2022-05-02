@@ -16,33 +16,36 @@ public class GoForLunchUseCase {
 
     public void handle(String restaurantId, String workmateId) {
 
-        List<Selection> selectionsResults = new ArrayList<>();
+        Selection newSelection = new Selection(restaurantId, workmateId);
 
-        this.visitorGateway.getSelections().subscribe(selectionsResults::addAll);
+        Selection workmateSelection = this.getWorkmateSelection(workmateId);
 
-        Selection selection = new Selection(restaurantId, workmateId);
-
-        if(selectionsResults.isEmpty()) {
-            this.visitorGateway.addSelection(selection);
-        } else {
-            boolean found = false;
-            for(int i=0; i<selectionsResults.size(); i++) {
-                if(selectionsResults.get(i).getWorkmateId().equals(workmateId)) {
-                    found = true;
-                    if(selectionsResults.get(i).getRestaurantId().equals(restaurantId)) {
-                        this.visitorGateway.removeSelection(selectionsResults.get(i).getWorkmateId());
-                    } else {
-                        this.visitorGateway.removeSelection(selectionsResults.get(i).getWorkmateId());
-                        this.visitorGateway.addSelection(selection);
-                    }
-                    break;
-                }
+        if(workmateSelection == null)
+            this.visitorGateway.addSelection(newSelection);
+        else {
+            if(workmateSelection.getRestaurantId().equals(restaurantId)) {
+                this.visitorGateway.removeSelection(workmateSelection.getId());
+            } else {
+                this.visitorGateway.removeSelection(workmateSelection.getId());
+                this.visitorGateway.addSelection(newSelection);
             }
-            if(!found) {
-                this.visitorGateway.addSelection(selection);
-            }
-
         }
+    }
 
+    private List<Selection> getSelections() {
+        List<Selection> selectionsResults = new ArrayList<>();
+        this.visitorGateway.getSelections().subscribe(selectionsResults::addAll);
+        return selectionsResults;
+    }
+
+    private Selection getWorkmateSelection(String workmateId) {
+        List<Selection> selectionsResults = this.getSelections();
+        if(!selectionsResults.isEmpty()) {
+            for(Selection selection: selectionsResults) {
+                if(selection.getWorkmateId().equals(workmateId))
+                    return selection;
+            }
+        }
+        return null;
     }
 }

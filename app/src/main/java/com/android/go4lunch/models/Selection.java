@@ -9,16 +9,13 @@ public class Selection {
     private String workmateId;
 
     public Selection(String restaurantId, String workmateId) {
+        this.id = workmateId;
         this.restaurantId = restaurantId;
         this.workmateId = workmateId;
     }
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getRestaurantId() {

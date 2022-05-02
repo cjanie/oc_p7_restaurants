@@ -24,8 +24,8 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
 /*
         return this.restaurantRepository.getRestaurantsNearby(myPosition.getLatitude(), myPosition.getLongitude(), radius)
                 .flatMap(restaurants -> this.formatRestaurants(restaurants));
-*/
 
+*/
     }
 
     @Override
@@ -34,8 +34,8 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
 /*
         return this.restaurantRepository.getRestaurantsNearbyWithDetails(myPosition.getLatitude(), myPosition.getLongitude(), radius)
                 .flatMap(restaurants -> this.formatRestaurants(restaurants));
-*/
 
+*/
     }
 
     @Override

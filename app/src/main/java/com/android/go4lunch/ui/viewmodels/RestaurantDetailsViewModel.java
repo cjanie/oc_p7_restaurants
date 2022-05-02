@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.android.go4lunch.usecases.GetSessionUseCase;
 import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
+import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
 import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Workmate;
@@ -15,6 +16,8 @@ import com.android.go4lunch.usecases.exceptions.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.disposables.Disposable;
 
 public class RestaurantDetailsViewModel extends ViewModel {
 
@@ -26,6 +29,8 @@ public class RestaurantDetailsViewModel extends ViewModel {
     private GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
 
     private GetWorkmateByIdUseCase getWorkmateByIdUsecase;
+
+    private IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase;
 
     private Restaurant restaurant;
 
@@ -39,16 +44,17 @@ public class RestaurantDetailsViewModel extends ViewModel {
             GetSessionUseCase getSessionUseCase,
             GoForLunchUseCase goForLunchUseCase,
             GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase,
-            GetWorkmateByIdUseCase getWorkmateByIdUsecase
+            GetWorkmateByIdUseCase getWorkmateByIdUsecase,
+            IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase
     ) {
         this.getSessionUseCase = getSessionUseCase;
         this.goForLunchUseCase = goForLunchUseCase;
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
         this.getWorkmateByIdUsecase = getWorkmateByIdUsecase;
+        this.isTheCurrentSelectionUseCase = isTheCurrentSelectionUseCase;
 
         this.visitors = new MutableLiveData<>(new ArrayList<>());
         this.isTheCurrentSelection = new MutableLiveData<>(false);
-
     }
 
 
@@ -69,10 +75,20 @@ public class RestaurantDetailsViewModel extends ViewModel {
     }
 
     public LiveData<Boolean> getIsTheCurrentSelection() {
-        return this.isTheCurrentSelection;
-    };
+        if(this.restaurant != null) {
+            Disposable disposable = this.isTheCurrentSelectionUseCase.handle(this.restaurant.getId()).subscribe(
+                    isTheCurrentSelection -> {
+                        this.isTheCurrentSelection.postValue(isTheCurrentSelection);
+                    },
+                    Throwable::printStackTrace
+            );
+        }
 
-    public void handleLike() throws NotFoundException {
+        return this.isTheCurrentSelection;
+    }
+
+
+    public void handleGoForLunch() throws NotFoundException {
         this.setSession();
         if(this.session != null) {
             this.goForLunchUseCase.handle(
@@ -88,10 +104,6 @@ public class RestaurantDetailsViewModel extends ViewModel {
             List<String> workmateIdsResults = new ArrayList<>();
             this.getRestaurantVisitorsUseCase.handle(this.restaurant.getId()).subscribe(workmateIdsResults::addAll);
 
-            if(workmateIdsResults.isEmpty()) {
-                isTheCurrentSelection.setValue(false);
-            }
-
             List<Workmate> workmates = new ArrayList<>();
             if(!workmateIdsResults.isEmpty()) {
                 for(String id: workmateIdsResults) {
@@ -101,13 +113,6 @@ public class RestaurantDetailsViewModel extends ViewModel {
                         Workmate workmate = workmateResults.get(0);
                         workmates.add(workmate);
                         this.setSession();
-                        if(this.session != null) {
-                            if(workmate.getId().equals(this.session.getId())) {
-                                this.isTheCurrentSelection.setValue(true);
-                            } else {
-                                this.isTheCurrentSelection.setValue(false);
-                            }
-                        }
 
                     } catch (NotFoundException e) {
                         throw e;

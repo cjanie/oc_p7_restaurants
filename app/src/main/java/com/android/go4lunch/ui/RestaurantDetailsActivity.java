@@ -2,7 +2,6 @@ package com.android.go4lunch.ui;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,14 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
-import com.android.go4lunch.gateways_impl.Mock;
-import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.ui.adapters.ListVisitorRecyclerViewAdapter;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
 import com.android.go4lunch.usecases.exceptions.NotFoundException;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,8 +29,8 @@ public class RestaurantDetailsActivity extends BaseActivity {
 
     private RestaurantDetailsViewModel restaurantDetailsViewModel;
 
-    @BindView(R.id.details_restaurant_pastille)
-    FrameLayout pastille;
+    @BindView(R.id.button_go)
+    FloatingActionButton buttonGo;
 
     @BindView(R.id.details_restaurant_image)
     ImageView restaurantImage;
@@ -109,30 +107,32 @@ public class RestaurantDetailsActivity extends BaseActivity {
             ListVisitorRecyclerViewAdapter adapter = new ListVisitorRecyclerViewAdapter(visitors);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(adapter);
-
-            this.pastille.setVisibility(visitors.isEmpty() ? View.INVISIBLE : View.VISIBLE);
         });
 
         // IS THE CURRENT SELECTION
-
         this.restaurantDetailsViewModel.getIsTheCurrentSelection().observe(this, isTheCurrentSelection -> {
-            this.star.setVisibility(isTheCurrentSelection ? View.VISIBLE : View.INVISIBLE);
+            if(isTheCurrentSelection) {
+                this.buttonGo.setImageDrawable(getDrawable(R.drawable.ic_baseline_check_circle_24));
+            } else {
+                this.buttonGo.setImageDrawable(getDrawable(R.drawable.ic_baseline_add_task_24));
+            }
         });
 
+        // set on Click Listeners
+        this.buttonGo.setOnClickListener(view -> {
+            handleGoForLunch();
+        });
 
-        // CLICK CALL
         this.buttonCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
-
-        // CLICK LIKE
         this.buttonLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handleLike();
+
             }
         });
 
@@ -146,9 +146,9 @@ public class RestaurantDetailsActivity extends BaseActivity {
 
     }
 
-    private void handleLike() {
+    private void handleGoForLunch() {
         try {
-            this.restaurantDetailsViewModel.handleLike();
+            this.restaurantDetailsViewModel.handleGoForLunch();
             
         } catch (NotFoundException e) {
             this.handleError(e);
