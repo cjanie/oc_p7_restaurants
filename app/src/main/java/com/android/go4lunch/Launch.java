@@ -179,7 +179,10 @@ public class Launch extends Application {
 
     private synchronized GetWorkmatesUseCase getWorkmatesUseCase() {
         if(this.getWorkmatesUseCase == null) {
-            this.getWorkmatesUseCase = new GetWorkmatesUseCase(workmateGateway());
+            this.getWorkmatesUseCase = new GetWorkmatesUseCase(
+                    this.workmateGateway(),
+                    this.sessionGateway()
+            );
         }
         return this.getWorkmatesUseCase;
     }
