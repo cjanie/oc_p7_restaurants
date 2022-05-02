@@ -11,10 +11,9 @@ import com.android.go4lunch.gateways.SessionGateway;
 import com.android.go4lunch.gateways.VisitorGateway;
 import com.android.go4lunch.gateways.WorkmateGateway;
 import com.android.go4lunch.gateways_impl.DistanceGatewayImpl;
-import com.android.go4lunch.gateways_impl.InMemoryVisitorGateway;
-import com.android.go4lunch.gateways_impl.Mock;
 import com.android.go4lunch.gateways_impl.RestaurantGatewayImpl;
 import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
+import com.android.go4lunch.gateways_impl.VisitorGatewayImpl;
 import com.android.go4lunch.gateways_impl.WorkmateGatewayImpl;
 import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.RealDateProvider;
@@ -31,10 +30,11 @@ import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
 import com.android.go4lunch.usecases.GetWorkmatesUseCase;
-import com.android.go4lunch.usecases.LikeUseCase;
+import com.android.go4lunch.usecases.GoForLunchUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
+import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
 import com.android.go4lunch.usecases.SaveWorkmateUseCase;
 import com.android.go4lunch.usecases.SignOutUseCase;
 import com.google.firebase.FirebaseApp;
@@ -56,7 +56,7 @@ public class Launch extends Application {
     private RestaurantGateway restaurantGateway;
     private DistanceGateway distanceGateway;
     private WorkmateGateway workmateGateway;
-    private InMemoryVisitorGateway visitorsGateway;
+    private VisitorGateway visitorGateway;
     private SessionGateway sessionGateway;
 
     // Use cases
@@ -68,9 +68,10 @@ public class Launch extends Application {
     private GetRestaurantByIdUseCase getRestaurantByIdUseCase;
     private GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
     private GetSessionUseCase getSessionUseCase;
-    private LikeUseCase likeUseCase;
+    private GoForLunchUseCase goForLunchUseCase;
     private SaveWorkmateUseCase saveWorkmateUseCase;
     private SignOutUseCase signOutUseCase;
+    private IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase;
 
     // view models factories
     private MapViewModelFactory mapViewModelFactory;
@@ -147,12 +148,11 @@ public class Launch extends Application {
         return this.workmateGateway;
     }
 
-    private synchronized VisitorGateway visitorsGateway() {
-        if(this.visitorsGateway == null) {
-            this.visitorsGateway = new InMemoryVisitorGateway();
-            this.visitorsGateway.setSelections(new Mock().selections());
+    private synchronized VisitorGateway visitorGateway() {
+        if(this.visitorGateway == null) {
+            this.visitorGateway = new VisitorGatewayImpl(this.database());
         }
-        return visitorsGateway;
+        return visitorGateway;
     }
 
     private synchronized SessionGateway sessionGateway() {
@@ -186,7 +186,7 @@ public class Launch extends Application {
 
     private synchronized GetWorkmateSelectionUseCase getWorkmateSelectionUseCase() {
         if(this.getWorkmateSelectionUseCase == null) {
-            this.getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorsGateway());
+            this.getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorGateway());
         }
         return this.getWorkmateSelectionUseCase;
     }
@@ -207,7 +207,7 @@ public class Launch extends Application {
 
     private synchronized GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase() {
         if(this.getRestaurantVisitorsUseCase == null) {
-            this.getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(visitorsGateway());
+            this.getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(visitorGateway());
         }
         return this.getRestaurantVisitorsUseCase;
     }
@@ -219,11 +219,11 @@ public class Launch extends Application {
         return this.getSessionUseCase;
     }
 
-    private synchronized LikeUseCase likeUseCase() {
-        if(this.likeUseCase == null) {
-            this.likeUseCase = new LikeUseCase(visitorsGateway());
+    private synchronized GoForLunchUseCase goForLunchUseCase() {
+        if(this.goForLunchUseCase == null) {
+            this.goForLunchUseCase = new GoForLunchUseCase(visitorGateway());
         }
-        return this.likeUseCase;
+        return this.goForLunchUseCase;
     }
 
     private synchronized SaveWorkmateUseCase saveWorkmateUseCase() {
@@ -238,6 +238,16 @@ public class Launch extends Application {
             this.signOutUseCase = new SignOutUseCase(this.sessionGateway());
         }
         return this.signOutUseCase;
+    }
+
+    private synchronized IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase() {
+        if(this.isTheCurrentSelectionUseCase == null) {
+            this.isTheCurrentSelectionUseCase = new IsTheCurrentSelectionUseCase(
+                    this.visitorGateway(),
+                    this.sessionGateway()
+            );
+        }
+        return this.isTheCurrentSelectionUseCase;
     }
 
     // View model factories
@@ -265,9 +275,10 @@ public class Launch extends Application {
         if(this.restaurantDetailsViewModelFactory == null) {
             this.restaurantDetailsViewModelFactory = new RestaurantDetailsViewModelFactory(
                     getSessionUseCase(),
-                    likeUseCase(),
+                    goForLunchUseCase(),
                     getRestaurantVisitorsUseCase(),
-                    getWorkmateByIdUseCase()
+                    getWorkmateByIdUseCase(),
+                    isTheCurrentSelectionUseCase()
             );
         }
         return this.restaurantDetailsViewModelFactory;

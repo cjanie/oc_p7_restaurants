@@ -62,24 +62,16 @@
                 app:layout_constraintTop_toBottomOf="@+id/details_restaurant_name" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <FrameLayout
-            android:id="@+id/details_restaurant_pastille"
-            android:layout_width="@dimen/photo_size"
-            android:layout_height="@dimen/photo_size"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_go"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin"
-            android:background="@drawable/card_circle_background"
-            android:padding="@dimen/margin"
+            android:src="@drawable/ic_baseline_add_task_24"
             app:layout_constraintBottom_toTopOf="@+id/text_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/text_layout">
-            >
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_baseline_check_circle_24" />
-        </FrameLayout>
-
+            app:layout_constraintTop_toTopOf="@+id/text_layout"/>
 
         <LinearLayout
             android:id="@+id/buttons_bar"
