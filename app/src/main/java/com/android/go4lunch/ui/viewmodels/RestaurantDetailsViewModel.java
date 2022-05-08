@@ -11,12 +11,14 @@ import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Workmate;
 import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
-import com.android.go4lunch.usecases.LikeUseCase;
+import com.android.go4lunch.usecases.GoForLunchUseCase;
 import com.android.go4lunch.usecases.exceptions.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 
 public class RestaurantDetailsViewModel extends ViewModel {
@@ -24,13 +26,13 @@ public class RestaurantDetailsViewModel extends ViewModel {
     // Use cases
     private GetSessionUseCase getSessionUseCase;
 
-    private LikeUseCase likeUseCase;
+    private GoForLunchUseCase goForLunchUseCase;
 
     private GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
 
-    private IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase;
-
     private GetWorkmateByIdUseCase getWorkmateByIdUsecase;
+
+    private IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase;
 
     private Restaurant restaurant;
 
@@ -40,24 +42,21 @@ public class RestaurantDetailsViewModel extends ViewModel {
 
     private MutableLiveData<Boolean> isTheCurrentSelection;
 
-    private Disposable disposable;
-
     public RestaurantDetailsViewModel(
             GetSessionUseCase getSessionUseCase,
-            LikeUseCase likeUseCase,
+            GoForLunchUseCase goForLunchUseCase,
             GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase,
-            IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase,
-            GetWorkmateByIdUseCase getWorkmateByIdUsecase
+            GetWorkmateByIdUseCase getWorkmateByIdUsecase,
+            IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase
     ) {
         this.getSessionUseCase = getSessionUseCase;
-        this.likeUseCase = likeUseCase;
+        this.goForLunchUseCase = goForLunchUseCase;
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
-        this.isTheCurrentSelectionUseCase = isTheCurrentSelectionUseCase;
         this.getWorkmateByIdUsecase = getWorkmateByIdUsecase;
+        this.isTheCurrentSelectionUseCase = isTheCurrentSelectionUseCase;
 
         this.visitors = new MutableLiveData<>(new ArrayList<>());
         this.isTheCurrentSelection = new MutableLiveData<>(false);
-
     }
 
 
@@ -68,7 +67,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
 
     private void setSession() throws NoWorkmateForSessionException {
         List<Workmate> sessionResults = new ArrayList<>();
-        this.getSessionUseCase.getWorkmate().subscribe(sessionResults::add);
+        this.getSessionUseCase.handle().subscribe(sessionResults::add);
         if(!sessionResults.isEmpty())
             this.session = sessionResults.get(0);
     }
@@ -77,32 +76,43 @@ public class RestaurantDetailsViewModel extends ViewModel {
         return this.visitors;
     }
 
-    public LiveData<Boolean> getIsTheCurrentSelection() throws NoWorkmateForSessionException {
-        //this.fetchIsTheCurrentSelection(); // !!!!!
+    public LiveData<Boolean> getIsTheCurrentSelection() {
+        // fetch -> void
+        // get -> LiveData
+        //this.fetchIsTheCurrentSelection();
         return this.isTheCurrentSelection;
-    };
+    }
 
-    public void handleLike() throws NotFoundException {
+    public void fetchIsTheCurrentSelection() {
+        if(this.restaurant != null) {
+            Disposable disposable = this.isTheCurrentSelectionUseCase.handle(this.restaurant.getId()).subscribe(
+                    isTheCurrentSelection -> {
+                        this.isTheCurrentSelection.postValue(isTheCurrentSelection);
+                    },
+                    Throwable::printStackTrace
+            );
+        }
+    }
+
+    public void handleGoForLunch() throws NotFoundException {
         this.setSession();
         if(this.session != null) {
-            this.likeUseCase.handle(
+            this.goForLunchUseCase.handle(
                     this.restaurant.getId(),
                     this.session.getId()
                     );
-            //this.fetchIsTheCurrentSelection(); // !!!!!
+            // TODO
+            //Observable.empty().delay(2, TimeUnit.SECONDS).subscribe(() -> {
+             //   this.fetchIsTheCurrentSelection();
+            //});
         }
         this.fetchVisitors();
-        //this.fetchIsTheCurrentSelection(); // !!!!
     }
 
     private void fetchVisitors() throws NotFoundException {
         if(this.restaurant != null) {
             List<String> workmateIdsResults = new ArrayList<>();
             this.getRestaurantVisitorsUseCase.handle(this.restaurant.getId()).subscribe(workmateIdsResults::addAll);
-
-            if(workmateIdsResults.isEmpty()) {
-                isTheCurrentSelection.setValue(false);
-            }
 
             List<Workmate> workmates = new ArrayList<>();
             if(!workmateIdsResults.isEmpty()) {
@@ -113,13 +123,6 @@ public class RestaurantDetailsViewModel extends ViewModel {
                         Workmate workmate = workmateResults.get(0);
                         workmates.add(workmate);
                         this.setSession();
-                        if(this.session != null) {
-                            if(workmate.getId().equals(this.session.getId())) {
-                                this.isTheCurrentSelection.setValue(true);
-                            } else {
-                                this.isTheCurrentSelection.setValue(false);
-                            }
-                        }
 
                     } catch (NotFoundException e) {
                         throw e;
@@ -130,18 +133,5 @@ public class RestaurantDetailsViewModel extends ViewModel {
             this.visitors.postValue(workmates);
         }
     }
-/*
-    private void fetchIsTheCurrentSelection() throws NoWorkmateForSessionException {
-        this.setSession();
-        if(this.restaurant != null && this.session != null) {
-            List<Boolean> isTheCurrentSelectionResults = new ArrayList<>();
-            this.isTheCurrentSelectionUseCase.handle(
-                        this.restaurant.getId(),
-                        this.session.getId()
-                    ).subscribe(isTheCurrentSelectionResults::add);
-            if(!isTheCurrentSelectionResults.isEmpty())
-                this.isTheCurrentSelection.postValue(isTheCurrentSelectionResults.get(0));
-        }
-    }
-*/
+
 }

@@ -1,123 +1,128 @@
 package com.android.go4lunch.ui;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager2.widget.ViewPager2;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.AttributeSet;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
+import com.android.go4lunch.ui.viewmodels.MainViewModel;
 
-import com.android.go4lunch.models.Geolocation;
-import com.android.go4lunch.ui.adapters.ViewPagerAdapter;
-
-import com.android.go4lunch.ui.viewmodels.SharedViewModel;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.material.tabs.TabLayout;
+import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
+import eightbitlab.com.blurview.BlurView;
+import eightbitlab.com.blurview.RenderScriptBlur;
 
 
 public class MainActivity extends BaseActivity {
 
+    // DATA
+    private MainViewModel mainViewModel;
+
     // UI
-    @BindView(R.id.tabs)
-    TabLayout tabLayout;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
 
-    @BindView(R.id.container)
-    ViewPager2 viewPager;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
-    private final String[] permissions = new String[] {Manifest.permission.ACCESS_FINE_LOCATION};
-
-    public final int requestCode = 123;
-
-    private SharedViewModel sharedViewModel;
+    @BindView(R.id.navigation_view)
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // UI
-        setContentView(R.layout.activity_main);
+        // Instantiate data provider
+        this.mainViewModel = new ViewModelProvider(
+                this,
+                ((Launch) this.getApplication()).mainViewModelFactory()
+        ).get(MainViewModel.class);
+
+        // Instantiate UI
+        this.setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        this.sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+        //Toolbar
+        this.setSupportActionBar(toolbar);
+        this.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerLayout.open();
+            }
+        });
 
-        // ViewPagerAdapter attachs ViewPager to Tablaout
-        new ViewPagerAdapter(this.getSupportFragmentManager(), this.getLifecycle(), this.tabLayout, this.viewPager, this.sharedViewModel);
+        // Navigation view header showing session data
+        try {
+            this.mainViewModel.getSession().observe(this, workmateSession -> {
+                Glide.with(
+                        (ImageView) navigationView.getHeaderView(0).findViewById(R.id.photo_session)
+                )
+                        .load(workmateSession.getUrlPhoto())
+                        .apply(RequestOptions.circleCropTransform())
+                        .error(R.drawable.ic_baseline_error_24)
+                        .into(
+                                (ImageView) navigationView.getHeaderView(0).findViewById(R.id.photo_session)
+                        );
+                ((TextView) navigationView.getHeaderView(0).findViewById(R.id.name_session)).setText(workmateSession.getName());
+                ((TextView) navigationView.getHeaderView(0).findViewById(R.id.email_session)).setText(workmateSession.getEmail());
+            });
+        } catch (NoWorkmateForSessionException e) {
+            Toast.makeText(this, e.getClass().getCanonicalName(), Toast.LENGTH_LONG);
+        }
 
-        // Location
-        this.requestLocationPermission();
+        this.blurNavigationViewHeaderBackground();
 
+        // Navigation view menu
+        this.navigationView.setCheckedItem(R.id.your_lunch);
+        this.navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if(item.getItemId() == R.id.settings) {
+                    Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(intent);
+                }
+                if(item.getItemId() == R.id.logout) {
+                    mainViewModel.signOut();
+                    Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                drawerLayout.close();
+                return false; // corresponds to is checked
+            }
+        });
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        this.initMyPosition();
+    public void onBackPressed() {
+        Snackbar.make(getWindow().getDecorView().getRootView(), R.string.on_back_pressed_disabled, Snackbar.LENGTH_LONG).show();
     }
 
-    private void requestLocationPermission() {
-        ActivityResultLauncher launcher = this.registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                isGranted -> {
-                    if(isGranted) {
-                        EasyPermissions.onRequestPermissionsResult(
-                                this.requestCode,
-                                this.permissions,
-                                new int[]{PackageManager.PERMISSION_GRANTED},
-                                this);
-                    } else {
-                        EasyPermissions.onRequestPermissionsResult(
-                                this.requestCode,
-                                this.permissions,
-                                new int[]{PackageManager.PERMISSION_DENIED},
-                                this);
-                    }
-                }
-        );
-        launcher.launch(this.permissions[0]);
-    }
+    private void blurNavigationViewHeaderBackground() {
+        BlurView blurView = this.navigationView.getHeaderView(0).findViewById(R.id.blur_layout);
+        ViewGroup viewGroup = (ViewGroup) this.navigationView.getHeaderView(0);
+        blurView.setupWith(viewGroup)
+                .setBlurAlgorithm(new RenderScriptBlur(this));
 
-    @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(123)
-    private void initMyPosition() {
-        // Control
-        if(EasyPermissions.hasPermissions(this, this.permissions)) {
-            // Get location when permission is not missing
-            FusedLocationProviderClient fusedlocationProviderClient =
-                    LocationServices.getFusedLocationProviderClient(this);
-            fusedlocationProviderClient.getLastLocation().addOnSuccessListener(this, location -> {
-                if(location != null) {
-                    this.sharedViewModel.setGeolocation(new Geolocation(
-                            location.getLatitude(),
-                            location.getLongitude())
-                    );
-                }
-            });
-        } else {
-            // Demand permission if missing, explaining that a permission is needed to get the user location
-            EasyPermissions.requestPermissions(
-                    this,
-                    this.getString(R.string.permission_rationale_text),
-                    123,
-                    this.permissions);
-        }
-    }
 
+
+
+    }
 }

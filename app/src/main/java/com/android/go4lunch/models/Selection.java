@@ -2,13 +2,20 @@ package com.android.go4lunch.models;
 
 public class Selection {
 
+    private String id;
+
     private String restaurantId;
 
     private String workmateId;
 
     public Selection(String restaurantId, String workmateId) {
+        this.id = workmateId;
         this.restaurantId = restaurantId;
         this.workmateId = workmateId;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getRestaurantId() {

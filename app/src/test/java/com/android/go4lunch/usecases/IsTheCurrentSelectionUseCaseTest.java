@@ -1,7 +1,14 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways_impl.InMemoryVisitorsGateway;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import com.android.go4lunch.gateways.SessionGateway;
+import com.android.go4lunch.gateways.VisitorGateway;
+import com.android.go4lunch.gateways_impl.InMemoryVisitorGateway;
+import com.android.go4lunch.in_memory_gateways.InMemorySessionGateway;
 import com.android.go4lunch.models.Selection;
+import com.android.go4lunch.models.Workmate;
 
 import org.junit.Test;
 
@@ -9,56 +16,41 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class IsTheCurrentSelectionUseCaseTest {
 
     @Test
-    public void isNotWhenRestaurantIsNotSelected() {
-        InMemoryVisitorsGateway visitorsGateway = new InMemoryVisitorsGateway();
-        // No visitors in visitors gateway
-        IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase = new IsTheCurrentSelectionUseCase(visitorsGateway);
+    public void theCurrentSelectionIsTheRestaurantThatIsSelectedByTheCurrentSession() {
+        InMemoryVisitorGateway visitorGateway = new InMemoryVisitorGateway();
+        visitorGateway.setSelections(Arrays.asList(new Selection("restaurant1", "workmate1")));
+        InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
+        Workmate workmateSession = new Workmate("Janie");
+        workmateSession.setId("workmate1");
+        sessionGateway.setWorkmate(workmateSession);
 
-        // SUT is the current selection ?
-        List<Boolean> isThecurrentSelectionResults = new ArrayList<>();
-        isTheCurrentSelectionUseCase.handle(
-                "1",
-                "1"
-        ).subscribe(isThecurrentSelectionResults::add);
-
-        // Is not
-        assertFalse(isThecurrentSelectionResults.get(0));
-    }
-
-    @Test
-    public void isTheCurrentSelectionWhenRestaurantIsSelectedByTheCurrentSession() {
-        InMemoryVisitorsGateway visitorsGateway = new InMemoryVisitorsGateway();
-        // Set selections in gateway
-        visitorsGateway.setSelections(Arrays.asList(new Selection("1", "1")));
-
-        // SUT is the current selection ?
-        IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase = new IsTheCurrentSelectionUseCase(visitorsGateway);
         List<Boolean> isTheCurrentSelectionResults = new ArrayList<>();
-        isTheCurrentSelectionUseCase.handle("1", "1").subscribe(isTheCurrentSelectionResults::add);
+        new IsTheCurrentSelectionUseCase(
+                visitorGateway,
+                sessionGateway
+        ).handle("restaurant1").subscribe(isTheCurrentSelectionResults::add);
 
-        // It is
         assertTrue(isTheCurrentSelectionResults.get(0));
     }
 
     @Test
-    public void isTheCurrentSelectionWhenRestaurantIsWithCurrentSession() {
-        InMemoryVisitorsGateway visitorsGateway = new InMemoryVisitorsGateway();
+    public void noCurrentSelectionWhenTheCurrentSessionHasNotSelectedAnyRestaurant() {
+        InMemoryVisitorGateway visitorGateway = new InMemoryVisitorGateway();
+        visitorGateway.setSelections(Arrays.asList(new Selection("restaurant2", "workmate2")));
+        InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
+        Workmate workmateSession = new Workmate("Janie");
+        workmateSession.setId("workmate1");
+        sessionGateway.setWorkmate(workmateSession);
 
-        // Set selections in gateway
-        Selection s1 = new Selection("1", "1");
-        Selection s2 = new Selection("1", "2");
-        Selection s3 = new Selection("2", "3");
-        visitorsGateway.setSelections(Arrays.asList(s1, s2, s3));
-
-        // SUT is the current selection ?
-        IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase = new IsTheCurrentSelectionUseCase(visitorsGateway);
         List<Boolean> isTheCurrentSelectionResults = new ArrayList<>();
-        isTheCurrentSelectionUseCase.handle("2", "3").subscribe(isTheCurrentSelectionResults::add);
+        new IsTheCurrentSelectionUseCase(
+                visitorGateway,
+                sessionGateway
+        ).handle("restaurant2").subscribe(isTheCurrentSelectionResults::add);
+        assertFalse(isTheCurrentSelectionResults.get(0));
     }
 }

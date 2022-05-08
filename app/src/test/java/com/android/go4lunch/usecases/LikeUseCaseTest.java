@@ -1,91 +1,55 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways_impl.InMemoryVisitorsGateway;
-import com.android.go4lunch.models.Selection;
-import com.android.go4lunch.models.Workmate;
+import static org.junit.Assert.assertEquals;
+
+import com.android.go4lunch.gateways.LikeGateway;
+import com.android.go4lunch.in_memory_gateways.InMemoryLikeGateway;
+import com.android.go4lunch.models.Like;
+import com.android.go4lunch.usecases.exceptions.NotFoundException;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+class LikeUseCase {
+
+    private LikeGateway likeGateway;
+
+    public LikeUseCase(LikeGateway likeGateway) {
+        this.likeGateway = likeGateway;
+    }
+
+    public void handle(String restaurantId, String workmateId) {
+        List<Like> likes = this.likeGateway.getLikes();
+        boolean found = false;
+        for(Like like: likes) {
+            if(like.getRestaurantId().equals(restaurantId) && like.getWorkmateId().equals(workmateId)) {
+                found = true;
+                break;
+            }
+        }
+        if(!found)
+            this.likeGateway.add(new Like(restaurantId, workmateId));
+    }
+
+
+}
 
 public class LikeUseCaseTest {
 
-
     @Test
-    public void likeForLunchIncrementsVisitors() {
-        InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
-        List<Selection> selections = new ArrayList<>();
-        Selection selection = new Selection("2", "2");
-        selections.add(selection);
-        inMemoryVisitorsGateway.setSelections(selections);
-
-        LikeUseCase likeUseCase = new LikeUseCase(inMemoryVisitorsGateway);
-
-        // LAUNCH LIKE
-        likeUseCase.handle("1", "1");
-
-        List<Selection> savedSelections = new ArrayList<>();
-        inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);
-
-        assert(savedSelections.size() == 2);
+    public void toLikeIncrementsTheNumberOfLikes() throws NotFoundException {
+        InMemoryLikeGateway likeGateway = new InMemoryLikeGateway();
+        new LikeUseCase(likeGateway).handle("restaurant1", "workmate1");
+        new LikeUseCase(likeGateway).handle("restaurant1", "workmate2");
+        assertEquals(2, likeGateway.getLikes().size());
     }
 
     @Test
-    public void cancelSelectionDecrementsVisitors() {
-        InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
-        LikeUseCase likeUseCase = new LikeUseCase(inMemoryVisitorsGateway);
-        // Increments
-        likeUseCase.handle("1",  "1");
-        // Decrements
-        likeUseCase.handle("1", "1");
-
-        List<Selection> savedSelections = new ArrayList<>();
-        inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);
-        assert(savedSelections.size() == 0);
+    public void aRestaurantCannotHaveManyLikesFromTheSameWorkmate() throws NotFoundException {
+        InMemoryLikeGateway likeGateway = new InMemoryLikeGateway();
+        new LikeUseCase(likeGateway).handle("restaurant1", "workmate1");
+        new LikeUseCase(likeGateway).handle("restaurant1", "workmate1");
+        assertEquals(1, new GetNumberOfLikesPerRestaurantUseCase(likeGateway).handle("restaurant1"));
     }
-
-    @Test
-    public void cancelSelectionDeletesTheSelectionOfTheUser() {
-        InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
-        List<Selection> selections = new ArrayList<>();
-        Workmate cyril = new Workmate("Cyril");
-        cyril.setId("1");
-        Selection selection = new Selection("1", "1");
-        selections.add(selection);
-        inMemoryVisitorsGateway.setSelections(selections);
-
-        LikeUseCase likeUseCase = new LikeUseCase(
-                inMemoryVisitorsGateway
-        );
-        likeUseCase.handle("2", "2");
-        likeUseCase.handle("2", "2");
-        List<Selection> savedSelections = new ArrayList<>();
-        inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);
-        assert(savedSelections.size() == 1);
-        assert(savedSelections.get(0).getWorkmateId().equals("1"));
-    }
-
-    @Test
-    public void workmateCannotHaveManySelections() {
-        InMemoryVisitorsGateway inMemoryVisitorsGateway = new InMemoryVisitorsGateway();
-        List<Selection> selections = new ArrayList<>();
-        Selection selection = new Selection("2", "2");
-        selections.add(selection);
-        inMemoryVisitorsGateway.setSelections(selections);
-
-        LikeUseCase likeUseCase = new LikeUseCase(inMemoryVisitorsGateway);
-
-        // LAUNCH LIKE
-        likeUseCase.handle("1", "2");
-
-        List<Selection> savedSelections = new ArrayList<>();
-        inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);
-        assert(savedSelections.size() == 1);
-    }
-
 }

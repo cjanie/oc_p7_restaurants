@@ -1,4 +1,4 @@
-package com.android.go4lunch.in_memory_repositories;
+package com.android.go4lunch.in_memory_gateways;
 
 import com.android.go4lunch.gateways.WorkmateGateway;
 import com.android.go4lunch.models.Workmate;
@@ -21,12 +21,14 @@ public class InMemoryWorkmateGateway implements WorkmateGateway {
         return this.workmates;
     }
 
+    @Override
+    public void saveWorkmate(Workmate workmate) {
+        
+    }
+
     public void setWorkmates(List<Workmate> workmates) {
         this.workmates = Observable.just(workmates);
     }
 
-    @Override
-    public void setWorkmates(Observable<List<Workmate>> workmates) {
-        this.workmates = workmates;
-    }
+
 }

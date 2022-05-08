@@ -14,10 +14,10 @@ public class GetSessionUseCase {
         this.sessionGateway = sessionGateway;
     }
 
-    public Observable<Workmate> getWorkmate() throws NoWorkmateForSessionException {
-        if(this.sessionGateway.getWorkmate() == null)
-            throw new NoWorkmateForSessionException();
-        return this.sessionGateway.getWorkmate();
+    public Observable<Workmate> handle() throws NoWorkmateForSessionException {
+        if(this.sessionGateway.getSession() == null)
+           throw new NoWorkmateForSessionException();
+        return this.sessionGateway.getSession();
     }
 
 }

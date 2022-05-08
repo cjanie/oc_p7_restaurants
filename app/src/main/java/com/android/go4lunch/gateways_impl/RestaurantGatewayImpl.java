@@ -21,21 +21,21 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
     @Override
     public Observable<List<Restaurant>> getRestaurantsNearby(Geolocation myPosition, int radius) {
         return Observable.just(new Mock().restaurants());
-        /*
+/*
         return this.restaurantRepository.getRestaurantsNearby(myPosition.getLatitude(), myPosition.getLongitude(), radius)
                 .flatMap(restaurants -> this.formatRestaurants(restaurants));
 
-         */
+*/
     }
 
     @Override
     public Observable<List<Restaurant>> getRestaurantsNearbyWithDetails(Geolocation myPosition, int radius) {
         return Observable.just(new Mock().restaurants());
-        /*
+/*
         return this.restaurantRepository.getRestaurantsNearbyWithDetails(myPosition.getLatitude(), myPosition.getLongitude(), radius)
                 .flatMap(restaurants -> this.formatRestaurants(restaurants));
 
-         */
+*/
     }
 
     @Override

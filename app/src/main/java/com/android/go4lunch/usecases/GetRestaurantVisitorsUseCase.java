@@ -1,8 +1,7 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways.VisitorsGateway;
+import com.android.go4lunch.gateways.VisitorGateway;
 import com.android.go4lunch.models.Selection;
-import com.android.go4lunch.models.Workmate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +10,10 @@ import io.reactivex.Observable;
 
 public class GetRestaurantVisitorsUseCase {
 
-    private VisitorsGateway visitorsGateway;
+    private VisitorGateway visitorGateway;
 
-    public GetRestaurantVisitorsUseCase(VisitorsGateway visitorsGateway) {
-        this.visitorsGateway = visitorsGateway;
+    public GetRestaurantVisitorsUseCase(VisitorGateway visitorGateway) {
+        this.visitorGateway = visitorGateway;
     }
 
     public Observable<List<String>> handle(String restaurantId) {
@@ -22,7 +21,7 @@ public class GetRestaurantVisitorsUseCase {
     }
 
     private Observable<List<String>> getVisitorsId(String restaurantId) {
-        return this.visitorsGateway.getSelections().map(selections -> {
+        return this.visitorGateway.getSelections().map(selections -> {
             List<String> visitorsId = new ArrayList<>();
             if(!selections.isEmpty()) {
                 for(Selection selection: selections) {
