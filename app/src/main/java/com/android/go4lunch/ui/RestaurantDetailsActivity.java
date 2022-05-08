@@ -117,7 +117,7 @@ public class RestaurantDetailsActivity extends BaseActivity {
                 this.buttonGo.setImageDrawable(getDrawable(R.drawable.ic_baseline_add_task_24));
             }
         });
-
+        this.restaurantDetailsViewModel.fetchIsTheCurrentSelection();
         // set on Click Listeners
         this.buttonGo.setOnClickListener(view -> {
             handleGoForLunch();

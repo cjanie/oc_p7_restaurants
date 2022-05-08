@@ -16,7 +16,9 @@ import com.android.go4lunch.usecases.exceptions.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 
 public class RestaurantDetailsViewModel extends ViewModel {
@@ -75,6 +77,13 @@ public class RestaurantDetailsViewModel extends ViewModel {
     }
 
     public LiveData<Boolean> getIsTheCurrentSelection() {
+        // fetch -> void
+        // get -> LiveData
+        //this.fetchIsTheCurrentSelection();
+        return this.isTheCurrentSelection;
+    }
+
+    public void fetchIsTheCurrentSelection() {
         if(this.restaurant != null) {
             Disposable disposable = this.isTheCurrentSelectionUseCase.handle(this.restaurant.getId()).subscribe(
                     isTheCurrentSelection -> {
@@ -83,10 +92,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
                     Throwable::printStackTrace
             );
         }
-
-        return this.isTheCurrentSelection;
     }
-
 
     public void handleGoForLunch() throws NotFoundException {
         this.setSession();
@@ -95,6 +101,10 @@ public class RestaurantDetailsViewModel extends ViewModel {
                     this.restaurant.getId(),
                     this.session.getId()
                     );
+            // TODO
+            //Observable.empty().delay(2, TimeUnit.SECONDS).subscribe(() -> {
+             //   this.fetchIsTheCurrentSelection();
+            //});
         }
         this.fetchVisitors();
     }
