@@ -1,9 +1,11 @@
 package com.android.go4lunch.usecases.decorators;
+import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.TimeProvider;
 import com.android.go4lunch.usecases.enums.TimeInfo;
-import com.android.go4lunch.usecases.models_vo.RestaurantVO;
+import com.android.go4lunch.usecases.models.RestaurantModel;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Map;
 
@@ -18,55 +20,27 @@ public class TimeInfoDecorator {
         this.dateProvider = dateProvider;
     }
 
-    public RestaurantVO decor(RestaurantVO restaurant) {
-        restaurant.setTimeInfo(this.getInfo(restaurant, this.dateProvider.today()));
-        return restaurant;
+    public TimeInfo decor(Restaurant restaurant) {
+        return this.getTimeInfo(restaurant);
     }
 
-    private TimeInfo getInfo(RestaurantVO restaurant, int dayOfToday) {
-        Map<Integer, Map<String, LocalTime>> planning = restaurant.getRestaurant().getPlanning();
+    private TimeInfo getTimeInfo(Restaurant restaurant) {
+        Map<Integer, Map<String, LocalTime>> planning = restaurant.getPlanning();
         if(planning == null)
             return TimeInfo.DEFAULT_TIME_INFO;
 
         LocalTime now = this.timeProvider.now();
-
-        if(planning.get(dayOfToday) != null) {
-            if(planning.get(dayOfToday).get("close").isBefore(now))
+        int today = this.dateProvider.today();
+        if(planning.get(today) != null) {
+            if(planning.get(today).get("close").isBefore(now))
                 return TimeInfo.CLOSE;
-            if(planning.get(dayOfToday).get("open").isBefore(now)) {
-                if(planning.get(dayOfToday).get("close").isAfter(now.plusHours(1)))
+            if(planning.get(today).get("open").isBefore(now)) {
+                if(planning.get(today).get("close").isAfter(now.plusHours(1)))
                     return TimeInfo.OPEN;
                 return TimeInfo.CLOSING_SOON;
             }
 
         }
-
-
-
-
-
-
-        /*
-        if(openingDays == null || openingDays.isEmpty() || open == null || close == null)
-            return TimeInfo.DEFAULT_TIME_INFO;
-
-        if(openingDays.contains(dayOfToday)) {
-            if(now.isAfter(close))
-                return TimeInfo.CLOSE;
-            if(!now.isBefore(close.minusHours(1)))
-                return TimeInfo.CLOSING_SOON;
-            if(now.isAfter(open))
-                return TimeInfo.OPEN;
-            if(!now.isBefore(open.minusHours(1)))
-                return TimeInfo.OPENING_SOON;
-        }
-
-        if(openingDays.contains(dayOfToday + 1)) {
-            if(!now.isBefore(open.minusHours(1)))
-                return TimeInfo.OPENING_SOON;
-        }
-
-         */
 
         return TimeInfo.CLOSE;
     }

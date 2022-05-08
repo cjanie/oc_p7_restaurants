@@ -1,44 +1,45 @@
 package com.android.go4lunch.gateways_impl;
 
-import android.util.Log;
-
-import com.android.go4lunch.apis.apiFirebase.UserRepository;
-import com.android.go4lunch.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.gateways.SessionGateway;
 import com.android.go4lunch.models.Workmate;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import io.reactivex.Observable;
 
 public class SessionGatewayImpl implements SessionGateway {
 
-    private String TAG = "SessionRepository";
+    private String TAG = "Session gateway impl";
 
-    private Observable<List<Workmate>> workmates;
+    private FirebaseAuth auth;
 
-    public SessionGatewayImpl() {
-        this.workmates = Observable.just(new ArrayList<>());
-        this.fetchSession();
+    // No use of subject. Once user is authentified, observable is instanciated and authentified user does not change
+    private Observable<Workmate> workmateSessionObservable;
+
+    public SessionGatewayImpl(FirebaseAuth auth) {
+        this.auth = auth;
     }
 
     @Override
-    public Observable<Workmate> getWorkmate() {
-        return this.workmates.flatMap(workmates -> {
-            if(workmates.isEmpty()) {
-                throw new NoWorkmateForSessionException();
-            }
-            Log.d(TAG, "get Workmate from session: " + workmates.get(0).getName());
-            return Observable.just(workmates.get(0));
-        });
+    public Observable<Workmate> getSession()  {
+        this.fetchSession();
+        return this.workmateSessionObservable;
+    }
+
+    @Override
+    public void signOut() {
+        this.auth.signOut();
     }
 
     private void fetchSession() {
-        UserRepository userRepository = new UserRepository();
-        userRepository.getAuthUser().addOnSuccessListener(task -> {
-            this.workmates = Observable.just(Arrays.asList(task));
-        });
+        FirebaseUser authUser = this.auth.getCurrentUser();
+        if(authUser != null) {
+            Workmate workmateSession = new Workmate(authUser.getDisplayName());
+            workmateSession.setId(authUser.getUid());
+            workmateSession.setEmail(authUser.getEmail());
+            workmateSession.setUrlPhoto(authUser.getPhotoUrl().toString());
+
+            this.workmateSessionObservable = Observable.just(workmateSession); // Observable Instantiation
+        }
     }
 }

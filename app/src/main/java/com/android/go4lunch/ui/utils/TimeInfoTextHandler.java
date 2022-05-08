@@ -1,30 +1,39 @@
 package com.android.go4lunch.ui.utils;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.widget.TextView;
 
 import com.android.go4lunch.R;
+import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.providers.RealDateProvider;
-import com.android.go4lunch.usecases.models_vo.RestaurantVO;
+import com.android.go4lunch.usecases.decorators.TimeInfoDecorator;
+import com.android.go4lunch.usecases.enums.TimeInfo;
+import com.android.go4lunch.usecases.models.RestaurantModel;
 import com.android.go4lunch.usecases.enums.TimeInfoVisitor;
+
+import java.time.LocalTime;
 
 public class TimeInfoTextHandler {
 
-    public String getText(RestaurantVO restaurantVO) {
-        return restaurantVO.getTimeInfo().accept(new TimeInfoVisitor<String>() {
+    public String getText(RestaurantModel restaurantModel, Context context) {
+        return restaurantModel.getTimeInfo().accept(new TimeInfoVisitor<String>() {
             @Override
             public String visitOpen() {
-                return "Open until " + restaurantVO.getRestaurant().getPlanning().get(new RealDateProvider().today()).get("close");
+                LocalTime close = restaurantModel.getCloseToday();
+                return context.getString(
+                        R.string.open_until) + " "
+                        + close.toString();
             }
 
             @Override
             public String visitClose() {
-                return "Close";
+                return context.getString(R.string.close);
             }
 
             @Override
             public String visitClosingSoon() {
-                return "Closing soon";
+                return context.getString(R.string.closing_soon);
             }
 
             @Override
@@ -34,7 +43,7 @@ public class TimeInfoTextHandler {
         });
     }
 
-    public int getColor(RestaurantVO restaurant, TextView textView) {
+    public int getColor(RestaurantModel restaurant, TextView textView) {
         return restaurant.getTimeInfo().accept(new TimeInfoVisitor<Integer>() {
             @Override
             public Integer visitOpen() {
@@ -58,7 +67,7 @@ public class TimeInfoTextHandler {
         });
     }
 
-    public int getStyle(RestaurantVO restaurant) {
+    public int getStyle(RestaurantModel restaurant) {
         return restaurant.getTimeInfo().accept(new TimeInfoVisitor<Integer>() {
             @Override
             public Integer visitOpen() {

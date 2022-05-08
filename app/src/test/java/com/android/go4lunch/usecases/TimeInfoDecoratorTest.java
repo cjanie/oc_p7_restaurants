@@ -6,7 +6,7 @@ import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.TimeProvider;
 import com.android.go4lunch.usecases.decorators.TimeInfoDecorator;
 import com.android.go4lunch.usecases.enums.TimeInfo;
-import com.android.go4lunch.usecases.models_vo.RestaurantVO;
+import com.android.go4lunch.usecases.models.RestaurantModel;
 import com.android.go4lunch.models.Restaurant;
 
 
@@ -42,11 +42,11 @@ public class TimeInfoDecoratorTest {
         Restaurant restaurant = new Restaurant("Los Rest", "2 rue des Pirouettes");
         restaurant.setPlanning(planning);
         // Instantiate Parameter for test
-        RestaurantVO restaurantVO = new RestaurantVO(restaurant);
+
         // Under test
-        RestaurantVO actual = timeInfoDecorator.decor(restaurantVO);
+        TimeInfo actual = timeInfoDecorator.decor(restaurant);
         // Assertion
-        assert(actual.getTimeInfo().equals(expectedTimeInfo));
+        assert(actual.equals(expectedTimeInfo));
     }
 
     @Test
@@ -107,13 +107,12 @@ public class TimeInfoDecoratorTest {
     public void shouldReturnDefaultWhenThereIsNoPlanning() {
         // Instantiate Parameter for test
         Restaurant restaurant = new Restaurant("Los Rest", "2 rue des Pirouettes");
-        RestaurantVO restaurantVO = new RestaurantVO(restaurant);
         // Under test
         TimeInfoDecorator timeInfoDecorator = new TimeInfoDecorator(
                 new DeterministicTimeProvider(LocalTime.of(12, 0)),
                 new DeterministicDateProvider(1)
         );
-        RestaurantVO actual = timeInfoDecorator.decor(restaurantVO);
-        assert(actual.getTimeInfo().equals(TimeInfo.DEFAULT_TIME_INFO));
+        TimeInfo actual = timeInfoDecorator.decor(restaurant);
+        assert(actual.equals(TimeInfo.DEFAULT_TIME_INFO));
     }
 }

@@ -8,22 +8,20 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
-import com.android.go4lunch.ui.events.InitMyPositionEvent;
 import com.android.go4lunch.ui.viewmodels.MapViewModel;
-import com.android.go4lunch.ui.viewmodels.MapViewModelFactory;
+import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
+import com.android.go4lunch.ui.viewmodels.SharedViewModel;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +29,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MapRestaurantFragment extends WithLocationPermissionFragment implements OnMapReadyCallback {
+public class MapRestaurantFragment extends Fragment implements OnMapReadyCallback {
+
+    private SharedViewModel sharedViewModel;
 
     private MapViewModel mapViewModel;
 
@@ -41,6 +41,10 @@ public class MapRestaurantFragment extends WithLocationPermissionFragment implem
     MapView mapView;
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+
+    public MapRestaurantFragment(SharedViewModel sharedViewModel) {
+        this.sharedViewModel = sharedViewModel;
+    }
 
     @Nullable
     @Override
@@ -64,6 +68,7 @@ public class MapRestaurantFragment extends WithLocationPermissionFragment implem
         }
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
+        this.setMarkersAtInitMyPosition();
 
         return root;
     }
@@ -90,14 +95,12 @@ public class MapRestaurantFragment extends WithLocationPermissionFragment implem
     public void onStart() {
         super.onStart();
         mapView.onStart();
-        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mapView.onStop();
-        EventBus.getDefault().unregister(this);
     }
 
     @SuppressLint("MissingPermission")
@@ -133,12 +136,18 @@ public class MapRestaurantFragment extends WithLocationPermissionFragment implem
         mapView.onLowMemory();
     }
 
-    @Subscribe
-    public void setMarkersAtInitMyPosition(InitMyPositionEvent event) {
-        this.mapViewModel.getMarkers(event.getLatitude(), event.getLongitude(), 1000)
-                .observe(this, markers -> {
-                   this.markers.setValue(markers);
-                });
+
+    public void setMarkersAtInitMyPosition() {
+
+        this.sharedViewModel.getGeolocation().observe(this.getViewLifecycleOwner(), geolocation -> {
+            this.mapViewModel.getMarkers(
+                    geolocation.getLatitude(),
+                    geolocation.getLongitude(),
+                    1000
+            ).observe(this.getViewLifecycleOwner(), markers -> {
+                this.markers.setValue(markers);
+            });
+        });
     }
 
 }

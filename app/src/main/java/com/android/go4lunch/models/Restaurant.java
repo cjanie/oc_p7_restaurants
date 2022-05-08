@@ -17,6 +17,10 @@ public class Restaurant {
 
     private Geolocation geolocation;
 
+    private String phone;
+
+    private String webSite;
+
     public Restaurant(String name, String address) {
         this.name = name;
         this.address = address;
@@ -69,5 +73,21 @@ public class Restaurant {
 
     public void setGeolocation(Geolocation geolocation) {
         this.geolocation = geolocation;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getWebSite() {
+        return webSite;
+    }
+
+    public void setWebSite(String webSite) {
+        this.webSite = webSite;
     }
 }

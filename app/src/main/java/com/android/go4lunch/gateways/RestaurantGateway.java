@@ -19,4 +19,6 @@ public interface RestaurantGateway {
             int radius
     );
 
+    Observable<List<Restaurant>> getRestaurantsNearby();
+
 }

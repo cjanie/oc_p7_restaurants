@@ -6,15 +6,22 @@
     android:layout_height="wrap_content"
     >
 
-    <ImageView
-        android:id="@+id/workmate_avatar"
+    <FrameLayout
+        android:id="@+id/workmate_avatar_frame"
         android:layout_width="@dimen/photo_size"
         android:layout_height="@dimen/photo_size"
-        android:padding="@dimen/margin_half"
+        android:background="@drawable/card_circle_background"
+        android:layout_margin="@dimen/margin_half"
+        android:padding="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_baseline_person_24" />
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/workmate_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
 
     <TextView
         android:id="@+id/workmate_text"
@@ -24,10 +31,10 @@
         android:textSize="@dimen/text_size_big"
         android:layout_marginLeft="@dimen/margin"
         android:layout_marginRight="@dimen/margin_half"
-        app:layout_constraintBottom_toBottomOf="@+id/workmate_avatar"
+        app:layout_constraintBottom_toBottomOf="@+id/workmate_avatar_frame"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/workmate_avatar"
-        app:layout_constraintTop_toTopOf="@+id/workmate_avatar" />
+        app:layout_constraintStart_toEndOf="@+id/workmate_avatar_frame"
+        app:layout_constraintTop_toTopOf="@+id/workmate_avatar_frame" />
 
     <View
         android:id="@+id/divider"
@@ -36,5 +43,5 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/workmate_avatar" />
+        app:layout_constraintStart_toEndOf="@+id/workmate_avatar_frame" />
 </androidx.constraintlayout.widget.ConstraintLayout>

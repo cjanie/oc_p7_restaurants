@@ -1,7 +1,6 @@
 package com.android.go4lunch.apis.apiGoogleMaps.repositories;
 
 import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsHttpClientProvider;
-import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsRequestConfig;
 import com.android.go4lunch.apis.apiGoogleMaps.deserializers.place.Result;
 import com.android.go4lunch.apis.apiGoogleMaps.factories.PlanningFactory;
 import com.android.go4lunch.apis.apiGoogleMaps.entities.Restaurant;
@@ -16,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
 
 public class RestaurantRepository {
 

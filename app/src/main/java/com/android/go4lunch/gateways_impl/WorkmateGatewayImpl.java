@@ -2,58 +2,106 @@ package com.android.go4lunch.gateways_impl;
 
 import android.util.Log;
 
-import com.android.go4lunch.apis.apiFirebase.UserRepository;
 import com.android.go4lunch.gateways.WorkmateGateway;
 import com.android.go4lunch.models.Workmate;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.subjects.PublishSubject;
+
+class WorkmateDatabaseConfig {
+
+    public static final String COLLECTION_PATH = "workmates";
+    public static final String NAME = "name";
+    public static final String EMAIL = "email";
+    public static final String PHONE = "phone";
+    public static final String URL_PHOTO = "urlPhoto";
+
+}
 
 public class WorkmateGatewayImpl implements WorkmateGateway {
 
     private String TAG = "WORKMATE GATEWAY IMPL";
 
-    private Observable<List<Workmate>> workmates;
+    private FirebaseFirestore database;
 
+    private PublishSubject<List<Workmate>> workmatesSubject;
 
-
-    public WorkmateGatewayImpl() {
-        Workmate janie = new Workmate("Janie");
-        janie.setId("1");
-        janie.setPhone("06 59 12 12 12");
-        janie.setEmail("janie.chun@hotmail.fr");
-        janie.setUrlPhoto("https://i.pravatar.cc/150?u=a042581f4e29026704d");
-
-        List<Workmate> workmates = new ArrayList<>();
-        workmates.add(janie);
-        workmates.add(janie);
-        this.workmates = Observable.just(workmates);
-        this.fetchUsers();
+    public WorkmateGatewayImpl(FirebaseFirestore database) {
+        this.database = database;
+        this.workmatesSubject = PublishSubject.create();
     }
 
     @Override
-    public Observable<List<Workmate>> getWorkmates() {
-        return this.workmates;
+    public Observable<List<Workmate>> getWorkmates() { // Renommer prefixe subscribe ou suffixe observable
+        this.fetchWorkmates();
+        return this.workmatesSubject.hide();
     }
 
-    @Override
-    public void setWorkmates(@NonNull Observable<List<Workmate>> workmates) {
-        this.workmates = workmates;
+    private void updateWorkmates(List<Workmate> workmates) {
+        this.workmatesSubject.onNext(workmates);
     }
 
-    public void fetchUsers() {
-        UserRepository userRepository = new UserRepository();
-        userRepository.getUsers().addOnSuccessListener(task -> {
-            if (task != null && !task.isEmpty()) {
-                this.workmates = Observable.just(task);
+    private void fetchWorkmates() {
+
+        this.database.collection(WorkmateDatabaseConfig.COLLECTION_PATH).get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                QuerySnapshot query = task.getResult();
+                List<DocumentSnapshot> docs = query.getDocuments();
+
+                List<Workmate> workmates = new ArrayList<>();
+                if(!docs.isEmpty()) {
+                    for(DocumentSnapshot doc: docs) {
+                        Workmate workmate = new Workmate((String) doc.getData().get(WorkmateDatabaseConfig.NAME));
+                        workmate.setId(doc.getId());
+                        workmate.setEmail((String) doc.getData().get(WorkmateDatabaseConfig.EMAIL));
+                        workmate.setPhone((String) doc.getData().get(WorkmateDatabaseConfig.PHONE));
+                        workmate.setUrlPhoto((String) doc.getData().get(WorkmateDatabaseConfig.URL_PHOTO));
+
+                        workmates.add(workmate);
+                    }
+                }
+                updateWorkmates(workmates);
             }
-        }).addOnFailureListener(error -> {
-            Log.e(this.TAG, "task fetch users error: " + error); //  ex: PERMISSION_DENIED: Missing or insufficient permissions.
         });
+    }
+
+    @Override
+    public void saveWorkmate(Workmate workmate) {
+        Map<String, Object> workmateMap = new HashMap<>();
+        workmateMap.put(WorkmateDatabaseConfig.NAME, workmate.getName());
+        workmateMap.put(WorkmateDatabaseConfig.EMAIL, workmate.getEmail());
+        workmateMap.put(WorkmateDatabaseConfig.PHONE, workmate.getPhone());
+        workmateMap.put(WorkmateDatabaseConfig.URL_PHOTO, workmate.getUrlPhoto());
+        this.database.collection(WorkmateDatabaseConfig.COLLECTION_PATH).document(workmate.getId())
+                .set(workmateMap)
+                .addOnSuccessListener((Void aVoid) ->
+                        Log.d(TAG, "DocumentSnapshot successfully written!")
+                )
+                .addOnFailureListener((Exception e) ->
+                        Log.w(TAG, "Error writing document", e)
+                );
+    }
+
+    public void deleteWorkmate(Workmate workmate) {
+        this.database.collection(WorkmateDatabaseConfig.COLLECTION_PATH).document(workmate.getId())
+                .delete()
+                .addOnSuccessListener((Void aVoid) ->
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!")
+                )
+                .addOnFailureListener((Exception e) ->
+                        Log.w(TAG, "Error deleting document", e)
+                );
     }
 
 }

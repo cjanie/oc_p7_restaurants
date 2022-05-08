@@ -10,6 +10,16 @@
     <string name="sign_in_cancelled">Sign in cancelled</string>
     <string name="no_internet_connection">No internet connection</string>
 
+    <string name="on_back_pressed_disabled">On back pressed disabled</string>
+    <string name="permission_rationale_text">We need permission to get your location</string>
+
+    <!-- NAV DRAWER -->
+    <string name="your_lunch">Your lunch</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+
     <!-- MENU -->
     <string name="map_view">Map View</string>
     <string name="list_view">List View</string>
@@ -24,14 +34,23 @@
     <string name="close">Close</string>
     <string name="opening_soon">Opening soon</string>
     <string name="closing_soon">Closing soon</string>
+    <string name="open_until">Open until</string>
 
     <string name="distance">Distance</string>
+    <string name="meter_abbrev">m</string>
 
     <!-- WORKMATES -->
     <string name="selections">Selections</string>
 
     <string name="is_eating">is eating</string>
     <string name="has_not_decided">has not decided yet</string>
+
+    <!-- RESTAURANT -->
+    <string name="call">Call</string>
+    <string name="like">Like</string>
+    <string name="website">Website</string>
+    <string name="visitor">Visitor</string>
+    <string name="visitor_text"> is joining!</string>
 
 
     <!-- PERMISSION -->
@@ -41,5 +60,23 @@
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
     <string name="facebook_application_id" translatable="false">570389354021189</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb570389354021189</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
 </resources>
