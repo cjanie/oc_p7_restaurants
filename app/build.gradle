@@ -92,6 +92,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-core:9.6.1'
 
+    // API FUTURE
+    //implementation 'com.google.cloud:google-cloud-firestore:1.32.0'
+
     // BUTTERKNIFE
     implementation 'com.jakewharton:butterknife:10.2.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'

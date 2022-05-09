@@ -3,9 +3,7 @@ package com.android.go4lunch.usecases;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import com.android.go4lunch.gateways.SessionGateway;
-import com.android.go4lunch.gateways.VisitorGateway;
-import com.android.go4lunch.gateways_impl.InMemoryVisitorGateway;
+import com.android.go4lunch.in_memory_gateways.InMemoryVisitorGateway;
 import com.android.go4lunch.in_memory_gateways.InMemorySessionGateway;
 import com.android.go4lunch.models.Selection;
 import com.android.go4lunch.models.Workmate;

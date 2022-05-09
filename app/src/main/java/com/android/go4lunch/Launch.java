@@ -6,11 +6,13 @@ import com.android.go4lunch.apis.apiGoogleMaps.repositories.DistanceRepository;
 import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsHttpClientProvider;
 import com.android.go4lunch.apis.apiGoogleMaps.repositories.RestaurantRepository;
 import com.android.go4lunch.gateways.DistanceGateway;
+import com.android.go4lunch.gateways.LikeGateway;
 import com.android.go4lunch.gateways.RestaurantGateway;
 import com.android.go4lunch.gateways.SessionGateway;
 import com.android.go4lunch.gateways.VisitorGateway;
 import com.android.go4lunch.gateways.WorkmateGateway;
 import com.android.go4lunch.gateways_impl.DistanceGatewayImpl;
+import com.android.go4lunch.gateways_impl.LikeGatewayImpl;
 import com.android.go4lunch.gateways_impl.RestaurantGatewayImpl;
 import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
 import com.android.go4lunch.gateways_impl.VisitorGatewayImpl;
@@ -25,6 +27,7 @@ import com.android.go4lunch.ui.viewmodels.factories.RestaurantDetailsViewModelFa
 import com.android.go4lunch.ui.viewmodels.factories.RestaurantsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.SignInViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.WorkmatesViewModelFactory;
+import com.android.go4lunch.usecases.GetNumberOfLikesPerRestaurantUseCase;
 import com.android.go4lunch.usecases.GetRestaurantByIdUseCase;
 import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
@@ -35,6 +38,7 @@ import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
 import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
+import com.android.go4lunch.usecases.LikeUseCase;
 import com.android.go4lunch.usecases.SaveWorkmateUseCase;
 import com.android.go4lunch.usecases.SignOutUseCase;
 import com.google.firebase.FirebaseApp;
@@ -58,6 +62,7 @@ public class Launch extends Application {
     private WorkmateGateway workmateGateway;
     private VisitorGateway visitorGateway;
     private SessionGateway sessionGateway;
+    private LikeGateway likeGateway;
 
     // Use cases
     private GetRestaurantsForMapUseCase getRestaurantsForMapUseCase;
@@ -72,6 +77,8 @@ public class Launch extends Application {
     private SaveWorkmateUseCase saveWorkmateUseCase;
     private SignOutUseCase signOutUseCase;
     private IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase;
+    private LikeUseCase likeUseCase;
+    private GetNumberOfLikesPerRestaurantUseCase getNumberOfLikesPerRestaurantUseCase;
 
     // view models factories
     private MapViewModelFactory mapViewModelFactory;
@@ -160,6 +167,13 @@ public class Launch extends Application {
             this.sessionGateway = new SessionGatewayImpl(this.auth());
         }
         return this.sessionGateway;
+    }
+
+    private synchronized LikeGateway likeGateway() {
+        if(this.likeGateway == null) {
+            this.likeGateway = new LikeGatewayImpl(this.database());
+        }
+        return this.likeGateway;
     }
 
     // Use cases
@@ -253,6 +267,24 @@ public class Launch extends Application {
         return this.isTheCurrentSelectionUseCase;
     }
 
+    private synchronized LikeUseCase likeUseCase() {
+        if(this.likeUseCase == null) {
+            this.likeUseCase = new LikeUseCase(
+                    this.likeGateway()
+            );
+        }
+        return this.likeUseCase;
+    }
+
+    private synchronized GetNumberOfLikesPerRestaurantUseCase getNumberOfLikesPerRestaurantUseCase() {
+        if(this.getNumberOfLikesPerRestaurantUseCase == null) {
+            this.getNumberOfLikesPerRestaurantUseCase = new GetNumberOfLikesPerRestaurantUseCase(
+                    this.likeGateway()
+            );
+        }
+        return this.getNumberOfLikesPerRestaurantUseCase;
+    }
+
     // View model factories
 
     public synchronized MapViewModelFactory mapViewModelFactory() {
@@ -281,7 +313,9 @@ public class Launch extends Application {
                     goForLunchUseCase(),
                     getRestaurantVisitorsUseCase(),
                     getWorkmateByIdUseCase(),
-                    isTheCurrentSelectionUseCase()
+                    isTheCurrentSelectionUseCase(),
+                    likeUseCase(),
+                    getNumberOfLikesPerRestaurantUseCase()
             );
         }
         return this.restaurantDetailsViewModelFactory;

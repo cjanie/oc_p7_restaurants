@@ -12,31 +12,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-class LikeUseCase {
-
-    private LikeGateway likeGateway;
-
-    public LikeUseCase(LikeGateway likeGateway) {
-        this.likeGateway = likeGateway;
-    }
-
-    public void handle(String restaurantId, String workmateId) {
-        List<Like> likesResults = new ArrayList<>();
-        this.likeGateway.getLikes().subscribe(likesResults::addAll);
-        boolean found = false;
-        for(Like like: likesResults) {
-            if(like.getRestaurantId().equals(restaurantId) && like.getWorkmateId().equals(workmateId)) {
-                found = true;
-                break;
-            }
-        }
-        if(!found)
-            this.likeGateway.add(new Like(restaurantId, workmateId));
-    }
-
-
-}
-
 public class LikeUseCaseTest {
 
     @Test

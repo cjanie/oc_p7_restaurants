@@ -8,7 +8,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-class GetNumberOfLikesPerRestaurantUseCase {
+public class GetNumberOfLikesPerRestaurantUseCase {
 
     private LikeGateway likeGateway;
 

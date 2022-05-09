@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.android.go4lunch.usecases.GetNumberOfLikesPerRestaurantUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
 import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
+import com.android.go4lunch.usecases.LikeUseCase;
 import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.models.Workmate;
@@ -34,6 +36,10 @@ public class RestaurantDetailsViewModel extends ViewModel {
 
     private IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase;
 
+    private LikeUseCase likeUseCase;
+
+    private GetNumberOfLikesPerRestaurantUseCase getNumberOfLikesPerRestaurantUseCase;
+
     private Restaurant restaurant;
 
     private Workmate session;
@@ -47,13 +53,17 @@ public class RestaurantDetailsViewModel extends ViewModel {
             GoForLunchUseCase goForLunchUseCase,
             GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase,
             GetWorkmateByIdUseCase getWorkmateByIdUsecase,
-            IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase
+            IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase,
+            LikeUseCase likeUseCase,
+            GetNumberOfLikesPerRestaurantUseCase getNumberOfLikesPerRestaurantUseCase
     ) {
         this.getSessionUseCase = getSessionUseCase;
         this.goForLunchUseCase = goForLunchUseCase;
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
         this.getWorkmateByIdUsecase = getWorkmateByIdUsecase;
         this.isTheCurrentSelectionUseCase = isTheCurrentSelectionUseCase;
+        this.likeUseCase = likeUseCase;
+        this.getNumberOfLikesPerRestaurantUseCase = getNumberOfLikesPerRestaurantUseCase;
 
         this.visitors = new MutableLiveData<>(new ArrayList<>());
         this.isTheCurrentSelection = new MutableLiveData<>(false);
