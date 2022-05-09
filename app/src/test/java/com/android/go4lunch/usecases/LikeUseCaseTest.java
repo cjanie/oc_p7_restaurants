@@ -9,6 +9,7 @@ import com.android.go4lunch.usecases.exceptions.NotFoundException;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class LikeUseCase {
@@ -20,9 +21,10 @@ class LikeUseCase {
     }
 
     public void handle(String restaurantId, String workmateId) {
-        List<Like> likes = this.likeGateway.getLikes();
+        List<Like> likesResults = new ArrayList<>();
+        this.likeGateway.getLikes().subscribe(likesResults::addAll);
         boolean found = false;
-        for(Like like: likes) {
+        for(Like like: likesResults) {
             if(like.getRestaurantId().equals(restaurantId) && like.getWorkmateId().equals(workmateId)) {
                 found = true;
                 break;
@@ -42,7 +44,10 @@ public class LikeUseCaseTest {
         InMemoryLikeGateway likeGateway = new InMemoryLikeGateway();
         new LikeUseCase(likeGateway).handle("restaurant1", "workmate1");
         new LikeUseCase(likeGateway).handle("restaurant1", "workmate2");
-        assertEquals(2, likeGateway.getLikes().size());
+        List<Like> likesResult = new ArrayList<>();
+        likeGateway.getLikes().subscribe(likesResult::addAll);
+
+        assertEquals(2, likesResult.size());
     }
 
     @Test
@@ -50,6 +55,9 @@ public class LikeUseCaseTest {
         InMemoryLikeGateway likeGateway = new InMemoryLikeGateway();
         new LikeUseCase(likeGateway).handle("restaurant1", "workmate1");
         new LikeUseCase(likeGateway).handle("restaurant1", "workmate1");
-        assertEquals(1, new GetNumberOfLikesPerRestaurantUseCase(likeGateway).handle("restaurant1"));
+        List<Integer> numberOflikesPerRestaurantResults = new ArrayList<>();
+        new GetNumberOfLikesPerRestaurantUseCase(likeGateway).handle("restaurant1")
+                .subscribe(numberOflikesPerRestaurantResults::add);
+        assert(numberOflikesPerRestaurantResults.get(0) == 1);
     }
 }

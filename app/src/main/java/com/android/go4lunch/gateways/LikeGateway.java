@@ -4,9 +4,11 @@ import com.android.go4lunch.models.Like;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+
 public interface LikeGateway {
 
-    List<Like> getLikes();
+    Observable<List<Like>> getLikes();
 
     void add(Like like);
 }
