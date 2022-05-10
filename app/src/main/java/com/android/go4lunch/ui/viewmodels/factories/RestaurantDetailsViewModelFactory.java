@@ -9,7 +9,9 @@ import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.usecases.GoForLunchUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
+import com.android.go4lunch.usecases.IsOneOfTheUserFavoriteRestaurantsUseCase;
 import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
+import com.android.go4lunch.usecases.LikeUseCase;
 
 public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Factory {
 
@@ -23,19 +25,27 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
 
     private final IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase;
 
+    private final LikeUseCase likeUseCase;
+
+    private final IsOneOfTheUserFavoriteRestaurantsUseCase isOneOfTheUserFavoriteRestaurantsUseCase;
+
 
     public RestaurantDetailsViewModelFactory(
             GetSessionUseCase getSessionUseCase,
             GoForLunchUseCase goForLunchUseCase,
             GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase,
             GetWorkmateByIdUseCase getWorkmateByIdUseCase,
-            IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase
+            IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase,
+            LikeUseCase likeUseCase,
+            IsOneOfTheUserFavoriteRestaurantsUseCase isOneOfTheUserFavoriteRestaurantsUseCase
     ) {
         this.getSessionUseCase = getSessionUseCase;
         this.goForLunchUseCase = goForLunchUseCase;
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
         this.getWorkmateByIdUseCase = getWorkmateByIdUseCase;
         this.isTheCurrentSelectionUseCase = isTheCurrentSelectionUseCase;
+        this.likeUseCase = likeUseCase;
+        this.isOneOfTheUserFavoriteRestaurantsUseCase = isOneOfTheUserFavoriteRestaurantsUseCase;
     }
 
 
@@ -48,7 +58,9 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
                     this.goForLunchUseCase,
                     this.getRestaurantVisitorsUseCase,
                     this.getWorkmateByIdUseCase,
-                    this.isTheCurrentSelectionUseCase
+                    this.isTheCurrentSelectionUseCase,
+                    this.likeUseCase,
+                    this.isOneOfTheUserFavoriteRestaurantsUseCase
             );
         }
         throw new IllegalArgumentException("RestaurantDetailsViewModelFactory: Unknown ViewModel class");

@@ -6,25 +6,32 @@ import com.android.go4lunch.models.Like;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+
 public class InMemoryLikeGateway implements LikeGateway {
-    List<Like> likes;
+
+    Observable<List<Like>> likes;
 
     public InMemoryLikeGateway() {
-        this.likes = new ArrayList<>();
+        this.likes = Observable.just(new ArrayList<>());
     }
 
     public void setLikes(List<Like> likes) {
-        this.likes = likes;
+        this.likes = Observable.just(likes);
     }
 
     @Override
-    public List<Like> getLikes() {
+    public Observable<List<Like>> getLikes() {
         return this.likes;
     }
 
     @Override
-    public void add(Like like) {
-        this.likes.add(like);
+    public boolean add(Like like) {
+        List<Like> likesResult = new ArrayList<>();
+        this.likes.subscribe(likesResult::addAll);
+        likesResult.add(like);
+        this.likes = Observable.just(likesResult);
+        return true;
     }
 
 

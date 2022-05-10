@@ -32,6 +32,8 @@ public class Mock {
         }
 
         lol.setPlanning(planning);
+        lol.setPhone("0658156166");
+        lol.setWebSite("https://devstory.net/12667/android-phone-call");
 
         Restaurant bon = new Restaurant("Chez Bon", "2, rue des presses");
         bon.setId("2");
@@ -47,6 +49,9 @@ public class Mock {
             planningNight.put(planningNight.size(), nightTimes);
         }
         bon.setPlanning(planningNight);
+        bon.setPhone("0658156166");
+        bon.setWebSite("https://devstory.net/12667/android-phone-call");
+
         this.restaurants = Arrays.asList(lol, bon);
 
         Workmate janie = new Workmate("Janie");

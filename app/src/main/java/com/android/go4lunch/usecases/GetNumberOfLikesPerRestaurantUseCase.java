@@ -3,9 +3,12 @@ package com.android.go4lunch.usecases;
 import com.android.go4lunch.gateways.LikeGateway;
 import com.android.go4lunch.models.Like;
 
+import java.util.ArrayList;
 import java.util.List;
 
-class GetNumberOfLikesPerRestaurantUseCase {
+import io.reactivex.Observable;
+
+public class GetNumberOfLikesPerRestaurantUseCase {
 
     private LikeGateway likeGateway;
 
@@ -13,16 +16,17 @@ class GetNumberOfLikesPerRestaurantUseCase {
         this.likeGateway = likeGateway;
     }
 
-    public int handle(String restaurantId) {
+    public Observable<Integer> handle(String restaurantId) {
         int numberOfLikesPerRestaurant = 0;
-        List<Like> likes = this.likeGateway.getLikes();
-        if(!likes.isEmpty()) {
-            for(Like like : likes) {
+        List<Like> likesResults = new ArrayList<>();
+        this.likeGateway.getLikes().subscribe(likesResults::addAll);
+        if(!likesResults.isEmpty()) {
+            for(Like like : likesResults) {
                 if(like.getRestaurantId().equals(restaurantId)) {
                     numberOfLikesPerRestaurant += 1;
                 }
             }
         }
-        return numberOfLikesPerRestaurant;
+        return Observable.just(numberOfLikesPerRestaurant);
     }
 }
