@@ -37,6 +37,7 @@ import com.android.go4lunch.usecases.GoForLunchUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
 import com.android.go4lunch.usecases.GetSessionUseCase;
+import com.android.go4lunch.usecases.IsOneOfTheUserFavoriteRestaurantsUseCase;
 import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
 import com.android.go4lunch.usecases.LikeUseCase;
 import com.android.go4lunch.usecases.SaveWorkmateUseCase;
@@ -78,6 +79,7 @@ public class Launch extends Application {
     private SignOutUseCase signOutUseCase;
     private IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase;
     private LikeUseCase likeUseCase;
+    private IsOneOfTheUserFavoriteRestaurantsUseCase isOneOfTheUserFavoriteRestaurantsUseCase;
     private GetNumberOfLikesPerRestaurantUseCase getNumberOfLikesPerRestaurantUseCase;
 
     // view models factories
@@ -276,6 +278,16 @@ public class Launch extends Application {
         return this.likeUseCase;
     }
 
+    private synchronized IsOneOfTheUserFavoriteRestaurantsUseCase isOneOfTheUserFavoriteRestaurants() {
+        if(this.isOneOfTheUserFavoriteRestaurantsUseCase == null) {
+            this.isOneOfTheUserFavoriteRestaurantsUseCase = new IsOneOfTheUserFavoriteRestaurantsUseCase(
+                    this.likeGateway(),
+                    this.sessionGateway()
+            );
+        }
+        return this.isOneOfTheUserFavoriteRestaurantsUseCase;
+    }
+
     private synchronized GetNumberOfLikesPerRestaurantUseCase getNumberOfLikesPerRestaurantUseCase() {
         if(this.getNumberOfLikesPerRestaurantUseCase == null) {
             this.getNumberOfLikesPerRestaurantUseCase = new GetNumberOfLikesPerRestaurantUseCase(
@@ -315,7 +327,7 @@ public class Launch extends Application {
                     getWorkmateByIdUseCase(),
                     isTheCurrentSelectionUseCase(),
                     likeUseCase(),
-                    getNumberOfLikesPerRestaurantUseCase()
+                    isOneOfTheUserFavoriteRestaurants()
             );
         }
         return this.restaurantDetailsViewModelFactory;

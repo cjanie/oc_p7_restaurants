@@ -2,18 +2,21 @@ package com.android.go4lunch.gateways_impl;
 
 import com.android.go4lunch.gateways.LikeGateway;
 import com.android.go4lunch.models.Like;
-//import com.google.api.core.ApiFuture;
-//import com.google.cloud.firestore.WriteResult;
-import com.google.firebase.firestore.CollectionReference;
+
+
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firestore.v1.WriteResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import io.reactivex.Observable;
 
@@ -67,22 +70,9 @@ public class LikeGatewayImpl implements LikeGateway {
         Map<String, Object> likeMap = new HashMap<>();
         likeMap.put(LikeDatabaseConfig.RESTAURANT_ID, like.getRestaurantId());
         likeMap.put(LikeDatabaseConfig.WORKMATE_ID, like.getWorkmateId());
+        Task<DocumentReference> task = this.database.collection(LikeDatabaseConfig.COLLECTION_PATH).add(likeMap);
 
-        CollectionReference collectionReference = this.database.collection(LikeDatabaseConfig.COLLECTION_PATH);
-        // Get new Id first
-        String newDocId = collectionReference.getId();
-        //ApiFuture<WriteResult> future = (ApiFuture<WriteResult>) collectionReference.document(newDocId).set(likeMap);
-        return true;
-
-        /*
-        try {
-            //future.get();
-            return true;
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-         */
+        System.out.println(task.isSuccessful() + "%%%%%% Task is successfull");
+        return task.isSuccessful();
     }
 }

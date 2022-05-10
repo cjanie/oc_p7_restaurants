@@ -1,5 +1,7 @@
 package com.android.go4lunch.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +19,7 @@ import com.android.go4lunch.R;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.ui.adapters.ListVisitorRecyclerViewAdapter;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
+import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.usecases.exceptions.NotFoundException;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -117,22 +120,45 @@ public class RestaurantDetailsActivity extends BaseActivity {
                 this.buttonGo.setImageDrawable(getDrawable(R.drawable.ic_baseline_add_task_24));
             }
         });
-        this.restaurantDetailsViewModel.fetchIsTheCurrentSelection();
+        this.restaurantDetailsViewModel.updateIsTheCurrentSelection();
+
+        // IS FAVORITE
+        try {
+            this.restaurantDetailsViewModel.getIsOneOfTheUserFavoriteRestaurants().observe(this, isFavorite -> {
+                if(isFavorite) {
+                    this.star.setImageDrawable(this.getDrawable(R.drawable.ic_baseline_star_24));
+                } else {
+                    this.star.setImageDrawable(this.getDrawable(R.drawable.ic_baseline_star_border_24));
+                }
+            });
+            this.restaurantDetailsViewModel.updateIsOneOfTheUserFavoriteRestaurants();
+        } catch (NoWorkmateForSessionException e) {
+            e.printStackTrace();
+            this.handleError(e);
+        }
+
         // set on Click Listeners
         this.buttonGo.setOnClickListener(view -> {
             handleGoForLunch();
         });
 
+
         this.buttonCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                call(restaurant.getPhone());
             }
         });
         this.buttonLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                System.out.println("Click like %%%%%%%%%%");
+                try {
+                    restaurantDetailsViewModel.handleLike();
+                } catch (NoWorkmateForSessionException e) {
+                    e.printStackTrace();
+                    handleError(e);
+                }
             }
         });
 
@@ -157,6 +183,14 @@ public class RestaurantDetailsActivity extends BaseActivity {
 
     private void handleError(Exception e) {
         Toast.makeText(this, e.getClass().getName() + " " + e.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    private void call(String phoneNumber) {
+        if(phoneNumber != null && !phoneNumber.isEmpty()) {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" + phoneNumber));
+            startActivity(callIntent);
+        }
     }
 
 }

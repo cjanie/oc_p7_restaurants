@@ -54,6 +54,7 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+
 }
 
 dependencies {
@@ -91,9 +92,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-core:9.6.1'
-
-    // API FUTURE
-    //implementation 'com.google.cloud:google-cloud-firestore:1.32.0'
 
     // BUTTERKNIFE
     implementation 'com.jakewharton:butterknife:10.2.3'
