@@ -57,6 +57,10 @@ android {
 dependencies {
     // Nav drawer
     implementation 'androidx.navigation:navigation-ui:2.4.2'
+
+    // Nav host fragment
+    implementation 'androidx.navigation:navigation-fragment:2.4.2'
+
     // Settings
     implementation 'androidx.preference:preference:1.2.0'
 

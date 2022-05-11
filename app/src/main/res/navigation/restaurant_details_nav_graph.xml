@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/restaurant_details_nav_graph.xml"
+    app:startDestination="@id/detailsFragment">
+
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.android.go4lunch.ui.fragments.DetailsFragment"
+        android:label="DetailsFragment" >
+        <action
+            android:id="@+id/action_detailsFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.android.go4lunch.ui.fragments.WebViewFragment"
+        android:label="WebViewFragment" >
+    </fragment>
+</navigation>
