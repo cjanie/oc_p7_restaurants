@@ -11,7 +11,6 @@
     <string name="no_internet_connection">No internet connection</string>
 
     <string name="on_back_pressed_disabled">On back pressed disabled</string>
-    <string name="permission_rationale_text">We need permission to get your location</string>
 
     <!-- NAV DRAWER -->
     <string name="your_lunch">Your lunch</string>
@@ -47,6 +46,7 @@
 
     <!-- RESTAURANT -->
     <string name="call">Call</string>
+    <string name="no_phone_number_available">There is no phone number available</string>
     <string name="like">Like</string>
     <string name="website">Website</string>
     <string name="visitor">Visitor</string>
@@ -54,7 +54,9 @@
 
 
     <!-- PERMISSION -->
+    <string name="location_permission_rationale_text">We need permission to get your location</string>
     <string name="location_rationale">You must grant permissions for location</string>
+    <string name="call_permission_rationale_text">We need permission to make phone call</string>
 
     <!-- FACEBOOK -->
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->

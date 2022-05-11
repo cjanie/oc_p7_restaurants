@@ -78,6 +78,10 @@ public class RestaurantDetailsViewModel extends ViewModel {
         this.fetchVisitors();
     }
 
+    public Restaurant getRestaurant() {
+        return this.restaurant;
+    }
+
     private void setSession() throws NoWorkmateForSessionException {
         List<Workmate> sessionResults = new ArrayList<>();
         this.getSessionUseCase.handle().subscribe(sessionResults::add);
