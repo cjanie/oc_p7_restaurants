@@ -10,11 +10,6 @@
         android:layout_height="match_parent"
         >
 
-        <fragment
-            android:id="@+id/details_fragment"
-            android:name="com.android.go4lunch.ui.fragments.DetailsFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.ui.adapters.ListVisitorRecyclerViewAdapter;
+import com.android.go4lunch.ui.fragments.DetailsFragment;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
 import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.usecases.exceptions.NotFoundException;
@@ -31,6 +33,7 @@ import butterknife.ButterKnife;
 public class RestaurantDetailsActivity extends BaseActivity {
 
     private RestaurantDetailsViewModel restaurantDetailsViewModel;
+
 
     @BindView(R.id.button_go)
     FloatingActionButton buttonGo;
@@ -70,6 +73,7 @@ public class RestaurantDetailsActivity extends BaseActivity {
 
         setContentView(R.layout.activity_restaurant_details);
         ButterKnife.bind(this);
+
 
         // Data
         // RESTAURANT
