@@ -71,13 +71,15 @@ public class MainFragment extends Fragment {
                                 this.requestCode,
                                 this.permissions,
                                 new int[]{PackageManager.PERMISSION_GRANTED},
-                                this);
+                                this
+                        );
                     } else {
                         EasyPermissions.onRequestPermissionsResult(
                                 this.requestCode,
                                 this.permissions,
                                 new int[]{PackageManager.PERMISSION_DENIED},
-                                this);
+                                this
+                        );
                     }
                 }
         );
@@ -104,7 +106,7 @@ public class MainFragment extends Fragment {
             // Demand permission if missing, explaining that a permission is needed to get the user location
             EasyPermissions.requestPermissions(
                     this,
-                    this.getString(R.string.permission_rationale_text),
+                    this.getString(R.string.location_permission_rationale_text),
                     123,
                     this.permissions);
         }

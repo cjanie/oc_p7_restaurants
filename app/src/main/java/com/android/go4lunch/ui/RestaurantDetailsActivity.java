@@ -1,14 +1,18 @@
 package com.android.go4lunch.ui;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,7 +23,6 @@ import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 import com.android.go4lunch.models.Restaurant;
 import com.android.go4lunch.ui.adapters.ListVisitorRecyclerViewAdapter;
-import com.android.go4lunch.ui.fragments.DetailsFragment;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
 import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.usecases.exceptions.NotFoundException;
@@ -29,8 +32,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class RestaurantDetailsActivity extends BaseActivity {
+
+    private final String[] permissions = new String[] {Manifest.permission.CALL_PHONE};
+
+    public final int requestCode = 155;
 
     private RestaurantDetailsViewModel restaurantDetailsViewModel;
 
@@ -73,7 +82,7 @@ public class RestaurantDetailsActivity extends BaseActivity {
 
         setContentView(R.layout.activity_restaurant_details);
         ButterKnife.bind(this);
-
+        requestCallPermission();
 
         // Data
         // RESTAURANT
@@ -146,13 +155,13 @@ public class RestaurantDetailsActivity extends BaseActivity {
             handleGoForLunch();
         });
 
-
         this.buttonCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 call(restaurant.getPhone());
             }
         });
+
         this.buttonLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -172,8 +181,6 @@ public class RestaurantDetailsActivity extends BaseActivity {
 
             }
         });
-
-
     }
 
     private void handleGoForLunch() {
@@ -189,11 +196,49 @@ public class RestaurantDetailsActivity extends BaseActivity {
         Toast.makeText(this, e.getClass().getName() + " " + e.getMessage(), Toast.LENGTH_LONG).show();
     }
 
+    private void requestCallPermission() {
+        ActivityResultLauncher launcher = this.registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if(isGranted) {
+                        EasyPermissions.onRequestPermissionsResult(
+                                this.requestCode,
+                                this.permissions,
+                                new int[]{PackageManager.PERMISSION_GRANTED},
+                                this
+                        );
+                    } else {
+                        EasyPermissions.onRequestPermissionsResult(
+                                this.requestCode,
+                                this.permissions,
+                                new int[]{PackageManager.PERMISSION_DENIED},
+                                this
+                        );
+                    }
+                }
+        );
+        launcher.launch(this.permissions[0]);
+    }
+
+
+    @SuppressLint("MissingPermission")
     private void call(String phoneNumber) {
-        if(phoneNumber != null && !phoneNumber.isEmpty()) {
-            Intent callIntent = new Intent(Intent.ACTION_CALL);
-            callIntent.setData(Uri.parse("tel:" + phoneNumber));
-            startActivity(callIntent);
+        // Control
+        if(EasyPermissions.hasPermissions(this, this.permissions)) {
+            if(phoneNumber != null && !phoneNumber.isEmpty()) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + phoneNumber));
+                startActivity(callIntent);
+            } else {
+                Toast.makeText(this, R.string.no_phone_number_available, Toast.LENGTH_LONG).show();
+            }
+        } else {
+            // Demand permission if missing, explaining that a permission is needed in order to make phone call
+            EasyPermissions.requestPermissions(
+                    this,
+                    this.getString(R.string.call_permission_rationale_text),
+                    155,
+                    this.permissions);
         }
     }
 
