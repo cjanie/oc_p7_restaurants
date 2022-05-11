@@ -26,7 +26,8 @@
             android:name=".ui.SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".ui.SignInActivity">
+        <activity android:name=".ui.SignInActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
