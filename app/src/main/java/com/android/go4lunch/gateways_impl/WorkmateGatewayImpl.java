@@ -4,8 +4,6 @@ import android.util.Log;
 
 import com.android.go4lunch.gateways.WorkmateGateway;
 import com.android.go4lunch.models.Workmate;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -16,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.subjects.PublishSubject;
 
 class WorkmateDatabaseConfig {
@@ -43,37 +40,39 @@ public class WorkmateGatewayImpl implements WorkmateGateway {
     }
 
     @Override
-    public Observable<List<Workmate>> getWorkmates() { // Renommer prefixe subscribe ou suffixe observable
-        this.fetchWorkmates();
+    public Observable<List<Workmate>> getWorkmates() {
+        this.fetchWorkmatesToUpdateSubject();
         return this.workmatesSubject.hide();
     }
 
-    private void updateWorkmates(List<Workmate> workmates) {
-        this.workmatesSubject.onNext(workmates);
-    }
-
-    private void fetchWorkmates() {
+    private void fetchWorkmatesToUpdateSubject() {
 
         this.database.collection(WorkmateDatabaseConfig.COLLECTION_PATH).get().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
-                QuerySnapshot query = task.getResult();
-                List<DocumentSnapshot> docs = query.getDocuments();
-
-                List<Workmate> workmates = new ArrayList<>();
-                if(!docs.isEmpty()) {
-                    for(DocumentSnapshot doc: docs) {
-                        Workmate workmate = new Workmate((String) doc.getData().get(WorkmateDatabaseConfig.NAME));
-                        workmate.setId(doc.getId());
-                        workmate.setEmail((String) doc.getData().get(WorkmateDatabaseConfig.EMAIL));
-                        workmate.setPhone((String) doc.getData().get(WorkmateDatabaseConfig.PHONE));
-                        workmate.setUrlPhoto((String) doc.getData().get(WorkmateDatabaseConfig.URL_PHOTO));
-
-                        workmates.add(workmate);
-                    }
-                }
-                updateWorkmates(workmates);
+                List<Workmate> workmates = this.formatWorkmatesQuery(task.getResult());
+                this.updateWorkmatesSubject(workmates);
             }
         });
+    }
+
+    private List<Workmate> formatWorkmatesQuery(QuerySnapshot query) {
+        List<Workmate> workmates = new ArrayList<>();
+        List<DocumentSnapshot> docs = query.getDocuments();
+        if(!docs.isEmpty()) {
+            for(DocumentSnapshot doc: docs) {
+                Workmate workmate = new Workmate((String) doc.getData().get(WorkmateDatabaseConfig.NAME));
+                workmate.setId(doc.getId());
+                workmate.setEmail((String) doc.getData().get(WorkmateDatabaseConfig.EMAIL));
+                workmate.setPhone((String) doc.getData().get(WorkmateDatabaseConfig.PHONE));
+                workmate.setUrlPhoto((String) doc.getData().get(WorkmateDatabaseConfig.URL_PHOTO));
+                workmates.add(workmate);
+            }
+        }
+        return workmates;
+    }
+
+    private void updateWorkmatesSubject(List<Workmate> workmates) {
+        this.workmatesSubject.onNext(workmates);
     }
 
     @Override

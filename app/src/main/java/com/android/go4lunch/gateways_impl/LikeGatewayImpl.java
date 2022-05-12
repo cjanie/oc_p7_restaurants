@@ -9,16 +9,14 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firestore.v1.WriteResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
 
 class LikeDatabaseConfig {
     public static final String COLLECTION_PATH = "likes";
@@ -30,39 +28,47 @@ public class LikeGatewayImpl implements LikeGateway {
 
     private FirebaseFirestore database;
 
-    private Observable<List<Like>> likesObservable;
+    private BehaviorSubject<List<Like>> likesSubject;
 
     public LikeGatewayImpl(FirebaseFirestore database) {
         this.database = database;
-        this.likesObservable = Observable.just(new ArrayList<>());
+        this.likesSubject = BehaviorSubject.create();
     }
 
     @Override
     public Observable<List<Like>> getLikes() {
-        this.fetchLikes();
-        return this.likesObservable;
+        this.fetchLikesToUpdateSubject();
+        return this.likesSubject.hide();
     }
 
-    private void fetchLikes() {
-        this.database.collection(LikeDatabaseConfig.COLLECTION_PATH).get().addOnCompleteListener(task -> {
+    private void fetchLikesToUpdateSubject() {
+        this.database.collection(LikeDatabaseConfig.COLLECTION_PATH)
+                .get()
+                .addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
-                QuerySnapshot querySnapshot = task.getResult();
-                List<DocumentSnapshot> docs = querySnapshot.getDocuments();
-
-                List<Like> likes = new ArrayList<>();
-                if(!docs.isEmpty()) {
-                    for(DocumentSnapshot doc: docs) {
-                        Like like = new Like(
-                                (String) doc.getData().get(LikeDatabaseConfig.RESTAURANT_ID),
-                                (String) doc.getData().get(LikeDatabaseConfig.WORKMATE_ID)
-                        );
-                        like.setId(doc.getId());
-                        likes.add(like);
-                    }
-                }
-                this.likesObservable = Observable.just(likes);
+                List<Like> likes = this.formatLikesQuery(task.getResult());
+                this.updateLikesSubject(likes);
             }
         });
+    }
+
+    private List<Like> formatLikesQuery(QuerySnapshot query) {
+        List<Like> likes = new ArrayList<>();
+        List<DocumentSnapshot> docs = query.getDocuments();
+        if(!docs.isEmpty()) {
+            for(DocumentSnapshot doc: docs) {
+                Like like = new Like(
+                        (String) doc.getData().get(LikeDatabaseConfig.RESTAURANT_ID),
+                        (String) doc.getData().get(LikeDatabaseConfig.WORKMATE_ID)
+                );
+                like.setId(doc.getId());
+                likes.add(like);
+            }
+        }
+        return likes;
+    }
+    private void updateLikesSubject(List<Like> likes) {
+        this.likesSubject.onNext(likes);
     }
 
     @Override
@@ -70,8 +76,8 @@ public class LikeGatewayImpl implements LikeGateway {
         Map<String, Object> likeMap = new HashMap<>();
         likeMap.put(LikeDatabaseConfig.RESTAURANT_ID, like.getRestaurantId());
         likeMap.put(LikeDatabaseConfig.WORKMATE_ID, like.getWorkmateId());
-        Task<DocumentReference> task = this.database.collection(LikeDatabaseConfig.COLLECTION_PATH).add(likeMap);
-
+        Task<DocumentReference> task = this.database.collection(LikeDatabaseConfig.COLLECTION_PATH)
+                .add(likeMap);
         System.out.println(task.isSuccessful() + "%%%%%% Task is successfull");
         return task.isSuccessful();
     }

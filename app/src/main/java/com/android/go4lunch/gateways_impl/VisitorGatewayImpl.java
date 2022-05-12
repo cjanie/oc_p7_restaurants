@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
 
 class SelectionDatabaseConfig {
 
@@ -28,38 +29,48 @@ public class VisitorGatewayImpl implements VisitorGateway {
 
     private FirebaseFirestore database;
 
-    private Observable<List<Selection>> selectionsObservable;
+    private BehaviorSubject selectionsSubject;
 
     public VisitorGatewayImpl(FirebaseFirestore database) {
         this.database = database;
-        this.selectionsObservable = Observable.just(new ArrayList<>());
+        this.selectionsSubject = BehaviorSubject.create();
     }
 
     @Override
     public Observable<List<Selection>> getSelections() {
-        this.fetchSelections();
-        return this.selectionsObservable;
+        this.fetchSelectionsToUpdateSubject();
+        return this.selectionsSubject.hide();
     }
 
-    private void fetchSelections() {
+    private void fetchSelectionsToUpdateSubject() {
         this.database.collection(SelectionDatabaseConfig.COLLECTION_PATH).get().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
-                QuerySnapshot query = task.getResult();
-                List<DocumentSnapshot> docs = query.getDocuments();
+                List<Selection> selections = this.formatSelectionsQuery(task.getResult());
+                Log.d(TAG, "-- fetch selections -- size: " + selections.size());
 
-                List<Selection> selections = new ArrayList<>();
-                if(!docs.isEmpty()) {
-                    for(DocumentSnapshot doc: docs) {
-                        Selection selection = new Selection(
-                                (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_ID),
-                                (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_ID)
-                        );
-                        selections.add(selection);
-                    }
-                }
-                this.selectionsObservable = Observable.just(selections);
+                this.updateSelectionsSubject(selections);
             }
         });
+    }
+
+    private List<Selection> formatSelectionsQuery(QuerySnapshot query) {
+        List<Selection> selections = new ArrayList<>();
+        List<DocumentSnapshot> docs = query.getDocuments();
+        if(!docs.isEmpty()) {
+            for(DocumentSnapshot doc: docs) {
+                Selection selection = new Selection(
+                        (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_ID),
+                        (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_ID)
+                );
+                selection.setId(doc.getId());
+                selections.add(selection);
+            }
+        }
+        return selections;
+    }
+
+    private void updateSelectionsSubject(List<Selection> selections) {
+        this.selectionsSubject.onNext(selections);
     }
 
     @Override
@@ -104,12 +115,14 @@ public class VisitorGatewayImpl implements VisitorGateway {
                                     (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_ID),
                                     (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_ID)
                             );
+                            selection.setId(doc.getId());
                             visitors.add(selection);
                         }
                     }
                 }
             }
         });
+        System.out.println(TAG + "%%%%%%%%%%%%%%%%%%%% visitors for restaurant : " + visitors.size());
         return Observable.just(visitors);
     }
 
