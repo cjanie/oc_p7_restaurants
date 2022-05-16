@@ -19,8 +19,8 @@ public class GetRestaurantsForListUseCase {
         this.restaurantGateway = restaurantGateway;
     }
 
-    public Observable<List<Restaurant>> handle(Geolocation myPosition, int radius) {
-        return this.restaurantGateway.getRestaurantsNearbyWithDetails(myPosition, radius);
+    public Observable<List<Restaurant>> handle(Double myLatitude, Double myLongitude, int radius) {
+        return this.restaurantGateway.getRestaurantsNearby(myLatitude, myLongitude, radius);
     }
 
 

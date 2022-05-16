@@ -21,8 +21,12 @@ public class Restaurant {
 
     private String webSite;
 
-    public Restaurant(String name, String address) {
+    public Restaurant(String name) {
         this.name = name;
+    }
+
+    public Restaurant(String name, String address) {
+        this(name);
         this.address = address;
     }
 

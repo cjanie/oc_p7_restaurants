@@ -1,5 +1,7 @@
 package com.android.go4lunch.usecases;
 
+import android.util.Log;
+
 import com.android.go4lunch.gateways.VisitorGateway;
 import com.android.go4lunch.models.Selection;
 
@@ -9,6 +11,8 @@ import java.util.List;
 import io.reactivex.Observable;
 
 public class GetRestaurantVisitorsUseCase {
+
+    private final String TAG = "GET VISITORS USE CASE";
 
     private VisitorGateway visitorGateway;
 
@@ -22,15 +26,18 @@ public class GetRestaurantVisitorsUseCase {
 
     private Observable<List<String>> getVisitorsId(String restaurantId) {
         return this.visitorGateway.getSelections().map(selections -> {
-            List<String> visitorsId = new ArrayList<>();
+            Log.d(TAG, "-- getVisitorsId per restaurant -- selections size: " + selections.size());
+
+            List<String> visitorsIds = new ArrayList<>();
             if(!selections.isEmpty()) {
                 for(Selection selection: selections) {
                     if(selection.getRestaurantId().equals(restaurantId)) {
-                        visitorsId.add(selection.getWorkmateId());
+                        visitorsIds.add(selection.getWorkmateId());
                     }
                 }
             }
-            return visitorsId;
+            Log.d(TAG, "-- getVisitorsId per restaurant -- visitorsIds size: " + visitorsIds.size());
+            return visitorsIds;
         });
     }
 }

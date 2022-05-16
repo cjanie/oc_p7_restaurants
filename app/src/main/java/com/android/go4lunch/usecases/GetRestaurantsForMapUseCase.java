@@ -20,8 +20,8 @@ public class GetRestaurantsForMapUseCase {
         this.restaurantGateway = restaurantGateway;
     }
 
-    public Observable<List<MarkerOptions>> getRestaurantsMarkers(Geolocation myPosition, int radius) {
-        return this.restaurantGateway.getRestaurantsNearbyWithDetails(myPosition, radius).map(restaurants -> {
+    public Observable<List<MarkerOptions>> getRestaurantsMarkers(Double myLatitude, Double myLongitude, int radius) {
+        return this.restaurantGateway.getRestaurantsNearby(myLatitude, myLongitude, radius).map(restaurants -> {
             List<MarkerOptions> markersOptions = new ArrayList<>();
             if(!restaurants.isEmpty()) {
                 for(Restaurant restaurant: restaurants) {

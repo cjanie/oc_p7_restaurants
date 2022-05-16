@@ -8,6 +8,8 @@ public class Selection {
 
     private String workmateId;
 
+    private String restaurantName;
+
     public Selection(String restaurantId, String workmateId) {
         this.id = workmateId;
         this.restaurantId = restaurantId;
@@ -38,4 +40,11 @@ public class Selection {
         this.workmateId = workmateId;
     }
 
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
+    }
 }

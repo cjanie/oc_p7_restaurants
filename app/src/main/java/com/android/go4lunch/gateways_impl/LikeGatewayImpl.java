@@ -1,5 +1,7 @@
 package com.android.go4lunch.gateways_impl;
 
+import android.util.Log;
+
 import com.android.go4lunch.gateways.LikeGateway;
 import com.android.go4lunch.models.Like;
 
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
@@ -25,6 +28,8 @@ class LikeDatabaseConfig {
 }
 
 public class LikeGatewayImpl implements LikeGateway {
+
+    private final String TAG = "LIKE GATEWAY IMPL";
 
     private FirebaseFirestore database;
 
@@ -38,7 +43,11 @@ public class LikeGatewayImpl implements LikeGateway {
     @Override
     public Observable<List<Like>> getLikes() {
         this.fetchLikesToUpdateSubject();
-        return this.likesSubject.hide();
+        List<Like> likesResult = new ArrayList<>();
+        return this.likesSubject.map(likes -> {
+            Log.d(TAG, "-- getLikes mapping likesSubject -- size: " + likes.size());
+            return likes;
+        });
     }
 
     private void fetchLikesToUpdateSubject() {
@@ -47,6 +56,7 @@ public class LikeGatewayImpl implements LikeGateway {
                 .addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 List<Like> likes = this.formatLikesQuery(task.getResult());
+                Log.d(TAG, " -- fetch likes -- size: " + likes.size());
                 this.updateLikesSubject(likes);
             }
         });

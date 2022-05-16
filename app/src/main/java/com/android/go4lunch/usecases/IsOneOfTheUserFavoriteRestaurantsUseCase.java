@@ -1,5 +1,7 @@
 package com.android.go4lunch.usecases;
 
+import android.util.Log;
+
 import com.android.go4lunch.gateways.LikeGateway;
 import com.android.go4lunch.gateways.SessionGateway;
 import com.android.go4lunch.models.Like;
@@ -13,6 +15,8 @@ import io.reactivex.Observable;
 
 public class IsOneOfTheUserFavoriteRestaurantsUseCase {
 
+    private final String TAG = "IS FAVORITE USE CASE";
+
     private LikeGateway likeGateway;
     private SessionGateway sessionGateway;
 
@@ -23,18 +27,19 @@ public class IsOneOfTheUserFavoriteRestaurantsUseCase {
 
     public Observable<Boolean> handle(String restaurantId) throws NoWorkmateForSessionException {
         String workmateOfSessionId = this.getUserId();
-        boolean isAFavoriteRestaurant = false;
-        List<Like> likesResults = new ArrayList<>();
-        this.likeGateway.getLikes().subscribe(likesResults::addAll);
-        if(!likesResults.isEmpty()) {
-            for(Like like: likesResults) {
-                if(like.getRestaurantId().equals(restaurantId) && like.getWorkmateId().equals(workmateOfSessionId)) {
-                    isAFavoriteRestaurant = true;
-                    break;
+        return this.likeGateway.getLikes().map(likes -> {
+            Log.d(TAG, "-- handle -- likes size: " + likes.size());
+            boolean isAFavoriteRestaurant = false;
+            if(!likes.isEmpty()) {
+                for(Like like: likes) {
+                    if(like.getRestaurantId().equals(restaurantId) && like.getWorkmateId().equals(workmateOfSessionId)) {
+                        isAFavoriteRestaurant = true;
+                        break;
+                    }
                 }
             }
-        }
-        return Observable.just(isAFavoriteRestaurant);
+            return isAFavoriteRestaurant;
+        });
     }
 
     private String getUserId() throws NoWorkmateForSessionException {

@@ -14,33 +14,23 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
 
     private RestaurantRepository restaurantRepository;
 
+    private Observable<List<Restaurant>> restaurantsObservable;
+
     public RestaurantGatewayImpl(RestaurantRepository restaurantRepository) {
         this.restaurantRepository = restaurantRepository;
     }
 
     @Override
-    public Observable<List<Restaurant>> getRestaurantsNearby(Geolocation myPosition, int radius) {
-        return Observable.just(new Mock().restaurants());
+    public Observable<List<Restaurant>> getRestaurantsNearby(Double myLatitude, Double myLongitude, int radius) {
+        if(this.restaurantsObservable == null) {
+            this.restaurantsObservable = Observable.just(new Mock().restaurants());
 /*
-        return this.restaurantRepository.getRestaurantsNearby(myPosition.getLatitude(), myPosition.getLongitude(), radius)
-                .flatMap(restaurants -> this.formatRestaurants(restaurants));
-
+            this.restaurantsObservable = this.restaurantRepository.getRestaurantsNearbyWithDetails(myLatitude, myLongitude, radius)
+                    .flatMap(restaurants -> this.formatRestaurants(restaurants));
 */
-    }
+        }
 
-    @Override
-    public Observable<List<Restaurant>> getRestaurantsNearbyWithDetails(Geolocation myPosition, int radius) {
-        return Observable.just(new Mock().restaurants());
-/*
-        return this.restaurantRepository.getRestaurantsNearbyWithDetails(myPosition.getLatitude(), myPosition.getLongitude(), radius)
-                .flatMap(restaurants -> this.formatRestaurants(restaurants));
-
-*/
-    }
-
-    @Override
-    public Observable<List<Restaurant>> getRestaurantsNearby() {
-        return Observable.just(new Mock().restaurants());
+        return this.restaurantsObservable;
     }
 
     private Observable<List<Restaurant>> formatRestaurants(List<com.android.go4lunch.apis.apiGoogleMaps.entities.Restaurant> listToFormat) {

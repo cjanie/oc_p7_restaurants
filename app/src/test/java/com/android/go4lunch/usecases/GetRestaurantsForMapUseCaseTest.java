@@ -74,7 +74,7 @@ public class GetRestaurantsForMapUseCaseTest {
 
     private List<MarkerOptions> getObservedResults(GetRestaurantsForMapUseCase getRestaurantsForMapUseCase) {
         Observable<List<MarkerOptions>> observableMarkersOptions = getRestaurantsForMapUseCase
-                .getRestaurantsMarkers(new Geolocation(222.2, 22.22), 1000);
+                .getRestaurantsMarkers(222.2, 22.22, 1000);
         List<MarkerOptions> results = new ArrayList<>();
         observableMarkersOptions.subscribe(results::addAll);
         return results;

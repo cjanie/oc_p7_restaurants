@@ -10,15 +10,9 @@ import io.reactivex.Observable;
 public interface RestaurantGateway {
 
     Observable<List<Restaurant>> getRestaurantsNearby(
-            Geolocation myPosition,
+            Double myLatitude,
+            Double myLongitude,
             int radius
     );
-
-    Observable<List<Restaurant>> getRestaurantsNearbyWithDetails(
-            Geolocation myPosition,
-            int radius
-    );
-
-    Observable<List<Restaurant>> getRestaurantsNearby();
 
 }

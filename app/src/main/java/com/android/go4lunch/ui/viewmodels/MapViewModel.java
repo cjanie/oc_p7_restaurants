@@ -39,7 +39,7 @@ public class MapViewModel extends ViewModel {
 
     public LiveData<List<MarkerOptions>> getMarkers(Double myLatitude, Double myLongitude, int radius) {
         this.setMarkers(
-                this.getRestaurantsForMapUseCase.getRestaurantsMarkers(new Geolocation(myLatitude, myLongitude), radius)
+                this.getRestaurantsForMapUseCase.getRestaurantsMarkers(myLatitude, myLongitude, radius)
         );
         return this.markers;
     }

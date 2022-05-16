@@ -1,5 +1,7 @@
 package com.android.go4lunch.usecases;
 
+import android.util.Log;
+
 import com.android.go4lunch.gateways.LikeGateway;
 import com.android.go4lunch.models.Like;
 
@@ -10,6 +12,8 @@ import io.reactivex.Observable;
 
 public class GetNumberOfLikesPerRestaurantUseCase {
 
+    private final String TAG = "NUMBER LIKES USE CASE";
+
     private LikeGateway likeGateway;
 
     public GetNumberOfLikesPerRestaurantUseCase(LikeGateway likeGateway) {
@@ -17,16 +21,18 @@ public class GetNumberOfLikesPerRestaurantUseCase {
     }
 
     public Observable<Integer> handle(String restaurantId) {
-        int numberOfLikesPerRestaurant = 0;
-        List<Like> likesResults = new ArrayList<>();
-        this.likeGateway.getLikes().subscribe(likesResults::addAll);
-        if(!likesResults.isEmpty()) {
-            for(Like like : likesResults) {
-                if(like.getRestaurantId().equals(restaurantId)) {
-                    numberOfLikesPerRestaurant += 1;
+        return this.likeGateway.getLikes().map(likes -> {
+            Log.d(TAG, "-- handle -- likes size: " + likes.size());
+
+            int numberOfLikesPerRestaurant = 0;
+            if(!likes.isEmpty()) {
+                for(Like like : likes) {
+                    if(like.getRestaurantId().equals(restaurantId)) {
+                        numberOfLikesPerRestaurant += 1;
+                    }
                 }
             }
-        }
-        return Observable.just(numberOfLikesPerRestaurant);
+            return numberOfLikesPerRestaurant;
+        });
     }
 }

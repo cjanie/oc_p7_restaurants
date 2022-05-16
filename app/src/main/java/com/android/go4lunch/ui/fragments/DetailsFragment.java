@@ -34,11 +34,17 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.Arrays;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class DetailsFragment extends Fragment {
+
+    private ActivityResultLauncher launcher;
 
     private final String[] permissions = new String[] {Manifest.permission.CALL_PHONE};
 
@@ -78,7 +84,7 @@ public class DetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_details, container, false);
         ButterKnife.bind(this, root);
-        this.requestCallPermission();
+        this.launcher = this.createActivityResultLauncher();
         this.restaurantDetailsViewModel = new ViewModelProvider(this.getActivity()).get(RestaurantDetailsViewModel.class);
 
         Restaurant restaurant = this.restaurantDetailsViewModel.getRestaurant();
@@ -130,7 +136,11 @@ public class DetailsFragment extends Fragment {
         );
 
         this.buttonCall.setOnClickListener(view ->
-                handleCall(restaurant.getPhone())
+                {
+                    requestCallPermission();
+                    handleCall();
+                }
+
         );
 
         this.buttonLike.setOnClickListener(view ->
@@ -144,7 +154,7 @@ public class DetailsFragment extends Fragment {
         return root;
     }
 
-    private void requestCallPermission() {
+    private ActivityResultLauncher createActivityResultLauncher() {
         ActivityResultLauncher launcher = this.registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
@@ -165,13 +175,19 @@ public class DetailsFragment extends Fragment {
                     }
                 }
         );
-        launcher.launch(this.permissions[0]);
+        return launcher;
+    }
+
+    private void requestCallPermission() {
+        this.launcher.launch(this.permissions[0]);
     }
 
     @SuppressLint("MissingPermission")
-    private void handleCall(String phoneNumber) {
+    @AfterPermissionGranted(155)
+    private void handleCall() {
         // Control
         if(EasyPermissions.hasPermissions(this.getActivity(), this.permissions)) {
+            String phoneNumber = this.restaurantDetailsViewModel.getRestaurant().getPhone();
             if(phoneNumber != null && !phoneNumber.isEmpty()) {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:" + phoneNumber));
@@ -179,15 +195,12 @@ public class DetailsFragment extends Fragment {
             } else {
                 Toast.makeText(this.getActivity(), R.string.no_phone_number_available, Toast.LENGTH_LONG).show();
             }
-        } else {
-            // Demand permission if missing, explaining that a permission is needed in order to make phone call
-            EasyPermissions.requestPermissions(
-                    this,
-                    this.getString(R.string.call_permission_rationale_text),
-                    155,
-                    this.permissions);
+        } else if(EasyPermissions.permissionPermanentlyDenied(this, this.permissions[0])){
+            new AppSettingsDialog.Builder(this).build().show();
         }
     }
+
+
 
     private void handleGoForLunch() {
         try {

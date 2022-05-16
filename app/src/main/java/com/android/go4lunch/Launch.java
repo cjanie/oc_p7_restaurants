@@ -28,7 +28,6 @@ import com.android.go4lunch.ui.viewmodels.factories.RestaurantsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.SignInViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.WorkmatesViewModelFactory;
 import com.android.go4lunch.usecases.GetNumberOfLikesPerRestaurantUseCase;
-import com.android.go4lunch.usecases.GetRestaurantByIdUseCase;
 import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
@@ -71,7 +70,6 @@ public class Launch extends Application {
     private GetWorkmatesUseCase getWorkmatesUseCase;
     private GetWorkmateSelectionUseCase getWorkmateSelectionUseCase;
     private GetWorkmateByIdUseCase getWorkmateByIdUseCase;
-    private GetRestaurantByIdUseCase getRestaurantByIdUseCase;
     private GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
     private GetSessionUseCase getSessionUseCase;
     private GoForLunchUseCase goForLunchUseCase;
@@ -217,13 +215,6 @@ public class Launch extends Application {
         return this.getWorkmateByIdUseCase;
     }
 
-    private synchronized GetRestaurantByIdUseCase getRestaurantByIdUseCase() {
-        if(this.getRestaurantByIdUseCase == null) {
-            this.getRestaurantByIdUseCase = new GetRestaurantByIdUseCase(restaurantGateway());
-        }
-        return this.getRestaurantByIdUseCase;
-    }
-
     private synchronized GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase() {
         if(this.getRestaurantVisitorsUseCase == null) {
             this.getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(visitorGateway());
@@ -337,8 +328,7 @@ public class Launch extends Application {
         if(this.workmatesViewModelFactory == null) {
             this.workmatesViewModelFactory = new WorkmatesViewModelFactory(
                     getWorkmatesUseCase(),
-                    getWorkmateSelectionUseCase(),
-                    getRestaurantByIdUseCase()
+                    getWorkmateSelectionUseCase()
             );
         }
         return this.workmatesViewModelFactory;

@@ -26,7 +26,7 @@ public class GoForLunchUseCaseTest {
         GoForLunchUseCase goForLunchUseCase = new GoForLunchUseCase(inMemoryVisitorsGateway);
 
         // LAUNCH LIKE
-        goForLunchUseCase.handle("1", "1");
+        goForLunchUseCase.handle("1", "1", "resto1");
 
         List<Selection> savedSelections = new ArrayList<>();
         inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);
@@ -39,9 +39,9 @@ public class GoForLunchUseCaseTest {
         InMemoryVisitorGateway inMemoryVisitorsGateway = new InMemoryVisitorGateway();
         GoForLunchUseCase goForLunchUseCase = new GoForLunchUseCase(inMemoryVisitorsGateway);
         // Increments
-        goForLunchUseCase.handle("1",  "1");
+        goForLunchUseCase.handle("1",  "1", "resto1");
         // Decrements
-        goForLunchUseCase.handle("1", "1");
+        goForLunchUseCase.handle("1", "1", "resto1");
 
         List<Selection> savedSelections = new ArrayList<>();
         inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);
@@ -61,8 +61,8 @@ public class GoForLunchUseCaseTest {
         GoForLunchUseCase goForLunchUseCase = new GoForLunchUseCase(
                 inMemoryVisitorsGateway
         );
-        goForLunchUseCase.handle("2", "2");
-        goForLunchUseCase.handle("2", "2");
+        goForLunchUseCase.handle("2", "2","resto2");
+        goForLunchUseCase.handle("2", "2", "resto2");
         List<Selection> savedSelections = new ArrayList<>();
         inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);
         assert(savedSelections.size() == 1);
@@ -80,7 +80,7 @@ public class GoForLunchUseCaseTest {
         GoForLunchUseCase goForLunchUseCase = new GoForLunchUseCase(inMemoryVisitorsGateway);
 
         // LAUNCH LIKE
-        goForLunchUseCase.handle("1", "2");
+        goForLunchUseCase.handle("1", "2", "resto2");
 
         List<Selection> savedSelections = new ArrayList<>();
         inMemoryVisitorsGateway.getSelections().subscribe(savedSelections::addAll);

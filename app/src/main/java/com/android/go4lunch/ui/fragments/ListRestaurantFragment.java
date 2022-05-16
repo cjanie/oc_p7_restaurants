@@ -62,8 +62,10 @@ public class ListRestaurantFragment extends Fragment {
                     ListRestaurantRecyclerViewAdapter adapter = new ListRestaurantRecyclerViewAdapter(restaurants);
                     this.recyclerView.setAdapter(adapter);
                 });
+
             }
         });
+
 
         return root;
     }

@@ -21,6 +21,7 @@ class SelectionDatabaseConfig {
     public static final String COLLECTION_PATH = "selections";
     public static final String RESTAURANT_ID = "restaurantId";
     public static final String WORKMATE_ID = "workmateId";
+    public static final String RESTAURANT_NAME = "restaurantName";
 }
 
 public class VisitorGatewayImpl implements VisitorGateway {
@@ -63,6 +64,7 @@ public class VisitorGatewayImpl implements VisitorGateway {
                         (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_ID)
                 );
                 selection.setId(doc.getId());
+                selection.setRestaurantName((String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_NAME));
                 selections.add(selection);
             }
         }
@@ -78,6 +80,7 @@ public class VisitorGatewayImpl implements VisitorGateway {
         Map<String, Object> selectionMap = new HashMap<>();
         selectionMap.put(SelectionDatabaseConfig.RESTAURANT_ID, selection.getRestaurantId());
         selectionMap.put(SelectionDatabaseConfig.WORKMATE_ID, selection.getWorkmateId());
+        selectionMap.put(SelectionDatabaseConfig.RESTAURANT_NAME, selection.getRestaurantName());
         this.database.collection(SelectionDatabaseConfig.COLLECTION_PATH).document(selection.getId())
                 .set(selectionMap)
                 .addOnSuccessListener(aVoid -> {

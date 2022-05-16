@@ -29,15 +29,17 @@ public class GetWorkmateSelectionUseCaseTest {
         visitorsGateway.setSelections(Arrays.asList(selection1, selection2));
 
         GetWorkmateSelectionUseCase getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorsGateway);
-        List<String> selectionResults = new ArrayList<>();
+        List<Selection> selectionResults = new ArrayList<>();
         getWorkmateSelectionUseCase.handle("2").subscribe(selectionResults::add);
-        assert(selectionResults.get(0).equals("2"));
+        assert(selectionResults.get(0).getRestaurantId().equals("2"));
     }
 
     @Test
     public void nothingWhenWormateHasNoSelection() {
         InMemoryVisitorGateway visitorsGateway = new InMemoryVisitorGateway();
         GetWorkmateSelectionUseCase getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorsGateway);
-        assertThrows(NotFoundException.class, () -> getWorkmateSelectionUseCase.handle("1"));
+        List<Selection> selectionResults = new ArrayList<>();
+        getWorkmateSelectionUseCase.handle("1").subscribe(selectionResults::add);
+        assert(selectionResults.isEmpty());
     }
 }

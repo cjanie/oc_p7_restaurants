@@ -1,5 +1,7 @@
 package com.android.go4lunch.ui.viewmodels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -19,12 +21,16 @@ import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.subjects.BehaviorSubject;
 
 public class RestaurantsViewModel extends ViewModel {
+
+    private final String TAG = "RESTAURANTS VIEW MODEL";
 
     // Use Cases
     private final GetRestaurantsForListUseCase getRestaurantsForListUseCase;
@@ -35,6 +41,8 @@ public class RestaurantsViewModel extends ViewModel {
     private final TimeProvider timeProvider;
 
     private final DateProvider dateProvider;
+
+    private Observable<List<RestaurantModel>> restaurantModelsObservable;
 
     // Restaurant List LiveData
     private final MutableLiveData<List<RestaurantModel>> restaurants;
@@ -60,14 +68,17 @@ public class RestaurantsViewModel extends ViewModel {
     // GET methods
 
     public LiveData<List<RestaurantModel>> getRestaurants(Double myLatitude, Double myLongitude, int radius) {
+
         List<Restaurant> restaurantsResults = new ArrayList<>();
-        this.getRestaurantsForListUseCase.handle(new Geolocation(myLatitude, myLongitude), radius)
+        this.getRestaurantsForListUseCase.handle(myLatitude, myLongitude, radius)
                 .subscribe(restaurantsResults::addAll);
+        Log.d(TAG, "-- getRestaurants -- restaurants size: " + restaurantsResults.size());
         List<RestaurantModel> restaurantModels = new ArrayList<>();
         if(!restaurantsResults.isEmpty()) {
             for(Restaurant r: restaurantsResults) {
                 List<String> visitorsResults = new ArrayList<>();
                 this.getRestaurantVisitorsUseCase.handle(r.getId()).subscribe(visitorsResults::addAll);
+                Log.d(TAG, "-- getRestaurants -- visitors size: " + visitorsResults.size());
                 RestaurantModel restaurantModel = new RestaurantModel(
                         r,
                         this.timeProvider,
@@ -77,13 +88,68 @@ public class RestaurantsViewModel extends ViewModel {
                 restaurantModels.add(restaurantModel);
             }
         }
+
         this.setRestaurants(
                 Observable.just(restaurantModels)
+
+
         );
+        ////////
+        this.updateRestaurantModelsObservable(myLatitude, myLongitude, radius);
+        this.updateRestaurants();
+        ////////
         return this.restaurants;
     }
 
+    public void updateRestaurants() {
+
+        this.restaurantModelsObservable.subscribe(restaurantModels -> {
+            Log.d(TAG, "-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% update Restaurants -- restaurantsModels size: " + restaurantModels.size());
+            restaurants.postValue(restaurantModels);
+
+        });
+
+    }
+
+    private Observable<List<RestaurantModel>> getRestaurantsAsModelsObservable(Double myLatitude, Double myLongitude, int radius) {
+        return this.getRestaurantsForListUseCase.handle(myLatitude, myLongitude, radius).flatMap(
+                restaurants -> {
+                    Log.d(TAG, "-- getRestaurantsAsModelsObservable -- restaurants size: " + restaurants.size());
+
+                    return Observable.fromIterable(restaurants)
+                            .flatMap(
+                                    restaurant ->
+                                            formatRestaurantToModelObservable(restaurant)
+                            ).toList().toObservable();
+                }
+        );
+    }
+
+    public Observable<RestaurantModel> formatRestaurantToModelObservable(Restaurant restaurant) {
+        return this.getRestaurantVisitorsUseCase.handle(restaurant.getId()).map(visitors -> {
+            Log.d(TAG, "-- getRestaurants -- visitors size: " + visitors.size());
+
+            RestaurantModel restaurantModel = new RestaurantModel(
+                    restaurant,
+                    this.timeProvider,
+                    this.dateProvider,
+                    100L,
+                    visitors
+            );
+            return restaurantModel;
+        });
+    }
+
+    private void updateRestaurantModelsObservable(Double myLatitude, Double myLongitude, int radius) {
+        this.restaurantModelsObservable = this.getRestaurantsAsModelsObservable(myLatitude, myLongitude, radius);
+    }
+
     private void setRestaurants(Observable<List<RestaurantModel>> observableWithRestaurants) {
+        observableWithRestaurants.subscribe(restaurantModels -> {
+            Log.d(TAG, "-- setRestaurants --: restaurantsmodels size: " + restaurantModels.size());
+           this.restaurants.postValue(restaurantModels);
+        });
+        /*
         this.disposable = observableWithRestaurants
                 .subscribeWith(new DisposableObserver<List<RestaurantModel>>() {
 
@@ -103,6 +169,8 @@ public class RestaurantsViewModel extends ViewModel {
 
                     }
                 });
+
+         */
     }
 
     @Override

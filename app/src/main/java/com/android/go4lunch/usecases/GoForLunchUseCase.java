@@ -14,9 +14,10 @@ public class GoForLunchUseCase {
         this.visitorGateway = visitorGateway;
     }
 
-    public void handle(String restaurantId, String workmateId) {
+    public void handle(String restaurantId, String workmateId, String restaurantName) {
 
         Selection newSelection = new Selection(restaurantId, workmateId);
+        newSelection.setRestaurantName(restaurantName);
 
         Selection workmateSelection = this.getWorkmateSelection(workmateId);
 

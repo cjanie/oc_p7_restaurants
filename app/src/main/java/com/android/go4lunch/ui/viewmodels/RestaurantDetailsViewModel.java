@@ -130,7 +130,8 @@ public class RestaurantDetailsViewModel extends ViewModel {
         if(this.session != null) {
             this.goForLunchUseCase.handle(
                     this.restaurant.getId(),
-                    this.session.getId()
+                    this.session.getId(),
+                    this.restaurant.getName()
                     );
             // TODO
             Observable.just(true).delay(2, TimeUnit.SECONDS).subscribe(bool -> {

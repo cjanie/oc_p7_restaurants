@@ -30,7 +30,7 @@ public class GetRestaurantsForListUseCaseTest {
 
     private List<Restaurant> getObservedResult(GetRestaurantsForListUseCase getRestaurantsForListUseCase) {
         Observable<List<Restaurant>> observableRestaurants = getRestaurantsForListUseCase
-                .handle(new Geolocation(1111.1, 1111.2), 1000);
+                .handle(1111.1, 1111.2, 1000);
         List<Restaurant> results = new ArrayList<>();
         observableRestaurants.subscribe(results::addAll);
         return results;
