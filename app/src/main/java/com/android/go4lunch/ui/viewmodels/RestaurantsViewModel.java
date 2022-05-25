@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModel;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.TimeProvider;
-import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.businesslogic.models.RestaurantModel;
-import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForListUseCase;
 
 import java.util.ArrayList;
 import java.util.List;

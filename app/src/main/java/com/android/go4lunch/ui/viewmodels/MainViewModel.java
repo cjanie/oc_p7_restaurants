@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.android.go4lunch.businesslogic.entities.Workmate;
-import com.android.go4lunch.usecases.GetSessionUseCase;
-import com.android.go4lunch.usecases.SignOutUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
+import com.android.go4lunch.businesslogic.usecases.SignOutUseCase;
 import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
 
 import io.reactivex.disposables.Disposable;

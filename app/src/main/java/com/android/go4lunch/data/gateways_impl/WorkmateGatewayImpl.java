@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.android.go4lunch.businesslogic.gateways.WorkmateGateway;
 import com.android.go4lunch.businesslogic.entities.Workmate;
+import com.android.go4lunch.businesslogic.models.WorkmateEntityModel;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -18,17 +19,17 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
-class WorkmateDatabaseConfig {
-
-    public static final String COLLECTION_PATH = "workmates";
-    public static final String NAME = "name";
-    public static final String EMAIL = "email";
-    public static final String PHONE = "phone";
-    public static final String URL_PHOTO = "urlPhoto";
-
-}
-
 public class WorkmateGatewayImpl implements WorkmateGateway {
+
+    private class WorkmateDatabaseConfig {
+
+        public static final String COLLECTION_PATH = "workmates";
+        public static final String NAME = "name";
+        public static final String EMAIL = "email";
+        public static final String PHONE = "phone";
+        public static final String URL_PHOTO = "urlPhoto";
+
+    }
 
     private String TAG = "WORKMATE GATEWAY IMPL";
 
@@ -44,7 +45,8 @@ public class WorkmateGatewayImpl implements WorkmateGateway {
     @Override
     public Observable<List<Workmate>> getWorkmates() {
         this.fetchWorkmatesToUpdateSubject();
-        return this.workmatesSubject.hide()
+        return this.workmatesSubject
+                .hide()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -64,11 +66,13 @@ public class WorkmateGatewayImpl implements WorkmateGateway {
         List<DocumentSnapshot> docs = query.getDocuments();
         if(!docs.isEmpty()) {
             for(DocumentSnapshot doc: docs) {
-                Workmate workmate = new Workmate((String) doc.getData().get(WorkmateDatabaseConfig.NAME));
-                workmate.setId(doc.getId());
-                workmate.setEmail((String) doc.getData().get(WorkmateDatabaseConfig.EMAIL));
-                workmate.setPhone((String) doc.getData().get(WorkmateDatabaseConfig.PHONE));
-                workmate.setUrlPhoto((String) doc.getData().get(WorkmateDatabaseConfig.URL_PHOTO));
+                Workmate workmate = new WorkmateEntityModel().createWorkmate(
+                        doc.getId(),
+                        (String) doc.getData().get(WorkmateDatabaseConfig.NAME),
+                        (String) doc.getData().get(WorkmateDatabaseConfig.EMAIL),
+                        (String) doc.getData().get(WorkmateDatabaseConfig.URL_PHOTO),
+                        (String) doc.getData().get(WorkmateDatabaseConfig.PHONE)
+                );
                 workmates.add(workmate);
             }
         }

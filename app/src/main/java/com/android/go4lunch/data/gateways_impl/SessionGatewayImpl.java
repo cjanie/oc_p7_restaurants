@@ -2,6 +2,7 @@ package com.android.go4lunch.data.gateways_impl;
 
 import com.android.go4lunch.businesslogic.gateways.SessionGateway;
 import com.android.go4lunch.businesslogic.entities.Workmate;
+import com.android.go4lunch.businesslogic.models.WorkmateEntityModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -40,7 +41,7 @@ public class SessionGatewayImpl implements SessionGateway {
     private void fetchSessionToUpdateSubject() {
         FirebaseUser authUser = this.auth.getCurrentUser();
         if(authUser != null) {
-            Workmate session = this.createWorkmate(
+            Workmate session = new WorkmateEntityModel().createWorkmate(
                     authUser.getUid(),
                     authUser.getDisplayName(),
                     authUser.getEmail(),
@@ -49,14 +50,6 @@ public class SessionGatewayImpl implements SessionGateway {
 
             this.updateSessionSubject(session);
         }
-    }
-
-    private Workmate createWorkmate(String id, String name, String email, String urlPhoto) {
-        Workmate workmate = new Workmate(name);
-        workmate.setId(id);
-        workmate.setEmail(email);
-        workmate.setUrlPhoto(urlPhoto);
-        return workmate;
     }
 
     private void updateSessionSubject(Workmate session) {

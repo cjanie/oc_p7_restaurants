@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.TimeProvider;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModel;
-import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
-import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetRestaurantVisitorsUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForListUseCase;
 
 public class RestaurantsViewModelFactory implements ViewModelProvider.Factory {
 

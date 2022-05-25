@@ -4,16 +4,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.usecases.GetSessionUseCase;
-import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
-import com.android.go4lunch.usecases.IsOneOfTheUserFavoriteRestaurantsUseCase;
-import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
-import com.android.go4lunch.usecases.LikeUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetWorkmateByIdUseCase;
+import com.android.go4lunch.businesslogic.usecases.IsOneOfTheUserFavoriteRestaurantsUseCase;
+import com.android.go4lunch.businesslogic.usecases.IsTheCurrentSelectionUseCase;
+import com.android.go4lunch.businesslogic.usecases.LikeUseCase;
 import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.businesslogic.entities.Workmate;
-import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
-import com.android.go4lunch.usecases.GoForLunchUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetRestaurantVisitorsUseCase;
+import com.android.go4lunch.businesslogic.usecases.GoForLunchUseCase;
 import com.android.go4lunch.businesslogic.exceptions.NotFoundException;
 
 import java.util.ArrayList;

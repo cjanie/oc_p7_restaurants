@@ -5,13 +5,13 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
-import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
-import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
-import com.android.go4lunch.usecases.GoForLunchUseCase;
-import com.android.go4lunch.usecases.GetSessionUseCase;
-import com.android.go4lunch.usecases.IsOneOfTheUserFavoriteRestaurantsUseCase;
-import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
-import com.android.go4lunch.usecases.LikeUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetRestaurantVisitorsUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetWorkmateByIdUseCase;
+import com.android.go4lunch.businesslogic.usecases.GoForLunchUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
+import com.android.go4lunch.businesslogic.usecases.IsOneOfTheUserFavoriteRestaurantsUseCase;
+import com.android.go4lunch.businesslogic.usecases.IsTheCurrentSelectionUseCase;
+import com.android.go4lunch.businesslogic.usecases.LikeUseCase;
 
 public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Factory {
 

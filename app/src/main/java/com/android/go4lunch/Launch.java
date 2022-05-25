@@ -27,20 +27,19 @@ import com.android.go4lunch.ui.viewmodels.factories.RestaurantDetailsViewModelFa
 import com.android.go4lunch.ui.viewmodels.factories.RestaurantsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.SignInViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.WorkmatesViewModelFactory;
-import com.android.go4lunch.usecases.GetNumberOfLikesPerRestaurantUseCase;
-import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
-import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
-import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
-import com.android.go4lunch.usecases.GetWorkmatesUseCase;
-import com.android.go4lunch.usecases.GoForLunchUseCase;
-import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
-import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
-import com.android.go4lunch.usecases.GetSessionUseCase;
-import com.android.go4lunch.usecases.IsOneOfTheUserFavoriteRestaurantsUseCase;
-import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
-import com.android.go4lunch.usecases.LikeUseCase;
-import com.android.go4lunch.usecases.SaveWorkmateUseCase;
-import com.android.go4lunch.usecases.SignOutUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetNumberOfLikesPerRestaurantUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetRestaurantVisitorsUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetWorkmateByIdUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetWorkmatesUseCase;
+import com.android.go4lunch.businesslogic.usecases.GoForLunchUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForListUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForMapUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
+import com.android.go4lunch.businesslogic.usecases.IsOneOfTheUserFavoriteRestaurantsUseCase;
+import com.android.go4lunch.businesslogic.usecases.IsTheCurrentSelectionUseCase;
+import com.android.go4lunch.businesslogic.usecases.LikeUseCase;
+import com.android.go4lunch.businesslogic.usecases.SaveWorkmateUseCase;
+import com.android.go4lunch.businesslogic.usecases.SignOutUseCase;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -68,7 +67,6 @@ public class Launch extends Application {
     private GetRestaurantsForMapUseCase getRestaurantsForMapUseCase;
     private GetRestaurantsForListUseCase getRestaurantsForListUseCase;
     private GetWorkmatesUseCase getWorkmatesUseCase;
-    private GetWorkmateSelectionUseCase getWorkmateSelectionUseCase;
     private GetWorkmateByIdUseCase getWorkmateByIdUseCase;
     private GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
     private GetSessionUseCase getSessionUseCase;
@@ -195,17 +193,11 @@ public class Launch extends Application {
         if(this.getWorkmatesUseCase == null) {
             this.getWorkmatesUseCase = new GetWorkmatesUseCase(
                     this.workmateGateway(),
-                    this.sessionGateway()
+                    this.sessionGateway(),
+                    this.visitorGateway()
             );
         }
         return this.getWorkmatesUseCase;
-    }
-
-    private synchronized GetWorkmateSelectionUseCase getWorkmateSelectionUseCase() {
-        if(this.getWorkmateSelectionUseCase == null) {
-            this.getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorGateway());
-        }
-        return this.getWorkmateSelectionUseCase;
     }
 
     private synchronized GetWorkmateByIdUseCase getWorkmateByIdUseCase() {
@@ -327,8 +319,7 @@ public class Launch extends Application {
     public synchronized WorkmatesViewModelFactory workmatesViewModelFactory() {
         if(this.workmatesViewModelFactory == null) {
             this.workmatesViewModelFactory = new WorkmatesViewModelFactory(
-                    getWorkmatesUseCase(),
-                    getWorkmateSelectionUseCase()
+                    getWorkmatesUseCase()
             );
         }
         return this.workmatesViewModelFactory;

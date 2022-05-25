@@ -5,8 +5,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.ui.viewmodels.SignInViewModel;
-import com.android.go4lunch.usecases.GetSessionUseCase;
-import com.android.go4lunch.usecases.SaveWorkmateUseCase;
+import com.android.go4lunch.businesslogic.usecases.SaveWorkmateUseCase;
 
 public class SignInViewModelFactory implements ViewModelProvider.Factory {
 

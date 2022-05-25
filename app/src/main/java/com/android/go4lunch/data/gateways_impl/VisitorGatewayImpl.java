@@ -52,8 +52,6 @@ public class VisitorGatewayImpl implements VisitorGateway {
         this.database.collection(SelectionDatabaseConfig.COLLECTION_PATH).get().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 List<Selection> selections = this.formatSelectionsQuery(task.getResult());
-                Log.d(TAG, "-- fetch selections -- size: " + selections.size());
-
                 this.updateSelectionsSubject(selections);
             }
         });

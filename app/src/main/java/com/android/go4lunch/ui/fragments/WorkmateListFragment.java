@@ -19,7 +19,7 @@ import com.android.go4lunch.ui.adapters.ListWorkmateRecyclerViewAdapter;
 import com.android.go4lunch.ui.viewmodels.WorkmatesViewModel;
 
 public class WorkmateListFragment extends Fragment {
-
+    private String TAG = "WORKMATES FRAGMENT";
     private WorkmatesViewModel workmatesViewModel;
 
     private RecyclerView recyclerView;
@@ -40,14 +40,21 @@ public class WorkmateListFragment extends Fragment {
         this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
 
-        this.workmatesViewModel.getWorkmates().observe(this.getViewLifecycleOwner(), workmates -> {
-            ListWorkmateRecyclerViewAdapter adapter = new ListWorkmateRecyclerViewAdapter(workmates);
-            this.recyclerView.setAdapter(adapter);
-        });
+
 
 
         return root;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.workmatesViewModel.getWorkmatesLiveData().observe(this.getViewLifecycleOwner(), workmates -> {
+            System.out.println(TAG + " workmates size " + workmates.size());
+            ListWorkmateRecyclerViewAdapter adapter = new ListWorkmateRecyclerViewAdapter(workmates);
+            this.recyclerView.setAdapter(adapter);
+        });
+        this.workmatesViewModel.updateWorkmates();
+    }
 }
 

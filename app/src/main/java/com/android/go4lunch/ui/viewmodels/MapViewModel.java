@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForMapUseCase;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class MapViewModel extends ViewModel {
     // Data
     private final MutableLiveData<List<MarkerOptions>> markers;
 
-    // For stream data (Observable)
+    // For observing observable data
     private Disposable disposable;
 
     // Constructor
