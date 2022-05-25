@@ -1,8 +1,8 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.models.Selection;
-import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.usecases.decorators.SelectionInfoDecoratorForWorkMate;
+import com.android.go4lunch.businesslogic.entities.Selection;
+import com.android.go4lunch.businesslogic.entities.Workmate;
+import com.android.go4lunch.businesslogic.decorators.SelectionInfoDecoratorForWorkMate;
 
 import org.junit.Test;
 

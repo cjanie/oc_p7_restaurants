@@ -1,7 +1,6 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.models.Geolocation;
-import com.android.go4lunch.models.Restaurant;
+import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.in_memory_gateways.InMemoryRestaurantGateway;
 
 import org.junit.Test;

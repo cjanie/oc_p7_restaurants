@@ -1,8 +1,7 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways.RestaurantGateway;
-import com.android.go4lunch.models.Geolocation;
-import com.android.go4lunch.models.Restaurant;
+import com.android.go4lunch.businesslogic.gateways.RestaurantGateway;
+import com.android.go4lunch.businesslogic.entities.Restaurant;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;

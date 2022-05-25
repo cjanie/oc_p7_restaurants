@@ -1,24 +1,15 @@
 package com.android.go4lunch.ui.viewmodels;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.models.Restaurant;
-import com.android.go4lunch.models.Selection;
-import com.android.go4lunch.models.Workmate;
 import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
 import com.android.go4lunch.usecases.GetWorkmatesUseCase;
-import com.android.go4lunch.usecases.exceptions.NotFoundException;
-import com.android.go4lunch.usecases.models.WorkmateModel;
+import com.android.go4lunch.businesslogic.models.WorkmateModel;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
 
 public class WorkmatesViewModel extends ViewModel {
 

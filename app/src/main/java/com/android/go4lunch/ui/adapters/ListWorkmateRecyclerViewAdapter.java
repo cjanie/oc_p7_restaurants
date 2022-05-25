@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
-import com.android.go4lunch.usecases.models.WorkmateModel;
+import com.android.go4lunch.businesslogic.models.WorkmateModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 

@@ -1,8 +1,8 @@
 package com.android.go4lunch.factories;
 
-import com.android.go4lunch.apis.apiGoogleMaps.deserializers.place.OpenClose;
-import com.android.go4lunch.apis.apiGoogleMaps.deserializers.place.Period;
-import com.android.go4lunch.apis.apiGoogleMaps.factories.PlanningFactory;
+import com.android.go4lunch.data.apiGoogleMaps.deserializers.place.OpenClose;
+import com.android.go4lunch.data.apiGoogleMaps.deserializers.place.Period;
+import com.android.go4lunch.data.apiGoogleMaps.factories.PlanningFactory;
 
 import org.junit.Before;
 import org.junit.Test;

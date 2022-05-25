@@ -2,12 +2,8 @@ package com.android.go4lunch.usecases;
 
 import android.util.Log;
 
-import com.android.go4lunch.gateways.VisitorGateway;
-import com.android.go4lunch.models.Selection;
-import com.android.go4lunch.usecases.exceptions.NotFoundException;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
+import com.android.go4lunch.businesslogic.entities.Selection;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;

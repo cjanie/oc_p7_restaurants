@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.models.Geolocation;
+import com.android.go4lunch.businesslogic.entities.Geolocation;
 
 public class SharedViewModel extends ViewModel {
 

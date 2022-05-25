@@ -2,10 +2,8 @@ package com.android.go4lunch.usecases;
 
 import static org.junit.Assert.assertEquals;
 
-import com.android.go4lunch.gateways.LikeGateway;
 import com.android.go4lunch.in_memory_gateways.InMemoryLikeGateway;
-import com.android.go4lunch.models.Like;
-import com.android.go4lunch.usecases.exceptions.NotFoundException;
+import com.android.go4lunch.businesslogic.entities.Like;
 
 import org.junit.Test;
 

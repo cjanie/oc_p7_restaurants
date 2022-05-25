@@ -5,8 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import com.android.go4lunch.in_memory_gateways.InMemoryLikeGateway;
 import com.android.go4lunch.in_memory_gateways.InMemorySessionGateway;
-import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
+import com.android.go4lunch.businesslogic.entities.Workmate;
+import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
 
 import org.junit.Test;
 

@@ -1,8 +1,7 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways.SessionGateway;
-import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
+import com.android.go4lunch.businesslogic.gateways.SessionGateway;
+import com.android.go4lunch.businesslogic.entities.Workmate;
 
 import io.reactivex.Observable;
 

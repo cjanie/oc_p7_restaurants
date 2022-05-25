@@ -1,6 +1,6 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways.SessionGateway;
+import com.android.go4lunch.businesslogic.gateways.SessionGateway;
 
 public class SignOutUseCase {
 

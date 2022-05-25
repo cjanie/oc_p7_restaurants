@@ -1,8 +1,8 @@
 package com.android.go4lunch.in_memory_gateways;
 
 import com.android.go4lunch.exceptions.NullDistanceResponseException;
-import com.android.go4lunch.gateways.DistanceGateway;
-import com.android.go4lunch.models.Geolocation;
+import com.android.go4lunch.businesslogic.gateways.DistanceGateway;
+import com.android.go4lunch.businesslogic.entities.Geolocation;
 
 import io.reactivex.Observable;
 

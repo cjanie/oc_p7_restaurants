@@ -4,10 +4,9 @@ import com.android.go4lunch.deterministic_providers.DeterministicDateProvider;
 import com.android.go4lunch.deterministic_providers.DeterministicTimeProvider;
 import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.TimeProvider;
-import com.android.go4lunch.usecases.decorators.TimeInfoDecorator;
-import com.android.go4lunch.usecases.enums.TimeInfo;
-import com.android.go4lunch.usecases.models.RestaurantModel;
-import com.android.go4lunch.models.Restaurant;
+import com.android.go4lunch.businesslogic.decorators.TimeInfoDecorator;
+import com.android.go4lunch.businesslogic.enums.TimeInfo;
+import com.android.go4lunch.businesslogic.entities.Restaurant;
 
 
 import org.junit.Test;

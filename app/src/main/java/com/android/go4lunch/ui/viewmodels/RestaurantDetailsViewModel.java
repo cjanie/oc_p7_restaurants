@@ -9,19 +9,18 @@ import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.usecases.IsOneOfTheUserFavoriteRestaurantsUseCase;
 import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
 import com.android.go4lunch.usecases.LikeUseCase;
-import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
-import com.android.go4lunch.models.Restaurant;
-import com.android.go4lunch.models.Workmate;
+import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
+import com.android.go4lunch.businesslogic.entities.Restaurant;
+import com.android.go4lunch.businesslogic.entities.Workmate;
 import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.usecases.GoForLunchUseCase;
-import com.android.go4lunch.usecases.exceptions.NotFoundException;
+import com.android.go4lunch.businesslogic.exceptions.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
 
 public class RestaurantDetailsViewModel extends ViewModel {
 

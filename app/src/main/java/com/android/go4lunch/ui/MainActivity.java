@@ -19,7 +19,7 @@ import com.android.go4lunch.R;
 
 import com.android.go4lunch.ui.viewmodels.MainViewModel;
 
-import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
+import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.navigation.NavigationView;

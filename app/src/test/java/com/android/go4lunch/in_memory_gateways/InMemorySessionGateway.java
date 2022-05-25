@@ -1,7 +1,7 @@
 package com.android.go4lunch.in_memory_gateways;
 
-import com.android.go4lunch.gateways.SessionGateway;
-import com.android.go4lunch.models.Workmate;
+import com.android.go4lunch.businesslogic.gateways.SessionGateway;
+import com.android.go4lunch.businesslogic.entities.Workmate;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;

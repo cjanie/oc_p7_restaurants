@@ -1,7 +1,7 @@
 package com.android.go4lunch.usecases;
 
 import com.android.go4lunch.in_memory_gateways.InMemoryLikeGateway;
-import com.android.go4lunch.models.Like;
+import com.android.go4lunch.businesslogic.entities.Like;
 
 import org.junit.Test;
 

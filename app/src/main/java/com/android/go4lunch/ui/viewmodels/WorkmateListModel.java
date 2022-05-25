@@ -1,10 +1,10 @@
 package com.android.go4lunch.ui.viewmodels;
 
-import com.android.go4lunch.models.Restaurant;
-import com.android.go4lunch.models.Workmate;
+import com.android.go4lunch.businesslogic.entities.Restaurant;
+import com.android.go4lunch.businesslogic.entities.Workmate;
 import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
 import com.android.go4lunch.usecases.GetWorkmatesUseCase;
-import com.android.go4lunch.usecases.models.WorkmateModel;
+import com.android.go4lunch.businesslogic.models.WorkmateModel;
 
 import java.util.ArrayList;
 import java.util.List;

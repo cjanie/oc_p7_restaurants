@@ -2,8 +2,8 @@ package com.android.go4lunch.usecases;
 
 import android.util.Log;
 
-import com.android.go4lunch.gateways.VisitorGateway;
-import com.android.go4lunch.models.Selection;
+import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
+import com.android.go4lunch.businesslogic.entities.Selection;
 
 import java.util.ArrayList;
 import java.util.List;

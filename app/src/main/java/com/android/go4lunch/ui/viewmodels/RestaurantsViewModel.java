@@ -6,27 +6,18 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
-import com.android.go4lunch.models.Restaurant;
-import com.android.go4lunch.models.Workmate;
+import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.TimeProvider;
 import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
-import com.android.go4lunch.usecases.GetSessionUseCase;
-import com.android.go4lunch.usecases.decorators.TimeInfoDecorator;
-import com.android.go4lunch.usecases.models.RestaurantModel;
-import com.android.go4lunch.models.Geolocation;
+import com.android.go4lunch.businesslogic.models.RestaurantModel;
 import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.subjects.BehaviorSubject;
 
 public class RestaurantsViewModel extends ViewModel {
 

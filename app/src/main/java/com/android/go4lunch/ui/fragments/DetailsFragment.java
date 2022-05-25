@@ -25,11 +25,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
-import com.android.go4lunch.models.Restaurant;
+import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.adapters.ListVisitorRecyclerViewAdapter;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
-import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
-import com.android.go4lunch.usecases.exceptions.NotFoundException;
+import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
+import com.android.go4lunch.businesslogic.exceptions.NotFoundException;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

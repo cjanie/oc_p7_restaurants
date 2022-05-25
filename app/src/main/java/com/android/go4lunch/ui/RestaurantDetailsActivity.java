@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
-import com.android.go4lunch.models.Restaurant;
+import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
-import com.android.go4lunch.usecases.exceptions.NotFoundException;
+import com.android.go4lunch.businesslogic.exceptions.NotFoundException;
 
 public class RestaurantDetailsActivity extends BaseActivity {
 

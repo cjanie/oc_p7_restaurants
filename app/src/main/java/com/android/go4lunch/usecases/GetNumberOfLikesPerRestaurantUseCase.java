@@ -2,11 +2,8 @@ package com.android.go4lunch.usecases;
 
 import android.util.Log;
 
-import com.android.go4lunch.gateways.LikeGateway;
-import com.android.go4lunch.models.Like;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.android.go4lunch.businesslogic.gateways.LikeGateway;
+import com.android.go4lunch.businesslogic.entities.Like;
 
 import io.reactivex.Observable;
 

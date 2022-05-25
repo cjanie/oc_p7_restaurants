@@ -2,11 +2,11 @@ package com.android.go4lunch.usecases;
 
 import android.util.Log;
 
-import com.android.go4lunch.gateways.LikeGateway;
-import com.android.go4lunch.gateways.SessionGateway;
-import com.android.go4lunch.models.Like;
-import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
+import com.android.go4lunch.businesslogic.gateways.LikeGateway;
+import com.android.go4lunch.businesslogic.gateways.SessionGateway;
+import com.android.go4lunch.businesslogic.entities.Like;
+import com.android.go4lunch.businesslogic.entities.Workmate;
+import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
 
 import java.util.ArrayList;
 import java.util.List;

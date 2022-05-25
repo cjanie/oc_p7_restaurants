@@ -1,8 +1,8 @@
 package com.android.go4lunch.usecases;
 
-import com.android.go4lunch.gateways.WorkmateGateway;
-import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.usecases.exceptions.NotFoundException;
+import com.android.go4lunch.businesslogic.gateways.WorkmateGateway;
+import com.android.go4lunch.businesslogic.entities.Workmate;
+import com.android.go4lunch.businesslogic.exceptions.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;

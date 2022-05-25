@@ -1,8 +1,8 @@
 package com.android.go4lunch.usecases;
 
 import com.android.go4lunch.in_memory_gateways.InMemoryWorkmateGateway;
-import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.usecases.exceptions.NotFoundException;
+import com.android.go4lunch.businesslogic.entities.Workmate;
+import com.android.go4lunch.businesslogic.exceptions.NotFoundException;
 
 import org.junit.Test;
 

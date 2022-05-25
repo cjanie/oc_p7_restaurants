@@ -3,13 +3,12 @@ package com.android.go4lunch;
 import com.android.go4lunch.in_memory_gateways.InMemorySessionGateway;
 import com.android.go4lunch.in_memory_gateways.InMemoryVisitorGateway;
 import com.android.go4lunch.in_memory_gateways.InMemoryWorkmateGateway;
-import com.android.go4lunch.models.Restaurant;
-import com.android.go4lunch.models.Selection;
-import com.android.go4lunch.models.Workmate;
+import com.android.go4lunch.businesslogic.entities.Selection;
+import com.android.go4lunch.businesslogic.entities.Workmate;
 import com.android.go4lunch.ui.viewmodels.WorkmateListModel;
 import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
 import com.android.go4lunch.usecases.GetWorkmatesUseCase;
-import com.android.go4lunch.usecases.models.WorkmateModel;
+import com.android.go4lunch.businesslogic.models.WorkmateModel;
 
 import org.junit.Before;
 import org.junit.Test;

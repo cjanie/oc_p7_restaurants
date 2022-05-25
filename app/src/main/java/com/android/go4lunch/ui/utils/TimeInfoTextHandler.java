@@ -5,12 +5,8 @@ import android.graphics.Typeface;
 import android.widget.TextView;
 
 import com.android.go4lunch.R;
-import com.android.go4lunch.models.Restaurant;
-import com.android.go4lunch.providers.RealDateProvider;
-import com.android.go4lunch.usecases.decorators.TimeInfoDecorator;
-import com.android.go4lunch.usecases.enums.TimeInfo;
-import com.android.go4lunch.usecases.models.RestaurantModel;
-import com.android.go4lunch.usecases.enums.TimeInfoVisitor;
+import com.android.go4lunch.businesslogic.models.RestaurantModel;
+import com.android.go4lunch.businesslogic.enums.TimeInfoVisitor;
 
 import java.time.LocalTime;
 

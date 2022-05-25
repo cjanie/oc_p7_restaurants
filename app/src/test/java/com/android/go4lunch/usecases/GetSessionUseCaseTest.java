@@ -2,16 +2,11 @@ package com.android.go4lunch.usecases;
 
 import static org.junit.Assert.assertNull;
 
-import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
+import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.in_memory_gateways.InMemorySessionGateway;
-import com.android.go4lunch.models.Workmate;
+import com.android.go4lunch.businesslogic.entities.Workmate;
 
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import io.reactivex.Observable;
 
 public class GetSessionUseCaseTest {
 

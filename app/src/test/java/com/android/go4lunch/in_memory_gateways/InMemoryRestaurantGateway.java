@@ -1,7 +1,7 @@
 package com.android.go4lunch.in_memory_gateways;
 
-import com.android.go4lunch.gateways.RestaurantGateway;
-import com.android.go4lunch.models.Restaurant;
+import com.android.go4lunch.businesslogic.gateways.RestaurantGateway;
+import com.android.go4lunch.businesslogic.entities.Restaurant;
 
 import java.util.ArrayList;
 import java.util.List;
