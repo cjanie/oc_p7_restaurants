@@ -1,5 +1,7 @@
 package com.android.go4lunch.ui.viewmodels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -32,30 +34,38 @@ public class WorkmatesViewModel extends ViewModel {
     }
 
     public LiveData<List<Workmate>> getWorkmatesLiveData() {
-        this.updateWorkmates();
+        this.updateWorkmatesLiveData();
         return this.workmatesLiveData;
     }
 
-    public void updateWorkmates() {
+    public void updateWorkmatesLiveData() {
         this.disposable = this.getWorkmatesUseCase.handle().subscribeWith(
                 new DisposableObserver<List<Workmate>>() {
                     @Override
                     public void onNext(List<Workmate> workmates) {
+                        Log.d(TAG, "updateWorkmatesLiveData workmates size: " + workmates.size());
                         workmatesLiveData.postValue(workmates);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        e.printStackTrace();
                     }
 
                     @Override
                     public void onComplete() {
-
+                        Log.d(TAG, "updateWorkmatesLiveData completed");
                     }
                 }
                 );
 
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        if(this.disposable != null && !this.disposable.isDisposed())
+            this.disposable.dispose();
     }
 
 }

@@ -54,7 +54,7 @@ public class WorkmateListFragment extends Fragment {
             ListWorkmateRecyclerViewAdapter adapter = new ListWorkmateRecyclerViewAdapter(workmates);
             this.recyclerView.setAdapter(adapter);
         });
-        this.workmatesViewModel.updateWorkmates();
+        this.workmatesViewModel.updateWorkmatesLiveData();
     }
 }
 

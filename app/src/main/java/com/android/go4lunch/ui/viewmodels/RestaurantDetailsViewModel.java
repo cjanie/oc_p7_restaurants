@@ -45,7 +45,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
 
     private MutableLiveData<List<Workmate>> visitors;
 
-    private MutableLiveData<Boolean> isTheCurrentSelection;
+    private MutableLiveData<Boolean> isTheCurrentSelectionLiveData;
 
     private MutableLiveData<Boolean> isOneOfTheUserFavoriteRestaurants;
 
@@ -67,7 +67,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
         this.isOneOfTheUserFavoriteRestaurantsUseCase = isOneOfTheUserFavoriteRestaurantsUseCase;
 
         this.visitors = new MutableLiveData<>(new ArrayList<>());
-        this.isTheCurrentSelection = new MutableLiveData<>(false);
+        this.isTheCurrentSelectionLiveData = new MutableLiveData<>(false);
         this.isOneOfTheUserFavoriteRestaurants = new MutableLiveData<>(false);
     }
 
@@ -95,15 +95,15 @@ public class RestaurantDetailsViewModel extends ViewModel {
     public LiveData<Boolean> getIsTheCurrentSelection() {
         // fetch -> void
         // get -> LiveData
-        //this.fetchIsTheCurrentSelection();
-        return this.isTheCurrentSelection;
+        //this.updateIsTheCurrentSelectionLiveData();
+        return this.isTheCurrentSelectionLiveData;
     }
 
-    public void updateIsTheCurrentSelection() {
+    public void updateIsTheCurrentSelectionLiveData() {
         if(this.restaurant != null) {
             this.isTheCurrentSelectionUseCase.handle(this.restaurant.getId()).subscribe(
                     isTheCurrentSelection -> {
-                        this.isTheCurrentSelection.postValue(isTheCurrentSelection);
+                        this.isTheCurrentSelectionLiveData.postValue(isTheCurrentSelection);
                     },
                     Throwable::printStackTrace
             );
@@ -134,7 +134,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
                     );
             // TODO
             Observable.just(true).delay(2, TimeUnit.SECONDS).subscribe(bool -> {
-                this.updateIsTheCurrentSelection();
+                this.updateIsTheCurrentSelectionLiveData();
                 //this.fetchVisitors();
             });
 

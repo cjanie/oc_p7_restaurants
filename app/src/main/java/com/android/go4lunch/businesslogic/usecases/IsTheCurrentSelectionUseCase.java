@@ -5,10 +5,10 @@ import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
 import com.android.go4lunch.businesslogic.entities.Selection;
 import com.android.go4lunch.businesslogic.entities.Workmate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
 
 public class IsTheCurrentSelectionUseCase {
 
@@ -16,44 +16,45 @@ public class IsTheCurrentSelectionUseCase {
 
     private SessionGateway sessionGateway;
 
+    private BehaviorSubject isTheCurrentSelectionSubject;
+
     public IsTheCurrentSelectionUseCase(VisitorGateway visitorGateway, SessionGateway sessionGateway) {
         this.visitorGateway = visitorGateway;
         this.sessionGateway = sessionGateway;
+
+        this.isTheCurrentSelectionSubject = BehaviorSubject.create();
     }
 
     public Observable<Boolean> handle(String restaurantId) {
-        return Observable.just(
-                this.getSessionSelection() != null
-                && this.getSessionSelection().getRestaurantId().equals(restaurantId)
-        );
+        return this.getSelections()
+                .flatMap(selections ->
+                        Observable.fromIterable(selections)
+                                .flatMap(selection -> this.findCurrentSelection(selections, restaurantId))
+                );
     }
 
-    private Workmate getSession() {
-        List<Workmate> workmateSessionResults = new ArrayList<>();
-        this.sessionGateway.getSession().subscribe(workmateSessionResults::add);
-
-        if(workmateSessionResults.isEmpty())
-            return null;
-        else return workmateSessionResults.get(0);
+    private Observable<List<Selection>> getSelections() {
+        return this.visitorGateway.getSelections();
     }
 
-    private List<Selection> getSelections() {
-        List<Selection> selectionsResults = new ArrayList<>();
-        this.visitorGateway.getSelections().subscribe(selectionsResults::addAll);
-        return selectionsResults;
-    }
-
-    private Selection getSessionSelection() {
-        List<Selection> selectionsResults = this.getSelections();
-        Workmate workmateSession = this.getSession();
-        if(workmateSession != null) {
-            if(!selectionsResults.isEmpty()) {
-                for(Selection selection: selectionsResults) {
-                    if(selection.getWorkmateId().equals(workmateSession.getId()))
-                        return selection;
+    private Observable<Boolean> findCurrentSelection(List<Selection> selections, String restaurantId) {
+        return this.getSession().map(session -> {
+            if(session != null) {
+                if(!selections.isEmpty()) {
+                    for(Selection selection: selections) {
+                        if(selection.getWorkmateId().equals(session.getId()) && selection.getRestaurantId().equals(restaurantId)) {
+                            return true;
+                        }
+                    }
                 }
+
             }
-        }
-        return null;
+            return false;
+        });
     }
+
+    private Observable<Workmate> getSession() {
+        return this.sessionGateway.getSession();
+    }
+
 }

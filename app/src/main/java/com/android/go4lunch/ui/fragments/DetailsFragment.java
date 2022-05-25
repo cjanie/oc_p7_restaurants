@@ -104,7 +104,7 @@ public class DetailsFragment extends Fragment {
                 this.buttonGo.setImageDrawable(this.getActivity().getDrawable(R.drawable.ic_baseline_add_task_24));
             }
         });
-        this.restaurantDetailsViewModel.updateIsTheCurrentSelection();
+        this.restaurantDetailsViewModel.updateIsTheCurrentSelectionLiveData();
 
         // IS FAVORITE
         try {
