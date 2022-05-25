@@ -24,7 +24,7 @@ public class IsTheCurrentSelectionUseCaseTest {
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
         Workmate workmateSession = new Workmate("Janie");
         workmateSession.setId("workmate1");
-        sessionGateway.setWorkmate(workmateSession);
+        sessionGateway.setSession(workmateSession);
 
         List<Boolean> isTheCurrentSelectionResults = new ArrayList<>();
         new IsTheCurrentSelectionUseCase(
@@ -42,7 +42,7 @@ public class IsTheCurrentSelectionUseCaseTest {
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
         Workmate workmateSession = new Workmate("Janie");
         workmateSession.setId("workmate1");
-        sessionGateway.setWorkmate(workmateSession);
+        sessionGateway.setSession(workmateSession);
 
         List<Boolean> isTheCurrentSelectionResults = new ArrayList<>();
         new IsTheCurrentSelectionUseCase(

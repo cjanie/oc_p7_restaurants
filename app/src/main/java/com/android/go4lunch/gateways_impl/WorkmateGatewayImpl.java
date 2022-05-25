@@ -12,8 +12,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 
 class WorkmateDatabaseConfig {
@@ -32,17 +36,19 @@ public class WorkmateGatewayImpl implements WorkmateGateway {
 
     private FirebaseFirestore database;
 
-    private PublishSubject<List<Workmate>> workmatesSubject;
+    private BehaviorSubject<List<Workmate>> workmatesSubject;
 
     public WorkmateGatewayImpl(FirebaseFirestore database) {
         this.database = database;
-        this.workmatesSubject = PublishSubject.create();
+        this.workmatesSubject = BehaviorSubject.create();
     }
 
     @Override
     public Observable<List<Workmate>> getWorkmates() {
         this.fetchWorkmatesToUpdateSubject();
-        return this.workmatesSubject.hide();
+        return this.workmatesSubject.hide()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private void fetchWorkmatesToUpdateSubject() {

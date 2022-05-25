@@ -28,6 +28,8 @@ public class WorkmatesViewModel extends ViewModel {
 
     private final GetWorkmateSelectionUseCase getWorkmateSelectionUseCase;
 
+    private final WorkmateListModel workmateListModel;
+
     private final MutableLiveData<List<WorkmateModel>> workmates;
 
     public WorkmatesViewModel(
@@ -38,66 +40,14 @@ public class WorkmatesViewModel extends ViewModel {
         this.getWorkmatesUseCase = getWorkmatesUseCase;
         this.getWorkmateSelectionUseCase = getWorkmateSelectionUseCase;
 
+        this.workmateListModel = new WorkmateListModel(this.getWorkmatesUseCase, this.getWorkmateSelectionUseCase);
         this.workmates = new MutableLiveData<>(new ArrayList<>());
     }
 
     public LiveData<List<WorkmateModel>> getWorkmates() {
-
-        Disposable disposable = this.getWorkmatesUseCase.handle().subscribe(
-            workmates -> {
-                List<WorkmateModel> workmateModels = new ArrayList<>();
-                for(Workmate w: workmates) {
-                    WorkmateModel workmateModel = this.decorWorkmate(w);
-                    workmateModels.add(workmateModel);
-                }
-                this.workmates.postValue(workmateModels);
-            },
-                Throwable::printStackTrace
-        );
-
-
-
+        this.workmateListModel.getWorkmatesWithTheirSelectedRestaurants().subscribe(
+                workmateModels -> this.workmates.postValue(workmateModels));
         return this.workmates;
-    }
-
-    private Observable<List<WorkmateModel>> decorWorkmates() {
-        return this.getWorkmatesUseCase.handle().flatMap(
-                workmates -> {
-                    Log.d(TAG, "-- decor workmates -- workmates size: " + workmates.size());
-                    return Observable.fromIterable(workmates).flatMap(
-                        workmate -> decorWorkmateAsModel(workmate)
-                    ).toList().toObservable();
-                });
-    }
-
-    private Observable<WorkmateModel> decorWorkmateAsModel(Workmate workmate) {
-        return this.getWorkmateSelectionUseCase.handle(workmate.getId()).map(selection -> {
-            Log.d(TAG, "-- decor workmate as model -- workmate selection: " + selection);
-
-            WorkmateModel workmateModel = new WorkmateModel(workmate);
-            Restaurant selected = new Restaurant(selection.getRestaurantName());
-            selected.setId(selection.getRestaurantId());
-            workmateModel.setSelection(selected);
-            return workmateModel;
-        });
-    }
-
-    private WorkmateModel decorWorkmate(Workmate workmate) {
-        WorkmateModel workmateModel = new WorkmateModel(workmate);
-        List<Selection> selectionResults = new ArrayList<>();
-        this.getWorkmateSelectionUseCase.handle(workmate.getId()).subscribe(selection -> {
-            Log.d(TAG, "-- decor workmate -- workmate selection : " + selection);
-
-        });
-        this.getWorkmateSelectionUseCase.handle(workmate.getId()).subscribe(selectionResults::add);
-
-        if(!selectionResults.isEmpty()) {
-            Selection workmateSelection = selectionResults.get(0);
-            Restaurant selected = new Restaurant(workmateSelection.getRestaurantName());
-            selected.setId(workmateSelection.getId());
-            workmateModel.setSelection(new Restaurant(workmateSelection.getRestaurantName()));
-        }
-        return workmateModel;
     }
 
 }

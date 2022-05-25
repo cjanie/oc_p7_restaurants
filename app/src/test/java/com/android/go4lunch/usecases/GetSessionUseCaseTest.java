@@ -1,5 +1,7 @@
 package com.android.go4lunch.usecases;
 
+import static org.junit.Assert.assertNull;
+
 import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.in_memory_gateways.InMemorySessionGateway;
 import com.android.go4lunch.models.Workmate;
@@ -15,22 +17,23 @@ public class GetSessionUseCaseTest {
 
     @Test
     public void returnsTheWorkmateOfTheCurrentSession() throws NoWorkmateForSessionException {
-        Workmate workmate = new Workmate("Janie");
+        Workmate session = new Workmate("Janie");
         InMemorySessionGateway inMemorySessionGateway = new InMemorySessionGateway();
-        inMemorySessionGateway.setWorkmate(workmate);
+        inMemorySessionGateway.setSession(session);
         GetSessionUseCase getSessionUseCase = new GetSessionUseCase(inMemorySessionGateway);
-        Observable<Workmate> observableWorkmate = getSessionUseCase.handle();
-        List<Workmate> results = new ArrayList<>();
-        observableWorkmate.subscribe(results::add);
-        assert(results.get(0).getName().equals("Janie"));
+        getSessionUseCase.handle().subscribe(sessionResult -> {
+            assert(sessionResult.getName().equals("Janie"));
+        });
     }
 
-    @Test(expected = NoWorkmateForSessionException.class)
+    @Test
     public void handlesErrorWhenNoWorkmateForSession() throws NoWorkmateForSessionException {
         InMemorySessionGateway inMemorySessionGateway = new InMemorySessionGateway();
         // Dont set repository with workmate
         GetSessionUseCase getSessionUseCase = new GetSessionUseCase(inMemorySessionGateway);
-        getSessionUseCase.handle();
+        getSessionUseCase.handle().subscribe(sessionResult -> {
+            assertNull(sessionResult);
+        });
     }
 
 }

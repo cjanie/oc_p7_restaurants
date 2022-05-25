@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -27,9 +28,24 @@ import com.google.android.material.tabs.TabLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainFragment extends Fragment {
+
+    // FOR LOCATION PERMISSION
+
+    private ActivityResultLauncher launcher;
+
+    private final String[] PERMISSIONS = new String[] {Manifest.permission.ACCESS_FINE_LOCATION};
+
+    private final int REQUEST_CODE = 123;
+
+    // DATA
+
+    private SharedViewModel sharedViewModel;
+
+    // UI
 
     @BindView(R.id.tabs)
     TabLayout tabLayout;
@@ -37,60 +53,57 @@ public class MainFragment extends Fragment {
     @BindView(R.id.container)
     ViewPager2 viewPager;
 
-    private final String[] permissions = new String[] {Manifest.permission.ACCESS_FINE_LOCATION};
-
-    public final int requestCode = 123;
-
-    private SharedViewModel sharedViewModel;
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_main, container, false);
-        ButterKnife.bind(this, root);
+        this.launcher = this.createActivityResultLauncher();
+        this.requestLocationPermission();
+        this.initMyPosition();
 
         this.sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+
+        View root = inflater.inflate(R.layout.fragment_main, container, false);
+        ButterKnife.bind(this, root);
 
         // ViewPagerAdapter attachs ViewPager to Tablaout
         new ViewPagerAdapter(this.getActivity().getSupportFragmentManager(), this.getLifecycle(), this.tabLayout, this.viewPager, this.sharedViewModel);
 
-        // Location
-        this.requestLocationPermission();
-
         return root;
     }
 
-    private void requestLocationPermission() {
-        ActivityResultLauncher launcher = this.registerForActivityResult(
+    private ActivityResultLauncher createActivityResultLauncher() {
+        return this.registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     if(isGranted) {
                         EasyPermissions.onRequestPermissionsResult(
-                                this.requestCode,
-                                this.permissions,
+                                this.REQUEST_CODE,
+                                this.PERMISSIONS,
                                 new int[]{PackageManager.PERMISSION_GRANTED},
                                 this
                         );
                     } else {
                         EasyPermissions.onRequestPermissionsResult(
-                                this.requestCode,
-                                this.permissions,
+                                this.REQUEST_CODE,
+                                this.PERMISSIONS,
                                 new int[]{PackageManager.PERMISSION_DENIED},
                                 this
                         );
                     }
                 }
         );
-        launcher.launch(this.permissions[0]);
+    }
+
+    private void requestLocationPermission() {
+        this.launcher.launch(this.PERMISSIONS[0]);
     }
 
     @SuppressLint("MissingPermission")
     @AfterPermissionGranted(123)
     private void initMyPosition() {
         // Control
-        if(EasyPermissions.hasPermissions(this.getActivity(), this.permissions)) {
+        if(EasyPermissions.hasPermissions(this.getActivity(), this.PERMISSIONS)) {
             // Get location when permission is not missing
             FusedLocationProviderClient fusedlocationProviderClient =
                     LocationServices.getFusedLocationProviderClient(this.getActivity());
@@ -100,21 +113,20 @@ public class MainFragment extends Fragment {
                             location.getLatitude(),
                             location.getLongitude())
                     );
+                } else {
+                    Toast.makeText(this.getActivity(), this.getText(R.string.location_not_available), Toast.LENGTH_SHORT).show();
                 }
             });
-        } else {
+        } else if(EasyPermissions.permissionPermanentlyDenied(this, this.PERMISSIONS[0])) {
             // Demand permission if missing, explaining that a permission is needed to get the user location
+            /*
             EasyPermissions.requestPermissions(
                     this,
                     this.getString(R.string.location_permission_rationale_text),
                     123,
-                    this.permissions);
+                    this.PERMISSIONS);
+             */
+                new AppSettingsDialog.Builder(this).build().show();
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        this.initMyPosition();
     }
 }

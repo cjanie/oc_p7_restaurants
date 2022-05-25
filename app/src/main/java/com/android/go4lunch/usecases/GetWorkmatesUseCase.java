@@ -26,31 +26,26 @@ public class GetWorkmatesUseCase {
     }
 
     public Observable<List<Workmate>> handle() {
-        return this.workmateGateway.getWorkmates().map(workmates ->
-            this.getFilteredListOfWorkmatesRemovingTheWorkmateOfTheCurrentSession(workmates, this.getSession())
+        return this.workmateGateway.getWorkmates().flatMap(workmates ->
+            this.filterWorkmatesRemovingSession(workmates)
         );
     }
 
-    private List<Workmate> getFilteredListOfWorkmatesRemovingTheWorkmateOfTheCurrentSession(List<Workmate> workmates, Workmate workmateSession) {
-        List<Workmate> filteredList = new ArrayList<>();
-        if(workmateSession == null)
-            filteredList = workmates;
-        if(workmateSession!= null && workmates != null && !workmates.isEmpty()) {
-            for(int i=0; i<workmates.size(); i++) {
-                if(!workmates.get(i).getId().equals(workmateSession.getId())) {
-                    filteredList.add(workmates.get(i));
+    private Observable<List<Workmate>> filterWorkmatesRemovingSession(List<Workmate> workmates) {
+        return this.sessionGateway.getSession().map(session -> {
+            List<Workmate> filteredList = new ArrayList<>();
+            if(!workmates.isEmpty()) {
+                for(Workmate workmate: workmates) {
+                    if(session != null) {
+                        if(!workmate.getId().equals(session.getId())) {
+                            filteredList.add(workmate);
+                        }
+                    } else {
+                        filteredList = workmates;
+                    }
                 }
             }
-        }
-        return filteredList;
-    }
-
-    private Workmate getSession() {
-        List<Workmate> workmateSessionResults = new ArrayList<>();
-        if(sessionGateway.getSession() != null)
-            this.sessionGateway.getSession().subscribe(workmateSessionResults::add);
-        if(!workmateSessionResults.isEmpty())
-            return workmateSessionResults.get(0);
-        return null;
+            return filteredList;
+        });
     }
 }

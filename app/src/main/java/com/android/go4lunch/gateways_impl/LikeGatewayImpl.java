@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
 class LikeDatabaseConfig {
@@ -44,7 +46,12 @@ public class LikeGatewayImpl implements LikeGateway {
     public Observable<List<Like>> getLikes() {
         this.fetchLikesToUpdateSubject();
         List<Like> likesResult = new ArrayList<>();
-        return this.likesSubject.map(likes -> {
+        return this.likesSubject
+                .hide()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(10, TimeUnit.SECONDS)
+                .map(likes -> {
             Log.d(TAG, "-- getLikes mapping likesSubject -- size: " + likes.size());
             return likes;
         });

@@ -21,12 +21,12 @@ public class GetWorkmatesUseCaseTest {
         InMemoryWorkmateGateway workmateGateway = new InMemoryWorkmateGateway();
         workmateGateway.setWorkmates(Arrays.asList(new Workmate("Janie")));
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
-        GetWorkmatesUseCase getWorkmatesUseCase = new GetWorkmatesUseCase(workmateGateway, sessionGateway);
+        // SUT
+        new GetWorkmatesUseCase(workmateGateway, sessionGateway).handle()
+                .subscribe(workmates -> {
+                    assert(workmates.size() == 1);
+                });
 
-        Observable<List<Workmate>> observableWormates = getWorkmatesUseCase.handle();
-        List<Workmate> results = new ArrayList<>();
-        observableWormates.subscribe(results::addAll);
-        assert(results.size() == 1);
     }
 
     @Test
@@ -37,14 +37,11 @@ public class GetWorkmatesUseCaseTest {
                 new Workmate("Cyril")
         ));
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
-        GetWorkmatesUseCase getWorkmatesUseCase = new GetWorkmatesUseCase(
-                workmateGateway,
-                sessionGateway
-        );
-        Observable<List<Workmate>> observableWormates = getWorkmatesUseCase.handle();
-        List<Workmate> results = new ArrayList<>();
-        observableWormates.subscribe(results::addAll);
-        assert(results.size() == 2);
+        new GetWorkmatesUseCase(workmateGateway, sessionGateway).handle()
+                .subscribe(workmates -> {
+                    assert(workmates.size() == 2);
+                });
+
     }
 
     @Test
@@ -63,12 +60,12 @@ public class GetWorkmatesUseCaseTest {
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
         Workmate session = new Workmate("Cyril");
         session.setId("2");
-        sessionGateway.setWorkmate(session);
-
-        // Filtered list result
-        List<Workmate> workmatesResult = new ArrayList<>();
-        new GetWorkmatesUseCase(workmateGateway, sessionGateway).handle().subscribe(workmatesResult::addAll);
-        assertEquals(1, workmatesResult.size());
+        sessionGateway.setSession(session);
+        // SUT
+        new GetWorkmatesUseCase(workmateGateway, sessionGateway).handle()
+                .subscribe(workmates -> {
+                    assertEquals(1, workmates.size());
+                });
     }
 
     @Test
@@ -76,11 +73,11 @@ public class GetWorkmatesUseCaseTest {
         InMemoryWorkmateGateway workmateGateway = new InMemoryWorkmateGateway();
         // dont set any workmate in the repository
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
-        GetWorkmatesUseCase getWorkmatesUseCase = new GetWorkmatesUseCase(workmateGateway, sessionGateway);
-        Observable<List<Workmate>> observableWormates = getWorkmatesUseCase.handle();
-        List<Workmate> results = new ArrayList<>();
-        observableWormates.subscribe(results::addAll);
-        assert(results.isEmpty());
+        // SUT
+        new GetWorkmatesUseCase(workmateGateway, sessionGateway).handle()
+                .subscribe(workmates -> {
+                    assert(workmates.isEmpty());
+                });
     }
 
 }

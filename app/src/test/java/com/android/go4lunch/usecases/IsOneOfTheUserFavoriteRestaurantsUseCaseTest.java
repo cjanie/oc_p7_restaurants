@@ -22,7 +22,7 @@ public class IsOneOfTheUserFavoriteRestaurantsUseCaseTest {
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
         Workmate workmateForSession = new Workmate("Janie");
         workmateForSession.setId("workmate1");
-        sessionGateway.setWorkmate(workmateForSession);
+        sessionGateway.setSession(workmateForSession);
         List<Boolean> isFavoriteResults = new ArrayList<>();
         new IsOneOfTheUserFavoriteRestaurantsUseCase(
                 likeGateway,
@@ -37,7 +37,7 @@ public class IsOneOfTheUserFavoriteRestaurantsUseCaseTest {
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
         Workmate workmateForSession = new Workmate("Janie");
         workmateForSession.setId("workmate1");
-        sessionGateway.setWorkmate(workmateForSession);
+        sessionGateway.setSession(workmateForSession);
         List<Boolean> isFavoriteResults = new ArrayList<>();
         new IsOneOfTheUserFavoriteRestaurantsUseCase(
                 likeGateway,
@@ -52,4 +52,6 @@ public class IsOneOfTheUserFavoriteRestaurantsUseCaseTest {
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
         new IsOneOfTheUserFavoriteRestaurantsUseCase(likeGateway, sessionGateway).handle("restaurant1");
     }
+
+
 }
