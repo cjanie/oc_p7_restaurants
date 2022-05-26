@@ -18,7 +18,7 @@ public class IsOneOfTheUserFavoriteRestaurantsUseCaseTest {
     @Test
     public void aRestaurantIsOneOfFavoritesWhenTheWorkmateOfTheSessionHasLikedIt() throws NoWorkmateForSessionException {
         InMemoryLikeGateway likeGateway = new InMemoryLikeGateway();
-        new LikeUseCase(likeGateway).handle("restaurant1", "workmate1");
+        new AddLikeUseCase(likeGateway).handle("restaurant1", "workmate1").subscribe();
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
         Workmate workmateForSession = new Workmate("Janie");
         workmateForSession.setId("workmate1");
@@ -46,11 +46,21 @@ public class IsOneOfTheUserFavoriteRestaurantsUseCaseTest {
         assertFalse(isFavoriteResults.get(0));
     }
 
-    @Test(expected = NoWorkmateForSessionException.class)
-    public void errorWhenThereIsNoWorkmateForSession() throws NoWorkmateForSessionException {
+    @Test
+    public void FalseWhenTheWorkmateOfTheSessionHasNotLiked() {
         InMemoryLikeGateway likeGateway = new InMemoryLikeGateway();
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
-        new IsOneOfTheUserFavoriteRestaurantsUseCase(likeGateway, sessionGateway).handle("restaurant1");
+        Workmate workmateSession = new Workmate("Janie");
+        workmateSession.setId("workmate1");
+        sessionGateway.setSession(workmateSession);
+
+        List<Boolean> isFavoriteResults = new ArrayList<>();
+
+        new IsOneOfTheUserFavoriteRestaurantsUseCase(likeGateway, sessionGateway)
+                .handle("restaurant1")
+                .subscribe(isFavorite -> isFavoriteResults.add(isFavorite));
+        assert(!isFavoriteResults.isEmpty());
+        assertFalse(isFavoriteResults.get(0));
     }
 
 

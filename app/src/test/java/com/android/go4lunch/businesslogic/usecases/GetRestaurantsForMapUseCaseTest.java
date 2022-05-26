@@ -21,25 +21,25 @@ public class GetRestaurantsForMapUseCaseTest {
     public void shouldReturn1MarkerOptionsWhen1RestaurantWithGeolocationIsAvailable() {
         List<Restaurant> restaurants = this.createListOfRestaurantsForRepository(1, true);
         GetRestaurantsForMapUseCase getRestaurantsForMapUseCase = this.createGetRestaurantForMap(restaurants);
-        List<MarkerOptions> results = this.getObservedResults(getRestaurantsForMapUseCase);
+        List<Restaurant> results = this.getObservedResults(getRestaurantsForMapUseCase);
         assert(results.size() == 1);
-        assert(results.get(0).getTitle().equals("Resto U"));
+        assert(results.get(0).getName().equals("Resto U"));
     }
 
     @Test
     public void shouldReturn2MarkersOptionsWhen2RestaurantsWithGeolocationAreAvailable() {
         List<Restaurant> restaurants = this.createListOfRestaurantsForRepository(2, true);
         GetRestaurantsForMapUseCase getRestaurantsForMapUseCase = this.createGetRestaurantForMap(restaurants);
-        List<MarkerOptions> results = this.getObservedResults(getRestaurantsForMapUseCase);
+        List<Restaurant> results = this.getObservedResults(getRestaurantsForMapUseCase);
         assert(results.size() == 2);
-        assert(results.get(0).getTitle().equals("Resto U"));
+        assert(results.get(0).getName().equals("Resto U"));
     }
 
     @Test
     public void shouldReturnNoMarkerOptionsWhenNoRestaurantIsAvailable() {
         GetRestaurantsForMapUseCase getRestaurantsForMapUseCase =
                 this.createGetRestaurantForMap(new ArrayList<>());
-        List<MarkerOptions> results = this.getObservedResults(getRestaurantsForMapUseCase);
+        List<Restaurant> results = this.getObservedResults(getRestaurantsForMapUseCase);
         assert(results.isEmpty());
     }
 
@@ -49,7 +49,7 @@ public class GetRestaurantsForMapUseCaseTest {
                 this.createListOfRestaurantsForRepository(1, false);
         GetRestaurantsForMapUseCase getRestaurantsForMapUseCase = this.createGetRestaurantForMap(restaurantsToSetInRepository);
 
-        List<MarkerOptions> results = this.getObservedResults(getRestaurantsForMapUseCase);
+        List<Restaurant> results = this.getObservedResults(getRestaurantsForMapUseCase);
 
         assert(results.isEmpty());
     }
@@ -72,11 +72,11 @@ public class GetRestaurantsForMapUseCaseTest {
         return new GetRestaurantsForMapUseCase(inMemoryRestaurantQuery);
     }
 
-    private List<MarkerOptions> getObservedResults(GetRestaurantsForMapUseCase getRestaurantsForMapUseCase) {
-        Observable<List<MarkerOptions>> observableMarkersOptions = getRestaurantsForMapUseCase
-                .getRestaurantsMarkers(222.2, 22.22, 1000);
-        List<MarkerOptions> results = new ArrayList<>();
-        observableMarkersOptions.subscribe(results::addAll);
+    private List<Restaurant> getObservedResults(GetRestaurantsForMapUseCase getRestaurantsForMapUseCase) {
+        Observable<List<Restaurant>> restaurantsObservable = getRestaurantsForMapUseCase
+                .handle(222.2, 22.22, 1000);
+        List<Restaurant> results = new ArrayList<>();
+        restaurantsObservable.subscribe(results::addAll);
         return results;
     }
 

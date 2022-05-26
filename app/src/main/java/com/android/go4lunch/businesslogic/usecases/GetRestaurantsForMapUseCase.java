@@ -19,22 +19,21 @@ public class GetRestaurantsForMapUseCase {
         this.restaurantGateway = restaurantGateway;
     }
 
-    public Observable<List<MarkerOptions>> getRestaurantsMarkers(Double myLatitude, Double myLongitude, int radius) {
-        return this.restaurantGateway.getRestaurantsNearby(myLatitude, myLongitude, radius).map(restaurants -> {
-            List<MarkerOptions> markersOptions = new ArrayList<>();
-            if(!restaurants.isEmpty()) {
-                for(Restaurant restaurant: restaurants) {
-                    if(restaurant.getGeolocation() != null) {
-                        MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(
-                                restaurant.getGeolocation().getLatitude(),
-                                restaurant.getGeolocation().getLongitude())
-                        ).title(restaurant.getName());
-                        markersOptions.add(markerOptions);
-                    }
+    public Observable<List<Restaurant>>handle(Double myLatitude, Double myLongitude, int radius) {
+        return this.restaurantGateway.getRestaurantsNearby(myLatitude, myLongitude, radius)
+                .map(restaurants -> filterOnlyGeolocalisedRestaurants(restaurants));
+    }
+
+    private List<Restaurant> filterOnlyGeolocalisedRestaurants(List<Restaurant> restaurants) {
+        List<Restaurant> filteredList = new ArrayList<>();
+        if(!restaurants.isEmpty()) {
+            for(Restaurant restaurant: restaurants) {
+                if(restaurant.getGeolocation() != null) {
+                    filteredList.add(restaurant);
                 }
             }
-            return markersOptions;
-        });
+        }
+        return filteredList;
     }
 
 }

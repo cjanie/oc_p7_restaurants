@@ -11,7 +11,7 @@ import com.android.go4lunch.businesslogic.usecases.GoForLunchUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
 import com.android.go4lunch.businesslogic.usecases.IsOneOfTheUserFavoriteRestaurantsUseCase;
 import com.android.go4lunch.businesslogic.usecases.IsTheCurrentSelectionUseCase;
-import com.android.go4lunch.businesslogic.usecases.LikeUseCase;
+import com.android.go4lunch.businesslogic.usecases.AddLikeUseCase;
 
 public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Factory {
 
@@ -25,7 +25,7 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
 
     private final IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase;
 
-    private final LikeUseCase likeUseCase;
+    private final AddLikeUseCase addLikeUseCase;
 
     private final IsOneOfTheUserFavoriteRestaurantsUseCase isOneOfTheUserFavoriteRestaurantsUseCase;
 
@@ -36,7 +36,7 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
             GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase,
             GetWorkmateByIdUseCase getWorkmateByIdUseCase,
             IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase,
-            LikeUseCase likeUseCase,
+            AddLikeUseCase addLikeUseCase,
             IsOneOfTheUserFavoriteRestaurantsUseCase isOneOfTheUserFavoriteRestaurantsUseCase
     ) {
         this.getSessionUseCase = getSessionUseCase;
@@ -44,7 +44,7 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
         this.getWorkmateByIdUseCase = getWorkmateByIdUseCase;
         this.isTheCurrentSelectionUseCase = isTheCurrentSelectionUseCase;
-        this.likeUseCase = likeUseCase;
+        this.addLikeUseCase = addLikeUseCase;
         this.isOneOfTheUserFavoriteRestaurantsUseCase = isOneOfTheUserFavoriteRestaurantsUseCase;
     }
 
@@ -59,7 +59,7 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
                     this.getRestaurantVisitorsUseCase,
                     this.getWorkmateByIdUseCase,
                     this.isTheCurrentSelectionUseCase,
-                    this.likeUseCase,
+                    this.addLikeUseCase,
                     this.isOneOfTheUserFavoriteRestaurantsUseCase
             );
         }

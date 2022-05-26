@@ -37,7 +37,7 @@ import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForMapUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
 import com.android.go4lunch.businesslogic.usecases.IsOneOfTheUserFavoriteRestaurantsUseCase;
 import com.android.go4lunch.businesslogic.usecases.IsTheCurrentSelectionUseCase;
-import com.android.go4lunch.businesslogic.usecases.LikeUseCase;
+import com.android.go4lunch.businesslogic.usecases.AddLikeUseCase;
 import com.android.go4lunch.businesslogic.usecases.SaveWorkmateUseCase;
 import com.android.go4lunch.businesslogic.usecases.SignOutUseCase;
 import com.google.firebase.FirebaseApp;
@@ -74,7 +74,7 @@ public class Launch extends Application {
     private SaveWorkmateUseCase saveWorkmateUseCase;
     private SignOutUseCase signOutUseCase;
     private IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase;
-    private LikeUseCase likeUseCase;
+    private AddLikeUseCase addLikeUseCase;
     private IsOneOfTheUserFavoriteRestaurantsUseCase isOneOfTheUserFavoriteRestaurantsUseCase;
     private GetNumberOfLikesPerRestaurantUseCase getNumberOfLikesPerRestaurantUseCase;
 
@@ -252,13 +252,13 @@ public class Launch extends Application {
         return this.isTheCurrentSelectionUseCase;
     }
 
-    private synchronized LikeUseCase likeUseCase() {
-        if(this.likeUseCase == null) {
-            this.likeUseCase = new LikeUseCase(
+    private synchronized AddLikeUseCase likeUseCase() {
+        if(this.addLikeUseCase == null) {
+            this.addLikeUseCase = new AddLikeUseCase(
                     this.likeGateway()
             );
         }
-        return this.likeUseCase;
+        return this.addLikeUseCase;
     }
 
     private synchronized IsOneOfTheUserFavoriteRestaurantsUseCase isOneOfTheUserFavoriteRestaurants() {

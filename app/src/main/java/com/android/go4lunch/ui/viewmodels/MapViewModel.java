@@ -6,7 +6,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForMapUseCase;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -38,7 +40,7 @@ public class MapViewModel extends ViewModel {
 
     public LiveData<List<MarkerOptions>> getMarkers(Double myLatitude, Double myLongitude, int radius) {
         this.setMarkers(
-                this.getRestaurantsForMapUseCase.getRestaurantsMarkers(myLatitude, myLongitude, radius)
+                this.getRestaurantsMarkers(myLatitude, myLongitude, radius)
         );
         return this.markers;
     }
@@ -60,6 +62,24 @@ public class MapViewModel extends ViewModel {
             public void onComplete() {
 
             }
+        });
+    }
+
+    public Observable<List<MarkerOptions>> getRestaurantsMarkers(Double myLatitude, Double myLongitude, int radius) {
+        return this.getRestaurantsForMapUseCase.handle(myLatitude, myLongitude, radius).map(restaurants -> {
+            List<MarkerOptions> markersOptions = new ArrayList<>();
+            if(!restaurants.isEmpty()) {
+                for(Restaurant restaurant: restaurants) {
+                    if(restaurant.getGeolocation() != null) {
+                        MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(
+                                restaurant.getGeolocation().getLatitude(),
+                                restaurant.getGeolocation().getLongitude())
+                        ).title(restaurant.getName());
+                        markersOptions.add(markerOptions);
+                    }
+                }
+            }
+            return markersOptions;
         });
     }
 

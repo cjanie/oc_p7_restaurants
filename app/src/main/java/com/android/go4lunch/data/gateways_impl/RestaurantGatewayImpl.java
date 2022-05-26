@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class RestaurantGatewayImpl implements RestaurantGateway {
 
@@ -23,11 +25,11 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
     @Override
     public Observable<List<Restaurant>> getRestaurantsNearby(Double myLatitude, Double myLongitude, int radius) {
         if(this.restaurantsObservable == null) {
-            this.restaurantsObservable = Observable.just(new Mock().restaurants());
-/*
+            //this.restaurantsObservable = Observable.just(new Mock().restaurants()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+
             this.restaurantsObservable = this.restaurantRepository.getRestaurantsNearbyWithDetails(myLatitude, myLongitude, radius)
                     .flatMap(restaurants -> this.formatRestaurants(restaurants));
-*/
+
         }
 
         return this.restaurantsObservable;

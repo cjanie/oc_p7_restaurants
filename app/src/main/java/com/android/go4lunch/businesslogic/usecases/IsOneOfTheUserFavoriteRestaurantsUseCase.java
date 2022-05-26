@@ -25,32 +25,32 @@ public class IsOneOfTheUserFavoriteRestaurantsUseCase {
         this.sessionGateway = sessionGateway;
     }
 
-    public Observable<Boolean> handle(String restaurantId) throws NoWorkmateForSessionException {
-        String workmateOfSessionId = this.getUserId();
-        return this.likeGateway.getLikes().map(likes -> {
-            Log.d(TAG, "-- handle -- likes size: " + likes.size());
-            boolean isAFavoriteRestaurant = false;
+    public Observable<Boolean> handle(String restaurantId) {
+
+        return this.getLikes().flatMap(likes -> this.isFoundAsAFavorite(likes, restaurantId));
+
+    }
+
+    private Observable<List<Like>> getLikes() {
+        return this.likeGateway.getLikes();
+    }
+
+    private Observable<Boolean> isFoundAsAFavorite(List<Like> likes, String restaurantId) {
+        return this.getSession().map(session -> {
+
             if(!likes.isEmpty()) {
                 for(Like like: likes) {
-                    if(like.getRestaurantId().equals(restaurantId) && like.getWorkmateId().equals(workmateOfSessionId)) {
-                        isAFavoriteRestaurant = true;
-                        break;
+                    if(like.getWorkmateId().equals(session.getId()) && like.getRestaurantId().equals(restaurantId)) {
+                        return true;
                     }
                 }
             }
-            return isAFavoriteRestaurant;
+
+            return false;
         });
     }
 
-    private String getUserId() throws NoWorkmateForSessionException {
-        List<Workmate> sessionResults = new ArrayList<>();
-
-        this.sessionGateway.getSession().subscribe(sessionResults::add);
-        if(sessionResults.isEmpty()) {
-            throw new NoWorkmateForSessionException();
-        } else {
-            Workmate session = sessionResults.get(0);
-            return session.getId();
-        }
+    private Observable<Workmate> getSession() {
+        return this.sessionGateway.getSession();
     }
 }

@@ -8,7 +8,7 @@ import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.businesslogic.usecases.IsOneOfTheUserFavoriteRestaurantsUseCase;
 import com.android.go4lunch.businesslogic.usecases.IsTheCurrentSelectionUseCase;
-import com.android.go4lunch.businesslogic.usecases.LikeUseCase;
+import com.android.go4lunch.businesslogic.usecases.AddLikeUseCase;
 import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.businesslogic.entities.Workmate;
@@ -35,7 +35,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
 
     private IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase;
 
-    private LikeUseCase likeUseCase;
+    private AddLikeUseCase addLikeUseCase;
 
     private IsOneOfTheUserFavoriteRestaurantsUseCase isOneOfTheUserFavoriteRestaurantsUseCase;
 
@@ -55,7 +55,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
             GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase,
             GetWorkmateByIdUseCase getWorkmateByIdUsecase,
             IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase,
-            LikeUseCase likeUseCase,
+            AddLikeUseCase addLikeUseCase,
             IsOneOfTheUserFavoriteRestaurantsUseCase isOneOfTheUserFavoriteRestaurantsUseCase
     ) {
         this.getSessionUseCase = getSessionUseCase;
@@ -63,7 +63,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
         this.getWorkmateByIdUsecase = getWorkmateByIdUsecase;
         this.isTheCurrentSelectionUseCase = isTheCurrentSelectionUseCase;
-        this.likeUseCase = likeUseCase;
+        this.addLikeUseCase = addLikeUseCase;
         this.isOneOfTheUserFavoriteRestaurantsUseCase = isOneOfTheUserFavoriteRestaurantsUseCase;
 
         this.visitors = new MutableLiveData<>(new ArrayList<>());
@@ -170,7 +170,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
     public void handleLike() throws NoWorkmateForSessionException {
         this.setSession();
         if(session != null) {
-            this.likeUseCase.handle(this.restaurant.getId(), this.session.getId());
+            this.addLikeUseCase.handle(this.restaurant.getId(), this.session.getId());
             this.updateIsOneOfTheUserFavoriteRestaurants();
         }
     }

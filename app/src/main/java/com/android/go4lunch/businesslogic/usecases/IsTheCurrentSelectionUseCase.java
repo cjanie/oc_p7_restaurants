@@ -16,21 +16,21 @@ public class IsTheCurrentSelectionUseCase {
 
     private SessionGateway sessionGateway;
 
-    private BehaviorSubject isTheCurrentSelectionSubject;
 
     public IsTheCurrentSelectionUseCase(VisitorGateway visitorGateway, SessionGateway sessionGateway) {
         this.visitorGateway = visitorGateway;
         this.sessionGateway = sessionGateway;
-
-        this.isTheCurrentSelectionSubject = BehaviorSubject.create();
     }
 
     public Observable<Boolean> handle(String restaurantId) {
         return this.getSelections()
-                .flatMap(selections ->
+                .flatMap(selections -> this.findCurrentSelection(selections, restaurantId));
+
+                        /*
                         Observable.fromIterable(selections)
                                 .flatMap(selection -> this.findCurrentSelection(selections, restaurantId))
-                );
+                */
+
     }
 
     private Observable<List<Selection>> getSelections() {
@@ -39,15 +39,12 @@ public class IsTheCurrentSelectionUseCase {
 
     private Observable<Boolean> findCurrentSelection(List<Selection> selections, String restaurantId) {
         return this.getSession().map(session -> {
-            if(session != null) {
-                if(!selections.isEmpty()) {
-                    for(Selection selection: selections) {
-                        if(selection.getWorkmateId().equals(session.getId()) && selection.getRestaurantId().equals(restaurantId)) {
-                            return true;
-                        }
+            if(!selections.isEmpty()) {
+                for(Selection selection: selections) {
+                    if(selection.getWorkmateId().equals(session.getId()) && selection.getRestaurantId().equals(restaurantId)) {
+                        return true;
                     }
                 }
-
             }
             return false;
         });

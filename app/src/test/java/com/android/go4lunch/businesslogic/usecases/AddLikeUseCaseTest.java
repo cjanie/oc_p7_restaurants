@@ -10,13 +10,13 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LikeUseCaseTest {
+public class AddLikeUseCaseTest {
 
     @Test
     public void toLikeIncrementsTheNumberOfLikes() {
         InMemoryLikeGateway likeGateway = new InMemoryLikeGateway();
-        new LikeUseCase(likeGateway).handle("restaurant1", "workmate1");
-        new LikeUseCase(likeGateway).handle("restaurant2", "workmate2");
+        new AddLikeUseCase(likeGateway).handle("restaurant1", "workmate1").subscribe();
+        new AddLikeUseCase(likeGateway).handle("restaurant2", "workmate2").subscribe();
         List<Like> likesResult = new ArrayList<>();
         likeGateway.getLikes().subscribe(likesResult::addAll);
 
@@ -26,8 +26,8 @@ public class LikeUseCaseTest {
     @Test
     public void aRestaurantCanBeLikedByManyWorkmates() {
         InMemoryLikeGateway likeGateway = new InMemoryLikeGateway();
-        new LikeUseCase(likeGateway).handle("restaurant1", "workmate1");
-        new LikeUseCase(likeGateway).handle("restaurant1", "workmate2");
+        new AddLikeUseCase(likeGateway).handle("restaurant1", "workmate1").subscribe();
+        new AddLikeUseCase(likeGateway).handle("restaurant1", "workmate2").subscribe();
         List<Like> likesResult = new ArrayList<>();
         likeGateway.getLikes().subscribe(likesResult::addAll);
 
@@ -36,19 +36,18 @@ public class LikeUseCaseTest {
     @Test
     public void aRestaurantCannotHaveManyLikesFromTheSameWorkmate() {
         InMemoryLikeGateway likeGateway = new InMemoryLikeGateway();
-        new LikeUseCase(likeGateway).handle("restaurant1", "workmate1");
-        new LikeUseCase(likeGateway).handle("restaurant1", "workmate1");
-        List<Integer> numberOflikesPerRestaurantResults = new ArrayList<>();
-        new GetNumberOfLikesPerRestaurantUseCase(likeGateway).handle("restaurant1")
-                .subscribe(numberOflikesPerRestaurantResults::add);
-        assert(numberOflikesPerRestaurantResults.get(0) == 1);
+        new AddLikeUseCase(likeGateway).handle("restaurant1", "workmate1").subscribe();
+        new AddLikeUseCase(likeGateway).handle("restaurant1", "workmate1").subscribe();
+        List<Like> likesResults = new ArrayList<>();
+        likeGateway.getLikes().subscribe(likes -> likesResults.addAll(likes));
+        assertEquals(1, likesResults.size());
     }
 
     @Test
     public void oneWorkmateCanLikeManyRestaurants() {
         InMemoryLikeGateway likeGateway = new InMemoryLikeGateway();
-        new LikeUseCase(likeGateway).handle("restaurant1", "workmate1");
-        new LikeUseCase(likeGateway).handle("restaurant1", "workmate2");
+        new AddLikeUseCase(likeGateway).handle("restaurant1", "workmate1").subscribe();
+        new AddLikeUseCase(likeGateway).handle("restaurant1", "workmate2").subscribe();
         List<Like> likesResults = new ArrayList<>();
         likeGateway.getLikes().subscribe(likesResults::addAll);
         assert(likesResults.size() == 2);
