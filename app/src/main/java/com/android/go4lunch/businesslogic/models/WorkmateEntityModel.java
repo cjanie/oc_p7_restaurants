@@ -19,6 +19,14 @@ public class WorkmateEntityModel {
         return workmate;
     }
 
+    public Workmate createVisitor(String id, String name, String urlPhoto) {
+        Workmate visitor = new Workmate(name);
+        visitor.setId(id);
+        visitor.setName(name);
+        visitor.setUrlPhoto(urlPhoto);
+        return visitor;
+    }
+
     public Workmate setWorkmateSelectedRestaurant(Workmate workmate, Restaurant restaurant) {
         Workmate workmateCopy = workmate;
         workmateCopy.setSelectedRestaurant(restaurant);

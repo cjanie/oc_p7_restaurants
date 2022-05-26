@@ -1,7 +1,9 @@
 package com.android.go4lunch.businesslogic.usecases;
 
+import com.android.go4lunch.businesslogic.entities.Workmate;
 import com.android.go4lunch.businesslogic.gateways.LikeGateway;
 import com.android.go4lunch.businesslogic.entities.Like;
+import com.android.go4lunch.businesslogic.gateways.SessionGateway;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,44 +14,45 @@ public class AddLikeUseCase {
 
     private LikeGateway likeGateway;
 
-    public AddLikeUseCase(LikeGateway likeGateway) {
+    private SessionGateway sessionGateway;
+
+    public AddLikeUseCase(
+            LikeGateway likeGateway, SessionGateway sessionGateway
+    ) {
         this.likeGateway = likeGateway;
+        this.sessionGateway = sessionGateway;
     }
 
-    public Observable<Boolean> handle(String restaurantId, String workmateId) {
+    public Observable<Boolean> handle(String restaurantId) {
 
-        return this.likeGateway.getLikes().map(likes -> {
+        return this.likeGateway.getLikes().flatMap(likes ->
+            addToLikes(restaurantId, likes)
+        );
+    }
+
+    private Observable<Boolean> addToLikes(String restaurantId, List<Like> likes) {
+        return this.getSession().map(session -> {
             boolean found = false;
             if(!likes.isEmpty()) {
                 for(Like like: likes) {
-                    if(like.getRestaurantId().equals(restaurantId) && like.getWorkmateId().equals(workmateId)) {
+                    if(like.getRestaurantId().equals(restaurantId) && like.getWorkmateId().equals(session.getId())) {
                         found = true;
                         break;
                     }
                 }
             }
 
-            if(!found)
-                this.likeGateway.add(new Like(restaurantId, workmateId));
+            if(!found) {
+                Like newLike = new Like(restaurantId, session.getId());
+                this.likeGateway.add(newLike);
+            }
+
             return !found;
         });
+    }
 
-
-/*
-        List<Like> likesResults = new ArrayList<>();
-        this.likeGateway.getLikes().subscribe(likesResults::addAll);
-        boolean found = false;
-        for(Like like: likesResults) {
-            if(like.getRestaurantId().equals(restaurantId) && like.getWorkmateId().equals(workmateId)) {
-                found = true;
-                break;
-            }
-        }
-        if(!found)
-            this.likeGateway.add(new Like(restaurantId, workmateId));
-        return !found;
-*/
-
+    private Observable<Workmate> getSession() {
+        return this.sessionGateway.getSession();
     }
 
 }

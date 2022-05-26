@@ -30,6 +30,8 @@ public class GoForLunchUseCase {
         return this.sessionGateway.getSession().map(session -> {
             Selection newSelection = new Selection(restaurantId, session.getId());
             newSelection.setRestaurantName(restaurantName);
+            newSelection.setWorkmateName(session.getName());
+            newSelection.setWorkmateUrlPhoto(session.getUrlPhoto());
 
             Selection workmateSelection = this.getWorkmateSelection(session.getId());
 

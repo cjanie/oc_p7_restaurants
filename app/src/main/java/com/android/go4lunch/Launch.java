@@ -257,7 +257,8 @@ public class Launch extends Application {
     private synchronized AddLikeUseCase likeUseCase() {
         if(this.addLikeUseCase == null) {
             this.addLikeUseCase = new AddLikeUseCase(
-                    this.likeGateway()
+                    this.likeGateway(),
+                    this.sessionGateway()
             );
         }
         return this.addLikeUseCase;

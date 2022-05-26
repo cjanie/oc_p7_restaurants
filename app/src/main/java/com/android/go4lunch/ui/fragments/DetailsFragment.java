@@ -203,21 +203,12 @@ public class DetailsFragment extends Fragment {
 
 
     private void handleGoForLunch() {
-        try {
-            this.restaurantDetailsViewModel.handleGoForLunch();
-        } catch (NotFoundException e) {
-            this.handleError(e);
-        }
+        this.restaurantDetailsViewModel.handleGoForLunch();
+
     }
 
     private void handleLike() {
-        System.out.println("Click like %%%%%%%%%%");
-        try {
-            this.restaurantDetailsViewModel.handleLike();
-        } catch (NoWorkmateForSessionException e) {
-            e.printStackTrace();
-            this.handleError(e);
-        }
+        this.restaurantDetailsViewModel.handleLike();
     }
 
     private void handleWebSite(String webSiteUrl) {
