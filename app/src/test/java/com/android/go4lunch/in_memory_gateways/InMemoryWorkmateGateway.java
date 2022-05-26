@@ -1,7 +1,7 @@
 package com.android.go4lunch.in_memory_gateways;
 
-import com.android.go4lunch.gateways.WorkmateGateway;
-import com.android.go4lunch.models.Workmate;
+import com.android.go4lunch.businesslogic.gateways.WorkmateGateway;
+import com.android.go4lunch.businesslogic.entities.Workmate;
 
 import java.util.ArrayList;
 import java.util.List;

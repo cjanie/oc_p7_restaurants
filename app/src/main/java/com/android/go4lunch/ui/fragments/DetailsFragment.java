@@ -25,16 +25,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
-import com.android.go4lunch.models.Restaurant;
+import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.adapters.ListVisitorRecyclerViewAdapter;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
-import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
-import com.android.go4lunch.usecases.exceptions.NotFoundException;
+import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
+import com.android.go4lunch.businesslogic.exceptions.NotFoundException;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,9 +44,9 @@ public class DetailsFragment extends Fragment {
 
     private ActivityResultLauncher launcher;
 
-    private final String[] permissions = new String[] {Manifest.permission.CALL_PHONE};
+    private final String[] PERMISSIONS = new String[] {Manifest.permission.CALL_PHONE};
 
-    public final int requestCode = 155;
+    private final int REQUEST_CODE = 155;
 
     private RestaurantDetailsViewModel restaurantDetailsViewModel;
 
@@ -106,29 +104,31 @@ public class DetailsFragment extends Fragment {
                 this.buttonGo.setImageDrawable(this.getActivity().getDrawable(R.drawable.ic_baseline_add_task_24));
             }
         });
-        this.restaurantDetailsViewModel.updateIsTheCurrentSelection();
+        this.restaurantDetailsViewModel.fetchIsTheCurrentSelectionToUpdateLiveData();
 
         // IS FAVORITE
-        try {
-            this.restaurantDetailsViewModel.getIsOneOfTheUserFavoriteRestaurants().observe(this.getActivity(), isFavorite -> {
-                if(isFavorite) {
-                    this.star.setImageDrawable(this.getActivity().getDrawable(R.drawable.ic_baseline_star_24));
-                } else {
-                    this.star.setImageDrawable(this.getActivity().getDrawable(R.drawable.ic_baseline_star_border_24));
-                }
-            });
-            this.restaurantDetailsViewModel.updateIsOneOfTheUserFavoriteRestaurants();
-        } catch (NoWorkmateForSessionException e) {
-            e.printStackTrace();
-            this.handleError(e);
-        }
+
+        this.restaurantDetailsViewModel.getIsMarkedAsFavoriteLiveData().observe(this.getActivity(), isFavorite -> {
+            if(isFavorite) {
+                this.star.setImageDrawable(this.getActivity().getDrawable(R.drawable.ic_baseline_star_24));
+            } else {
+                this.star.setImageDrawable(this.getActivity().getDrawable(R.drawable.ic_baseline_star_border_24));
+            }
+        });
+        this.restaurantDetailsViewModel.fetchIsMarkedAsFavoriteToUpdateLiveData();
+
 
         // VISITORS
-        this.restaurantDetailsViewModel.getVisitors().observe(this.getActivity(), visitors -> {
+        this.restaurantDetailsViewModel.getVisitorsLiveData().observe(this.getActivity(), visitors -> {
             ListVisitorRecyclerViewAdapter adapter = new ListVisitorRecyclerViewAdapter(visitors);
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
             recyclerView.setAdapter(adapter);
         });
+        try {
+            this.restaurantDetailsViewModel.fetchVisitorsToUpdateLiveData();
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
 
         // set on Click Listeners
         this.buttonGo.setOnClickListener(view ->
@@ -160,15 +160,15 @@ public class DetailsFragment extends Fragment {
                 isGranted -> {
                     if(isGranted) {
                         EasyPermissions.onRequestPermissionsResult(
-                                this.requestCode,
-                                this.permissions,
+                                this.REQUEST_CODE,
+                                this.PERMISSIONS,
                                 new int[]{PackageManager.PERMISSION_GRANTED},
                                 this
                         );
                     } else {
                         EasyPermissions.onRequestPermissionsResult(
-                                this.requestCode,
-                                this.permissions,
+                                this.REQUEST_CODE,
+                                this.PERMISSIONS,
                                 new int[]{PackageManager.PERMISSION_DENIED},
                                 this
                         );
@@ -179,14 +179,14 @@ public class DetailsFragment extends Fragment {
     }
 
     private void requestCallPermission() {
-        this.launcher.launch(this.permissions[0]);
+        this.launcher.launch(this.PERMISSIONS[0]);
     }
 
     @SuppressLint("MissingPermission")
     @AfterPermissionGranted(155)
     private void handleCall() {
         // Control
-        if(EasyPermissions.hasPermissions(this.getActivity(), this.permissions)) {
+        if(EasyPermissions.hasPermissions(this.getActivity(), this.PERMISSIONS)) {
             String phoneNumber = this.restaurantDetailsViewModel.getRestaurant().getPhone();
             if(phoneNumber != null && !phoneNumber.isEmpty()) {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
@@ -195,7 +195,7 @@ public class DetailsFragment extends Fragment {
             } else {
                 Toast.makeText(this.getActivity(), R.string.no_phone_number_available, Toast.LENGTH_LONG).show();
             }
-        } else if(EasyPermissions.permissionPermanentlyDenied(this, this.permissions[0])){
+        } else if(EasyPermissions.permissionPermanentlyDenied(this, this.PERMISSIONS[0])){
             new AppSettingsDialog.Builder(this).build().show();
         }
     }

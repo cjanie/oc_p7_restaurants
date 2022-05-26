@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
+import com.android.go4lunch.businesslogic.entities.Geolocation;
 import com.android.go4lunch.ui.adapters.ListRestaurantRecyclerViewAdapter;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModel;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
@@ -39,7 +40,6 @@ public class ListRestaurantFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Data
-        //this.sharedViewModel = new ViewModelProvider(this.requireActivity()).get(SharedViewModel.class);
         this.restaurantsViewModel = new ViewModelProvider(
                 this,
                 ((Launch) this.getActivity().getApplication()).restaurantsViewModelFactory()
@@ -52,22 +52,33 @@ public class ListRestaurantFragment extends Fragment {
         this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
         this.recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
 
+        // Listens to the result of the view model action
+        this.observeRestaurantsData();
+
+        // Call the View model action
+        this.updateRestaurantsDataFromMyPosition();
+
+        return root;
+    }
+
+    private void observeRestaurantsData() {
+        this.restaurantsViewModel.getRestaurantsLiveData().observe(this.getViewLifecycleOwner(), restaurants -> {
+            ListRestaurantRecyclerViewAdapter adapter = new ListRestaurantRecyclerViewAdapter(restaurants);
+            this.recyclerView.setAdapter(adapter);
+        });
+    }
+
+    private void updateRestaurantsDataFromMyPosition() {
         this.sharedViewModel.getGeolocation().observe(this.getViewLifecycleOwner(), geolocation -> {
             if(geolocation != null) {
-                this.restaurantsViewModel.getRestaurants(
+                this.restaurantsViewModel.fetchRestaurantsObservableToUpdateLiveData(
                         geolocation.getLatitude(),
                         geolocation.getLongitude(),
                         1000
-                ).observe(this.getViewLifecycleOwner(), restaurants -> {
-                    ListRestaurantRecyclerViewAdapter adapter = new ListRestaurantRecyclerViewAdapter(restaurants);
-                    this.recyclerView.setAdapter(adapter);
-                });
+                );
 
             }
         });
-
-
-        return root;
     }
 
 }

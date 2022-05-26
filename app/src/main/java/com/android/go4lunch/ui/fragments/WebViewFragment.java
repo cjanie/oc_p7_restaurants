@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.R;
-import com.android.go4lunch.models.Restaurant;
+import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
 
 public class WebViewFragment extends Fragment {

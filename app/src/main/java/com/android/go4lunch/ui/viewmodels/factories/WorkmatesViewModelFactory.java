@@ -1,30 +1,22 @@
 package com.android.go4lunch.ui.viewmodels.factories;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.ui.viewmodels.WorkmatesViewModel;
-import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
-import com.android.go4lunch.usecases.GetWorkmatesUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetWorkmatesUseCase;
 
 public class WorkmatesViewModelFactory implements ViewModelProvider.Factory {
 
     private final GetWorkmatesUseCase getWorkmatesUseCase;
 
-    private final GetWorkmateSelectionUseCase getWorkmateSelectionUseCase;
-
 
 
     public WorkmatesViewModelFactory(
-            GetWorkmatesUseCase getWorkmatesUseCase,
-            GetWorkmateSelectionUseCase getWorkmateSelectionUseCase
-
+            GetWorkmatesUseCase getWorkmatesUseCase
     ) {
         this.getWorkmatesUseCase = getWorkmatesUseCase;
-        this.getWorkmateSelectionUseCase = getWorkmateSelectionUseCase;
     }
 
     @NonNull
@@ -32,8 +24,7 @@ public class WorkmatesViewModelFactory implements ViewModelProvider.Factory {
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if(modelClass.isAssignableFrom(WorkmatesViewModel.class)) {
             return (T) new WorkmatesViewModel(
-                    this.getWorkmatesUseCase,
-                    this.getWorkmateSelectionUseCase
+                    this.getWorkmatesUseCase
             );
         }
         throw new IllegalArgumentException("WorkmatesViewModelFactory: Unknown ViewModel class");

@@ -2,9 +2,8 @@ package com.android.go4lunch.ui.viewmodels;
 
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.usecases.GetSessionUseCase;
-import com.android.go4lunch.usecases.SaveWorkmateUseCase;
+import com.android.go4lunch.businesslogic.entities.Workmate;
+import com.android.go4lunch.businesslogic.usecases.SaveWorkmateUseCase;
 
 public class SignInViewModel extends ViewModel {
 

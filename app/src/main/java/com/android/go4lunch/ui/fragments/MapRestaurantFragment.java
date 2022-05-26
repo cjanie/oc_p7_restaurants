@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
+import com.android.go4lunch.businesslogic.entities.Geolocation;
 import com.android.go4lunch.ui.viewmodels.MapViewModel;
 import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
@@ -23,25 +23,24 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MapRestaurantFragment extends Fragment implements OnMapReadyCallback {
 
+    // View models
     private SharedViewModel sharedViewModel;
 
     private MapViewModel mapViewModel;
 
-    private MutableLiveData<List<MarkerOptions>> markers;
 
+    // UI
     @BindView(R.id.map_view)
     MapView mapView;
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
 
+    // Constructor
     public MapRestaurantFragment(SharedViewModel sharedViewModel) {
         this.sharedViewModel = sharedViewModel;
     }
@@ -53,8 +52,6 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
         // Data
         MapViewModelFactory mapViewModelFactory = ((Launch) this.getActivity().getApplication()).mapViewModelFactory();
         this.mapViewModel = new ViewModelProvider(this, mapViewModelFactory).get(MapViewModel.class);
-        this.markers = new MutableLiveData<>(new ArrayList<>());
-
         // UI
         View root = inflater.inflate(R.layout.fragment_restaurant_map, container, false);
         ButterKnife.bind(this, root);
@@ -68,7 +65,10 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
         }
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
-        this.setMarkersAtInitMyPosition();
+
+        // Call the Map View Model Update Action when My Position is available
+        // The result of the action is listened in the call back on map ready
+        this.updateRestaurantsMarkersAtInitMyPosition();
 
         return root;
     }
@@ -108,8 +108,9 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
     public void onMapReady(@NonNull GoogleMap googleMap) {
         // Show my Position on the map
         googleMap.setMyLocationEnabled(true);
-        // Add markers
-        this.markers.observe(this, markers -> {
+        // Add markers on the map
+        // Listening to the result of the view model action
+        this.mapViewModel.getRestaurantsMarkersLiveData().observe(this, markers -> {
             if(!markers.isEmpty()) {
                 for(MarkerOptions marker: markers) {
                     googleMap.addMarker(marker);
@@ -136,18 +137,13 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
         mapView.onLowMemory();
     }
 
-
-    public void setMarkersAtInitMyPosition() {
-
+    private void updateRestaurantsMarkersAtInitMyPosition() {
         this.sharedViewModel.getGeolocation().observe(this.getViewLifecycleOwner(), geolocation -> {
-            this.mapViewModel.getMarkers(
+            // Action of the Map View Model to update data when geolocation is available;
+            this.mapViewModel.fetchRestaurantsToUpdateRestaurantsMarkersLiveData(
                     geolocation.getLatitude(),
                     geolocation.getLongitude(),
-                    1000
-            ).observe(this.getViewLifecycleOwner(), markers -> {
-                this.markers.setValue(markers);
-            });
+                    1000);
         });
     }
-
 }

@@ -4,14 +4,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.models.Workmate;
-import com.android.go4lunch.usecases.GetSessionUseCase;
-import com.android.go4lunch.usecases.SignOutUseCase;
-import com.android.go4lunch.usecases.exceptions.NoWorkmateForSessionException;
-import com.android.go4lunch.usecases.models.WorkmateModel;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.android.go4lunch.businesslogic.entities.Workmate;
+import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
+import com.android.go4lunch.businesslogic.usecases.SignOutUseCase;
+import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
 
 import io.reactivex.disposables.Disposable;
 

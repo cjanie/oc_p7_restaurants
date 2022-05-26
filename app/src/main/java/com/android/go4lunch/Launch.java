@@ -2,21 +2,21 @@ package com.android.go4lunch;
 
 import android.app.Application;
 
-import com.android.go4lunch.apis.apiGoogleMaps.repositories.DistanceRepository;
-import com.android.go4lunch.apis.apiGoogleMaps.GoogleMapsHttpClientProvider;
-import com.android.go4lunch.apis.apiGoogleMaps.repositories.RestaurantRepository;
-import com.android.go4lunch.gateways.DistanceGateway;
-import com.android.go4lunch.gateways.LikeGateway;
-import com.android.go4lunch.gateways.RestaurantGateway;
-import com.android.go4lunch.gateways.SessionGateway;
-import com.android.go4lunch.gateways.VisitorGateway;
-import com.android.go4lunch.gateways.WorkmateGateway;
-import com.android.go4lunch.gateways_impl.DistanceGatewayImpl;
-import com.android.go4lunch.gateways_impl.LikeGatewayImpl;
-import com.android.go4lunch.gateways_impl.RestaurantGatewayImpl;
-import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
-import com.android.go4lunch.gateways_impl.VisitorGatewayImpl;
-import com.android.go4lunch.gateways_impl.WorkmateGatewayImpl;
+import com.android.go4lunch.data.apiGoogleMaps.repositories.DistanceRepository;
+import com.android.go4lunch.data.apiGoogleMaps.GoogleMapsHttpClientProvider;
+import com.android.go4lunch.data.apiGoogleMaps.repositories.RestaurantRepository;
+import com.android.go4lunch.businesslogic.gateways.DistanceGateway;
+import com.android.go4lunch.businesslogic.gateways.LikeGateway;
+import com.android.go4lunch.businesslogic.gateways.RestaurantGateway;
+import com.android.go4lunch.businesslogic.gateways.SessionGateway;
+import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
+import com.android.go4lunch.businesslogic.gateways.WorkmateGateway;
+import com.android.go4lunch.data.gateways_impl.DistanceGatewayImpl;
+import com.android.go4lunch.data.gateways_impl.LikeGatewayImpl;
+import com.android.go4lunch.data.gateways_impl.RestaurantGatewayImpl;
+import com.android.go4lunch.data.gateways_impl.SessionGatewayImpl;
+import com.android.go4lunch.data.gateways_impl.VisitorGatewayImpl;
+import com.android.go4lunch.data.gateways_impl.WorkmateGatewayImpl;
 import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.RealDateProvider;
 import com.android.go4lunch.providers.RealTimeProvider;
@@ -27,20 +27,19 @@ import com.android.go4lunch.ui.viewmodels.factories.RestaurantDetailsViewModelFa
 import com.android.go4lunch.ui.viewmodels.factories.RestaurantsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.SignInViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.WorkmatesViewModelFactory;
-import com.android.go4lunch.usecases.GetNumberOfLikesPerRestaurantUseCase;
-import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
-import com.android.go4lunch.usecases.GetWorkmateByIdUseCase;
-import com.android.go4lunch.usecases.GetWorkmateSelectionUseCase;
-import com.android.go4lunch.usecases.GetWorkmatesUseCase;
-import com.android.go4lunch.usecases.GoForLunchUseCase;
-import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
-import com.android.go4lunch.usecases.GetRestaurantsForMapUseCase;
-import com.android.go4lunch.usecases.GetSessionUseCase;
-import com.android.go4lunch.usecases.IsOneOfTheUserFavoriteRestaurantsUseCase;
-import com.android.go4lunch.usecases.IsTheCurrentSelectionUseCase;
-import com.android.go4lunch.usecases.LikeUseCase;
-import com.android.go4lunch.usecases.SaveWorkmateUseCase;
-import com.android.go4lunch.usecases.SignOutUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetNumberOfLikesPerRestaurantUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetRestaurantVisitorsUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetWorkmateByIdUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetWorkmatesUseCase;
+import com.android.go4lunch.businesslogic.usecases.GoForLunchUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForListUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetRestaurantsNearbyUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
+import com.android.go4lunch.businesslogic.usecases.IsInFavoritesRestaurantsUseCase;
+import com.android.go4lunch.businesslogic.usecases.IsTheCurrentSelectionUseCase;
+import com.android.go4lunch.businesslogic.usecases.AddLikeUseCase;
+import com.android.go4lunch.businesslogic.usecases.SaveWorkmateUseCase;
+import com.android.go4lunch.businesslogic.usecases.SignOutUseCase;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -65,10 +64,9 @@ public class Launch extends Application {
     private LikeGateway likeGateway;
 
     // Use cases
-    private GetRestaurantsForMapUseCase getRestaurantsForMapUseCase;
+    private GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase;
     private GetRestaurantsForListUseCase getRestaurantsForListUseCase;
     private GetWorkmatesUseCase getWorkmatesUseCase;
-    private GetWorkmateSelectionUseCase getWorkmateSelectionUseCase;
     private GetWorkmateByIdUseCase getWorkmateByIdUseCase;
     private GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
     private GetSessionUseCase getSessionUseCase;
@@ -76,8 +74,8 @@ public class Launch extends Application {
     private SaveWorkmateUseCase saveWorkmateUseCase;
     private SignOutUseCase signOutUseCase;
     private IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase;
-    private LikeUseCase likeUseCase;
-    private IsOneOfTheUserFavoriteRestaurantsUseCase isOneOfTheUserFavoriteRestaurantsUseCase;
+    private AddLikeUseCase addLikeUseCase;
+    private IsInFavoritesRestaurantsUseCase isInFavoritesRestaurantsUseCase;
     private GetNumberOfLikesPerRestaurantUseCase getNumberOfLikesPerRestaurantUseCase;
 
     // view models factories
@@ -177,11 +175,11 @@ public class Launch extends Application {
     }
 
     // Use cases
-    private synchronized GetRestaurantsForMapUseCase getGetRestaurantsForMapUseCase() {
-        if(this.getRestaurantsForMapUseCase == null) {
-            this.getRestaurantsForMapUseCase = new GetRestaurantsForMapUseCase(restaurantGateway());
+    private synchronized GetRestaurantsNearbyUseCase getGetRestaurantsForMapUseCase() {
+        if(this.getRestaurantsNearbyUseCase == null) {
+            this.getRestaurantsNearbyUseCase = new GetRestaurantsNearbyUseCase(restaurantGateway());
         }
-        return this.getRestaurantsForMapUseCase;
+        return this.getRestaurantsNearbyUseCase;
     }
 
     private synchronized GetRestaurantsForListUseCase getGetRestaurantsForListUseCase() {
@@ -195,17 +193,11 @@ public class Launch extends Application {
         if(this.getWorkmatesUseCase == null) {
             this.getWorkmatesUseCase = new GetWorkmatesUseCase(
                     this.workmateGateway(),
-                    this.sessionGateway()
+                    this.sessionGateway(),
+                    this.visitorGateway()
             );
         }
         return this.getWorkmatesUseCase;
-    }
-
-    private synchronized GetWorkmateSelectionUseCase getWorkmateSelectionUseCase() {
-        if(this.getWorkmateSelectionUseCase == null) {
-            this.getWorkmateSelectionUseCase = new GetWorkmateSelectionUseCase(visitorGateway());
-        }
-        return this.getWorkmateSelectionUseCase;
     }
 
     private synchronized GetWorkmateByIdUseCase getWorkmateByIdUseCase() {
@@ -260,23 +252,23 @@ public class Launch extends Application {
         return this.isTheCurrentSelectionUseCase;
     }
 
-    private synchronized LikeUseCase likeUseCase() {
-        if(this.likeUseCase == null) {
-            this.likeUseCase = new LikeUseCase(
+    private synchronized AddLikeUseCase likeUseCase() {
+        if(this.addLikeUseCase == null) {
+            this.addLikeUseCase = new AddLikeUseCase(
                     this.likeGateway()
             );
         }
-        return this.likeUseCase;
+        return this.addLikeUseCase;
     }
 
-    private synchronized IsOneOfTheUserFavoriteRestaurantsUseCase isOneOfTheUserFavoriteRestaurants() {
-        if(this.isOneOfTheUserFavoriteRestaurantsUseCase == null) {
-            this.isOneOfTheUserFavoriteRestaurantsUseCase = new IsOneOfTheUserFavoriteRestaurantsUseCase(
+    private synchronized IsInFavoritesRestaurantsUseCase isOneOfTheUserFavoriteRestaurants() {
+        if(this.isInFavoritesRestaurantsUseCase == null) {
+            this.isInFavoritesRestaurantsUseCase = new IsInFavoritesRestaurantsUseCase(
                     this.likeGateway(),
                     this.sessionGateway()
             );
         }
-        return this.isOneOfTheUserFavoriteRestaurantsUseCase;
+        return this.isInFavoritesRestaurantsUseCase;
     }
 
     private synchronized GetNumberOfLikesPerRestaurantUseCase getNumberOfLikesPerRestaurantUseCase() {
@@ -327,8 +319,7 @@ public class Launch extends Application {
     public synchronized WorkmatesViewModelFactory workmatesViewModelFactory() {
         if(this.workmatesViewModelFactory == null) {
             this.workmatesViewModelFactory = new WorkmatesViewModelFactory(
-                    getWorkmatesUseCase(),
-                    getWorkmateSelectionUseCase()
+                    getWorkmatesUseCase()
             );
         }
         return this.workmatesViewModelFactory;

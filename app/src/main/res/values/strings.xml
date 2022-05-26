@@ -25,6 +25,7 @@
     <string name="workmates">Workmates</string>
 
     <!-- RESTAURANTS -->
+    <string name="location_not_available">Your location is not available</string>
     <string name="restaurant_name">Restaurant Name</string>
     <string name="address">Address</string>
 
