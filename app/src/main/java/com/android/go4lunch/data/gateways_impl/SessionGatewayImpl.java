@@ -22,6 +22,7 @@ public class SessionGatewayImpl implements SessionGateway {
     public SessionGatewayImpl(FirebaseAuth auth) {
         this.auth = auth;
         this.sessionSubject = BehaviorSubject.create();
+        this.fetchSessionToUpdateSubject();
     }
 
     @Override
@@ -31,7 +32,7 @@ public class SessionGatewayImpl implements SessionGateway {
 
     @Override
     public Observable<Workmate> getSession()  {
-        this.fetchSessionToUpdateSubject();
+
         return this.sessionSubject
                 .hide()
                 .subscribeOn(Schedulers.io())
@@ -48,12 +49,7 @@ public class SessionGatewayImpl implements SessionGateway {
                     authUser.getPhotoUrl().toString()
             );
 
-            this.updateSessionSubject(session);
+            this.sessionSubject.onNext(session);
         }
     }
-
-    private void updateSessionSubject(Workmate session) {
-        this.sessionSubject.onNext(session);
-    }
-
 }

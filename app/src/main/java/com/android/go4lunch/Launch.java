@@ -223,7 +223,9 @@ public class Launch extends Application {
 
     private synchronized GoForLunchUseCase goForLunchUseCase() {
         if(this.goForLunchUseCase == null) {
-            this.goForLunchUseCase = new GoForLunchUseCase(visitorGateway());
+            this.goForLunchUseCase = new GoForLunchUseCase(
+                    visitorGateway(),
+                    sessionGateway());
         }
         return this.goForLunchUseCase;
     }
