@@ -7,6 +7,8 @@ import com.android.go4lunch.businesslogic.entities.Selection;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+
 public class GoForLunchUseCase {
 
     private final VisitorGateway visitorGateway;
@@ -20,23 +22,31 @@ public class GoForLunchUseCase {
         this.sessionGateway = sessionGateway;
     }
 
-    public void handle(String restaurantId, String workmateId, String restaurantName) {
+    public Observable<Boolean> handle(String restaurantId, String restaurantName) {
+        return this.toggle(restaurantId, restaurantName);
+    }
 
-        Selection newSelection = new Selection(restaurantId, workmateId);
-        newSelection.setRestaurantName(restaurantName);
+    private Observable<Boolean> toggle(String restaurantId, String restaurantName) {
+        return this.sessionGateway.getSession().map(session -> {
+            Selection newSelection = new Selection(restaurantId, session.getId());
+            newSelection.setRestaurantName(restaurantName);
 
-        Selection workmateSelection = this.getWorkmateSelection(workmateId);
+            Selection workmateSelection = this.getWorkmateSelection(session.getId());
 
-        if(workmateSelection == null)
-            this.visitorGateway.addSelection(newSelection);
-        else {
-            if(workmateSelection.getRestaurantId().equals(restaurantId)) {
-                this.visitorGateway.removeSelection(workmateSelection.getId());
-            } else {
-                this.visitorGateway.removeSelection(workmateSelection.getId());
+            if(workmateSelection == null) {
                 this.visitorGateway.addSelection(newSelection);
+
+            } else {
+                if(workmateSelection.getRestaurantId().equals(restaurantId)) {
+                    this.visitorGateway.removeSelection(workmateSelection.getId());
+
+                } else {
+                    this.visitorGateway.removeSelection(workmateSelection.getId());
+                    this.visitorGateway.addSelection(newSelection);
+                }
             }
-        }
+            return true;
+        });
     }
 
     private List<Selection> getSelections() {

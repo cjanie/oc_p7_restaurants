@@ -129,20 +129,17 @@ public class RestaurantDetailsViewModel extends ViewModel {
     }
 
     public void handleGoForLunch() throws NotFoundException {
-        this.setSession();
-        if(this.session != null) {
+
             this.goForLunchUseCase.handle(
                     this.restaurant.getId(),
-                    this.session.getId(),
                     this.restaurant.getName()
                     );
             // TODO
             Observable.just(true).delay(2, TimeUnit.SECONDS).subscribe(bool -> {
                 this.fetchIsTheCurrentSelectionToUpdateLiveData();
-                //this.fetchVisitors();
             });
 
-        }
+
 
     }
 

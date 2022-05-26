@@ -10,6 +10,10 @@ public class Selection {
 
     private String restaurantName;
 
+    private String workmateName;
+
+    private String workmateUrlPhoto;
+
     public Selection(String restaurantId, String workmateId) {
         this.id = workmateId;
         this.restaurantId = restaurantId;
@@ -46,5 +50,21 @@ public class Selection {
 
     public void setRestaurantName(String restaurantName) {
         this.restaurantName = restaurantName;
+    }
+
+    public String getWorkmateName() {
+        return workmateName;
+    }
+
+    public void setWorkmateName(String workmateName) {
+        this.workmateName = workmateName;
+    }
+
+    public String getWorkmateUrlPhoto() {
+        return workmateUrlPhoto;
+    }
+
+    public void setWorkmateUrlPhoto(String workmateUrlPhoto) {
+        this.workmateUrlPhoto = workmateUrlPhoto;
     }
 }

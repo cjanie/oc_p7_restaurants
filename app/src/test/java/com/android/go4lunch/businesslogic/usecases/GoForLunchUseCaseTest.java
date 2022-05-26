@@ -24,12 +24,15 @@ public class GoForLunchUseCaseTest {
         selections.add(selection);
         visitorGateway.setSelections(selections);
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
+        Workmate session = new Workmate("Janie");
+        session.setId("1");
+        sessionGateway.setSession(session);
 
         GoForLunchUseCase goForLunchUseCase = new GoForLunchUseCase(
                 visitorGateway, sessionGateway);
 
         // LAUNCH LIKE
-        goForLunchUseCase.handle("1", "1", "resto1");
+        goForLunchUseCase.handle("1", "resto1").subscribe();
 
         List<Selection> savedSelections = new ArrayList<>();
         visitorGateway.getSelections().subscribe(savedSelections::addAll);
@@ -41,11 +44,14 @@ public class GoForLunchUseCaseTest {
     public void cancelSelectionDecrementsVisitors() {
         InMemoryVisitorGateway visitorGateway = new InMemoryVisitorGateway();
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
+        Workmate session = new Workmate("Janie");
+        session.setId("1");
+        sessionGateway.setSession(session);
         GoForLunchUseCase goForLunchUseCase = new GoForLunchUseCase(visitorGateway, sessionGateway);
         // Increments
-        goForLunchUseCase.handle("1",  "1", "resto1");
+        goForLunchUseCase.handle("1", "resto1");
         // Decrements
-        goForLunchUseCase.handle("1", "1", "resto1");
+        goForLunchUseCase.handle("1", "resto1");
 
         List<Selection> savedSelections = new ArrayList<>();
         visitorGateway.getSelections().subscribe(savedSelections::addAll);
@@ -62,12 +68,14 @@ public class GoForLunchUseCaseTest {
         selections.add(selection);
         visitorGateway.setSelections(selections);
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
-
+        Workmate session = new Workmate("Cyril");
+        session.setId("2");
+        sessionGateway.setSession(session);
         GoForLunchUseCase goForLunchUseCase = new GoForLunchUseCase(
                 visitorGateway, sessionGateway
         );
-        goForLunchUseCase.handle("2", "2","resto2");
-        goForLunchUseCase.handle("2", "2", "resto2");
+        goForLunchUseCase.handle("2","resto2");
+        goForLunchUseCase.handle("2", "resto2");
         List<Selection> savedSelections = new ArrayList<>();
         visitorGateway.getSelections().subscribe(savedSelections::addAll);
         assert(savedSelections.size() == 1);
@@ -82,13 +90,15 @@ public class GoForLunchUseCaseTest {
         selections.add(selection);
         visitorGateway.setSelections(selections);
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
-
+        Workmate session = new Workmate("Janie");
+        session.setId("2");
+        sessionGateway.setSession(session);
         GoForLunchUseCase goForLunchUseCase = new GoForLunchUseCase(
                 visitorGateway, sessionGateway
         );
 
         // LAUNCH LIKE
-        goForLunchUseCase.handle("1", "2", "resto2");
+        goForLunchUseCase.handle("1", "resto2");
 
         List<Selection> savedSelections = new ArrayList<>();
         visitorGateway.getSelections().subscribe(savedSelections::addAll);
