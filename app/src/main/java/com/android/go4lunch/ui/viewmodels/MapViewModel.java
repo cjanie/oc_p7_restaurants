@@ -1,7 +1,5 @@
 package com.android.go4lunch.ui.viewmodels;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -14,11 +12,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
-
 public class MapViewModel extends ViewModel {
 
     private String TAG = "MAP VIEW MODEL";
@@ -26,20 +19,22 @@ public class MapViewModel extends ViewModel {
     // Use Case
     private GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase;
 
-    // Data
-    private final MutableLiveData<List<MarkerOptions>> markers;
+    // LiveData
+    private final MutableLiveData<List<MarkerOptions>> markersLiveData;
 
     // Constructor
     public MapViewModel(GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase) {
         this.getRestaurantsNearbyUseCase = getRestaurantsNearbyUseCase;
-        this.markers = new MutableLiveData<>(new ArrayList<>());
+        this.markersLiveData = new MutableLiveData<>(new ArrayList<>());
     }
 
-    public LiveData<List<MarkerOptions>> getRestaurantsMarkers() {
-        return this.markers;
+    // Getter for the view the model livedata that the activity listens
+    public LiveData<List<MarkerOptions>> getRestaurantsMarkersLiveData() {
+        return this.markersLiveData;
     }
 
-    public void fetchRestaurantsMarkers(Double myLatitude, Double myLongitude, int radius) {
+    // View model Action that updates the view model livedata
+    public void fetchRestaurantsToUpdateRestaurantsMarkersLiveData(Double myLatitude, Double myLongitude, int radius) {
         this.getRestaurantsNearbyUseCase.handle(myLatitude, myLongitude, radius).subscribe(restaurants -> {
             List<MarkerOptions> markersOptions = new ArrayList<>();
             if(!restaurants.isEmpty()) {
@@ -53,8 +48,7 @@ public class MapViewModel extends ViewModel {
                     }
                 }
             }
-            markers.postValue(markersOptions);
-
+            markersLiveData.postValue(markersOptions);
         });
     }
 
