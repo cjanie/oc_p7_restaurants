@@ -33,7 +33,7 @@ import com.android.go4lunch.businesslogic.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetWorkmatesUseCase;
 import com.android.go4lunch.businesslogic.usecases.GoForLunchUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForListUseCase;
-import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForMapUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetRestaurantsNearbyUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
 import com.android.go4lunch.businesslogic.usecases.IsOneOfTheUserFavoriteRestaurantsUseCase;
 import com.android.go4lunch.businesslogic.usecases.IsTheCurrentSelectionUseCase;
@@ -64,7 +64,7 @@ public class Launch extends Application {
     private LikeGateway likeGateway;
 
     // Use cases
-    private GetRestaurantsForMapUseCase getRestaurantsForMapUseCase;
+    private GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase;
     private GetRestaurantsForListUseCase getRestaurantsForListUseCase;
     private GetWorkmatesUseCase getWorkmatesUseCase;
     private GetWorkmateByIdUseCase getWorkmateByIdUseCase;
@@ -175,11 +175,11 @@ public class Launch extends Application {
     }
 
     // Use cases
-    private synchronized GetRestaurantsForMapUseCase getGetRestaurantsForMapUseCase() {
-        if(this.getRestaurantsForMapUseCase == null) {
-            this.getRestaurantsForMapUseCase = new GetRestaurantsForMapUseCase(restaurantGateway());
+    private synchronized GetRestaurantsNearbyUseCase getGetRestaurantsForMapUseCase() {
+        if(this.getRestaurantsNearbyUseCase == null) {
+            this.getRestaurantsNearbyUseCase = new GetRestaurantsNearbyUseCase(restaurantGateway());
         }
-        return this.getRestaurantsForMapUseCase;
+        return this.getRestaurantsNearbyUseCase;
     }
 
     private synchronized GetRestaurantsForListUseCase getGetRestaurantsForListUseCase() {

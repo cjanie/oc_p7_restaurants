@@ -3,7 +3,6 @@ package com.android.go4lunch.businesslogic.usecases;
 import com.android.go4lunch.businesslogic.entities.Geolocation;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.in_memory_gateways.InMemoryRestaurantGateway;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.junit.Test;
 
@@ -15,13 +14,13 @@ import io.reactivex.Observable;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class GetRestaurantsForMapUseCaseTest {
+public class GetRestaurantsNearbyUseCaseTest {
 
     @Test
     public void shouldReturn1MarkerOptionsWhen1RestaurantWithGeolocationIsAvailable() {
         List<Restaurant> restaurants = this.createListOfRestaurantsForRepository(1, true);
-        GetRestaurantsForMapUseCase getRestaurantsForMapUseCase = this.createGetRestaurantForMap(restaurants);
-        List<Restaurant> results = this.getObservedResults(getRestaurantsForMapUseCase);
+        GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase = this.createGetRestaurantForMap(restaurants);
+        List<Restaurant> results = this.getObservedResults(getRestaurantsNearbyUseCase);
         assert(results.size() == 1);
         assert(results.get(0).getName().equals("Resto U"));
     }
@@ -29,28 +28,17 @@ public class GetRestaurantsForMapUseCaseTest {
     @Test
     public void shouldReturn2MarkersOptionsWhen2RestaurantsWithGeolocationAreAvailable() {
         List<Restaurant> restaurants = this.createListOfRestaurantsForRepository(2, true);
-        GetRestaurantsForMapUseCase getRestaurantsForMapUseCase = this.createGetRestaurantForMap(restaurants);
-        List<Restaurant> results = this.getObservedResults(getRestaurantsForMapUseCase);
+        GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase = this.createGetRestaurantForMap(restaurants);
+        List<Restaurant> results = this.getObservedResults(getRestaurantsNearbyUseCase);
         assert(results.size() == 2);
         assert(results.get(0).getName().equals("Resto U"));
     }
 
     @Test
     public void shouldReturnNoMarkerOptionsWhenNoRestaurantIsAvailable() {
-        GetRestaurantsForMapUseCase getRestaurantsForMapUseCase =
+        GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase =
                 this.createGetRestaurantForMap(new ArrayList<>());
-        List<Restaurant> results = this.getObservedResults(getRestaurantsForMapUseCase);
-        assert(results.isEmpty());
-    }
-
-    @Test
-    public void shouldReturnNoMarkerOptionsWhenRestaurantHasNoAvailableGeolocation() {
-        List<Restaurant> restaurantsToSetInRepository =
-                this.createListOfRestaurantsForRepository(1, false);
-        GetRestaurantsForMapUseCase getRestaurantsForMapUseCase = this.createGetRestaurantForMap(restaurantsToSetInRepository);
-
-        List<Restaurant> results = this.getObservedResults(getRestaurantsForMapUseCase);
-
+        List<Restaurant> results = this.getObservedResults(getRestaurantsNearbyUseCase);
         assert(results.isEmpty());
     }
 
@@ -66,14 +54,14 @@ public class GetRestaurantsForMapUseCaseTest {
         return restaurants;
     }
 
-    private GetRestaurantsForMapUseCase createGetRestaurantForMap(List<Restaurant> restaurantsInRepository) {
+    private GetRestaurantsNearbyUseCase createGetRestaurantForMap(List<Restaurant> restaurantsInRepository) {
         InMemoryRestaurantGateway inMemoryRestaurantQuery = new InMemoryRestaurantGateway();
         inMemoryRestaurantQuery.setRestaurants(restaurantsInRepository);
-        return new GetRestaurantsForMapUseCase(inMemoryRestaurantQuery);
+        return new GetRestaurantsNearbyUseCase(inMemoryRestaurantQuery);
     }
 
-    private List<Restaurant> getObservedResults(GetRestaurantsForMapUseCase getRestaurantsForMapUseCase) {
-        Observable<List<Restaurant>> restaurantsObservable = getRestaurantsForMapUseCase
+    private List<Restaurant> getObservedResults(GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase) {
+        Observable<List<Restaurant>> restaurantsObservable = getRestaurantsNearbyUseCase
                 .handle(222.2, 22.22, 1000);
         List<Restaurant> results = new ArrayList<>();
         restaurantsObservable.subscribe(results::addAll);

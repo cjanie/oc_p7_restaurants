@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.android.go4lunch.businesslogic.entities.Restaurant;
-import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForMapUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetRestaurantsNearbyUseCase;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -24,49 +24,23 @@ public class MapViewModel extends ViewModel {
     private String TAG = "MAP VIEW MODEL";
 
     // Use Case
-    private GetRestaurantsForMapUseCase getRestaurantsForMapUseCase;
+    private GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase;
 
     // Data
     private final MutableLiveData<List<MarkerOptions>> markers;
 
-    // For observing observable data
-    private Disposable disposable;
-
     // Constructor
-    public MapViewModel(GetRestaurantsForMapUseCase getRestaurantsForMapUseCase) {
-        this.getRestaurantsForMapUseCase = getRestaurantsForMapUseCase;
+    public MapViewModel(GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase) {
+        this.getRestaurantsNearbyUseCase = getRestaurantsNearbyUseCase;
         this.markers = new MutableLiveData<>(new ArrayList<>());
     }
 
-    public LiveData<List<MarkerOptions>> getMarkers(Double myLatitude, Double myLongitude, int radius) {
-        this.setMarkers(
-                this.getRestaurantsMarkers(myLatitude, myLongitude, radius)
-        );
+    public LiveData<List<MarkerOptions>> getRestaurantsMarkers() {
         return this.markers;
     }
 
-
-    private void setMarkers(Observable<List<MarkerOptions>> observableMarkers) {
-        this.disposable = observableMarkers.subscribeWith(new DisposableObserver<List<MarkerOptions>>() {
-            @Override
-            public void onNext(@NonNull List<MarkerOptions> markersOptions) {
-                markers.setValue(markersOptions);
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-                Log.e(TAG, e.getMessage());
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
-    }
-
-    public Observable<List<MarkerOptions>> getRestaurantsMarkers(Double myLatitude, Double myLongitude, int radius) {
-        return this.getRestaurantsForMapUseCase.handle(myLatitude, myLongitude, radius).map(restaurants -> {
+    public void fetchRestaurantsMarkers(Double myLatitude, Double myLongitude, int radius) {
+        this.getRestaurantsNearbyUseCase.handle(myLatitude, myLongitude, radius).subscribe(restaurants -> {
             List<MarkerOptions> markersOptions = new ArrayList<>();
             if(!restaurants.isEmpty()) {
                 for(Restaurant restaurant: restaurants) {
@@ -79,7 +53,8 @@ public class MapViewModel extends ViewModel {
                     }
                 }
             }
-            return markersOptions;
+            markers.postValue(markersOptions);
+
         });
     }
 
