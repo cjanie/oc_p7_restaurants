@@ -1,5 +1,6 @@
 package com.android.go4lunch.businesslogic.usecases;
 
+import com.android.go4lunch.businesslogic.entities.Workmate;
 import com.android.go4lunch.in_memory_gateways.InMemoryVisitorGateway;
 import com.android.go4lunch.businesslogic.entities.Selection;
 
@@ -20,7 +21,7 @@ public class GetRestaurantVisitorsUseCaseTest {
         selections.add(selection);
         restaurantVisitorGateway.setSelections(selections);
         GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(restaurantVisitorGateway);
-        List<String> results = new ArrayList<>();
+        List<Workmate> results = new ArrayList<>();
         getRestaurantVisitorsUseCase.handle("1").subscribe(results::addAll);
         assertFalse(results.isEmpty());
     }
@@ -29,7 +30,7 @@ public class GetRestaurantVisitorsUseCaseTest {
     public void doesNotReturnAnyVisitorWhenThereIsNone() {
         InMemoryVisitorGateway visitorGateway = new InMemoryVisitorGateway();
         GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(visitorGateway);
-        List<String> results = new ArrayList<>();
+        List<Workmate> results = new ArrayList<>();
         getRestaurantVisitorsUseCase.handle("0").subscribe(results::addAll);
         assert(results.isEmpty());
     }
@@ -46,7 +47,7 @@ public class GetRestaurantVisitorsUseCaseTest {
         Selection selection3 = new Selection("1", "2");
         selected.add(selection3);
         GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(visitorsGateway);
-        List<String> results = new ArrayList<>();
+        List<Workmate> results = new ArrayList<>();
         getRestaurantVisitorsUseCase.handle("1").subscribe(results::addAll);
         assert(results.size() == 2);
     }

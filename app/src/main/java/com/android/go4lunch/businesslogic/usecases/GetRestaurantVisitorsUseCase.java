@@ -2,6 +2,7 @@ package com.android.go4lunch.businesslogic.usecases;
 
 import android.util.Log;
 
+import com.android.go4lunch.businesslogic.entities.Workmate;
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
 import com.android.go4lunch.businesslogic.entities.Selection;
 
@@ -20,24 +21,24 @@ public class GetRestaurantVisitorsUseCase {
         this.visitorGateway = visitorGateway;
     }
 
-    public Observable<List<String>> handle(String restaurantId) {
-        return this.getVisitorsId(restaurantId);
+    public Observable<List<Workmate>> handle(String restaurantId) {
+        return this.getVisitors(restaurantId);
     }
 
-    private Observable<List<String>> getVisitorsId(String restaurantId) {
+    private Observable<List<Workmate>> getVisitors(String restaurantId) {
         return this.visitorGateway.getSelections().map(selections -> {
-            Log.d(TAG, "-- getVisitorsId per restaurant -- selections size: " + selections.size());
-
-            List<String> visitorsIds = new ArrayList<>();
+            List<Workmate> visitors = new ArrayList<>();
             if(!selections.isEmpty()) {
                 for(Selection selection: selections) {
                     if(selection.getRestaurantId().equals(restaurantId)) {
-                        visitorsIds.add(selection.getWorkmateId());
+                        Workmate visitor = new Workmate("TODO IN GET VISITORS USE CASE");
+                        visitor.setId(selection.getWorkmateId());
+                        visitors.add(visitor);
                     }
                 }
             }
-            Log.d(TAG, "-- getVisitorsId per restaurant -- visitorsIds size: " + visitorsIds.size());
-            return visitorsIds;
+
+            return visitors;
         });
     }
 }

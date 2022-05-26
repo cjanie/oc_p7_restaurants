@@ -35,7 +35,7 @@ import com.android.go4lunch.businesslogic.usecases.GoForLunchUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForListUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetRestaurantsNearbyUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
-import com.android.go4lunch.businesslogic.usecases.IsOneOfTheUserFavoriteRestaurantsUseCase;
+import com.android.go4lunch.businesslogic.usecases.IsInFavoritesRestaurantsUseCase;
 import com.android.go4lunch.businesslogic.usecases.IsTheCurrentSelectionUseCase;
 import com.android.go4lunch.businesslogic.usecases.AddLikeUseCase;
 import com.android.go4lunch.businesslogic.usecases.SaveWorkmateUseCase;
@@ -75,7 +75,7 @@ public class Launch extends Application {
     private SignOutUseCase signOutUseCase;
     private IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase;
     private AddLikeUseCase addLikeUseCase;
-    private IsOneOfTheUserFavoriteRestaurantsUseCase isOneOfTheUserFavoriteRestaurantsUseCase;
+    private IsInFavoritesRestaurantsUseCase isInFavoritesRestaurantsUseCase;
     private GetNumberOfLikesPerRestaurantUseCase getNumberOfLikesPerRestaurantUseCase;
 
     // view models factories
@@ -261,14 +261,14 @@ public class Launch extends Application {
         return this.addLikeUseCase;
     }
 
-    private synchronized IsOneOfTheUserFavoriteRestaurantsUseCase isOneOfTheUserFavoriteRestaurants() {
-        if(this.isOneOfTheUserFavoriteRestaurantsUseCase == null) {
-            this.isOneOfTheUserFavoriteRestaurantsUseCase = new IsOneOfTheUserFavoriteRestaurantsUseCase(
+    private synchronized IsInFavoritesRestaurantsUseCase isOneOfTheUserFavoriteRestaurants() {
+        if(this.isInFavoritesRestaurantsUseCase == null) {
+            this.isInFavoritesRestaurantsUseCase = new IsInFavoritesRestaurantsUseCase(
                     this.likeGateway(),
                     this.sessionGateway()
             );
         }
-        return this.isOneOfTheUserFavoriteRestaurantsUseCase;
+        return this.isInFavoritesRestaurantsUseCase;
     }
 
     private synchronized GetNumberOfLikesPerRestaurantUseCase getNumberOfLikesPerRestaurantUseCase() {

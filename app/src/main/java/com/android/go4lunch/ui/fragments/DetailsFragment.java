@@ -104,29 +104,31 @@ public class DetailsFragment extends Fragment {
                 this.buttonGo.setImageDrawable(this.getActivity().getDrawable(R.drawable.ic_baseline_add_task_24));
             }
         });
-        this.restaurantDetailsViewModel.updateIsTheCurrentSelectionLiveData();
+        this.restaurantDetailsViewModel.fetchIsTheCurrentSelectionToUpdateLiveData();
 
         // IS FAVORITE
-        try {
-            this.restaurantDetailsViewModel.getIsOneOfTheUserFavoriteRestaurants().observe(this.getActivity(), isFavorite -> {
-                if(isFavorite) {
-                    this.star.setImageDrawable(this.getActivity().getDrawable(R.drawable.ic_baseline_star_24));
-                } else {
-                    this.star.setImageDrawable(this.getActivity().getDrawable(R.drawable.ic_baseline_star_border_24));
-                }
-            });
-            this.restaurantDetailsViewModel.updateIsOneOfTheUserFavoriteRestaurants();
-        } catch (NoWorkmateForSessionException e) {
-            e.printStackTrace();
-            this.handleError(e);
-        }
+
+        this.restaurantDetailsViewModel.getIsMarkedAsFavoriteLiveData().observe(this.getActivity(), isFavorite -> {
+            if(isFavorite) {
+                this.star.setImageDrawable(this.getActivity().getDrawable(R.drawable.ic_baseline_star_24));
+            } else {
+                this.star.setImageDrawable(this.getActivity().getDrawable(R.drawable.ic_baseline_star_border_24));
+            }
+        });
+        this.restaurantDetailsViewModel.fetchIsMarkedAsFavoriteToUpdateLiveData();
+
 
         // VISITORS
-        this.restaurantDetailsViewModel.getVisitors().observe(this.getActivity(), visitors -> {
+        this.restaurantDetailsViewModel.getVisitorsLiveData().observe(this.getActivity(), visitors -> {
             ListVisitorRecyclerViewAdapter adapter = new ListVisitorRecyclerViewAdapter(visitors);
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
             recyclerView.setAdapter(adapter);
         });
+        try {
+            this.restaurantDetailsViewModel.fetchVisitorsToUpdateLiveData();
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
 
         // set on Click Listeners
         this.buttonGo.setOnClickListener(view ->

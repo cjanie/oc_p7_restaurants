@@ -9,7 +9,7 @@ import com.android.go4lunch.businesslogic.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.businesslogic.usecases.GoForLunchUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
-import com.android.go4lunch.businesslogic.usecases.IsOneOfTheUserFavoriteRestaurantsUseCase;
+import com.android.go4lunch.businesslogic.usecases.IsInFavoritesRestaurantsUseCase;
 import com.android.go4lunch.businesslogic.usecases.IsTheCurrentSelectionUseCase;
 import com.android.go4lunch.businesslogic.usecases.AddLikeUseCase;
 
@@ -27,7 +27,7 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
 
     private final AddLikeUseCase addLikeUseCase;
 
-    private final IsOneOfTheUserFavoriteRestaurantsUseCase isOneOfTheUserFavoriteRestaurantsUseCase;
+    private final IsInFavoritesRestaurantsUseCase isInFavoritesRestaurantsUseCase;
 
 
     public RestaurantDetailsViewModelFactory(
@@ -37,7 +37,7 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
             GetWorkmateByIdUseCase getWorkmateByIdUseCase,
             IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase,
             AddLikeUseCase addLikeUseCase,
-            IsOneOfTheUserFavoriteRestaurantsUseCase isOneOfTheUserFavoriteRestaurantsUseCase
+            IsInFavoritesRestaurantsUseCase isInFavoritesRestaurantsUseCase
     ) {
         this.getSessionUseCase = getSessionUseCase;
         this.goForLunchUseCase = goForLunchUseCase;
@@ -45,7 +45,7 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
         this.getWorkmateByIdUseCase = getWorkmateByIdUseCase;
         this.isTheCurrentSelectionUseCase = isTheCurrentSelectionUseCase;
         this.addLikeUseCase = addLikeUseCase;
-        this.isOneOfTheUserFavoriteRestaurantsUseCase = isOneOfTheUserFavoriteRestaurantsUseCase;
+        this.isInFavoritesRestaurantsUseCase = isInFavoritesRestaurantsUseCase;
     }
 
 
@@ -60,7 +60,7 @@ public class RestaurantDetailsViewModelFactory implements ViewModelProvider.Fact
                     this.getWorkmateByIdUseCase,
                     this.isTheCurrentSelectionUseCase,
                     this.addLikeUseCase,
-                    this.isOneOfTheUserFavoriteRestaurantsUseCase
+                    this.isInFavoritesRestaurantsUseCase
             );
         }
         throw new IllegalArgumentException("RestaurantDetailsViewModelFactory: Unknown ViewModel class");

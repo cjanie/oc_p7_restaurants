@@ -13,7 +13,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IsOneOfTheUserFavoriteRestaurantsUseCaseTest {
+public class IsInFavoritesRestaurantsUseCaseTest {
 
     @Test
     public void aRestaurantIsOneOfFavoritesWhenTheWorkmateOfTheSessionHasLikedIt() throws NoWorkmateForSessionException {
@@ -24,7 +24,7 @@ public class IsOneOfTheUserFavoriteRestaurantsUseCaseTest {
         workmateForSession.setId("workmate1");
         sessionGateway.setSession(workmateForSession);
         List<Boolean> isFavoriteResults = new ArrayList<>();
-        new IsOneOfTheUserFavoriteRestaurantsUseCase(
+        new IsInFavoritesRestaurantsUseCase(
                 likeGateway,
                 sessionGateway
         ).handle("restaurant1").subscribe(isFavoriteResults::add);
@@ -39,7 +39,7 @@ public class IsOneOfTheUserFavoriteRestaurantsUseCaseTest {
         workmateForSession.setId("workmate1");
         sessionGateway.setSession(workmateForSession);
         List<Boolean> isFavoriteResults = new ArrayList<>();
-        new IsOneOfTheUserFavoriteRestaurantsUseCase(
+        new IsInFavoritesRestaurantsUseCase(
                 likeGateway,
                 sessionGateway
         ).handle("restaurant1").subscribe(isFavoriteResults::add);
@@ -56,7 +56,7 @@ public class IsOneOfTheUserFavoriteRestaurantsUseCaseTest {
 
         List<Boolean> isFavoriteResults = new ArrayList<>();
 
-        new IsOneOfTheUserFavoriteRestaurantsUseCase(likeGateway, sessionGateway)
+        new IsInFavoritesRestaurantsUseCase(likeGateway, sessionGateway)
                 .handle("restaurant1")
                 .subscribe(isFavorite -> isFavoriteResults.add(isFavorite));
         assert(!isFavoriteResults.isEmpty());

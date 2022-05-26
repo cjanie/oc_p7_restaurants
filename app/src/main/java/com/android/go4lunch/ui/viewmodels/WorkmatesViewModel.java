@@ -23,9 +23,6 @@ public class WorkmatesViewModel extends ViewModel {
 
     private final MutableLiveData<List<Workmate>> workmatesLiveData;
 
-    // For observing observable data
-    private Disposable disposable;
-
     public WorkmatesViewModel(
             GetWorkmatesUseCase getWorkmatesUseCase
     ) {
@@ -34,38 +31,14 @@ public class WorkmatesViewModel extends ViewModel {
     }
 
     public LiveData<List<Workmate>> getWorkmatesLiveData() {
-        this.updateWorkmatesLiveData();
         return this.workmatesLiveData;
     }
 
-    public void updateWorkmatesLiveData() {
-        this.disposable = this.getWorkmatesUseCase.handle().subscribeWith(
-                new DisposableObserver<List<Workmate>>() {
-                    @Override
-                    public void onNext(List<Workmate> workmates) {
-                        Log.d(TAG, "updateWorkmatesLiveData workmates size: " + workmates.size());
-                        workmatesLiveData.postValue(workmates);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.d(TAG, "updateWorkmatesLiveData completed");
-                    }
-                }
+    public void fetchWorkmatesToUpdateLiveData() {
+        this.getWorkmatesUseCase.handle().subscribe(
+                workmates -> this.workmatesLiveData.postValue(workmates)
                 );
 
-    }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        if(this.disposable != null && !this.disposable.isDisposed())
-            this.disposable.dispose();
     }
 
 }
