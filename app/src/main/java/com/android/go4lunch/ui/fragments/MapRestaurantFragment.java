@@ -35,7 +35,6 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
 
     private MapViewModel mapViewModel;
 
-    private MutableLiveData<List<MarkerOptions>> markers;
 
     @BindView(R.id.map_view)
     MapView mapView;
@@ -53,7 +52,6 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
         // Data
         MapViewModelFactory mapViewModelFactory = ((Launch) this.getActivity().getApplication()).mapViewModelFactory();
         this.mapViewModel = new ViewModelProvider(this, mapViewModelFactory).get(MapViewModel.class);
-        this.markers = new MutableLiveData<>(new ArrayList<>());
 
         // UI
         View root = inflater.inflate(R.layout.fragment_restaurant_map, container, false);
@@ -109,13 +107,16 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
         // Show my Position on the map
         googleMap.setMyLocationEnabled(true);
         // Add markers
-        this.markers.observe(this, markers -> {
+        // Ecoute le résultat de l'action du view model
+        this.mapViewModel.getRestaurantsMarkers().observe(this, markers -> {
             if(!markers.isEmpty()) {
                 for(MarkerOptions marker: markers) {
                     googleMap.addMarker(marker);
                 }
             }
         });
+
+
     }
 
     @Override
@@ -138,15 +139,12 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
 
 
     public void setMarkersAtInitMyPosition() {
-
         this.sharedViewModel.getGeolocation().observe(this.getViewLifecycleOwner(), geolocation -> {
-            this.mapViewModel.getMarkers(
+            // Demande action du view model
+            this.mapViewModel.fetchRestaurantsMarkers(
                     geolocation.getLatitude(),
                     geolocation.getLongitude(),
-                    1000
-            ).observe(this.getViewLifecycleOwner(), markers -> {
-                this.markers.setValue(markers);
-            });
+                    1000);
         });
     }
 
