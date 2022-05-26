@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
 import com.android.go4lunch.businesslogic.entities.Selection;
+import com.android.go4lunch.businesslogic.models.SelectionEntityModel;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -128,26 +129,15 @@ public class VisitorGatewayImpl implements VisitorGateway {
     }
 
     private Selection createSelection(DocumentSnapshot doc) {
-
-        if(doc != null && doc.getData() != null) {
-
-                String restaurantId = (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_ID);
-                String workmateId = (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_ID);
-                String selectionId = doc.getId();
-                String restaurantName = (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_NAME);
-                String workmateName = (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_NAME);
-                String workmateUrlPhoto = (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_URL_PHOTO);
-                Selection selection = new Selection(
-                        restaurantId,
-                        workmateId
-                );
-                selection.setId(selectionId);
-                selection.setRestaurantName(restaurantName);
-                selection.setWorkmateName(workmateName);
-                selection.setWorkmateUrlPhoto(workmateUrlPhoto);
-                return selection;
-        }
-        throw new NullPointerException();
+        Selection selection = new SelectionEntityModel().createSelection(
+                doc.getId(),
+                (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_ID),
+                (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_ID),
+                (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_NAME),
+                (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_NAME),
+                (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_URL_PHOTO)
+        );
+        return selection;
     }
 
 }
