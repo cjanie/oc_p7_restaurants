@@ -108,7 +108,6 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
         googleMap.setMyLocationEnabled(true);
         // Add markers
         // Ecoute le résultat de l'action du view model
-
         this.mapViewModel.getRestaurantsMarkers().observe(this, markers -> {
             if(!markers.isEmpty()) {
                 for(MarkerOptions marker: markers) {
