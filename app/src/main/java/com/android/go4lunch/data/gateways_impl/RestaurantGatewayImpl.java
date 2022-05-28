@@ -49,6 +49,7 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
         Restaurant restaurant = null;
         if(r != null) {
             restaurant = new Restaurant(r.getName(), r.getAddress());
+            restaurant.setId(r.getId());
             restaurant.setGeolocation(new Geolocation(
                     r.getLatitude(),
                     r.getLongitude()

@@ -1,4 +1,4 @@
-package com.android.go4lunch.businesslogic.models;
+package com.android.go4lunch.businesslogic.valueobjects;
 
 import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.TimeProvider;
@@ -9,7 +9,7 @@ import com.android.go4lunch.businesslogic.entities.Restaurant;
 import java.time.LocalTime;
 import java.util.List;
 
-public class RestaurantModel {
+public class RestaurantValueObject {
 
     private Restaurant restaurant;
 
@@ -21,7 +21,7 @@ public class RestaurantModel {
 
     private Long distance;
 
-    public RestaurantModel(
+    public RestaurantValueObject(
             Restaurant restaurant,
             TimeProvider timeProvider,
             DateProvider dateProvider,

@@ -1,7 +1,5 @@
 package com.android.go4lunch.ui.viewmodels;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -10,14 +8,13 @@ import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.TimeProvider;
 import com.android.go4lunch.businesslogic.usecases.GetRestaurantVisitorsUseCase;
-import com.android.go4lunch.businesslogic.models.RestaurantModel;
+import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
 import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForListUseCase;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
 
 public class RestaurantsViewModel extends ViewModel {
 
@@ -33,10 +30,10 @@ public class RestaurantsViewModel extends ViewModel {
 
     private final DateProvider dateProvider;
 
-    private Observable<List<RestaurantModel>> restaurantModelsObservable;
+    private Observable<List<RestaurantValueObject>> restaurantModelsObservable;
 
     // List LiveData
-    private final MutableLiveData<List<RestaurantModel>> restaurantsLiveData;
+    private final MutableLiveData<List<RestaurantValueObject>> restaurantsLiveData;
 
     // Constructor
     public RestaurantsViewModel(
@@ -88,7 +85,7 @@ public class RestaurantsViewModel extends ViewModel {
 
 
     // Getter for the view the model livedata that the activity listens
-    public LiveData<List<RestaurantModel>> getRestaurantsLiveData() {
+    public LiveData<List<RestaurantValueObject>> getRestaurantsLiveData() {
         return this.restaurantsLiveData;
     }
 
@@ -96,14 +93,14 @@ public class RestaurantsViewModel extends ViewModel {
     public void fetchRestaurantsObservableToUpdateLiveData(Double myLatitude, Double myLongitude, int radius) {
         this.getRestaurantsForListUseCase.handle(myLatitude, myLongitude, radius)
                 .subscribe(restaurants -> {
-                    List<RestaurantModel> restaurantModels = new ArrayList<>();
+                    List<RestaurantValueObject> restaurantValueObjects = new ArrayList<>();
                     if(!restaurants.isEmpty()) {
                         for(Restaurant restaurant: restaurants) {
-                            RestaurantModel restaurantModel = new RestaurantModel(restaurant, this.timeProvider, this.dateProvider, 100L, new ArrayList<>());
-                            restaurantModels.add(restaurantModel);
+                            RestaurantValueObject restaurantValueObject = new RestaurantValueObject(restaurant, this.timeProvider, this.dateProvider, 100L, new ArrayList<>());
+                            restaurantValueObjects.add(restaurantValueObject);
                         }
                     }
-                    this.restaurantsLiveData.postValue(restaurantModels);
+                    this.restaurantsLiveData.postValue(restaurantValueObjects);
                 });
     }
 

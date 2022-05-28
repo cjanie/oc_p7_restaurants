@@ -19,17 +19,17 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
-class SelectionDatabaseConfig {
-
-    public static final String COLLECTION_PATH = "selections";
-    public static final String RESTAURANT_ID = "restaurantId";
-    public static final String WORKMATE_ID = "workmateId";
-    public static final String RESTAURANT_NAME = "restaurantName";
-    public static final String WORKMATE_NAME = "workmateName";
-    public static final String WORKMATE_URL_PHOTO = "workmateUrlPhoto";
-}
-
 public class VisitorGatewayImpl implements VisitorGateway {
+
+    private class SelectionDatabaseConfig {
+
+        public static final String COLLECTION_PATH = "selections";
+        public static final String RESTAURANT_ID = "restaurantId";
+        public static final String WORKMATE_ID = "workmateId";
+        public static final String RESTAURANT_NAME = "restaurantName";
+        public static final String WORKMATE_NAME = "workmateName";
+        public static final String WORKMATE_URL_PHOTO = "workmateUrlPhoto";
+    }
 
     private final String TAG = "VISITOR GATEWAY IMPL";
 
@@ -48,7 +48,7 @@ public class VisitorGatewayImpl implements VisitorGateway {
         return this.selectionsSubject
                 .hide()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(Schedulers.io());
     }
 
     private void fetchSelectionsToUpdateSubject() {
@@ -130,12 +130,12 @@ public class VisitorGatewayImpl implements VisitorGateway {
 
     private Selection createSelection(DocumentSnapshot doc) {
         Selection selection = new SelectionEntityModel().createSelection(
-                doc.getId(),
                 (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_ID),
                 (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_ID),
                 (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_NAME),
                 (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_NAME),
-                (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_URL_PHOTO)
+                (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_URL_PHOTO),
+                doc.getId()
         );
         return selection;
     }

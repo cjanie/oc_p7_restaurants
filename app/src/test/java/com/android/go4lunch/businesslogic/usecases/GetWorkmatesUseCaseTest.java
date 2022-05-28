@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import com.android.go4lunch.businesslogic.entities.Selection;
+import com.android.go4lunch.businesslogic.valueobjects.WorkmateValueObject;
 import com.android.go4lunch.in_memory_gateways.InMemorySessionGateway;
 import com.android.go4lunch.in_memory_gateways.InMemoryVisitorGateway;
 import com.android.go4lunch.in_memory_gateways.InMemoryWorkmateGateway;
@@ -39,7 +40,7 @@ public class GetWorkmatesUseCaseTest {
 
         InMemoryVisitorGateway visitorGateway = new InMemoryVisitorGateway();
         // SUT
-        List<Workmate> workmatesResults = new ArrayList<>();
+        List<WorkmateValueObject> workmatesResults = new ArrayList<>();
         new GetWorkmatesUseCase(
                 workmateGateway,
                 sessionGateway,
@@ -58,7 +59,7 @@ public class GetWorkmatesUseCaseTest {
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
         InMemoryVisitorGateway visitorGateway = new InMemoryVisitorGateway();
         // SUT
-        List<Workmate> workmatesResults = new ArrayList<>();
+        List<WorkmateValueObject> workmatesResults = new ArrayList<>();
         new GetWorkmatesUseCase(
                 workmateGateway,
                 sessionGateway,
@@ -86,7 +87,7 @@ public class GetWorkmatesUseCaseTest {
         Selection selection = new Selection("restaurant1", "workmate1");
         visitorGateway.setSelections(Arrays.asList(selection));
 
-        List<Workmate> workmatesResults = new ArrayList<>();
+        List<WorkmateValueObject> workmatesResults = new ArrayList<>();
         new GetWorkmatesUseCase(
                 workmateGateway,
                 sessionGateway,
@@ -95,8 +96,8 @@ public class GetWorkmatesUseCaseTest {
                 .subscribe(workmates -> {
                     workmatesResults.addAll(workmates);
                 });
-        assertNotNull(workmatesResults.get(0).getSelectedRestaurant());
-        assertEquals("restaurant1", workmatesResults.get(0).getSelectedRestaurant().getId());
+        assertNotNull(workmatesResults.get(0).getSelection());
+        assertEquals("restaurant1", workmatesResults.get(0).getSelection().getId());
     }
 
     @Test
@@ -118,12 +119,12 @@ public class GetWorkmatesUseCaseTest {
         // No selection to set in the gateway
 
         // SUT
-        List<Workmate> workmatesResults = new ArrayList<>();
+        List<WorkmateValueObject> workmatesResults = new ArrayList<>();
         new GetWorkmatesUseCase(workmateGateway, sessionGateway, visitorGateway).handle().subscribe(
                 workmates -> workmatesResults.addAll(workmates)
         );
 
-        assertNull(workmatesResults.get(1).getSelectedRestaurant());
+        assertNull(workmatesResults.get(1).getSelection());
 
     }
 
@@ -147,12 +148,11 @@ public class GetWorkmatesUseCaseTest {
         Selection selection2 = new Selection("restaurant1", "workmate3");
         visitorGateway.setSelections(Arrays.asList(selection1, selection2));
 
-        List<Workmate> workmatesResults = new ArrayList<>();
+        List<WorkmateValueObject> workmatesResults = new ArrayList<>();
         new GetWorkmatesUseCase(workmateGateway, sessionGateway, visitorGateway).handle()
                 .subscribe(workmates -> workmatesResults.addAll(workmates));
         assertEquals(2, workmatesResults.size());
-        assertEquals("restaurant1", workmatesResults.get(1).getSelectedRestaurant().getId());
-
+        assertEquals("restaurant1", workmatesResults.get(1).getSelection().getId());
 
     }
 }

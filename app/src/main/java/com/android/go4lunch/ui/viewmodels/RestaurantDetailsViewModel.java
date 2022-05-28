@@ -119,7 +119,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
         return this.visitorsLiveData;
     }
 
-    public void fetchVisitorsToUpdateLiveData() throws NotFoundException {
+    public void fetchVisitorsToUpdateLiveData() {
         if(this.restaurant != null) {
             this.getRestaurantVisitorsUseCase.handle(this.restaurant.getId())
                     .subscribe(visitors ->

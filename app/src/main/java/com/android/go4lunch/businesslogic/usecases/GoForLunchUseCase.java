@@ -1,13 +1,16 @@
 package com.android.go4lunch.businesslogic.usecases;
 
+import com.android.go4lunch.businesslogic.entities.Workmate;
 import com.android.go4lunch.businesslogic.gateways.SessionGateway;
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
 import com.android.go4lunch.businesslogic.entities.Selection;
+import com.android.go4lunch.businesslogic.models.SelectionEntityModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
 
 public class GoForLunchUseCase {
 
@@ -27,11 +30,11 @@ public class GoForLunchUseCase {
     }
 
     private Observable<Boolean> toggle(String restaurantId, String restaurantName) {
-        return this.sessionGateway.getSession().map(session -> {
-            Selection newSelection = new Selection(restaurantId, session.getId());
-            newSelection.setRestaurantName(restaurantName);
-            newSelection.setWorkmateName(session.getName());
-            newSelection.setWorkmateUrlPhoto(session.getUrlPhoto());
+
+        return this.getSession().map(session -> {
+            Selection newSelection = new SelectionEntityModel().createSelection(
+                restaurantId, session.getId(), restaurantName, session.getName(), session.getUrlPhoto()
+            );
 
             Selection workmateSelection = this.getWorkmateSelection(session.getId());
 
@@ -53,7 +56,8 @@ public class GoForLunchUseCase {
 
     private List<Selection> getSelections() {
         List<Selection> selectionsResults = new ArrayList<>();
-        this.visitorGateway.getSelections().subscribe(selectionsResults::addAll);
+        this.visitorGateway.getSelections()
+                .subscribe(selections -> selectionsResults.addAll(selections));
         return selectionsResults;
     }
 
@@ -66,5 +70,10 @@ public class GoForLunchUseCase {
             }
         }
         return null;
+    }
+
+
+    private Observable<Workmate> getSession() {
+        return this.sessionGateway.getSession();
     }
 }

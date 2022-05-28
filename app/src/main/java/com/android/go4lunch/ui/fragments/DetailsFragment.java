@@ -124,11 +124,9 @@ public class DetailsFragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
             recyclerView.setAdapter(adapter);
         });
-        try {
-            this.restaurantDetailsViewModel.fetchVisitorsToUpdateLiveData();
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-        }
+
+        this.restaurantDetailsViewModel.fetchVisitorsToUpdateLiveData();
+
 
         // set on Click Listeners
         this.buttonGo.setOnClickListener(view ->
