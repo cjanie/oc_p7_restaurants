@@ -8,12 +8,16 @@ import com.android.go4lunch.businesslogic.gateways.SessionGateway;
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
 import com.android.go4lunch.businesslogic.gateways.WorkmateGateway;
 import com.android.go4lunch.businesslogic.entities.Workmate;
+import com.android.go4lunch.businesslogic.models.RestaurantEntityModel;
 import com.android.go4lunch.businesslogic.models.WorkmateEntityModel;
+import com.android.go4lunch.businesslogic.valueobjects.WorkmateValueObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class GetWorkmatesUseCase {
 
@@ -25,6 +29,10 @@ public class GetWorkmatesUseCase {
 
     private VisitorGateway visitorGateway;
 
+    private final WorkmateEntityModel workmateEntityModel;
+
+    private final RestaurantEntityModel restaurantEntityModel;
+
     public GetWorkmatesUseCase(
             WorkmateGateway workmateGateway,
             SessionGateway sessionGateway,
@@ -33,75 +41,100 @@ public class GetWorkmatesUseCase {
         this.workmateGateway = workmateGateway;
         this.sessionGateway = sessionGateway;
         this.visitorGateway = visitorGateway;
+
+        this.workmateEntityModel = new WorkmateEntityModel();
+        this.restaurantEntityModel = new RestaurantEntityModel();
     }
 
-    public Observable<List<Workmate>> handle() {
-        //return this.getWorkmatesExceptSession();
-        return this.getWorkmatesExceptSessionWithWorkmateSelectedRestaurant();
+    public Observable<List<WorkmateValueObject>> handle() {
+        return this.getFilteredWorkmatesAfterRemovingSessionWithTheirSelectedRestaurant()
+                .doOnNext(workmateValueObjects -> {
+                    Log.d(TAG, "--handle : " + Thread.currentThread().getName());
+                });
     }
 
-    private Observable<List<Workmate>> getWorkmatesExceptSessionWithWorkmateSelectedRestaurant() {
-        return this.getWorkmatesExceptSession()
-                .flatMap(workmates ->
-                        Observable.fromIterable(workmates)
-                                .flatMap(
-                                        workmate -> {
-                                            Log.d(this.TAG, "getWorkmatesExceptSessionWithWorkmateSelectedRestaurant" + workmate.getName() + " selection: " + workmate.getSelectedRestaurant());
-                                            return this.createWorkmateValueObjectWithSelection(workmate);
-                                        }
-
-                                ).toList().toObservable()
-                );
+    private Observable<List<WorkmateValueObject>> getFilteredWorkmatesAfterRemovingSessionWithTheirSelectedRestaurant() {
+        return this.getFilteredWorkmatesAtferRemovingSessionFormatedToWorkmateVOs()
+                .flatMap(workmateVOs ->
+                        this.updateWorkmatesWithTheirSelectedRestaurant(workmateVOs));
     }
 
-    private Observable<List<Workmate>> getWorkmatesExceptSession() {
-        return this.workmateGateway.getWorkmates().flatMap(workmates ->
-                this.filterWorkmatesRemovingSession(workmates)
-        );
+    // getters for Gateways data
+    private Observable<List<Workmate>> getWorkmates() {
+        return this.workmateGateway.getWorkmates();
+    }
+
+    private Observable<Workmate> getSession() {
+        return this.sessionGateway.getSession();
+    }
+
+    private Observable<List<Selection>> getSelections() {
+        return this.visitorGateway.getSelections();
+    }
+
+    private Observable<List<Workmate>> getFilteredWorkmatesAfterRemovingSession() {
+        return this.getWorkmates()
+                .flatMap(workmates -> {
+                    Log.d(TAG, "--getfilteredWorkmatesAfterRemovingSession : " + Thread.currentThread().getName());
+                    return this.filterWorkmatesRemovingSession(workmates);
+                });
     }
 
     private Observable<List<Workmate>> filterWorkmatesRemovingSession(List<Workmate> workmates) {
-        return this.sessionGateway.getSession().map(session -> {
+        return this.getSession()
+                .map(session -> {
+                    Log.d(TAG, "--filterWorkmatesRemovingSession : " + Thread.currentThread().getName());
 
-            if(session == null) {
-                return workmates;
-            } else {
-                if(!workmates.isEmpty()) {
-                    List<Workmate> filteredList = new ArrayList<>();
-                    for(Workmate workmate: workmates) {
-                        if(!workmate.getId().equals(session.getId())) {
-                            filteredList.add(workmate);
+                    if(session == null) {
+                        return workmates;
+                    } else {
+                        if(!workmates.isEmpty()) {
+                            List<Workmate> filteredList = new ArrayList<>();
+                            for(Workmate workmate: workmates) {
+                                if(!workmate.getId().equals(session.getId())) {
+                                    filteredList.add(workmate);
+                                }
+                            }
+                            return filteredList;
                         }
+                        return workmates;
                     }
-                    return filteredList;
+                });
+    }
+
+    private Observable<List<WorkmateValueObject>> getFilteredWorkmatesAtferRemovingSessionFormatedToWorkmateVOs() {
+        return this.getFilteredWorkmatesAfterRemovingSession()
+                .map(filteredWorkmates -> {
+                    List<WorkmateValueObject> workmateVOs = this.workmateEntityModel.formatWorkmatesToWorkmateVOs(filteredWorkmates);
+                    Log.d(TAG, "--getFilteredWorkmatesAfterRemovingSessionFormatedToWorkmateVOs : " + Thread.currentThread().getName());
+                    return workmateVOs;
+                });
+    }
+
+    private Observable<List<WorkmateValueObject>> updateWorkmatesWithTheirSelectedRestaurant(List<WorkmateValueObject> workmateVOs) {
+        return this.getSelections().map(selections -> {
+            Log.d(TAG, "--updateWorkmatesWithTheirSelectedRestaurant : " + Thread.currentThread().getName());
+
+            List<WorkmateValueObject> filteredWorkmatesCopy = workmateVOs;
+            if(!filteredWorkmatesCopy.isEmpty()) {
+                for(WorkmateValueObject workmateVO: workmateVOs) {
+                    Restaurant selection = this.restaurantEntityModel
+                            .findWorkmateSelection(
+                                    workmateVO.getWorkmate().getId(),
+                                    selections
+                            );
+                    if(selection != null) {
+                        workmateVO.setSelection(selection);
+                        Log.d(TAG, "--getWorkmatesWithSelectedRestaurant : " + Thread.currentThread().getName());
+                    }
                 }
-                return workmates;
             }
+            return filteredWorkmatesCopy;
         });
     }
 
-    private Observable<Workmate> createWorkmateValueObjectWithSelection(Workmate workmate) {
-        return this.visitorGateway.getSelections().map(
-                selections -> {
-                    Log.d(this.TAG, "createWorkmateValueObjectWithSelection " + "selections size: " + selections.size());
-                    Workmate workmateCopy = workmate;
-                    if(!selections.isEmpty()) {
-                        for(Selection selection: selections) {
-                            if(selection.getWorkmateId().equals(workmate.getId())) {
-                                Restaurant selectedRestaurant = new Restaurant(selection.getRestaurantName());
-                                selectedRestaurant.setId(selection.getRestaurantId());
-                                workmateCopy = new WorkmateEntityModel().setWorkmateSelectedRestaurant(workmate, selectedRestaurant);
-                                Log.d(this.TAG, "createWorkmateValueObjectWithSelection " + workmateCopy.getName() + " selection: " + workmateCopy.getSelectedRestaurant());
-                                break;
-                            }
-                        }
-                    }
-
-                    return workmateCopy;
 
 
-                }
-        );
-    }
+
 
 }

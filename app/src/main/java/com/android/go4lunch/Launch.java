@@ -184,7 +184,9 @@ public class Launch extends Application {
 
     private synchronized GetRestaurantsForListUseCase getGetRestaurantsForListUseCase() {
         if(this.getRestaurantsForListUseCase == null) {
-            this.getRestaurantsForListUseCase = new GetRestaurantsForListUseCase(restaurantGateway());
+            this.getRestaurantsForListUseCase = new GetRestaurantsForListUseCase(
+                    restaurantGateway()
+            );
         }
         return this.getRestaurantsForListUseCase;
     }
@@ -257,7 +259,8 @@ public class Launch extends Application {
     private synchronized AddLikeUseCase likeUseCase() {
         if(this.addLikeUseCase == null) {
             this.addLikeUseCase = new AddLikeUseCase(
-                    this.likeGateway()
+                    this.likeGateway(),
+                    this.sessionGateway()
             );
         }
         return this.addLikeUseCase;

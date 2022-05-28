@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Workmate;
-import com.android.go4lunch.businesslogic.models.WorkmateModel;
+import com.android.go4lunch.businesslogic.valueobjects.WorkmateValueObject;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -21,9 +21,9 @@ public class ListWorkmateRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
     private static final int TYPE_ITEM_VIEW = 1;
 
-    private List<Workmate> workmates;
+    private List<WorkmateValueObject> workmates;
 
-    public ListWorkmateRecyclerViewAdapter(List<Workmate> workmates) {
+    public ListWorkmateRecyclerViewAdapter(List<WorkmateValueObject> workmates) {
         this.workmates = workmates;
     }
 
@@ -44,20 +44,20 @@ public class ListWorkmateRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         if(holder instanceof WorkmateViewHolder) {
-            Workmate workmate = this.workmates.get(position);
+            WorkmateValueObject workmate = this.workmates.get(position);
             // Avatar
             Glide.with(((WorkmateViewHolder) holder).avatar.getContext())
-                    .load(workmate.getUrlPhoto())
+                    .load(workmate.getWorkmate().getUrlPhoto())
                     .apply(RequestOptions.circleCropTransform())
                     .placeholder(R.drawable.ic_baseline_person_24)
                     .error(R.drawable.ic_baseline_error_24)
                     .into(((WorkmateViewHolder) holder).avatar);
             // Text
-            StringBuilder stringBuilder = new StringBuilder(workmate.getName());
-            if(workmate.getSelectedRestaurant() == null) {
+            StringBuilder stringBuilder = new StringBuilder(workmate.getWorkmate().getName());
+            if(workmate.getSelection() == null) {
                 stringBuilder.append(" " + holder.itemView.getContext().getString(R.string.has_not_decided));
             } else {
-                stringBuilder.append(" " + holder.itemView.getContext().getString(R.string.is_eating)+ " (" + workmate.getSelectedRestaurant().getName() + ")");
+                stringBuilder.append(" " + holder.itemView.getContext().getString(R.string.is_eating)+ " (" + workmate.getSelection().getName() + ")");
             }
             ((WorkmateViewHolder) holder).text.setText(stringBuilder.toString());
         }

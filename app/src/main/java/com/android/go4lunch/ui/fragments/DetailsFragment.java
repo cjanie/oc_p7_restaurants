@@ -124,11 +124,9 @@ public class DetailsFragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
             recyclerView.setAdapter(adapter);
         });
-        try {
-            this.restaurantDetailsViewModel.fetchVisitorsToUpdateLiveData();
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-        }
+
+        this.restaurantDetailsViewModel.fetchVisitorsToUpdateLiveData();
+
 
         // set on Click Listeners
         this.buttonGo.setOnClickListener(view ->
@@ -203,21 +201,12 @@ public class DetailsFragment extends Fragment {
 
 
     private void handleGoForLunch() {
-        try {
-            this.restaurantDetailsViewModel.handleGoForLunch();
-        } catch (NotFoundException e) {
-            this.handleError(e);
-        }
+        this.restaurantDetailsViewModel.handleGoForLunch();
+
     }
 
     private void handleLike() {
-        System.out.println("Click like %%%%%%%%%%");
-        try {
-            this.restaurantDetailsViewModel.handleLike();
-        } catch (NoWorkmateForSessionException e) {
-            e.printStackTrace();
-            this.handleError(e);
-        }
+        this.restaurantDetailsViewModel.handleLike();
     }
 
     private void handleWebSite(String webSiteUrl) {

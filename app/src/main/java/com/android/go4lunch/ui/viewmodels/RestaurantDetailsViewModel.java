@@ -119,7 +119,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
         return this.visitorsLiveData;
     }
 
-    public void fetchVisitorsToUpdateLiveData() throws NotFoundException {
+    public void fetchVisitorsToUpdateLiveData() {
         if(this.restaurant != null) {
             this.getRestaurantVisitorsUseCase.handle(this.restaurant.getId())
                     .subscribe(visitors ->
@@ -128,32 +128,25 @@ public class RestaurantDetailsViewModel extends ViewModel {
         }
     }
 
-    public void handleGoForLunch() throws NotFoundException {
-        this.setSession();
-        if(this.session != null) {
-            this.goForLunchUseCase.handle(
-                    this.restaurant.getId(),
-                    this.session.getId(),
-                    this.restaurant.getName()
-                    );
-            // TODO
-            Observable.just(true).delay(2, TimeUnit.SECONDS).subscribe(bool -> {
-                this.fetchIsTheCurrentSelectionToUpdateLiveData();
-                //this.fetchVisitors();
+    public void handleGoForLunch() {
+
+        this.goForLunchUseCase.handle(this.restaurant.getId(), this.restaurant.getName()).delay(5, TimeUnit.SECONDS)
+                .subscribe(isDone -> {
+
             });
-
-        }
-
+        this.fetchIsTheCurrentSelectionToUpdateLiveData();
     }
 
 
 
-    public void handleLike() throws NoWorkmateForSessionException {
-        this.setSession();
-        if(session != null) {
-            this.addLikeUseCase.handle(this.restaurant.getId(), this.session.getId());
-            this.fetchIsMarkedAsFavoriteToUpdateLiveData();
-        }
+    public void handleLike() {
+
+        this.addLikeUseCase.handle(this.restaurant.getId())
+                .subscribe(isDone ->
+                        this.fetchIsMarkedAsFavoriteToUpdateLiveData()
+                );
+
+
     }
 
 }

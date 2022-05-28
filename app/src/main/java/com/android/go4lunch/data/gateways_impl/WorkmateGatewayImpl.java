@@ -48,7 +48,7 @@ public class WorkmateGatewayImpl implements WorkmateGateway {
         return this.workmatesSubject
                 .hide()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(Schedulers.io());
     }
 
     private void fetchWorkmatesToUpdateSubject() {

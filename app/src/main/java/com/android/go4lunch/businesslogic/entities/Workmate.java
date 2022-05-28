@@ -12,8 +12,6 @@ public class Workmate {
 
     private String urlPhoto;
 
-    private Restaurant selectedRestaurant;
-
     public Workmate(String name) {
         this.name = name;
     }
@@ -58,11 +56,4 @@ public class Workmate {
         this.urlPhoto = urlPhoto;
     }
 
-    public Restaurant getSelectedRestaurant() {
-        return selectedRestaurant;
-    }
-
-    public void setSelectedRestaurant(Restaurant selectedRestaurant) {
-        this.selectedRestaurant = selectedRestaurant;
-    }
 }

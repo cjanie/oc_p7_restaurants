@@ -2,6 +2,10 @@ package com.android.go4lunch.businesslogic.models;
 
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.businesslogic.entities.Workmate;
+import com.android.go4lunch.businesslogic.valueobjects.WorkmateValueObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WorkmateEntityModel {
 
@@ -19,9 +23,22 @@ public class WorkmateEntityModel {
         return workmate;
     }
 
-    public Workmate setWorkmateSelectedRestaurant(Workmate workmate, Restaurant restaurant) {
-        Workmate workmateCopy = workmate;
-        workmateCopy.setSelectedRestaurant(restaurant);
-        return workmate;
+    public Workmate createVisitor(String id, String name, String urlPhoto) {
+        Workmate visitor = new Workmate(name);
+        visitor.setId(id);
+        visitor.setName(name);
+        visitor.setUrlPhoto(urlPhoto);
+        return visitor;
+    }
+
+    public List<WorkmateValueObject> formatWorkmatesToWorkmateVOs(List<Workmate>workmates) {
+        List<WorkmateValueObject> workmateVOs = new ArrayList<>();
+        if(!workmates.isEmpty()) {
+            for(Workmate workmate: workmates) {
+                WorkmateValueObject workmateVO = new WorkmateValueObject(workmate);
+                workmateVOs.add(workmateVO);
+            }
+        }
+        return workmateVOs;
     }
 }

@@ -1,11 +1,16 @@
 package com.android.go4lunch.businesslogic.usecases;
 
+import com.android.go4lunch.businesslogic.entities.Workmate;
 import com.android.go4lunch.businesslogic.gateways.SessionGateway;
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
 import com.android.go4lunch.businesslogic.entities.Selection;
+import com.android.go4lunch.businesslogic.models.SelectionEntityModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
 
 public class GoForLunchUseCase {
 
@@ -20,28 +25,39 @@ public class GoForLunchUseCase {
         this.sessionGateway = sessionGateway;
     }
 
-    public void handle(String restaurantId, String workmateId, String restaurantName) {
+    public Observable<Boolean> handle(String restaurantId, String restaurantName) {
+        return this.toggle(restaurantId, restaurantName);
+    }
 
-        Selection newSelection = new Selection(restaurantId, workmateId);
-        newSelection.setRestaurantName(restaurantName);
+    private Observable<Boolean> toggle(String restaurantId, String restaurantName) {
 
-        Selection workmateSelection = this.getWorkmateSelection(workmateId);
+        return this.getSession().map(session -> {
+            Selection newSelection = new SelectionEntityModel().createSelection(
+                restaurantId, session.getId(), restaurantName, session.getName(), session.getUrlPhoto()
+            );
 
-        if(workmateSelection == null)
-            this.visitorGateway.addSelection(newSelection);
-        else {
-            if(workmateSelection.getRestaurantId().equals(restaurantId)) {
-                this.visitorGateway.removeSelection(workmateSelection.getId());
-            } else {
-                this.visitorGateway.removeSelection(workmateSelection.getId());
+            Selection workmateSelection = this.getWorkmateSelection(session.getId());
+
+            if(workmateSelection == null) {
                 this.visitorGateway.addSelection(newSelection);
+
+            } else {
+                if(workmateSelection.getRestaurantId().equals(restaurantId)) {
+                    this.visitorGateway.removeSelection(workmateSelection.getId());
+
+                } else {
+                    this.visitorGateway.removeSelection(workmateSelection.getId());
+                    this.visitorGateway.addSelection(newSelection);
+                }
             }
-        }
+            return true;
+        });
     }
 
     private List<Selection> getSelections() {
         List<Selection> selectionsResults = new ArrayList<>();
-        this.visitorGateway.getSelections().subscribe(selectionsResults::addAll);
+        this.visitorGateway.getSelections()
+                .subscribe(selections -> selectionsResults.addAll(selections));
         return selectionsResults;
     }
 
@@ -54,5 +70,10 @@ public class GoForLunchUseCase {
             }
         }
         return null;
+    }
+
+
+    private Observable<Workmate> getSession() {
+        return this.sessionGateway.getSession();
     }
 }

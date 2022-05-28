@@ -18,11 +18,13 @@ public class IsInFavoritesRestaurantsUseCaseTest {
     @Test
     public void aRestaurantIsOneOfFavoritesWhenTheWorkmateOfTheSessionHasLikedIt() throws NoWorkmateForSessionException {
         InMemoryLikeGateway likeGateway = new InMemoryLikeGateway();
-        new AddLikeUseCase(likeGateway).handle("restaurant1", "workmate1").subscribe();
         InMemorySessionGateway sessionGateway = new InMemorySessionGateway();
-        Workmate workmateForSession = new Workmate("Janie");
-        workmateForSession.setId("workmate1");
-        sessionGateway.setSession(workmateForSession);
+        Workmate session = new Workmate("Janie");
+        session.setId("workmate1");
+        sessionGateway.setSession(session);
+
+        new AddLikeUseCase(likeGateway, sessionGateway).handle("restaurant1").subscribe();
+
         List<Boolean> isFavoriteResults = new ArrayList<>();
         new IsInFavoritesRestaurantsUseCase(
                 likeGateway,

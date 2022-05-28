@@ -1,15 +1,15 @@
-package com.android.go4lunch.businesslogic.models;
+package com.android.go4lunch.businesslogic.valueobjects;
 
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.businesslogic.entities.Workmate;
 
-public class WorkmateModel {
+public class WorkmateValueObject {
 
     private Workmate workmate;
 
     private Restaurant selection;
 
-    public WorkmateModel(Workmate workmate) {
+    public WorkmateValueObject(Workmate workmate) {
         this.workmate = workmate;
     }
 

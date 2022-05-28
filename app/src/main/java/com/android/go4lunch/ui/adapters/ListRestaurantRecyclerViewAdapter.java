@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
 import com.android.go4lunch.ui.RestaurantDetailsActivity;
-import com.android.go4lunch.businesslogic.models.RestaurantModel;
+import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
 import com.android.go4lunch.ui.utils.TimeInfoTextHandler;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -31,10 +31,10 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
     private static final int TYPE_ITEM_VIEW = 1;
 
-    private final List<RestaurantModel> restaurantModels;
+    private final List<RestaurantValueObject> restaurantValueObjects;
 
-    public ListRestaurantRecyclerViewAdapter(List<RestaurantModel> restaurantModels) {
-        this.restaurantModels = restaurantModels;
+    public ListRestaurantRecyclerViewAdapter(List<RestaurantValueObject> restaurantValueObjects) {
+        this.restaurantValueObjects = restaurantValueObjects;
     }
 
     @NonNull
@@ -53,7 +53,7 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof ItemViewHolder) {
-            RestaurantModel restaurant = this.restaurantModels.get(position);
+            RestaurantValueObject restaurant = this.restaurantValueObjects.get(position);
             Glide.with(((ItemViewHolder) holder).photo.getContext())
                     .load(restaurant.getRestaurant().getPhotoUrl())
                     .apply(RequestOptions.centerCropTransform())
@@ -69,7 +69,7 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
                 ((ItemViewHolder)holder).info.setTextColor(timeInfoTextHandler.getColor(restaurant, ((ItemViewHolder)holder).info));
                 ((ItemViewHolder)holder).info.setTypeface(null, timeInfoTextHandler.getStyle(restaurant));
             }
-
+/*
             if(restaurant.getDistance() != null) {
                 ((ItemViewHolder)holder).distance.setText(
                         restaurant.getDistance().toString()
@@ -77,7 +77,7 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
             }
 
             ((ItemViewHolder)holder).selections.setText("(" + restaurant.getVisitorsCount() +")");
-
+*/
             /*
             Vote vote = restaurant.getVoteInfo();
 
@@ -129,7 +129,7 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
     @Override
     public int getItemViewType(int position) {
-        if(this.restaurantModels.isEmpty() && position == 0) {
+        if(this.restaurantValueObjects.isEmpty() && position == 0) {
             return TYPE_EMPTY_VIEW;
         } else {
             return TYPE_ITEM_VIEW;
@@ -138,10 +138,10 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
     @Override
     public int getItemCount() {
-        if(this.restaurantModels.isEmpty()) {
+        if(this.restaurantValueObjects.isEmpty()) {
             return 1;
         }
-        return this.restaurantModels.size();
+        return this.restaurantValueObjects.size();
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {

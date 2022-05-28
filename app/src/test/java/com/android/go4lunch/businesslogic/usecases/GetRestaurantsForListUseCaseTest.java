@@ -1,6 +1,7 @@
 package com.android.go4lunch.businesslogic.usecases;
 
 import com.android.go4lunch.businesslogic.entities.Restaurant;
+import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
 import com.android.go4lunch.in_memory_gateways.InMemoryRestaurantGateway;
 
 import org.junit.Test;
@@ -12,7 +13,8 @@ import io.reactivex.Observable;
 public class GetRestaurantsForListUseCaseTest {
 
 
-    private GetRestaurantsForListUseCase createGetRestaurantsForList(int availableRestaurantsSize) {
+    private GetRestaurantsForListUseCase createGetRestaurantsForList(
+            int availableRestaurantsSize) {
         // Fill repository with available restaurants
         InMemoryRestaurantGateway restaurantQuery = new InMemoryRestaurantGateway();
         List<Restaurant> availableRestaurants = new ArrayList<>();
@@ -27,10 +29,10 @@ public class GetRestaurantsForListUseCaseTest {
         );
     }
 
-    private List<Restaurant> getObservedResult(GetRestaurantsForListUseCase getRestaurantsForListUseCase) {
-        Observable<List<Restaurant>> observableRestaurants = getRestaurantsForListUseCase
+    private List<RestaurantValueObject> getObservedResult(GetRestaurantsForListUseCase getRestaurantsForListUseCase) {
+        Observable<List<RestaurantValueObject>> observableRestaurants = getRestaurantsForListUseCase
                 .handle(1111.1, 1111.2, 1000);
-        List<Restaurant> results = new ArrayList<>();
+        List<RestaurantValueObject> results = new ArrayList<>();
         observableRestaurants.subscribe(results::addAll);
         return results;
     }

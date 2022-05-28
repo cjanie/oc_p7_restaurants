@@ -25,10 +25,10 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
     @Override
     public Observable<List<Restaurant>> getRestaurantsNearby(Double myLatitude, Double myLongitude, int radius) {
         if(this.restaurantsObservable == null) {
-            this.restaurantsObservable = Observable.just(new Mock().restaurants()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+            //this.restaurantsObservable = Observable.just(new Mock().restaurants()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
 
-            //this.restaurantsObservable = this.restaurantRepository.getRestaurantsNearbyWithDetails(myLatitude, myLongitude, radius)
-              //      .flatMap(restaurants -> this.formatRestaurants(restaurants));
+            this.restaurantsObservable = this.restaurantRepository.getRestaurantsNearbyWithDetails(myLatitude, myLongitude, radius)
+                    .flatMap(restaurants -> this.formatRestaurants(restaurants));
 
         }
 
@@ -49,6 +49,7 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
         Restaurant restaurant = null;
         if(r != null) {
             restaurant = new Restaurant(r.getName(), r.getAddress());
+            restaurant.setId(r.getId());
             restaurant.setGeolocation(new Geolocation(
                     r.getLatitude(),
                     r.getLongitude()

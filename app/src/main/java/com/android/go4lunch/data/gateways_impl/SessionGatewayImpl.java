@@ -36,7 +36,7 @@ public class SessionGatewayImpl implements SessionGateway {
         return this.sessionSubject
                 .hide()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(Schedulers.io());
     }
 
     private void fetchSessionToUpdateSubject() {

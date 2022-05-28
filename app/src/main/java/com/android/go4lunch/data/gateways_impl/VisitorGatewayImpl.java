@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
 import com.android.go4lunch.businesslogic.entities.Selection;
+import com.android.go4lunch.businesslogic.models.SelectionEntityModel;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -18,15 +19,17 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
-class SelectionDatabaseConfig {
-
-    public static final String COLLECTION_PATH = "selections";
-    public static final String RESTAURANT_ID = "restaurantId";
-    public static final String WORKMATE_ID = "workmateId";
-    public static final String RESTAURANT_NAME = "restaurantName";
-}
-
 public class VisitorGatewayImpl implements VisitorGateway {
+
+    private class SelectionDatabaseConfig {
+
+        public static final String COLLECTION_PATH = "selections";
+        public static final String RESTAURANT_ID = "restaurantId";
+        public static final String WORKMATE_ID = "workmateId";
+        public static final String RESTAURANT_NAME = "restaurantName";
+        public static final String WORKMATE_NAME = "workmateName";
+        public static final String WORKMATE_URL_PHOTO = "workmateUrlPhoto";
+    }
 
     private final String TAG = "VISITOR GATEWAY IMPL";
 
@@ -45,14 +48,14 @@ public class VisitorGatewayImpl implements VisitorGateway {
         return this.selectionsSubject
                 .hide()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(Schedulers.io());
     }
 
     private void fetchSelectionsToUpdateSubject() {
         this.database.collection(SelectionDatabaseConfig.COLLECTION_PATH).get().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 List<Selection> selections = this.formatSelectionsQuery(task.getResult());
-                this.updateSelectionsSubject(selections);
+                this.selectionsSubject.onNext(selections);
             }
         });
     }
@@ -68,16 +71,14 @@ public class VisitorGatewayImpl implements VisitorGateway {
         return selections;
     }
 
-    private void updateSelectionsSubject(List<Selection> selections) {
-        this.selectionsSubject.onNext(selections);
-    }
-
     @Override
     public void addSelection(Selection selection) {
         Map<String, Object> selectionMap = new HashMap<>();
         selectionMap.put(SelectionDatabaseConfig.RESTAURANT_ID, selection.getRestaurantId());
         selectionMap.put(SelectionDatabaseConfig.WORKMATE_ID, selection.getWorkmateId());
         selectionMap.put(SelectionDatabaseConfig.RESTAURANT_NAME, selection.getRestaurantName());
+        selectionMap.put(SelectionDatabaseConfig.WORKMATE_NAME, selection.getWorkmateName());
+        selectionMap.put(SelectionDatabaseConfig.WORKMATE_URL_PHOTO, selection.getWorkmateUrlPhoto());
         this.database.collection(SelectionDatabaseConfig.COLLECTION_PATH)
                 .document(selection.getId())
                 .set(selectionMap)
@@ -123,28 +124,20 @@ public class VisitorGatewayImpl implements VisitorGateway {
                 }
             }
         });
-        System.out.println(TAG + "%%%%%%%%%%%%%%%%%%%% visitors for restaurant : " + visitors.size());
-        return Observable.just(visitors);
+
+        return Observable.just(visitors).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
     private Selection createSelection(DocumentSnapshot doc) {
-
-        if(doc != null && doc.getData() != null) {
-
-                String restaurantId = (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_ID);
-                String workmateId = (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_ID);
-                String selectionId = doc.getId();
-                String restaurantName = (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_NAME);
-
-                Selection selection = new Selection(
-                        restaurantId,
-                        workmateId
-                );
-                selection.setId(selectionId);
-                selection.setRestaurantName(restaurantName);
-                return selection;
-        }
-        throw new NullPointerException();
+        Selection selection = new SelectionEntityModel().createSelection(
+                (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_ID),
+                (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_ID),
+                (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_NAME),
+                (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_NAME),
+                (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_URL_PHOTO),
+                doc.getId()
+        );
+        return selection;
     }
 
 }
