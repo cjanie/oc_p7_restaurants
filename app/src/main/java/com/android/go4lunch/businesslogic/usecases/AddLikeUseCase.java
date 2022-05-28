@@ -1,54 +1,66 @@
 package com.android.go4lunch.businesslogic.usecases;
 
+import android.util.Log;
+
 import com.android.go4lunch.businesslogic.entities.Workmate;
 import com.android.go4lunch.businesslogic.gateways.LikeGateway;
 import com.android.go4lunch.businesslogic.entities.Like;
 import com.android.go4lunch.businesslogic.gateways.SessionGateway;
+import com.android.go4lunch.businesslogic.models.LikeEntityModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
 
 public class AddLikeUseCase {
 
+    private final String TAG = "ADD LIKE USE CASE";
+
     private LikeGateway likeGateway;
 
     private SessionGateway sessionGateway;
+
+    private final LikeEntityModel likeEntityModel;
 
     public AddLikeUseCase(
             LikeGateway likeGateway, SessionGateway sessionGateway
     ) {
         this.likeGateway = likeGateway;
         this.sessionGateway = sessionGateway;
+
+        this.likeEntityModel = new LikeEntityModel();
     }
 
     public Observable<Boolean> handle(String restaurantId) {
 
-        return this.likeGateway.getLikes().flatMap(likes ->
-            addToLikes(restaurantId, likes)
-        );
+        return this.getLikesAndAddToLikesIfDoesNotExist(restaurantId)
+                .doOnNext(b ->
+                        Log.d(TAG, "--handle : " + Thread.currentThread().getName()));
     }
 
-    private Observable<Boolean> addToLikes(String restaurantId, List<Like> likes) {
-        return this.getSession().map(session -> {
-            boolean found = false;
-            if(!likes.isEmpty()) {
-                for(Like like: likes) {
-                    if(like.getRestaurantId().equals(restaurantId) && like.getWorkmateId().equals(session.getId())) {
-                        found = true;
-                        break;
-                    }
-                }
-            }
+    private Observable<Boolean> getLikesAndAddToLikesIfDoesNotExist(String restaurantId) {
+        return this.getLikes()
+                .flatMap(likes -> this.addToLikesIfDoesNotExist(restaurantId, likes));
+    }
 
-            if(!found) {
-                Like newLike = new Like(restaurantId, session.getId());
-                this.likeGateway.add(newLike);
-            }
 
-            return !found;
+    private Observable<Boolean> addToLikesIfDoesNotExist(String restaurantId, List<Like> likes) {
+        return this.getSession().flatMap(session -> {
+            Log.d(TAG, "addToLikes : " + Thread.currentThread().getName());
+
+            boolean doesLikeExist = this.likeEntityModel.doesLikeExist(restaurantId, session.getId(), likes);
+
+            if(!doesLikeExist) {
+                Like like = new Like(restaurantId, session.getId());
+                return this.likeGateway.add(like);
+
+            }
+            return Observable.just(false);
         });
+    }
+
+    private Observable<List<Like>> getLikes() {
+        return this.likeGateway.getLikes();
     }
 
     private Observable<Workmate> getSession() {

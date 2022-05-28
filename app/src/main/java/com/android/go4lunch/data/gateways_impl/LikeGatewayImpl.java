@@ -23,13 +23,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
-class LikeDatabaseConfig {
-    public static final String COLLECTION_PATH = "likes";
-    public static final String RESTAURANT_ID = "restaurantId";
-    public static final String WORKMATE_ID = "workmateId";
-}
-
 public class LikeGatewayImpl implements LikeGateway {
+
+    private class LikeDatabaseConfig {
+        public static final String COLLECTION_PATH = "likes";
+        public static final String RESTAURANT_ID = "restaurantId";
+        public static final String WORKMATE_ID = "workmateId";
+    }
 
     private final String TAG = "LIKE GATEWAY IMPL";
 
@@ -45,16 +45,10 @@ public class LikeGatewayImpl implements LikeGateway {
     @Override
     public Observable<List<Like>> getLikes() {
         this.fetchLikesToUpdateSubject();
-        List<Like> likesResult = new ArrayList<>();
         return this.likesSubject
                 .hide()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .timeout(10, TimeUnit.SECONDS)
-                .map(likes -> {
-            Log.d(TAG, "-- getLikes mapping likesSubject -- size: " + likes.size());
-            return likes;
-        });
+                .observeOn(Schedulers.io());
     }
 
     private void fetchLikesToUpdateSubject() {
@@ -89,13 +83,12 @@ public class LikeGatewayImpl implements LikeGateway {
     }
 
     @Override
-    public boolean add(Like like) {
+    public Observable<Boolean> add(Like like) {
         Map<String, Object> likeMap = new HashMap<>();
         likeMap.put(LikeDatabaseConfig.RESTAURANT_ID, like.getRestaurantId());
         likeMap.put(LikeDatabaseConfig.WORKMATE_ID, like.getWorkmateId());
         Task<DocumentReference> task = this.database.collection(LikeDatabaseConfig.COLLECTION_PATH)
                 .add(likeMap);
-        System.out.println(task.isSuccessful() + "%%%%%% Task is successfull");
-        return task.isSuccessful();
+        return Observable.just(task.isSuccessful());
     }
 }

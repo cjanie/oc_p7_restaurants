@@ -7,49 +7,50 @@ import com.android.go4lunch.businesslogic.enums.TimeInfo;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RestaurantValueObject {
 
     private Restaurant restaurant;
 
-    private TimeProvider timeProvider;
+    private TimeInfo timeInfo;
 
-    private DateProvider dateProvider;
-
+    private LocalTime closingTimeToday;
+/*
     private List<String> visitorsId;
 
     private Long distance;
 
-    public RestaurantValueObject(
-            Restaurant restaurant,
-            TimeProvider timeProvider,
-            DateProvider dateProvider,
-            Long distance,
-            List<String> visitorsId
-    ) {
-        this.restaurant = restaurant;
-        this.timeProvider = timeProvider;
-        this.dateProvider = dateProvider;
-        this.distance = distance;
-        this.visitorsId = visitorsId;
+ */
 
+    public RestaurantValueObject(Restaurant restaurant) {
+        this.restaurant = restaurant;
+        //this.visitorsId = new ArrayList<>();
     }
 
     public Restaurant getRestaurant() {
         return this.restaurant;
     }
-
+/*
+    public void setTimeInfo(TimeProvider timeProvider, DateProvider dateProvider) {
+        TimeInfoDecorator decorator = new TimeInfoDecorator(timeProvider, dateProvider);
+        this.timeInfo = decorator.decor(this.restaurant);
+    }
+*/
 
     public TimeInfo getTimeInfo() {
-        TimeInfoDecorator decorator = new TimeInfoDecorator(this.timeProvider, this.dateProvider);
-        return decorator.decor(this.restaurant);
+        return this.timeInfo;
     }
 
-    public LocalTime getCloseToday() {
-        return this.restaurant.getPlanning().get(this.dateProvider.today()).get("close");
+    public void setClosingTimeToday(DateProvider dateProvider) {
+        this.closingTimeToday = this.restaurant.getPlanning().get(dateProvider.today()).get("close");
     }
 
+    public LocalTime getClosingTimeToday() {
+        return this.closingTimeToday;
+    }
+/*
     public Long getDistance() {
         return this.distance;
     }
@@ -59,5 +60,7 @@ public class RestaurantValueObject {
     public int getVisitorsCount() {
         return this.visitorsId.size();
     }
+
+ */
 
 }

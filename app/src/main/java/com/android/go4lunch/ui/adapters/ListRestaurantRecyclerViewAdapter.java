@@ -69,7 +69,7 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
                 ((ItemViewHolder)holder).info.setTextColor(timeInfoTextHandler.getColor(restaurant, ((ItemViewHolder)holder).info));
                 ((ItemViewHolder)holder).info.setTypeface(null, timeInfoTextHandler.getStyle(restaurant));
             }
-
+/*
             if(restaurant.getDistance() != null) {
                 ((ItemViewHolder)holder).distance.setText(
                         restaurant.getDistance().toString()
@@ -77,7 +77,7 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
             }
 
             ((ItemViewHolder)holder).selections.setText("(" + restaurant.getVisitorsCount() +")");
-
+*/
             /*
             Vote vote = restaurant.getVoteInfo();
 

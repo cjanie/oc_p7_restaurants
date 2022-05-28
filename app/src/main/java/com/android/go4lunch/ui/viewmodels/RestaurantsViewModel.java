@@ -26,9 +26,7 @@ public class RestaurantsViewModel extends ViewModel {
     private final GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
 
     // Dependencies
-    private final TimeProvider timeProvider;
 
-    private final DateProvider dateProvider;
 
     private Observable<List<RestaurantValueObject>> restaurantModelsObservable;
 
@@ -43,8 +41,6 @@ public class RestaurantsViewModel extends ViewModel {
             DateProvider dateProvider) {
         this.getRestaurantsForListUseCase = getRestaurantsForListUseCase;
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
-        this.timeProvider = timeProvider;
-        this.dateProvider = dateProvider;
 
         this.restaurantsLiveData = new MutableLiveData<>(new ArrayList<>());
     }
@@ -92,16 +88,9 @@ public class RestaurantsViewModel extends ViewModel {
     // Action
     public void fetchRestaurantsObservableToUpdateLiveData(Double myLatitude, Double myLongitude, int radius) {
         this.getRestaurantsForListUseCase.handle(myLatitude, myLongitude, radius)
-                .subscribe(restaurants -> {
-                    List<RestaurantValueObject> restaurantValueObjects = new ArrayList<>();
-                    if(!restaurants.isEmpty()) {
-                        for(Restaurant restaurant: restaurants) {
-                            RestaurantValueObject restaurantValueObject = new RestaurantValueObject(restaurant, this.timeProvider, this.dateProvider, 100L, new ArrayList<>());
-                            restaurantValueObjects.add(restaurantValueObject);
-                        }
-                    }
-                    this.restaurantsLiveData.postValue(restaurantValueObjects);
-                });
+                .subscribe(restaurants ->
+                    this.restaurantsLiveData.postValue(restaurants)
+                );
     }
 
 

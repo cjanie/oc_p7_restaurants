@@ -16,7 +16,7 @@ public class TimeInfoTextHandler {
         return restaurantValueObject.getTimeInfo().accept(new TimeInfoVisitor<String>() {
             @Override
             public String visitOpen() {
-                LocalTime close = restaurantValueObject.getCloseToday();
+                LocalTime close = restaurantValueObject.getClosingTimeToday();
                 return context.getString(
                         R.string.open_until) + " "
                         + close.toString();

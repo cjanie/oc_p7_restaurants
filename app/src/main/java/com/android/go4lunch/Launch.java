@@ -184,7 +184,9 @@ public class Launch extends Application {
 
     private synchronized GetRestaurantsForListUseCase getGetRestaurantsForListUseCase() {
         if(this.getRestaurantsForListUseCase == null) {
-            this.getRestaurantsForListUseCase = new GetRestaurantsForListUseCase(restaurantGateway());
+            this.getRestaurantsForListUseCase = new GetRestaurantsForListUseCase(
+                    restaurantGateway()
+            );
         }
         return this.getRestaurantsForListUseCase;
     }

@@ -40,7 +40,7 @@ public class DistanceRepository {
                 // operator to execute request in a dedicated thread (Schedulers.io)
                 .subscribeOn(Schedulers.io())
                 // operator for all subscribers on main thread to listen
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 // operator for timeout error
                 .timeout(10, TimeUnit.SECONDS)
                 .map(root -> {

@@ -42,7 +42,7 @@ public class RestaurantRepository {
                 // operator to execute request in a dedicated thread (Schedulers.io)
                 .subscribeOn(Schedulers.io())
                 // operator for all subscribers on main thread to listen
-                .observeOn(AndroidSchedulers.mainThread()) // Schedulers.trampoline()?
+                .observeOn(Schedulers.io()) // Schedulers.trampoline()?
                 // operator for timeout error
                 .timeout(10, TimeUnit.SECONDS)
                 // Make a Restaurant list from response
