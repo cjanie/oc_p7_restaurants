@@ -27,20 +27,16 @@ public class GetRestaurantsForListUseCase {
 
     private final LikeGateway likeGateway;
 
-    private final DistanceGateway distanceGateway;
-
     private final RestaurantEntityModel restaurantEntityModel;
 
     public GetRestaurantsForListUseCase(
             RestaurantGateway restaurantGateway,
             VisitorGateway visitorGateway,
-            LikeGateway likeGateway,
-            DistanceGateway distanceGateway
+            LikeGateway likeGateway
     ) {
         this.restaurantGateway = restaurantGateway;
         this.visitorGateway = visitorGateway;
         this.likeGateway = likeGateway;
-        this.distanceGateway = distanceGateway;
 
         this.restaurantEntityModel = new RestaurantEntityModel();
     }
@@ -63,55 +59,20 @@ public class GetRestaurantsForListUseCase {
         return this.likeGateway.getLikes();
     }
 
-    private Observable<Long> getDistance(Geolocation myPosition, Geolocation restaurantPosition) {
-        return this.distanceGateway.getDistanceInMeter(myPosition, restaurantPosition);
-    }
-
     // Transformations
 
     public Observable<List<RestaurantValueObject>> getRestaurantsWithUpdates(Double myLatitude, Double myLongitude, int radius) {
         return this.formatRestaurantsAsValueObjects(myLatitude, myLongitude, radius)
-                .flatMap(restaurantVOs -> this.updateRestaurantsWithVisitorsCount(restaurantVOs))
-                .flatMap(restaurantVOs -> this.updateRestaurantsWithLikesCount(restaurantVOs))
-
-                .flatMap(restaurantVOs ->
-                            Observable.fromIterable(restaurantVOs)
-                                    .flatMap(restaurantVO ->
-                                            this.updateRestaurantWithDistance(restaurantVO, myLatitude, myLongitude)
-                                    ).toList().toObservable()
-                        );
-
-
+                .flatMap(restaurantVOs -> this.restaurantEntityModel.updateRestaurantsWithVisitorsCount(
+                        restaurantVOs,
+                        this.getSelections()
+                ))
+                .flatMap(restaurantVOs -> this.updateRestaurantsWithLikesCount(restaurantVOs));
     }
 
     public Observable<List<RestaurantValueObject>> formatRestaurantsAsValueObjects(Double myLatitude, Double myLongitude, int radius) {
         return this.getRestaurants(myLatitude, myLongitude, radius)
                 .map(restaurants -> this.restaurantEntityModel.formatRestaurantsToValueObjects(restaurants));
-    }
-
-    private Observable<List<RestaurantValueObject>> updateRestaurantsWithVisitorsCount(List<RestaurantValueObject> restaurantVOs) {
-        return this.getSelections().map(selections -> {
-            List<RestaurantValueObject> restaurantVOsCopy = restaurantVOs;
-            if(!restaurantVOsCopy.isEmpty()) {
-                for(RestaurantValueObject restaurantVO: restaurantVOsCopy) {
-                    int visitorsCount = this.getVisitorsCountByRestaurantId(selections, restaurantVO.getRestaurant().getId());
-                    restaurantVO.setVisitorsCount(visitorsCount);
-                }
-            }
-            return restaurantVOsCopy;
-        });
-    }
-
-    private int getVisitorsCountByRestaurantId(List<Selection> selections, String restaurantId) {
-        int count = 0;
-        if (!selections.isEmpty()) {
-            for (Selection selection : selections) {
-                if (selection.getRestaurantId().equals(restaurantId)) {
-                    count += 1;
-                }
-            }
-        }
-        return count;
     }
 
     private Observable<List<RestaurantValueObject>> updateRestaurantsWithLikesCount(List<RestaurantValueObject> restaurantVOs) {
@@ -139,14 +100,4 @@ public class GetRestaurantsForListUseCase {
         return count;
     }
 
-    private Observable<RestaurantValueObject> updateRestaurantWithDistance(RestaurantValueObject restaurantVO, Double myLatitude, Double myLongitude) {
-        Geolocation myPosition = new Geolocation(myLatitude, myLongitude);
-        return this.getDistance(myPosition, restaurantVO.getRestaurant().getGeolocation())
-                .map(distance -> {
-                    RestaurantValueObject restaurantVOCopy = restaurantVO;
-                    restaurantVOCopy.setDistance(distance);
-                    return restaurantVOCopy;
-                });
-
-    }
 }

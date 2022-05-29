@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.businesslogic.entities.Restaurant;
+import com.android.go4lunch.businesslogic.entities.Geolocation;
+import com.android.go4lunch.businesslogic.usecases.UpdateRestaurantWithDistanceUseCase;
 import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.TimeProvider;
-import com.android.go4lunch.businesslogic.usecases.GetRestaurantVisitorsUseCase;
 import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
 import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForListUseCase;
 
@@ -24,7 +24,11 @@ public class RestaurantsViewModel extends ViewModel {
     // Use Cases
     private final GetRestaurantsForListUseCase getRestaurantsForListUseCase;
 
-    private final GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
+    private final UpdateRestaurantWithDistanceUseCase updateRestaurantWithDistanceUseCase;
+
+    private final TimeProvider timeProvider;
+
+    private final DateProvider dateProvider;
 
     // Dependencies
 
@@ -37,49 +41,17 @@ public class RestaurantsViewModel extends ViewModel {
     // Constructor
     public RestaurantsViewModel(
             GetRestaurantsForListUseCase getRestaurantsForListUseCase,
-            GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase,
+            UpdateRestaurantWithDistanceUseCase updateRestaurantWithDistanceUseCase,
             TimeProvider timeProvider,
             DateProvider dateProvider) {
         this.getRestaurantsForListUseCase = getRestaurantsForListUseCase;
-        this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
+        this.updateRestaurantWithDistanceUseCase = updateRestaurantWithDistanceUseCase;
+
+        this.timeProvider = timeProvider;
+        this.dateProvider = dateProvider;
 
         this.restaurantsLiveData = new MutableLiveData<>(new ArrayList<>());
     }
-
-
-/*
-    private Observable<List<RestaurantModel>> getRestaurantsAsModelsObservable(Double myLatitude, Double myLongitude, int radius) {
-        return this.getRestaurantsForListUseCase.handle(myLatitude, myLongitude, radius).flatMap(
-                restaurants -> {
-                    Log.d(TAG, "-- getRestaurantsAsModelsObservable -- restaurants size: " + restaurants.size());
-
-                    return Observable.fromIterable(restaurants)
-                            .flatMap(
-                                    restaurant ->
-                                            formatRestaurantToModelObservable(restaurant)
-                            ).toList().toObservable();
-                }
-        );
-    }
-
- */
-/*
-    public Observable<RestaurantModel> formatRestaurantToModelObservable(Restaurant restaurant) {
-        return this.getRestaurantVisitorsUseCase.handle(restaurant.getId()).map(visitors -> {
-            Log.d(TAG, "-- getRestaurants -- visitors size: " + visitors.size());
-
-            RestaurantModel restaurantModel = new RestaurantModel(
-                    restaurant,
-                    this.timeProvider,
-                    this.dateProvider,
-                    100L,
-                    visitors
-            );
-            return restaurantModel;
-        });
-    }
-*/
-
 
     // Getter for the view the model livedata that the activity listens
     public LiveData<List<RestaurantValueObject>> getRestaurantsLiveData() {
@@ -89,11 +61,34 @@ public class RestaurantsViewModel extends ViewModel {
     // Action
     public void fetchRestaurantsObservableToUpdateLiveData(Double myLatitude, Double myLongitude, int radius) {
         this.getRestaurantsForListUseCase.handle(myLatitude, myLongitude, radius)
+                .map(restaurantVOs -> updateRestaurantsWithTimeInfo(
+                      restaurantVOs, this.timeProvider, this.dateProvider))
+
+                .flatMap(restaurantVOs -> this.updateRestaurantsWithDistance(restaurantVOs, myLatitude, myLongitude)
+                )
                 .subscribe(restaurants ->
                     this.restaurantsLiveData.postValue(restaurants)
                 );
     }
 
+    public Observable<List<RestaurantValueObject>> updateRestaurantsWithDistance(List<RestaurantValueObject> restaurantVOs, Double myLatitude, Double myLongitude) {
+        return Observable.fromIterable(restaurantVOs)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .flatMap(restaurantVO ->
+                        this.updateRestaurantWithDistanceUseCase.handle(restaurantVO, myLatitude, myLongitude)
+                ).toList().toObservable();
+    }
 
+    public List<RestaurantValueObject> updateRestaurantsWithTimeInfo(List<RestaurantValueObject> restaurantVOs, TimeProvider timeProvider, DateProvider dateProvider) {
+        List<RestaurantValueObject> restaurantVOsCopy = restaurantVOs;
+        if(!restaurantVOsCopy.isEmpty()) {
+            for(RestaurantValueObject restaurantVO: restaurantVOsCopy) {
+                restaurantVO.setTimeInfo(timeProvider, dateProvider);
+                //restaurantVO.setClosingTimeToday(dateProvider);
+            }
+        }
+        return restaurantVOsCopy;
+    }
 
 }

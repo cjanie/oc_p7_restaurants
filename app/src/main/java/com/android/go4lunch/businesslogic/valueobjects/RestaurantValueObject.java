@@ -35,19 +35,20 @@ public class RestaurantValueObject {
     public Restaurant getRestaurant() {
         return this.restaurant;
     }
-/*
+
     public void setTimeInfo(TimeProvider timeProvider, DateProvider dateProvider) {
         TimeInfoDecorator decorator = new TimeInfoDecorator(timeProvider, dateProvider);
         this.timeInfo = decorator.decor(this.restaurant);
     }
-*/
+
 
     public TimeInfo getTimeInfo() {
         return this.timeInfo;
     }
 
     public void setClosingTimeToday(DateProvider dateProvider) {
-        this.closingTimeToday = this.restaurant.getPlanning().get(dateProvider.today()).get("close");
+        if(this.restaurant.getPlanning() != null)
+            this.closingTimeToday = this.restaurant.getPlanning().get(dateProvider.today()).get("close");
     }
 
     public LocalTime getClosingTimeToday() {

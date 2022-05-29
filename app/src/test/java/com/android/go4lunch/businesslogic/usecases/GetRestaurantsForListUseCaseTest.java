@@ -39,13 +39,10 @@ public class GetRestaurantsForListUseCaseTest {
         restaurantGateway.setRestaurants(availableRestaurants);
         InMemoryVisitorGateway visitorGateway = new InMemoryVisitorGateway();
         InMemoryLikeGateway likeGateway = new InMemoryLikeGateway();
-        InMemoryDistanceGateway distanceGateway = new InMemoryDistanceGateway(Observable.just(1L));
-
         return new GetRestaurantsForListUseCase(
                 restaurantGateway,
                 visitorGateway,
-                likeGateway,
-                distanceGateway
+                likeGateway
         );
     }
 
@@ -53,8 +50,7 @@ public class GetRestaurantsForListUseCaseTest {
         return new GetRestaurantsForListUseCase(
                 new InMemoryRestaurantGateway(),
                 new InMemoryVisitorGateway(),
-                new InMemoryLikeGateway(),
-                new InMemoryDistanceGateway(null)
+                new InMemoryLikeGateway()
         );
     }
 
@@ -64,13 +60,10 @@ public class GetRestaurantsForListUseCaseTest {
         InMemoryVisitorGateway visitorGateway = new InMemoryVisitorGateway();
         visitorGateway.setSelections(availableSelections);
         InMemoryLikeGateway likeGateway = new InMemoryLikeGateway();
-        InMemoryDistanceGateway distanceGateway = new InMemoryDistanceGateway(Observable.just(1L));
-
         return new GetRestaurantsForListUseCase(
                 restaurantGateway,
                 visitorGateway,
-                likeGateway,
-                distanceGateway
+                likeGateway
         );
     }
 
@@ -86,13 +79,10 @@ public class GetRestaurantsForListUseCaseTest {
         InMemoryVisitorGateway visitorGateway = new InMemoryVisitorGateway();
         InMemoryLikeGateway likeGateway = new InMemoryLikeGateway();
         likeGateway.setLikes(availableLikes);
-        InMemoryDistanceGateway distanceGateway = new InMemoryDistanceGateway(Observable.just(1L));
-
         return new GetRestaurantsForListUseCase(
                 restaurantGateway,
                 visitorGateway,
-                likeGateway,
-                distanceGateway
+                likeGateway
         );
     }
 
@@ -125,8 +115,7 @@ public class GetRestaurantsForListUseCaseTest {
                 = new GetRestaurantsForListUseCase(
                         restaurantGateway,
                         new InMemoryVisitorGateway(),
-                        new InMemoryLikeGateway(),
-                        new InMemoryDistanceGateway(Observable.just(1L))
+                        new InMemoryLikeGateway()
                 );
         assert(this.getObservedResult(getRestaurantsForListUseCase).isEmpty());
     }

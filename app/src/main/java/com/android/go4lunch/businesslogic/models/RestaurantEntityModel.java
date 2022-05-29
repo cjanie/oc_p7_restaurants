@@ -9,6 +9,8 @@ import com.android.go4lunch.providers.TimeProvider;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+
 public class RestaurantEntityModel {
 
     public Restaurant findWorkmateSelection(String workmateId, List<Selection> selections) {
@@ -25,6 +27,7 @@ public class RestaurantEntityModel {
     }
 
     public List<RestaurantValueObject> formatRestaurantsToValueObjects(List<Restaurant> restaurants) {
+        // All VOs have a Geolocation in order to update distance
         List<Restaurant> filteredRestaurantsWithGeolocation = this.filterRestaurantsWithGeolocation(restaurants);
         List<RestaurantValueObject> restaurantVOs = new ArrayList<>();
         if(!filteredRestaurantsWithGeolocation.isEmpty()) {
@@ -44,5 +47,33 @@ public class RestaurantEntityModel {
             }
         }
         return filteredRestaurantsWithGeolocation;
+    }
+
+    public Observable<List<RestaurantValueObject>> updateRestaurantsWithVisitorsCount(
+            List<RestaurantValueObject> restaurantVOs,
+            Observable<List<Selection>> selectionsObservable
+    ) {
+        return selectionsObservable.map(selections -> {
+            List<RestaurantValueObject> restaurantVOsCopy = restaurantVOs;
+            if(!restaurantVOsCopy.isEmpty()) {
+                for(RestaurantValueObject restaurantVO: restaurantVOsCopy) {
+                    int visitorsCount = this.getVisitorsCountByRestaurantId(selections, restaurantVO.getRestaurant().getId());
+                    restaurantVO.setVisitorsCount(visitorsCount);
+                }
+            }
+            return restaurantVOsCopy;
+        });
+    }
+
+    private int getVisitorsCountByRestaurantId(List<Selection> selections, String restaurantId) {
+        int count = 0;
+        if (!selections.isEmpty()) {
+            for (Selection selection : selections) {
+                if (selection.getRestaurantId().equals(restaurantId)) {
+                    count += 1;
+                }
+            }
+        }
+        return count;
     }
 }

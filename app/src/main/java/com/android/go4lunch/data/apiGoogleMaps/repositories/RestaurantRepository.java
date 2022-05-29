@@ -43,8 +43,6 @@ public class RestaurantRepository {
                 .subscribeOn(Schedulers.io())
                 // operator for all subscribers on main thread to listen
                 .observeOn(Schedulers.io()) // Schedulers.trampoline()?
-                // operator for timeout error
-                .timeout(10, TimeUnit.SECONDS)
                 // Make a Restaurant list from response
                 .map(nearbySearchResponseRoot -> {
                     // Get the Result list from response
@@ -95,8 +93,7 @@ public class RestaurantRepository {
                 GoogleMapsRequestConfig.API_KEY
         )
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .timeout(10, TimeUnit.SECONDS)
+                .observeOn(Schedulers.io())
                 // set restaurant properties from details service response and return it
                 .map(detailsResponseRoot -> {
                     Result result = detailsResponseRoot.getResult();
