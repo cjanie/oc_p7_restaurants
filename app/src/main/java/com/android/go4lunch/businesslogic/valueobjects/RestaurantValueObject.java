@@ -17,16 +17,19 @@ public class RestaurantValueObject {
     private TimeInfo timeInfo;
 
     private LocalTime closingTimeToday;
-/*
-    private List<String> visitorsId;
+
+    private int visitorsCount;
+
+    private int likesCount;
 
     private Long distance;
 
- */
+
 
     public RestaurantValueObject(Restaurant restaurant) {
         this.restaurant = restaurant;
-        //this.visitorsId = new ArrayList<>();
+        this.visitorsCount = 0;
+        this.likesCount = 0;
     }
 
     public Restaurant getRestaurant() {
@@ -50,17 +53,31 @@ public class RestaurantValueObject {
     public LocalTime getClosingTimeToday() {
         return this.closingTimeToday;
     }
-/*
+
+    public int getVisitorsCount() {
+        return this.visitorsCount;
+    }
+
+    public void setVisitorsCount(int visitorsCount) {
+        this.visitorsCount = visitorsCount;
+    }
+
+    public void setLikesCount(int likesCount) {
+        this.likesCount = likesCount;
+    }
+
+    public int getNumberOfStarts() {
+        if(this.likesCount < 4) {
+            return this.likesCount;
+        }
+        return 3;
+    }
+
     public Long getDistance() {
         return this.distance;
     }
 
-
-
-    public int getVisitorsCount() {
-        return this.visitorsId.size();
+    public void setDistance(Long distance) {
+        this.distance = distance;
     }
-
- */
-
 }

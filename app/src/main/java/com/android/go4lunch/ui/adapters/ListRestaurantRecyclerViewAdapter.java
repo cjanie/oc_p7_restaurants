@@ -69,33 +69,25 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
                 ((ItemViewHolder)holder).info.setTextColor(timeInfoTextHandler.getColor(restaurant, ((ItemViewHolder)holder).info));
                 ((ItemViewHolder)holder).info.setTypeface(null, timeInfoTextHandler.getStyle(restaurant));
             }
-/*
+
+            // DISTANCE
             if(restaurant.getDistance() != null) {
                 ((ItemViewHolder)holder).distance.setText(
                         restaurant.getDistance().toString()
                                 + ((ItemViewHolder) holder).distance.getContext().getString(R.string.meter_abbrev));
             }
 
+            // VISITORS
             ((ItemViewHolder)holder).selections.setText("(" + restaurant.getVisitorsCount() +")");
-*/
-            /*
-            Vote vote = restaurant.getVoteInfo();
 
-            if(vote == Vote.ONE_STAR) {
-                ((ItemViewHolder)holder).starsContainer.addView(this.createStar(holder.itemView.getContext()));
-            }
-            if(vote == Vote.TWO_STARS) {
-                for(int i=0; i<2; i++) {
+            // STARS
+            if(restaurant.getNumberOfStarts() > 0) {
+                for(int i=0; i<restaurant.getNumberOfStarts(); i++) {
                     ((ItemViewHolder)holder).starsContainer.addView(this.createStar(holder.itemView.getContext()));
-                }
-            }
-            if(vote == Vote.THREE_STARS) {
-                for(int i=0; i<3; i++) {
-                    ((ItemViewHolder)holder).starsContainer.addView(this.createStar(holder.itemView.getContext()));
+
                 }
             }
 
-             */
             ((ItemViewHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
