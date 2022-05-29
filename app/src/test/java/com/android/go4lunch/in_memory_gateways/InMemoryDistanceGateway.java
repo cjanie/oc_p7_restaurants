@@ -17,9 +17,7 @@ public class InMemoryDistanceGateway implements DistanceGateway {
 
 
     @Override
-    public Observable<Long> getDistanceInMeter(Geolocation myPosition, Geolocation restaurantGeolocation) throws NullDistanceResponseException {
-        if(this.distance == null)
-            throw new NullDistanceResponseException();
+    public Observable<Long> getDistanceInMeter(Geolocation myPosition, Geolocation restaurantGeolocation) {
         return this.distance;
     }
 

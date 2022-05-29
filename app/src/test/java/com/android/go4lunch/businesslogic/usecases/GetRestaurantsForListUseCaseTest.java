@@ -3,6 +3,7 @@ package com.android.go4lunch.businesslogic.usecases;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import com.android.go4lunch.businesslogic.entities.Geolocation;
 import com.android.go4lunch.businesslogic.entities.Like;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.businesslogic.entities.Selection;
@@ -16,20 +17,24 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 
 public class GetRestaurantsForListUseCaseTest {
 
 
-    private GetRestaurantsForListUseCase createGetRestaurantsForList(
-            int availableRestaurantsSize) {
+    private GetRestaurantsForListUseCase createUseCase(
+            int availableRestaurantsSize
+    ) {
         // Fill repository with available restaurants
         InMemoryRestaurantGateway restaurantGateway = new InMemoryRestaurantGateway();
         List<Restaurant> availableRestaurants = new ArrayList<>();
         while(availableRestaurants.size() < availableRestaurantsSize) {
             Restaurant restaurant = new Restaurant("Restaurant de la Pointe", "97 rue Langevin");
-           availableRestaurants.add(restaurant);
+            restaurant.setGeolocation(new Geolocation(1.9, 1.2));
+
+            availableRestaurants.add(restaurant);
         }
         restaurantGateway.setRestaurants(availableRestaurants);
         InMemoryVisitorGateway visitorGateway = new InMemoryVisitorGateway();
@@ -41,6 +46,15 @@ public class GetRestaurantsForListUseCaseTest {
                 visitorGateway,
                 likeGateway,
                 distanceGateway
+        );
+    }
+
+    private GetRestaurantsForListUseCase createGetRestaurantsForListUseCaseWithoutAvailableRestaurant() {
+        return new GetRestaurantsForListUseCase(
+                new InMemoryRestaurantGateway(),
+                new InMemoryVisitorGateway(),
+                new InMemoryLikeGateway(),
+                new InMemoryDistanceGateway(null)
         );
     }
 
@@ -58,6 +72,12 @@ public class GetRestaurantsForListUseCaseTest {
                 likeGateway,
                 distanceGateway
         );
+    }
+
+    private InMemoryRestaurantGateway fillGatewayWithRestaurants(List<Restaurant> restaurants) {
+        InMemoryRestaurantGateway restaurantGateway = new InMemoryRestaurantGateway();
+        restaurantGateway.setRestaurants(restaurants);
+        return restaurantGateway;
     }
 
     private GetRestaurantsForListUseCase createUseCaseWithAvailableLikes(List<Restaurant> availableRestaurants, List<Like> availableLikes) {
@@ -88,7 +108,7 @@ public class GetRestaurantsForListUseCaseTest {
     public void returnsRestaurantsWhenThereAreSomeAvailable() {
 
         // SUT with 2 restaurants available
-        GetRestaurantsForListUseCase getRestaurantsForListUseCase = this.createGetRestaurantsForList(
+        GetRestaurantsForListUseCase getRestaurantsForListUseCase = this.createUseCase(
                 2
         );
 
@@ -96,12 +116,27 @@ public class GetRestaurantsForListUseCaseTest {
     }
 
     @Test
+    public void filtersRestaurantsWithGeolocation() {
+        Restaurant restaurant1 = new Restaurant("resto1");
+        Restaurant restaurant2 = new Restaurant("resto2");
+        InMemoryRestaurantGateway restaurantGateway
+                = this.fillGatewayWithRestaurants(Arrays.asList(restaurant1, restaurant2));
+        GetRestaurantsForListUseCase getRestaurantsForListUseCase
+                = new GetRestaurantsForListUseCase(
+                        restaurantGateway,
+                        new InMemoryVisitorGateway(),
+                        new InMemoryLikeGateway(),
+                        new InMemoryDistanceGateway(Observable.just(1L))
+                );
+        assert(this.getObservedResult(getRestaurantsForListUseCase).isEmpty());
+    }
+
+    @Test
     public void listShouldBeEmptyWhenNoRestaurantIsAvailable() {
 
         // SUT without any restaurant available
-        GetRestaurantsForListUseCase getRestaurantsForListUseCase = this.createGetRestaurantsForList(
-                0
-        );
+        GetRestaurantsForListUseCase getRestaurantsForListUseCase =
+                this.createGetRestaurantsForListUseCaseWithoutAvailableRestaurant();
 
         assert(this.getObservedResult(getRestaurantsForListUseCase).isEmpty());
     }
@@ -110,8 +145,10 @@ public class GetRestaurantsForListUseCaseTest {
     public void restaurantCanHaveSelections() {
         Restaurant restaurant1 = new Restaurant("Chez Jojo");
         restaurant1.setId("resto1");
+        restaurant1.setGeolocation(new Geolocation(1.1, 1.1));
         Restaurant restaurant2 = new Restaurant("Chez Janvier");
         restaurant2.setId("resto2");
+        restaurant2.setGeolocation(new Geolocation(1.2, 1.2));
 
         Selection selection1Resto2 = new Selection("resto2", "workmate1");
         Selection selection2Resto2 = new Selection("resto2", "workmate2");
@@ -129,6 +166,7 @@ public class GetRestaurantsForListUseCaseTest {
     public void restaurantCanHaveLikes() {
         Restaurant restaurant1 = new Restaurant("Chez Jojo");
         restaurant1.setId("resto1");
+        restaurant1.setGeolocation(new Geolocation(1.8, 1.9));
 
         Like like1Resto1 = new Like("resto1", "workmate1");
         Like like2Resto1 = new Like("resto1", "workmate2");
@@ -144,6 +182,7 @@ public class GetRestaurantsForListUseCaseTest {
     public void restaurantNotLiked() {
         Restaurant restaurant1 = new Restaurant("Chez Jojo");
         restaurant1.setId("resto1");
+        restaurant1.setGeolocation(new Geolocation(1.1, 1.3));
         GetRestaurantsForListUseCase getRestaurantsForListUseCase = this.createUseCaseWithAvailableLikes(
                 Arrays.asList(restaurant1),
                 Arrays.asList()
@@ -155,6 +194,7 @@ public class GetRestaurantsForListUseCaseTest {
     public void starsNotMoreThanThree() {
         Restaurant restaurant1 = new Restaurant("Chez Jojo");
         restaurant1.setId("resto1");
+        restaurant1.setGeolocation(new Geolocation(1.1, 1.1));
 
         Like like1Resto1 = new Like("resto1", "workmate1");
         Like like2Resto1 = new Like("resto1", "workmate2");

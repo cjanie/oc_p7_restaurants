@@ -16,7 +16,7 @@ public class DistanceGatewayImpl implements DistanceGateway {
     }
 
     @Override
-    public Observable<Long> getDistanceInMeter(Geolocation myPosition, Geolocation restaurantGeolocation) throws NullDistanceResponseException {
+    public Observable<Long> getDistanceInMeter(Geolocation myPosition, Geolocation restaurantGeolocation) {
         String destination = restaurantGeolocation.getLatitude().toString() + "," + restaurantGeolocation.getLongitude().toString();
         String origin = myPosition.getLatitude().toString() + "," + restaurantGeolocation.getLongitude().toString();
         return this.distanceRepository.getDistanceInMeter(destination, origin)

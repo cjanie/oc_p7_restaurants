@@ -10,5 +10,5 @@ public interface DistanceGateway {
     Observable<Long> getDistanceInMeter(
             Geolocation myPosition,
             Geolocation restaurantGeolocation
-    ) throws NullDistanceResponseException;
+    );
 }
