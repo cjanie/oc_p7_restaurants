@@ -25,13 +25,24 @@ public class RestaurantEntityModel {
     }
 
     public List<RestaurantValueObject> formatRestaurantsToValueObjects(List<Restaurant> restaurants) {
+        List<Restaurant> filteredRestaurantsWithGeolocation = this.filterRestaurantsWithGeolocation(restaurants);
         List<RestaurantValueObject> restaurantVOs = new ArrayList<>();
-        if(!restaurants.isEmpty()) {
+        if(!filteredRestaurantsWithGeolocation.isEmpty()) {
             for(Restaurant restaurant: restaurants) {
                 RestaurantValueObject restaurantVO = new RestaurantValueObject(restaurant);
                 restaurantVOs.add(restaurantVO);
             }
         }
         return restaurantVOs;
+    }
+
+    private List<Restaurant> filterRestaurantsWithGeolocation(List<Restaurant> restaurants) {
+        List<Restaurant> filteredRestaurantsWithGeolocation = new ArrayList<>();
+        for(Restaurant restaurant: restaurants) {
+            if(restaurant.getGeolocation() != null) {
+                filteredRestaurantsWithGeolocation.add(restaurant);
+            }
+        }
+        return filteredRestaurantsWithGeolocation;
     }
 }

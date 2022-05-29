@@ -24,7 +24,7 @@ public class DistanceRepository {
     public Observable<Integer> getDistanceInMeter(
             String destination,
             String origin
-    ) throws NullDistanceResponseException {
+    ) {
 
         // Prepare parameters of the request
         List<String> destinations = new ArrayList<>();
@@ -41,12 +41,7 @@ public class DistanceRepository {
                 .subscribeOn(Schedulers.io())
                 // operator for all subscribers on main thread to listen
                 .observeOn(Schedulers.io())
-                // operator for timeout error
-                .timeout(10, TimeUnit.SECONDS)
                 .map(root -> {
-                    if(root == null || root.getRows() == null)
-                        throw new NullDistanceResponseException();
-
                     Integer distance = null;
                     if(!root.getRows().isEmpty()) {
                         List<Element> elements = root.getRows().get(0).getElements();
