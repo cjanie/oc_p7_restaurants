@@ -1,11 +1,10 @@
 package com.android.go4lunch.businesslogic.usecases;
 
+import com.android.go4lunch.businesslogic.entities.Selection;
 import com.android.go4lunch.businesslogic.entities.Workmate;
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
-import com.android.go4lunch.businesslogic.entities.Selection;
 import com.android.go4lunch.businesslogic.models.WorkmateEntityModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -24,32 +23,19 @@ public class GetRestaurantVisitorsUseCase {
     }
 
     public Observable<List<Workmate>> handle(String restaurantId) {
-        return this.getVisitors(restaurantId);
+        return this.extractVisitorsByRestaurantId(restaurantId);
     }
 
-    private Observable<List<Workmate>> getVisitors(String restaurantId) {
-        return this.visitorGateway.getSelections()
+    private Observable<List<Workmate>> extractVisitorsByRestaurantId(String restaurantId) {
+        return this.getSelections()
                 .map(selections ->
-                        this.findVisitorsInSelectionsByRestaurantId(selections, restaurantId)
+                        this.workmateEntityModel.extractVisitorsByRestaurantId(selections, restaurantId)
 
         );
     }
 
-    private List<Workmate> findVisitorsInSelectionsByRestaurantId(List<Selection> selections, String restaurantId) {
-        List<Workmate> visitors = new ArrayList<>();
-        if (!selections.isEmpty()) {
-            for (Selection selection : selections) {
-                if (selection.getRestaurantId().equals(restaurantId)) {
-                    Workmate visitor = this.workmateEntityModel.createVisitor(
-                            selection.getWorkmateId(),
-                            selection.getWorkmateName(),
-                            selection.getWorkmateUrlPhoto()
-                    );
-                    visitors.add(visitor);
-                }
-            }
-        }
-        return visitors;
+    private Observable<List<Selection>> getSelections() {
+        return this.visitorGateway.getSelections();
     }
 
 }

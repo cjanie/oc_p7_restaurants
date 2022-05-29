@@ -7,11 +7,11 @@ import com.android.go4lunch.businesslogic.entities.Geolocation;
 import io.reactivex.Observable;
 
 
-public class InMemoryDistanceRepository implements DistanceGateway {
+public class InMemoryDistanceGateway implements DistanceGateway {
 
     private Observable<Long> distance;
 
-    public InMemoryDistanceRepository(Observable<Long> distance) {
+    public InMemoryDistanceGateway(Observable<Long> distance) {
         this.distance = distance;
     }
 
@@ -22,4 +22,5 @@ public class InMemoryDistanceRepository implements DistanceGateway {
             throw new NullDistanceResponseException();
         return this.distance;
     }
+
 }
