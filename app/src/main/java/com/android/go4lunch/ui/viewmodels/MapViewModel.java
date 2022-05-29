@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.businesslogic.usecases.GetRestaurantsNearbyUseCase;
 import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -41,10 +42,18 @@ public class MapViewModel extends ViewModel {
             if(!restaurants.isEmpty()) {
                 for(RestaurantValueObject restaurant: restaurants) {
                     if(restaurant.getRestaurant().getGeolocation() != null) {
-                        MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(
-                                restaurant.getRestaurant().getGeolocation().getLatitude(),
-                                restaurant.getRestaurant().getGeolocation().getLongitude())
-                        ).title(restaurant.getRestaurant().getName());
+                        MarkerOptions markerOptions = new MarkerOptions()
+                                .position(new LatLng(
+                                        restaurant.getRestaurant().getGeolocation().getLatitude(),
+                                        restaurant.getRestaurant().getGeolocation().getLongitude())
+                                )
+                                .title(restaurant.getRestaurant().getName())
+                                .snippet(restaurant.getRestaurant().getAddress())
+                                .icon(restaurant.getVisitorsCount() > 0 ?
+                                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
+                                        :
+                                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+
                         markersOptions.add(markerOptions);
                     }
                 }
