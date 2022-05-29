@@ -17,10 +17,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Geolocation;
 import com.android.go4lunch.ui.adapters.ViewPagerAdapter;
+import com.android.go4lunch.ui.viewmodels.MapViewModel;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
+import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
+import com.android.go4lunch.ui.viewmodels.factories.SharedViewModelFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.tabs.TabLayout;
@@ -61,7 +65,8 @@ public class MainFragment extends Fragment {
         this.requestLocationPermission();
         this.initMyPosition();
 
-        this.sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+        SharedViewModelFactory sharedViewModelFactory = ((Launch) this.getActivity().getApplication()).sharedViewModelFactory();
+        this.sharedViewModel = new ViewModelProvider(this, sharedViewModelFactory).get(SharedViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, root);

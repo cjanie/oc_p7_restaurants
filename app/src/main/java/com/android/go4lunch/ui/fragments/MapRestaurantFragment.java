@@ -18,6 +18,7 @@ import com.android.go4lunch.businesslogic.entities.Geolocation;
 import com.android.go4lunch.ui.viewmodels.MapViewModel;
 import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
+import com.android.go4lunch.ui.viewmodels.factories.SharedViewModelFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -52,6 +53,7 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
         // Data
         MapViewModelFactory mapViewModelFactory = ((Launch) this.getActivity().getApplication()).mapViewModelFactory();
         this.mapViewModel = new ViewModelProvider(this, mapViewModelFactory).get(MapViewModel.class);
+
         // UI
         View root = inflater.inflate(R.layout.fragment_restaurant_map, container, false);
         ButterKnife.bind(this, root);
