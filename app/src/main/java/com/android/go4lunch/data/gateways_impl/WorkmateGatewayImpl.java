@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.android.go4lunch.businesslogic.gateways.WorkmateGateway;
 import com.android.go4lunch.businesslogic.entities.Workmate;
-import com.android.go4lunch.businesslogic.models.WorkmateEntityModel;
+import com.android.go4lunch.businesslogic.models.WorkmateModel;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
@@ -66,7 +65,7 @@ public class WorkmateGatewayImpl implements WorkmateGateway {
         List<DocumentSnapshot> docs = query.getDocuments();
         if(!docs.isEmpty()) {
             for(DocumentSnapshot doc: docs) {
-                Workmate workmate = new WorkmateEntityModel().createWorkmate(
+                Workmate workmate = new WorkmateModel().createWorkmate(
                         doc.getId(),
                         (String) doc.getData().get(WorkmateDatabaseConfig.NAME),
                         (String) doc.getData().get(WorkmateDatabaseConfig.EMAIL),

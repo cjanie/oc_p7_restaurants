@@ -11,7 +11,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class RestaurantEntityModel {
+public class RestaurantModel {
 
     public Restaurant findWorkmateSelection(String workmateId, List<Selection> selections) {
         if(!selections.isEmpty()) {
@@ -26,7 +26,14 @@ public class RestaurantEntityModel {
         return null;
     }
 
-    public List<RestaurantValueObject> formatRestaurantsToValueObjects(List<Restaurant> restaurants) {
+    public Observable<List<RestaurantValueObject>> formatRestaurantsAsValueObjects(
+            Observable<List<Restaurant>> restaurantsObservable
+    ) {
+        return restaurantsObservable
+                .map(restaurants ->
+                        this.formatRestaurantsToValueObjects(restaurants));
+    }
+    private List<RestaurantValueObject> formatRestaurantsToValueObjects(List<Restaurant> restaurants) {
         // All VOs have a Geolocation in order to update distance
         List<Restaurant> filteredRestaurantsWithGeolocation = this.filterRestaurantsWithGeolocation(restaurants);
         List<RestaurantValueObject> restaurantVOs = new ArrayList<>();

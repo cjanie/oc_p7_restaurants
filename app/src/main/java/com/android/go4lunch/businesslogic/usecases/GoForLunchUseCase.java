@@ -4,13 +4,12 @@ import com.android.go4lunch.businesslogic.entities.Workmate;
 import com.android.go4lunch.businesslogic.gateways.SessionGateway;
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
 import com.android.go4lunch.businesslogic.entities.Selection;
-import com.android.go4lunch.businesslogic.models.SelectionEntityModel;
+import com.android.go4lunch.businesslogic.models.SelectionModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.subjects.BehaviorSubject;
 
 public class GoForLunchUseCase {
 
@@ -32,7 +31,7 @@ public class GoForLunchUseCase {
     private Observable<Boolean> toggle(String restaurantId, String restaurantName) {
 
         return this.getSession().map(session -> {
-            Selection newSelection = new SelectionEntityModel().createSelection(
+            Selection newSelection = new SelectionModel().createSelection(
                 restaurantId, session.getId(), restaurantName, session.getName(), session.getUrlPhoto()
             );
 

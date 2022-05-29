@@ -8,16 +8,14 @@ import com.android.go4lunch.businesslogic.gateways.SessionGateway;
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
 import com.android.go4lunch.businesslogic.gateways.WorkmateGateway;
 import com.android.go4lunch.businesslogic.entities.Workmate;
-import com.android.go4lunch.businesslogic.models.RestaurantEntityModel;
-import com.android.go4lunch.businesslogic.models.WorkmateEntityModel;
+import com.android.go4lunch.businesslogic.models.RestaurantModel;
+import com.android.go4lunch.businesslogic.models.WorkmateModel;
 import com.android.go4lunch.businesslogic.valueobjects.WorkmateValueObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class GetWorkmatesUseCase {
 
@@ -29,9 +27,9 @@ public class GetWorkmatesUseCase {
 
     private VisitorGateway visitorGateway;
 
-    private final WorkmateEntityModel workmateEntityModel;
+    private final WorkmateModel workmateModel;
 
-    private final RestaurantEntityModel restaurantEntityModel;
+    private final RestaurantModel restaurantModel;
 
     public GetWorkmatesUseCase(
             WorkmateGateway workmateGateway,
@@ -42,8 +40,8 @@ public class GetWorkmatesUseCase {
         this.sessionGateway = sessionGateway;
         this.visitorGateway = visitorGateway;
 
-        this.workmateEntityModel = new WorkmateEntityModel();
-        this.restaurantEntityModel = new RestaurantEntityModel();
+        this.workmateModel = new WorkmateModel();
+        this.restaurantModel = new RestaurantModel();
     }
 
     public Observable<List<WorkmateValueObject>> handle() {
@@ -105,7 +103,7 @@ public class GetWorkmatesUseCase {
     private Observable<List<WorkmateValueObject>> getFilteredWorkmatesAtferRemovingSessionFormatedToWorkmateVOs() {
         return this.getFilteredWorkmatesAfterRemovingSession()
                 .map(filteredWorkmates -> {
-                    List<WorkmateValueObject> workmateVOs = this.workmateEntityModel.formatWorkmatesToWorkmateVOs(filteredWorkmates);
+                    List<WorkmateValueObject> workmateVOs = this.workmateModel.formatWorkmatesToWorkmateVOs(filteredWorkmates);
                     Log.d(TAG, "--getFilteredWorkmatesAfterRemovingSessionFormatedToWorkmateVOs : " + Thread.currentThread().getName());
                     return workmateVOs;
                 });
@@ -118,7 +116,7 @@ public class GetWorkmatesUseCase {
             List<WorkmateValueObject> filteredWorkmatesCopy = workmateVOs;
             if(!filteredWorkmatesCopy.isEmpty()) {
                 for(WorkmateValueObject workmateVO: workmateVOs) {
-                    Restaurant selection = this.restaurantEntityModel
+                    Restaurant selection = this.restaurantModel
                             .findWorkmateSelection(
                                     workmateVO.getWorkmate().getId(),
                                     selections

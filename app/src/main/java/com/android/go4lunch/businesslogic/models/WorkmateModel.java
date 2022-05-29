@@ -8,7 +8,7 @@ import com.android.go4lunch.businesslogic.valueobjects.WorkmateValueObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WorkmateEntityModel {
+public class WorkmateModel {
 
     public Workmate createWorkmate(String id, String name, String email, String urlPhoto) {
         Workmate workmate = new Workmate(name);

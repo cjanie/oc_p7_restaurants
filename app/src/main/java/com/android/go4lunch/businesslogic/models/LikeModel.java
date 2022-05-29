@@ -4,7 +4,7 @@ import com.android.go4lunch.businesslogic.entities.Like;
 
 import java.util.List;
 
-public class LikeEntityModel {
+public class LikeModel {
 
     public boolean doesLikeExist(String restaurantId, String workmateId, List<Like> likes) {
 

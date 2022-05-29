@@ -6,7 +6,7 @@ import com.android.go4lunch.businesslogic.entities.Workmate;
 import com.android.go4lunch.businesslogic.gateways.LikeGateway;
 import com.android.go4lunch.businesslogic.entities.Like;
 import com.android.go4lunch.businesslogic.gateways.SessionGateway;
-import com.android.go4lunch.businesslogic.models.LikeEntityModel;
+import com.android.go4lunch.businesslogic.models.LikeModel;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class AddLikeUseCase {
 
     private SessionGateway sessionGateway;
 
-    private final LikeEntityModel likeEntityModel;
+    private final LikeModel likeModel;
 
     public AddLikeUseCase(
             LikeGateway likeGateway, SessionGateway sessionGateway
@@ -28,7 +28,7 @@ public class AddLikeUseCase {
         this.likeGateway = likeGateway;
         this.sessionGateway = sessionGateway;
 
-        this.likeEntityModel = new LikeEntityModel();
+        this.likeModel = new LikeModel();
     }
 
     public Observable<Boolean> handle(String restaurantId) {
@@ -48,7 +48,7 @@ public class AddLikeUseCase {
         return this.getSession().flatMap(session -> {
             Log.d(TAG, "addToLikes : " + Thread.currentThread().getName());
 
-            boolean doesLikeExist = this.likeEntityModel.doesLikeExist(restaurantId, session.getId(), likes);
+            boolean doesLikeExist = this.likeModel.doesLikeExist(restaurantId, session.getId(), likes);
 
             if(!doesLikeExist) {
                 Like like = new Like(restaurantId, session.getId());

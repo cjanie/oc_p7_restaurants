@@ -3,7 +3,7 @@ package com.android.go4lunch.businesslogic.usecases;
 import com.android.go4lunch.businesslogic.entities.Selection;
 import com.android.go4lunch.businesslogic.entities.Workmate;
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
-import com.android.go4lunch.businesslogic.models.WorkmateEntityModel;
+import com.android.go4lunch.businesslogic.models.WorkmateModel;
 
 import java.util.List;
 
@@ -15,11 +15,11 @@ public class GetRestaurantVisitorsUseCase {
 
     private VisitorGateway visitorGateway;
 
-    private WorkmateEntityModel workmateEntityModel;
+    private WorkmateModel workmateModel;
 
     public GetRestaurantVisitorsUseCase(VisitorGateway visitorGateway) {
         this.visitorGateway = visitorGateway;
-        this.workmateEntityModel = new WorkmateEntityModel();
+        this.workmateModel = new WorkmateModel();
     }
 
     public Observable<List<Workmate>> handle(String restaurantId) {
@@ -29,7 +29,7 @@ public class GetRestaurantVisitorsUseCase {
     private Observable<List<Workmate>> extractVisitorsByRestaurantId(String restaurantId) {
         return this.getSelections()
                 .map(selections ->
-                        this.workmateEntityModel.extractVisitorsByRestaurantId(selections, restaurantId)
+                        this.workmateModel.extractVisitorsByRestaurantId(selections, restaurantId)
 
         );
     }

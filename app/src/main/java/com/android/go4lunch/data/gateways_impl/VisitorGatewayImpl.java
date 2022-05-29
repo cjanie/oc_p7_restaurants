@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
 import com.android.go4lunch.businesslogic.entities.Selection;
-import com.android.go4lunch.businesslogic.models.SelectionEntityModel;
+import com.android.go4lunch.businesslogic.models.SelectionModel;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -129,7 +129,7 @@ public class VisitorGatewayImpl implements VisitorGateway {
     }
 
     private Selection createSelection(DocumentSnapshot doc) {
-        Selection selection = new SelectionEntityModel().createSelection(
+        Selection selection = new SelectionModel().createSelection(
                 (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_ID),
                 (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_ID),
                 (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_NAME),

@@ -2,7 +2,7 @@ package com.android.go4lunch.businesslogic.models;
 
 import com.android.go4lunch.businesslogic.entities.Selection;
 
-public class SelectionEntityModel {
+public class SelectionModel {
 
     public Selection createSelection(
             String restaurantId,

@@ -2,12 +2,11 @@ package com.android.go4lunch.data.gateways_impl;
 
 import com.android.go4lunch.businesslogic.gateways.SessionGateway;
 import com.android.go4lunch.businesslogic.entities.Workmate;
-import com.android.go4lunch.businesslogic.models.WorkmateEntityModel;
+import com.android.go4lunch.businesslogic.models.WorkmateModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
@@ -42,7 +41,7 @@ public class SessionGatewayImpl implements SessionGateway {
     private void fetchSessionToUpdateSubject() {
         FirebaseUser authUser = this.auth.getCurrentUser();
         if(authUser != null) {
-            Workmate session = new WorkmateEntityModel().createWorkmate(
+            Workmate session = new WorkmateModel().createWorkmate(
                     authUser.getUid(),
                     authUser.getDisplayName(),
                     authUser.getEmail(),

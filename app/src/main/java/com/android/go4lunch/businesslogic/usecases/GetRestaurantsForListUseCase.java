@@ -1,23 +1,18 @@
 package com.android.go4lunch.businesslogic.usecases;
 
-import com.android.go4lunch.businesslogic.entities.Geolocation;
 import com.android.go4lunch.businesslogic.entities.Like;
 import com.android.go4lunch.businesslogic.entities.Selection;
-import com.android.go4lunch.businesslogic.gateways.DistanceGateway;
 import com.android.go4lunch.businesslogic.gateways.LikeGateway;
 import com.android.go4lunch.businesslogic.gateways.RestaurantGateway;
 
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
-import com.android.go4lunch.businesslogic.models.RestaurantEntityModel;
+import com.android.go4lunch.businesslogic.models.RestaurantModel;
 import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
-import com.android.go4lunch.businesslogic.valueobjects.WorkmateValueObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
 
 public class GetRestaurantsForListUseCase {
 
@@ -27,7 +22,7 @@ public class GetRestaurantsForListUseCase {
 
     private final LikeGateway likeGateway;
 
-    private final RestaurantEntityModel restaurantEntityModel;
+    private final RestaurantModel restaurantModel;
 
     public GetRestaurantsForListUseCase(
             RestaurantGateway restaurantGateway,
@@ -38,7 +33,7 @@ public class GetRestaurantsForListUseCase {
         this.visitorGateway = visitorGateway;
         this.likeGateway = likeGateway;
 
-        this.restaurantEntityModel = new RestaurantEntityModel();
+        this.restaurantModel = new RestaurantModel();
     }
 
     public Observable<List<RestaurantValueObject>> handle(Double myLatitude, Double myLongitude, int radius) {
@@ -62,17 +57,15 @@ public class GetRestaurantsForListUseCase {
     // Transformations
 
     public Observable<List<RestaurantValueObject>> getRestaurantsWithUpdates(Double myLatitude, Double myLongitude, int radius) {
-        return this.formatRestaurantsAsValueObjects(myLatitude, myLongitude, radius)
-                .flatMap(restaurantVOs -> this.restaurantEntityModel.updateRestaurantsWithVisitorsCount(
-                        restaurantVOs,
-                        this.getSelections()
-                ))
+        return this.restaurantModel.formatRestaurantsAsValueObjects(
+                this.getRestaurants(myLatitude, myLongitude, radius)
+        )
+                .flatMap(restaurantVOs ->
+                        this.restaurantModel.updateRestaurantsWithVisitorsCount(
+                                restaurantVOs,
+                                this.getSelections()
+                        ))
                 .flatMap(restaurantVOs -> this.updateRestaurantsWithLikesCount(restaurantVOs));
-    }
-
-    public Observable<List<RestaurantValueObject>> formatRestaurantsAsValueObjects(Double myLatitude, Double myLongitude, int radius) {
-        return this.getRestaurants(myLatitude, myLongitude, radius)
-                .map(restaurants -> this.restaurantEntityModel.formatRestaurantsToValueObjects(restaurants));
     }
 
     private Observable<List<RestaurantValueObject>> updateRestaurantsWithLikesCount(List<RestaurantValueObject> restaurantVOs) {
