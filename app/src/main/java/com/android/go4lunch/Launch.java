@@ -26,6 +26,7 @@ import com.android.go4lunch.ui.viewmodels.factories.MainViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.RestaurantDetailsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.RestaurantsViewModelFactory;
+import com.android.go4lunch.ui.viewmodels.factories.SharedViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.SignInViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.WorkmatesViewModelFactory;
 import com.android.go4lunch.businesslogic.usecases.GetNumberOfLikesPerRestaurantUseCase;
@@ -87,6 +88,7 @@ public class Launch extends Application {
     private WorkmatesViewModelFactory workmatesViewModelFactory;
     private SignInViewModelFactory signInViewModelFactory;
     private MainViewModelFactory mainViewModelFactory;
+    private SharedViewModelFactory sharedViewModelFactory;
 
 
     // INSTANTIATIONS
@@ -363,6 +365,13 @@ public class Launch extends Application {
             );
         }
         return this.mainViewModelFactory;
+    }
+
+    public synchronized SharedViewModelFactory sharedViewModelFactory() {
+        if(this.sharedViewModelFactory == null) {
+            return this.sharedViewModelFactory = new SharedViewModelFactory();
+        }
+        return this.sharedViewModelFactory;
     }
 
 }

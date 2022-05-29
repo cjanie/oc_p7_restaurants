@@ -30,7 +30,7 @@ public class Mock {
         while (planning.size() < 7) {
             planning.put(planning.size(), times);
         }
-
+        lol.setGeolocation(new Geolocation(43.568325, 3.906514));
         lol.setPlanning(planning);
         lol.setPhone("0658156166");
         lol.setWebSite("https://devstory.net/12667/android-phone-call");

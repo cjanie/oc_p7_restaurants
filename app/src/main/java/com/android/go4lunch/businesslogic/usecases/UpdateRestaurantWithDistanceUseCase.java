@@ -20,12 +20,16 @@ public class UpdateRestaurantWithDistanceUseCase {
 
     private Observable<RestaurantValueObject> updateRestaurantWithDistance(RestaurantValueObject restaurantVO, Double myLatitude, Double myLongitude) {
         Geolocation myPosition = new Geolocation(myLatitude, myLongitude);
-        return this.distanceGateway.getDistanceInMeter(myPosition, restaurantVO.getRestaurant().getGeolocation())
-                .map(distance -> {
-                    RestaurantValueObject restaurantVOCopy = restaurantVO;
-                    restaurantVOCopy.setDistance(distance);
-                    return restaurantVOCopy;
-                });
-
+        try {
+            return this.distanceGateway.getDistanceInMeter(myPosition, restaurantVO.getRestaurant().getGeolocation())
+                    .map(distance -> {
+                        RestaurantValueObject restaurantVOCopy = restaurantVO;
+                        restaurantVOCopy.setDistance(distance);
+                        return restaurantVOCopy;
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
