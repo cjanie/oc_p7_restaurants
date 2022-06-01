@@ -128,21 +128,19 @@ public class MainFragment extends Fragment {
 
                 @Override
                 public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
+                    if(locationAvailability.isLocationAvailable()) {
+                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
+                            saveLocation(location);
+                        });
+                    } else {
+                        requestLocationUpdates(fusedLocationProviderClient, this);
+                        Toast.makeText(getActivity(), getText(R.string.location_not_available), Toast.LENGTH_SHORT).show();
+                    }
 
                 }
             };
 
-            fusedLocationProviderClient.getLocationAvailability().addOnSuccessListener(locationAvailability -> {
-                if(locationAvailability.isLocationAvailable()) {
-                    fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
-                        saveLocation(location);
-                    });
-                } else {
-                    requestLocationUpdates(fusedLocationProviderClient, locationCallback);
-                    Toast.makeText(getActivity(), getText(R.string.location_not_available), Toast.LENGTH_SHORT).show();
-                }
-
-            });
+            requestLocationUpdates(fusedLocationProviderClient, locationCallback);
 
 
         } else if(EasyPermissions.permissionPermanentlyDenied(this, this.PERMISSIONS[0])) {
@@ -189,8 +187,4 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private void showAvailableLocationMessage(LocationAvailability locationAvailability) {
-
-        Toast.makeText(this.getActivity(), this.getText(R.string.location_not_available), Toast.LENGTH_SHORT).show();
-    }
 }

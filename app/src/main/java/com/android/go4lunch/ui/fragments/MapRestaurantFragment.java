@@ -108,10 +108,14 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        // Show my Position on the map
-        googleMap.setMyLocationEnabled(true);
-        // Add markers on the map
-        // Listening to the result of the view model action
+        // Listening to the result of my position to show it on the map
+        this.sharedViewModel.getGeolocation().observe(this, geolocation -> {
+            if(geolocation != null) {
+                googleMap.setMyLocationEnabled(true);
+            }
+        });
+
+        // Listening to the result of the view model action to show markers on the map
         this.mapViewModel.getRestaurantsMarkersLiveData().observe(this, markers -> {
             if(!markers.isEmpty()) {
                 for(MarkerOptions marker: markers) {
