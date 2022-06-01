@@ -1,5 +1,7 @@
 package com.android.go4lunch.ui.viewmodels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -66,6 +68,7 @@ public class RestaurantsViewModel extends ViewModel {
 
                 .flatMap(restaurantVOs -> this.updateRestaurantsWithDistance(restaurantVOs, myLatitude, myLongitude)
                 )
+                .doOnNext(restaurantValueObjects -> Log.d(TAG, "-- fetchRestaurantsObservableToUpdateLiveData : " + Thread.currentThread().getName()))
                 .subscribe(restaurants ->
                     this.restaurantsLiveData.postValue(restaurants)
                 );
@@ -77,7 +80,9 @@ public class RestaurantsViewModel extends ViewModel {
                 .observeOn(Schedulers.io())
                 .flatMap(restaurantVO ->
                         this.updateRestaurantWithDistanceUseCase.handle(restaurantVO, myLatitude, myLongitude)
-                ).toList().toObservable();
+                ).toList().toObservable()
+                .doOnNext(restaurantValueObjects -> Log.d(TAG, "-- updateRestaurantsWithDistance : " + Thread.currentThread().getName()))
+        ;
     }
 
     public List<RestaurantValueObject> updateRestaurantsWithTimeInfo(List<RestaurantValueObject> restaurantVOs, TimeProvider timeProvider, DateProvider dateProvider) {

@@ -1,5 +1,8 @@
 package com.android.go4lunch.businesslogic.models;
 
+import android.util.Log;
+
+import com.android.go4lunch.businesslogic.entities.Like;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.businesslogic.entities.Selection;
 import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
@@ -78,6 +81,34 @@ public class RestaurantModel {
             for (Selection selection : selections) {
                 if (selection.getRestaurantId().equals(restaurantId)) {
                     count += 1;
+                }
+            }
+        }
+        return count;
+    }
+
+    public Observable<List<RestaurantValueObject>> updateRestaurantsWithLikesCount(
+            List<RestaurantValueObject> restaurantVOs,
+            Observable<List<Like>> likesObservable
+    ) {
+        return likesObservable.map(likes -> {
+            List<RestaurantValueObject> restaurantVOsCopy = restaurantVOs;
+            if(!restaurantVOsCopy.isEmpty()) {
+                for(RestaurantValueObject restaurantVO: restaurantVOsCopy) {
+                    int likesCount = this.getLikesCountByRestaurantId(likes, restaurantVO.getRestaurant().getId());
+                    restaurantVO.setLikesCount(likesCount);
+                }
+            }
+            return restaurantVOsCopy;
+        });
+    }
+
+    private int getLikesCountByRestaurantId(List<Like> likes, String restaurantId) {
+        int count = 0;
+        if(!likes.isEmpty()) {
+            for(Like like: likes) {
+                if(like.getRestaurantId().equals(restaurantId)) {
+                    count +=1;
                 }
             }
         }

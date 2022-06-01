@@ -47,7 +47,6 @@ public class VisitorGatewayImpl implements VisitorGateway {
         this.fetchSelectionsToUpdateSubject();
         return this.selectionsSubject
                 .hide()
-                .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io());
     }
 
