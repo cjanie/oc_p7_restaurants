@@ -90,7 +90,7 @@ public class RestaurantsViewModel extends ViewModel {
         if(!restaurantVOsCopy.isEmpty()) {
             for(RestaurantValueObject restaurantVO: restaurantVOsCopy) {
                 restaurantVO.setTimeInfo(timeProvider, dateProvider);
-                //restaurantVO.setClosingTimeToday(dateProvider);
+                restaurantVO.setOpenHoursToday(dateProvider);
             }
         }
         return restaurantVOsCopy;

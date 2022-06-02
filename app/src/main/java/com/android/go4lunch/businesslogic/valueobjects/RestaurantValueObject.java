@@ -9,6 +9,7 @@ import com.android.go4lunch.businesslogic.entities.Restaurant;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RestaurantValueObject {
 
@@ -16,7 +17,7 @@ public class RestaurantValueObject {
 
     private TimeInfo timeInfo;
 
-    private LocalTime closingTimeToday;
+    private Map<String, LocalTime> openHoursToday;
 
     private int visitorsCount;
 
@@ -41,18 +42,16 @@ public class RestaurantValueObject {
         this.timeInfo = decorator.decor(this.restaurant);
     }
 
-
     public TimeInfo getTimeInfo() {
         return this.timeInfo;
     }
 
-    public void setClosingTimeToday(DateProvider dateProvider) {
-        if(this.restaurant.getPlanning() != null)
-            this.closingTimeToday = this.restaurant.getPlanning().get(dateProvider.today()).get("close");
+    public void setOpenHoursToday(DateProvider dateProvider) {
+        this.openHoursToday = new TimeInfoDecorator(dateProvider).getOpenHoursToday(this.restaurant);
     }
 
-    public LocalTime getClosingTimeToday() {
-        return this.closingTimeToday;
+    public Map<String, LocalTime> getOpenHoursToday() {
+        return this.openHoursToday;
     }
 
     public int getVisitorsCount() {
