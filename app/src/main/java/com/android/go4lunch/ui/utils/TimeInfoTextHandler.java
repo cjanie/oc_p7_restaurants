@@ -18,8 +18,7 @@ public class TimeInfoTextHandler {
             public String visitOpen() {
                 LocalTime close = restaurantValueObject.getClosingTimeToday();
                 return context.getString(
-                        R.string.open_until) + " ";
-                        //+ close.toString();
+                        R.string.open_until) + " " + close.toString();
             }
 
             @Override
