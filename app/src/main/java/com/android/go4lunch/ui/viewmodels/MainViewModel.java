@@ -9,6 +9,7 @@ import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
 import com.android.go4lunch.businesslogic.usecases.SignOutUseCase;
 import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 public class MainViewModel extends ViewModel {
@@ -29,10 +30,11 @@ public class MainViewModel extends ViewModel {
 
     public LiveData<Workmate> getSession() throws NoWorkmateForSessionException {
 
-        Disposable disposable = this.getSessionUseCase.handle().subscribe(
+        Disposable disposable = this.getSessionUseCase.handle()
+                .subscribe(
                 sessionWorkmate -> {
                     if(sessionWorkmate != null)
-                        this.sessionWorkmate.setValue(sessionWorkmate);
+                        this.sessionWorkmate.postValue(sessionWorkmate);
                 },
                 Throwable::printStackTrace
         );

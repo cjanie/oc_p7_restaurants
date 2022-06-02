@@ -46,7 +46,6 @@ public class WorkmateGatewayImpl implements WorkmateGateway {
         this.fetchWorkmatesToUpdateSubject();
         return this.workmatesSubject
                 .hide()
-                .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io());
     }
 

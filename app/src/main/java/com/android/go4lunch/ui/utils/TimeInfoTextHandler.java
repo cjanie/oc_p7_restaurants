@@ -18,8 +18,7 @@ public class TimeInfoTextHandler {
             public String visitOpen() {
                 LocalTime close = restaurantValueObject.getClosingTimeToday();
                 return context.getString(
-                        R.string.open_until) + " "
-                        + close.toString();
+                        R.string.open_until) + " " + close.toString();
             }
 
             @Override
@@ -53,7 +52,7 @@ public class TimeInfoTextHandler {
 
             @Override
             public Integer visitClosingSoon() {
-                return textView.getContext().getResources().getColor(R.color.colorAccent);
+                return textView.getContext().getResources().getColor(R.color.accent);
             }
 
             @Override

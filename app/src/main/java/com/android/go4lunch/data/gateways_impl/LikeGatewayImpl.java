@@ -47,7 +47,6 @@ public class LikeGatewayImpl implements LikeGateway {
         this.fetchLikesToUpdateSubject();
         return this.likesSubject
                 .hide()
-                .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io());
     }
 

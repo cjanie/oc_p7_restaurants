@@ -18,6 +18,7 @@ import com.android.go4lunch.businesslogic.entities.Geolocation;
 import com.android.go4lunch.ui.viewmodels.MapViewModel;
 import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
+import com.android.go4lunch.ui.viewmodels.factories.SharedViewModelFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -52,6 +53,7 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
         // Data
         MapViewModelFactory mapViewModelFactory = ((Launch) this.getActivity().getApplication()).mapViewModelFactory();
         this.mapViewModel = new ViewModelProvider(this, mapViewModelFactory).get(MapViewModel.class);
+
         // UI
         View root = inflater.inflate(R.layout.fragment_restaurant_map, container, false);
         ButterKnife.bind(this, root);
@@ -106,10 +108,14 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        // Show my Position on the map
-        googleMap.setMyLocationEnabled(true);
-        // Add markers on the map
-        // Listening to the result of the view model action
+        // Listening to the result of my position to show it on the map
+        this.sharedViewModel.getGeolocation().observe(this, geolocation -> {
+            if(geolocation != null) {
+                googleMap.setMyLocationEnabled(true);
+            }
+        });
+
+        // Listening to the result of the view model action to show markers on the map
         this.mapViewModel.getRestaurantsMarkersLiveData().observe(this, markers -> {
             if(!markers.isEmpty()) {
                 for(MarkerOptions marker: markers) {

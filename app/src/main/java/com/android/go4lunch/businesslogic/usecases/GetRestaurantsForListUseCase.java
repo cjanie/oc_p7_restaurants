@@ -1,5 +1,7 @@
 package com.android.go4lunch.businesslogic.usecases;
 
+import android.util.Log;
+
 import com.android.go4lunch.businesslogic.entities.Like;
 import com.android.go4lunch.businesslogic.entities.Selection;
 import com.android.go4lunch.businesslogic.gateways.LikeGateway;
@@ -15,6 +17,8 @@ import java.util.List;
 import io.reactivex.Observable;
 
 public class GetRestaurantsForListUseCase {
+
+    private final String TAG = "GET RESTAURANTS LIST UC";
 
     private final RestaurantGateway restaurantGateway;
 
@@ -37,21 +41,26 @@ public class GetRestaurantsForListUseCase {
     }
 
     public Observable<List<RestaurantValueObject>> handle(Double myLatitude, Double myLongitude, int radius) {
-        return this.getRestaurantsWithUpdates(myLatitude, myLongitude, radius);
+        return this.getRestaurantsWithUpdates(myLatitude, myLongitude, radius)
+                .doOnNext(restaurantValueObjects -> Log.d(TAG, "--handle : " + Thread.currentThread().getName()));
     }
 
 
     // Get Data from gateways
     private Observable<List<Restaurant>> getRestaurants(Double myLatitude, Double myLongitude, int radius) {
-        return this.restaurantGateway.getRestaurantsNearby(myLatitude, myLongitude, radius);
+        return this.restaurantGateway.getRestaurantsNearby(myLatitude, myLongitude, radius)
+                .doOnNext(restaurants -> Log.d(TAG, "getRestaurants from Gateway " + Thread.currentThread().getName()));
     }
 
     private Observable<List<Selection>> getSelections() {
-        return this.visitorGateway.getSelections();
+        return this.visitorGateway.getSelections()
+                .doOnNext(selections -> Log.d(TAG, "getSelections from Gateway " + Thread.currentThread().getName()));
     }
 
     private Observable<List<Like>> getLikes() {
-        return this.likeGateway.getLikes();
+
+        return this.likeGateway.getLikes()
+                .doOnNext(likes -> Log.d(TAG, "getLikes from Gateway " + Thread.currentThread().getName()));
     }
 
     // Transformations
@@ -65,32 +74,15 @@ public class GetRestaurantsForListUseCase {
                                 restaurantVOs,
                                 this.getSelections()
                         ))
-                .flatMap(restaurantVOs -> this.updateRestaurantsWithLikesCount(restaurantVOs));
+                .flatMap(restaurantVOs ->
+                        this.restaurantModel.updateRestaurantsWithLikesCount(
+                                restaurantVOs,
+                                this.getLikes()
+                ))
+                .doOnNext(restaurantsVOs -> Log.d(TAG, "--getRestaurantsWithUpdates : " + Thread.currentThread().getName()));
     }
 
-    private Observable<List<RestaurantValueObject>> updateRestaurantsWithLikesCount(List<RestaurantValueObject> restaurantVOs) {
-        return this.getLikes().map(likes -> {
-            List<RestaurantValueObject> restaurantVOsCopy = restaurantVOs;
-            if(!restaurantVOsCopy.isEmpty()) {
-                for(RestaurantValueObject restaurantVO: restaurantVOsCopy) {
-                    int likesCount = this.getLikesCountByRestaurantId(likes, restaurantVO.getRestaurant().getId());
-                    restaurantVO.setLikesCount(likesCount);
-                }
-            }
-            return restaurantVOsCopy;
-        });
-    }
 
-    private int getLikesCountByRestaurantId(List<Like> likes, String restaurantId) {
-        int count = 0;
-        if(!likes.isEmpty()) {
-            for(Like like: likes) {
-                if(like.getRestaurantId().equals(restaurantId)) {
-                    count +=1;
-                }
-            }
-        }
-        return count;
-    }
+
 
 }

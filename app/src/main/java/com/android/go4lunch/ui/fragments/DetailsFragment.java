@@ -1,11 +1,12 @@
 package com.android.go4lunch.ui.fragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,39 +15,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.go4lunch.BuildConfig;
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.adapters.ListVisitorRecyclerViewAdapter;
+import com.android.go4lunch.ui.utils.SettingsRationale;
+import com.android.go4lunch.ui.utils.UsesPermission;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
-import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
-import com.android.go4lunch.businesslogic.exceptions.NotFoundException;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.AppSettingsDialog;
-import pub.devrel.easypermissions.EasyPermissions;
 
-public class DetailsFragment extends Fragment {
+public class DetailsFragment extends UsesPermission {
 
     private ActivityResultLauncher launcher;
 
-    private final String[] PERMISSIONS = new String[] {Manifest.permission.CALL_PHONE};
-
-    private final int REQUEST_CODE = 155;
+    private final String PERMISSION = Manifest.permission.CALL_PHONE;
 
     private RestaurantDetailsViewModel restaurantDetailsViewModel;
 
@@ -80,10 +75,13 @@ public class DetailsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        this.launcher = this.createResultActivityLauncher();
+
+        this.restaurantDetailsViewModel = new ViewModelProvider(this.getActivity()).get(RestaurantDetailsViewModel.class);
+
         View root = inflater.inflate(R.layout.fragment_details, container, false);
         ButterKnife.bind(this, root);
-        this.launcher = this.createActivityResultLauncher();
-        this.restaurantDetailsViewModel = new ViewModelProvider(this.getActivity()).get(RestaurantDetailsViewModel.class);
 
         Restaurant restaurant = this.restaurantDetailsViewModel.getRestaurant();
         if(restaurant.getPhotoUrl() != null) {
@@ -135,8 +133,8 @@ public class DetailsFragment extends Fragment {
 
         this.buttonCall.setOnClickListener(view ->
                 {
-                    requestCallPermission();
-                    handleCall();
+                    // requests and handles call permission
+                    this.launcher.launch(this.PERMISSION);
                 }
 
         );
@@ -152,53 +150,26 @@ public class DetailsFragment extends Fragment {
         return root;
     }
 
-    private ActivityResultLauncher createActivityResultLauncher() {
-        ActivityResultLauncher launcher = this.registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                isGranted -> {
-                    if(isGranted) {
-                        EasyPermissions.onRequestPermissionsResult(
-                                this.REQUEST_CODE,
-                                this.PERMISSIONS,
-                                new int[]{PackageManager.PERMISSION_GRANTED},
-                                this
-                        );
-                    } else {
-                        EasyPermissions.onRequestPermissionsResult(
-                                this.REQUEST_CODE,
-                                this.PERMISSIONS,
-                                new int[]{PackageManager.PERMISSION_DENIED},
-                                this
-                        );
-                    }
-                }
-        );
-        return launcher;
-    }
-
-    private void requestCallPermission() {
-        this.launcher.launch(this.PERMISSIONS[0]);
-    }
-
-    @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(155)
-    private void handleCall() {
-        // Control
-        if(EasyPermissions.hasPermissions(this.getActivity(), this.PERMISSIONS)) {
-            String phoneNumber = this.restaurantDetailsViewModel.getRestaurant().getPhone();
-            if(phoneNumber != null && !phoneNumber.isEmpty()) {
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + phoneNumber));
-                startActivity(callIntent);
-            } else {
-                Toast.makeText(this.getActivity(), R.string.no_phone_number_available, Toast.LENGTH_LONG).show();
-            }
-        } else if(EasyPermissions.permissionPermanentlyDenied(this, this.PERMISSIONS[0])){
-            new AppSettingsDialog.Builder(this).build().show();
+    private void handleCallPermissionIsGranted() {
+        String phoneNumber = this.restaurantDetailsViewModel.getRestaurant().getPhone();
+        if(phoneNumber != null && !phoneNumber.isEmpty()) {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" + phoneNumber));
+            startActivity(callIntent);
+        } else {
+            Toast.makeText(this.getActivity(), R.string.no_phone_number_available, Toast.LENGTH_LONG).show();
         }
     }
 
+    @Override
+    protected void handlePermissionIsGranted() {
+        this.handleCallPermissionIsGranted();
+    }
 
+    @Override
+    protected void goToSettings() {
+        this.goToSettingsWithRationale(R.string.call_rationale, R.string.call_permission_rationale_text);
+    }
 
     private void handleGoForLunch() {
         this.restaurantDetailsViewModel.handleGoForLunch();
