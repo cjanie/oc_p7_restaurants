@@ -1,10 +1,16 @@
 package com.android.go4lunch.ui;
 
+import androidx.activity.result.ActivityResult;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.work.WorkerParameters;
 
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -17,6 +23,8 @@ import android.widget.Toast;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
+import com.android.go4lunch.ui.notifications.NotificationConfig;
+import com.android.go4lunch.ui.notifications.NotificationWorker;
 import com.android.go4lunch.ui.viewmodels.MainViewModel;
 
 import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
@@ -108,6 +116,8 @@ public class MainActivity extends BaseActivity {
                 return false; // corresponds to is checked
             }
         });
+
+        this.notify(this, 1, "title", "text");
     }
 
     @Override
@@ -120,9 +130,30 @@ public class MainActivity extends BaseActivity {
         ViewGroup viewGroup = (ViewGroup) this.navigationView.getHeaderView(0);
         blurView.setupWith(viewGroup)
                 .setBlurAlgorithm(new RenderScriptBlur(this));
+    }
+
+    private void notify(Context context, int notificationId, String title, String text) {
+        Intent notifyIntent = new Intent(context, ActivityResult.class);
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        notifyIntent.putExtra(NotificationConfig.NOTIFICATION_EXTRA, true);
+        notifyIntent.putExtra(NotificationConfig.NOTIFICATION_ID, notificationId);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context, 0, notifyIntent, PendingIntent.FLAG_IMMUTABLE
+        );
 
 
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat
+                .Builder(context, NotificationConfig.NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_baseline_person_24)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
 
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(notificationId, notificationBuilder.build());
 
     }
 }
