@@ -56,8 +56,10 @@
 
     <!-- PERMISSION -->
     <string name="location_permission_rationale_text">We need permission to get your location</string>
-    <string name="location_rationale">You must grant permissions for location</string>
+    <string name="location_rationale">You must grant permission for location</string>
     <string name="call_permission_rationale_text">We need permission to make phone call</string>
+    <string name="call_rationale">You must grant permission for phone call</string>
+    <string name="ok">OK</string>
 
     <!-- FACEBOOK -->
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->

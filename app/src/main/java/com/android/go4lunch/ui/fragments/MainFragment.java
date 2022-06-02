@@ -87,7 +87,7 @@ public class MainFragment extends UsesPermission {
 
     @Override
     protected void goToSettings() {
-        this.goToSettingsWithLocationRational();
+        this.goToSettingsWithRationale(R.string.location_rationale, R.string.location_permission_rationale_text);
     }
 
     @SuppressLint("MissingPermission")
@@ -152,28 +152,5 @@ public class MainFragment extends UsesPermission {
             );
         }
     }
-
-    private void goToSettingsWithLocationRational() {
-
-        new AlertDialog.Builder(this.getContext())
-                .setTitle(R.string.location_rationale)
-                .setMessage(R.string.location_permission_rationale_text)
-                .setPositiveButton("OK", (dialogInterface, i) -> {
-                        Intent intent = new Intent();
-                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null);
-                        intent.setData(uri);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        try {
-                            startActivity(intent);
-                        } catch (ActivityNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                )
-                .create().show();
-
-    }
-
 
 }

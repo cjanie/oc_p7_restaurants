@@ -1,9 +1,12 @@
 package com.android.go4lunch.ui.fragments;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,19 +15,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.go4lunch.BuildConfig;
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.adapters.ListVisitorRecyclerViewAdapter;
+import com.android.go4lunch.ui.utils.SettingsRationale;
 import com.android.go4lunch.ui.utils.UsesPermission;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
 import com.bumptech.glide.Glide;
@@ -33,7 +36,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pub.devrel.easypermissions.AppSettingsDialog;
 
 public class DetailsFragment extends UsesPermission {
 
@@ -166,12 +168,7 @@ public class DetailsFragment extends UsesPermission {
 
     @Override
     protected void goToSettings() {
-        this.goToSettingsWithRational();
-    }
-
-
-    private void goToSettingsWithRational() {
-        new AppSettingsDialog.Builder(this).build().show();
+        this.goToSettingsWithRationale(R.string.call_rationale, R.string.call_permission_rationale_text);
     }
 
     private void handleGoForLunch() {

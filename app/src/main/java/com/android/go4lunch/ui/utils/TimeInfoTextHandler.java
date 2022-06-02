@@ -53,7 +53,7 @@ public class TimeInfoTextHandler {
 
             @Override
             public Integer visitClosingSoon() {
-                return textView.getContext().getResources().getColor(R.color.colorAccent);
+                return textView.getContext().getResources().getColor(R.color.accent);
             }
 
             @Override
