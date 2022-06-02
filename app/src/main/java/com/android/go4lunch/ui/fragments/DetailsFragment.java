@@ -1,9 +1,7 @@
 package com.android.go4lunch.ui.fragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,27 +25,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.adapters.ListVisitorRecyclerViewAdapter;
-import com.android.go4lunch.ui.utils.CreateActivityResultLauncher;
+import com.android.go4lunch.ui.utils.UsesPermission;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
-import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
-import com.android.go4lunch.businesslogic.exceptions.NotFoundException;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
-import pub.devrel.easypermissions.EasyPermissions;
 
-public class DetailsFragment extends Fragment {
+public class DetailsFragment extends UsesPermission {
 
     private ActivityResultLauncher launcher;
 
     private final String PERMISSION = Manifest.permission.CALL_PHONE;
-
-    private final int REQUEST_CODE = 155;
 
     private RestaurantDetailsViewModel restaurantDetailsViewModel;
 
@@ -81,12 +73,13 @@ public class DetailsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_details, container, false);
-        ButterKnife.bind(this, root);
-        this.launcher = new CreateActivityResultLauncher()
-                .create(this, this.REQUEST_CODE, this.PERMISSION);
+
+        this.launcher = this.createResultActivityLauncher();
 
         this.restaurantDetailsViewModel = new ViewModelProvider(this.getActivity()).get(RestaurantDetailsViewModel.class);
+
+        View root = inflater.inflate(R.layout.fragment_details, container, false);
+        ButterKnife.bind(this, root);
 
         Restaurant restaurant = this.restaurantDetailsViewModel.getRestaurant();
         if(restaurant.getPhotoUrl() != null) {
@@ -138,8 +131,8 @@ public class DetailsFragment extends Fragment {
 
         this.buttonCall.setOnClickListener(view ->
                 {
-                    requestCallPermission();
-                    handleCall();
+                    // requests and handles call permission
+                    this.launcher.launch(this.PERMISSION);
                 }
 
         );
@@ -155,20 +148,6 @@ public class DetailsFragment extends Fragment {
         return root;
     }
 
-    private void requestCallPermission() {
-        this.launcher.launch(this.PERMISSION);
-    }
-
-    @AfterPermissionGranted(155)
-    private void handleCall() {
-        // Control
-        if(EasyPermissions.hasPermissions(this.getActivity(), this.PERMISSION)) {
-            this.handleCallPermissionIsGranted();
-        } else if(EasyPermissions.permissionPermanentlyDenied(this, this.PERMISSION)){
-            this.goToSettings();
-        }
-    }
-
     private void handleCallPermissionIsGranted() {
         String phoneNumber = this.restaurantDetailsViewModel.getRestaurant().getPhone();
         if(phoneNumber != null && !phoneNumber.isEmpty()) {
@@ -180,7 +159,18 @@ public class DetailsFragment extends Fragment {
         }
     }
 
-    private void goToSettings() {
+    @Override
+    protected void handlePermissionIsGranted() {
+        this.handleCallPermissionIsGranted();
+    }
+
+    @Override
+    protected void goToSettings() {
+        this.goToSettingsWithRational();
+    }
+
+
+    private void goToSettingsWithRational() {
         new AppSettingsDialog.Builder(this).build().show();
     }
 

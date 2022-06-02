@@ -4,9 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,10 +16,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -30,7 +26,7 @@ import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Geolocation;
 import com.android.go4lunch.ui.adapters.ViewPagerAdapter;
-import com.android.go4lunch.ui.utils.CreateActivityResultLauncher;
+import com.android.go4lunch.ui.utils.UsesPermission;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
 import com.android.go4lunch.ui.viewmodels.factories.SharedViewModelFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -41,15 +37,10 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.Arrays;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.AppSettingsDialog;
-import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainFragment extends Fragment {
+public class MainFragment extends UsesPermission {
 
     // DATA
 
@@ -69,27 +60,16 @@ public class MainFragment extends Fragment {
 
     private final String PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
 
-    private final int REQUEST_CODE = 123;
-
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        this.locationPermissionsResultLauncher = this.registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                isPermissionGranted -> {
-                    if(isPermissionGranted) {
-                        handleLocationPermissionIsGranted();
-                    } else {
-                        goToSettings();
-                    }
-                }
-        );
+        this.locationPermissionsResultLauncher = this.createResultActivityLauncher();
         this.locationPermissionsResultLauncher.launch(this.PERMISSION);
 
         SharedViewModelFactory sharedViewModelFactory = ((Launch) this.getActivity().getApplication()).sharedViewModelFactory();
-        this.sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        this.sharedViewModel = new ViewModelProvider(this, sharedViewModelFactory).get(SharedViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, root);
@@ -98,6 +78,16 @@ public class MainFragment extends Fragment {
         new ViewPagerAdapter(this.getActivity().getSupportFragmentManager(), this.getLifecycle(), this.tabLayout, this.viewPager, this.sharedViewModel);
 
         return root;
+    }
+
+    @Override
+    protected void handlePermissionIsGranted() {
+        this.handleLocationPermissionIsGranted();
+    }
+
+    @Override
+    protected void goToSettings() {
+        this.goToSettingsWithLocationRational();
     }
 
     @SuppressLint("MissingPermission")
@@ -163,7 +153,7 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private void goToSettings() {
+    private void goToSettingsWithLocationRational() {
 
         new AlertDialog.Builder(this.getContext())
                 .setTitle(R.string.location_rationale)
