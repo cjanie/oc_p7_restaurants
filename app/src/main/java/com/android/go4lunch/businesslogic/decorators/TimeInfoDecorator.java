@@ -5,6 +5,7 @@ import com.android.go4lunch.providers.TimeProvider;
 import com.android.go4lunch.businesslogic.enums.TimeInfo;
 
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.Map;
 
 public class TimeInfoDecorator {
@@ -13,27 +14,32 @@ public class TimeInfoDecorator {
 
     private DateProvider dateProvider;
 
+    public TimeInfoDecorator(DateProvider dateProvider) {
+        this.dateProvider = dateProvider;
+    }
+
     public TimeInfoDecorator(TimeProvider timeProvider, DateProvider dateProvider) {
         this.timeProvider = timeProvider;
         this.dateProvider = dateProvider;
     }
 
     public TimeInfo decor(Restaurant restaurant) {
-        return this.getTimeInfo(restaurant);
+        return this.createTimeInfo(restaurant);
     }
 
-    private TimeInfo getTimeInfo(Restaurant restaurant) {
-        Map<Integer, Map<String, LocalTime>> planning = restaurant.getPlanning();
-        if(planning == null)
+    private TimeInfo createTimeInfo(Restaurant restaurant) {
+
+        if(restaurant.getPlanning() == null)
             return TimeInfo.DEFAULT_TIME_INFO;
 
         LocalTime now = this.timeProvider.now();
-        int today = this.dateProvider.today();
-        if(planning.get(today) != null) {
-            if(planning.get(today).get("close").isBefore(now))
+
+        Map<String, LocalTime> openHoursToday = this.getOpenHoursToday(restaurant);
+        if(!openHoursToday.isEmpty()) {
+            if(openHoursToday.get("close").isBefore(now))
                 return TimeInfo.CLOSE;
-            if(planning.get(today).get("open").isBefore(now)) {
-                if(planning.get(today).get("close").isAfter(now.plusHours(1)))
+            if(openHoursToday.get("open").isBefore(now)) {
+                if(openHoursToday.get("close").isAfter(now.plusHours(1)))
                     return TimeInfo.OPEN;
                 return TimeInfo.CLOSING_SOON;
             }
@@ -41,6 +47,18 @@ public class TimeInfoDecorator {
         }
 
         return TimeInfo.CLOSE;
+    }
+
+    public Map<String, LocalTime> getOpenHoursToday(Restaurant restaurant) {
+        Map<String, LocalTime> openHoursToday = new HashMap();
+        if(restaurant.getPlanning() != null) {
+
+            Integer today = this.dateProvider.today();
+
+            if(restaurant.getPlanning().get(today) != null)
+                openHoursToday = restaurant.getPlanning().get(today);
+        }
+        return openHoursToday;
     }
 
 }
