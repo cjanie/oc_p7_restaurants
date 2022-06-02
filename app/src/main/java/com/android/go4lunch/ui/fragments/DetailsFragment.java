@@ -155,8 +155,8 @@ public class DetailsFragment extends Fragment {
     private ActivityResultLauncher createActivityResultLauncher() {
         ActivityResultLauncher launcher = this.registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
-                isGranted -> {
-                    if(isGranted) {
+                hasBeenGranted -> {
+                    if(hasBeenGranted) {
                         EasyPermissions.onRequestPermissionsResult(
                                 this.REQUEST_CODE,
                                 this.PERMISSIONS,

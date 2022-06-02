@@ -2,10 +2,16 @@ package com.android.go4lunch.ui.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +25,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.android.go4lunch.BuildConfig;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Geolocation;
@@ -33,6 +40,8 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.Arrays;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -40,14 +49,6 @@ import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainFragment extends Fragment {
-
-    // FOR LOCATION PERMISSION
-
-    private ActivityResultLauncher locationPermissionsResultLauncher;
-
-    private final String[] PERMISSIONS = new String[] {Manifest.permission.ACCESS_FINE_LOCATION};
-
-    private final int REQUEST_CODE = 123;
 
     // DATA
 
@@ -61,13 +62,21 @@ public class MainFragment extends Fragment {
     @BindView(R.id.container)
     ViewPager2 viewPager;
 
+    // FOR LOCATION PERMISSION
+
+    private ActivityResultLauncher locationPermissionsResultLauncher;
+
+    private final String[] PERMISSIONS = new String[] {Manifest.permission.ACCESS_FINE_LOCATION};
+
+    private final int REQUEST_CODE = 123;
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         this.locationPermissionsResultLauncher = this.createActivityResultLauncher();
-        this.requestLocationPermission();
-        this.initMyPosition();
+        this.locationPermissionsResultLauncher.launch(this.PERMISSIONS[0]);
 
         SharedViewModelFactory sharedViewModelFactory = ((Launch) this.getActivity().getApplication()).sharedViewModelFactory();
         this.sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
@@ -84,77 +93,16 @@ public class MainFragment extends Fragment {
     private ActivityResultLauncher createActivityResultLauncher() {
         return this.registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
-                isGranted -> {
-                    if(isGranted) {
-                        EasyPermissions.onRequestPermissionsResult(
-                                this.REQUEST_CODE,
-                                this.PERMISSIONS,
-                                new int[]{PackageManager.PERMISSION_GRANTED},
-                                this
-                        );
+                permissionHasBeenGranted -> {
+                    if(permissionHasBeenGranted) {
+                        this.handleLocationPermissionHasBeenGranted();
                     } else {
-                        EasyPermissions.onRequestPermissionsResult(
-                                this.REQUEST_CODE,
-                                this.PERMISSIONS,
-                                new int[]{PackageManager.PERMISSION_DENIED},
-                                this
-                        );
+                        this.goToSettings();
                     }
                 }
         );
     }
 
-    private void requestLocationPermission() {
-        this.locationPermissionsResultLauncher.launch(this.PERMISSIONS[0]);
-    }
-
-    @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(123)
-    private void initMyPosition() {
-        // Control
-        if(EasyPermissions.hasPermissions(this.getActivity(), this.PERMISSIONS)) {
-            // Get location when permission is not missing
-            FusedLocationProviderClient fusedLocationProviderClient =
-                    LocationServices.getFusedLocationProviderClient(this.getActivity());
-
-            LocationCallback locationCallback = new LocationCallback() {
-                @Override
-                public void onLocationResult(@NonNull LocationResult locationResult) {
-                    if(!locationResult.equals(null) && !locationResult.getLocations().isEmpty()) {
-                        stopLocationUpdates(fusedLocationProviderClient, this);
-                        saveLocation(locationResult.getLocations().get(0));
-                    }
-                }
-
-                @Override
-                public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
-                    if(locationAvailability.isLocationAvailable()) {
-                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
-                            saveLocation(location);
-                        });
-                    } else {
-                        requestLocationUpdates(fusedLocationProviderClient, this);
-                        Toast.makeText(getActivity(), getText(R.string.location_not_available), Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-            };
-
-            requestLocationUpdates(fusedLocationProviderClient, locationCallback);
-
-
-        } else if(EasyPermissions.permissionPermanentlyDenied(this, this.PERMISSIONS[0])) {
-            // Demand permission if missing, explaining that a permission is needed to get the user location
-            /*
-            EasyPermissions.requestPermissions(
-                    this,
-                    this.getString(R.string.location_permission_rationale_text),
-                    123,
-                    this.PERMISSIONS);
-             */
-                new AppSettingsDialog.Builder(this).build().show();
-        }
-    }
 
     @SuppressLint("MissingPermission")
     private void requestLocationUpdates(
@@ -186,5 +134,61 @@ public class MainFragment extends Fragment {
             );
         }
     }
+
+    @SuppressLint("MissingPermission")
+    @AfterPermissionGranted(123)
+    private void handleLocationPermissionHasBeenGranted() {
+        // Get location when permission is not missing
+        FusedLocationProviderClient fusedLocationProviderClient =
+                LocationServices.getFusedLocationProviderClient(this.getActivity());
+
+        LocationCallback locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                if(!locationResult.equals(null) && !locationResult.getLocations().isEmpty()) {
+                    stopLocationUpdates(fusedLocationProviderClient, this);
+                    saveLocation(locationResult.getLocations().get(0));
+                }
+            }
+
+            @Override
+            public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
+                if(locationAvailability.isLocationAvailable()) {
+                    fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
+                        saveLocation(location);
+                    });
+                } else {
+                    requestLocationUpdates(fusedLocationProviderClient, this);
+                    Toast.makeText(getActivity(), getText(R.string.location_not_available), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        };
+
+        requestLocationUpdates(fusedLocationProviderClient, locationCallback);
+    }
+
+    private void goToSettings() {
+
+        new AlertDialog.Builder(this.getContext())
+                .setTitle(R.string.location_rationale)
+                .setMessage(R.string.location_permission_rationale_text)
+                .setPositiveButton("OK", (dialogInterface, i) -> {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null);
+                        intent.setData(uri);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        try {
+                            startActivity(intent);
+                        } catch (ActivityNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                )
+                .create().show();
+
+    }
+
 
 }
