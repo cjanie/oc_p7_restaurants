@@ -70,6 +70,7 @@
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- NOTIFICATIONS -->
+    <string name="receive_notifications">Receive notifications</string>
     <string name="is_eating_at">is eating at</string>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>

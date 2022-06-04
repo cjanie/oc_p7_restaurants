@@ -30,6 +30,10 @@
             app:summaryOn="@string/attachment_summary_on"
             app:title="@string/attachment_title" />
 
+        <SwitchPreferenceCompat
+            app:key="notifications"
+            app:title="@string/receive_notifications"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

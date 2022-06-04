@@ -7,26 +7,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
-import android.os.SystemClock;
 
 import androidx.activity.result.ActivityResult;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 
 import com.android.go4lunch.R;
-import com.android.go4lunch.businesslogic.entities.Selection;
 import com.android.go4lunch.businesslogic.usecases.ReceiveNotificationsUseCase;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observable;
 
 public class ShowNotificationsAction {
 
