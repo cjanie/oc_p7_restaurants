@@ -4,6 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +23,7 @@ import android.widget.Toast;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
+import com.android.go4lunch.ui.notifications.NotificationWorker;
 import com.android.go4lunch.ui.notifications.ShowNotificationAction;
 import com.android.go4lunch.ui.viewmodels.MainViewModel;
 
@@ -25,6 +32,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -111,7 +120,8 @@ public class MainActivity extends BaseActivity {
         });
 
         // Notifications
-        new ShowNotificationAction(this).run();
+        WorkManager workManager = WorkManager.getInstance(this);
+        workManager.enqueue(OneTimeWorkRequest.from(NotificationWorker.class));
     }
 
     @Override

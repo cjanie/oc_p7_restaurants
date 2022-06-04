@@ -34,14 +34,10 @@ public class ShowNotificationAction {
     // To show notif
     private NotificationManagerCompat notificationManager;
 
-    // To plan work
-    private WorkManager workManager;
-
     public ShowNotificationAction(Context context) {
 
         this.context = context;
         this.notificationManager = NotificationManagerCompat.from(context);
-        this.workManager = WorkManager.getInstance(context);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(
@@ -58,7 +54,6 @@ public class ShowNotificationAction {
 
         if(!this.getNotificationTexts().isEmpty()) {
             for (int i = 0; i < this.getNotificationTexts().size(); i++) {
-                //this.workManager.enqueue(OneTimeWorkRequest.from(NotificationWorker.class)); // TODO
                 this.notifyWorkmatesSelections(i, this.getNotificationTexts().get(i));
             }
         }
@@ -68,12 +63,12 @@ public class ShowNotificationAction {
         Notification notification = new NotificationCompat
                 .Builder(this.context, NotificationConfig.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_logo)
-                .setContentTitle("Go4Lunch Time")
+                .setContentTitle(this.context.getString(R.string.app_title))
                 .setContentText(text)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                //.setContentIntent(this.createNotificationContentIntent(id, text))
+                .setContentIntent(this.createNotificationContentIntent(id, text))
+                .setAutoCancel(true)
                 .build();
 
         this.notificationManager.notify(id, notification);
@@ -97,7 +92,11 @@ public class ShowNotificationAction {
         List<String> notifications = new ArrayList<>();
         if(!this.getSelections().isEmpty()) {
             for(Selection selection: this.getSelections()) {
-                notifications.add(selection.getWorkmateName() + " is eating at " + selection.getRestaurantName());
+                notifications.add(
+                        selection.getWorkmateName() + " "
+                                + this.context.getString(R.string.is_eating_at) + " "
+                                + selection.getRestaurantName()
+                );
             }
         }
         return notifications;
