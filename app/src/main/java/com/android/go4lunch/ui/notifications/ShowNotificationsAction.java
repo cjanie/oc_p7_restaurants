@@ -19,6 +19,7 @@ import androidx.work.WorkManager;
 
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Selection;
+import com.android.go4lunch.businesslogic.usecases.ReceiveNotificationsUseCase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,14 +28,16 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 
-public class ShowNotificationAction {
+public class ShowNotificationsAction {
 
     private Context context;
 
     // To show notif
     private NotificationManagerCompat notificationManager;
 
-    public ShowNotificationAction(Context context) {
+    private ReceiveNotificationsUseCase receiveNotificationsUseCase;
+
+    public ShowNotificationsAction(Context context, ReceiveNotificationsUseCase receiveNotificationsUseCase) {
 
         this.context = context;
         this.notificationManager = NotificationManagerCompat.from(context);
@@ -48,15 +51,24 @@ public class ShowNotificationAction {
             this.notificationManager.createNotificationChannel(notificationChannel);
         }
 
+        this.receiveNotificationsUseCase = receiveNotificationsUseCase;
     }
 
     public void run() {
+        this.receiveNotificationsUseCase.handle(new Selection("1", "1"))
+                .subscribe(notifications -> {
+                    if(!notifications.isEmpty()) {
+                        for (int i = 0; i < notifications.size(); i++) {
+                            this.notifyWorkmatesSelections(
+                                    i,
+                                    notifications.get(i).getReceiver().getWorkmateName() + " "
+                                            + this.context.getString(R.string.is_eating_at) + " "
+                                            + notifications.get(i).getReceiver().getRestaurantName()
 
-        if(!this.getNotificationTexts().isEmpty()) {
-            for (int i = 0; i < this.getNotificationTexts().size(); i++) {
-                this.notifyWorkmatesSelections(i, this.getNotificationTexts().get(i));
-            }
-        }
+                            );
+                        }
+                    }
+                });
     }
 
     private void notifyWorkmatesSelections(int id, String text) {
@@ -85,36 +97,6 @@ public class ShowNotificationAction {
         return PendingIntent.getActivity(
                 this.context, 0, notifyIntent, PendingIntent.FLAG_IMMUTABLE
         );
-    }
-
-
-    private List<String> getNotificationTexts() {
-        List<String> notifications = new ArrayList<>();
-        if(!this.getSelections().isEmpty()) {
-            for(Selection selection: this.getSelections()) {
-                notifications.add(
-                        selection.getWorkmateName() + " "
-                                + this.context.getString(R.string.is_eating_at) + " "
-                                + selection.getRestaurantName()
-                );
-            }
-        }
-        return notifications;
-    }
-
-    private List<Selection> getSelections() {
-        // Mock
-        Selection selection1 = new Selection("resto1", "workmate1");
-        selection1.setWorkmateName("Janie");
-        selection1.setRestaurantName("Chez Jojo");
-        selection1.setId("selection1");
-
-        Selection selection2 = new Selection("resto1", "workmate2");
-        selection2.setWorkmateName("Cyril");
-        selection2.setRestaurantName("Chez Jojo");
-        selection2.setId("selection2");
-
-        return Arrays.asList(selection1, selection2);
     }
 
 }

@@ -7,19 +7,21 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.android.go4lunch.Launch;
+
 public class NotificationWorker extends Worker {
 
-    private ShowNotificationAction showNotificationAction;
+    private ShowNotificationsAction showNotificationsAction;
 
     public NotificationWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
-        this.showNotificationAction = new ShowNotificationAction(context);
+        this.showNotificationsAction = ((Launch) context.getApplicationContext()).showNotificationsAction();
     }
 
     @NonNull
     @Override
     public Result doWork() {
-        this.showNotificationAction.run();
+        this.showNotificationsAction.run();
         return Result.success();
     }
 
