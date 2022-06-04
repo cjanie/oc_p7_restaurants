@@ -28,17 +28,16 @@ import java.util.concurrent.TimeUnit;
 
 public class NotificationWorker extends Worker {
 
-    private WorkManager workManager;
+
 
     public NotificationWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
-        this.workManager= WorkManager.getInstance(context);
     }
 
     @NonNull
     @Override
     public Result doWork() {
-        new ShowNotificationAction(this.getApplicationContext()).run();
+        new ShowNotificationAction(this.getApplicationContext()).run();// TODO
 
         Data data = this.createData(new NotificationValueObject(1, "Hy"));
 
@@ -47,13 +46,8 @@ public class NotificationWorker extends Worker {
         if(notificationText != null) {
             NotificationValueObject notificationVO = new NotificationValueObject(notificationId, notificationText);
 
-
             data = this.createData(notificationVO);
-            WorkRequest workRequest = this.createPeriodicWorkRequest(data);
-            this.workManager.enqueue(workRequest);
-
         }
-
         return Result.success(data);
     }
 

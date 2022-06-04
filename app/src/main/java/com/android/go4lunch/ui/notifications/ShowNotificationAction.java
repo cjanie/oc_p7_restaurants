@@ -14,6 +14,8 @@ import android.os.SystemClock;
 import androidx.activity.result.ActivityResult;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Selection;
@@ -29,12 +31,17 @@ public class ShowNotificationAction {
 
     private Context context;
 
+    // To show notif
     private NotificationManagerCompat notificationManager;
+
+    // To plan work
+    private WorkManager workManager;
 
     public ShowNotificationAction(Context context) {
 
         this.context = context;
         this.notificationManager = NotificationManagerCompat.from(context);
+        this.workManager = WorkManager.getInstance(context);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(
@@ -51,6 +58,7 @@ public class ShowNotificationAction {
 
         if(!this.getNotificationTexts().isEmpty()) {
             for (int i = 0; i < this.getNotificationTexts().size(); i++) {
+                //this.workManager.enqueue(OneTimeWorkRequest.from(NotificationWorker.class)); // TODO
                 this.notifyWorkmatesSelections(i, this.getNotificationTexts().get(i));
             }
         }
@@ -63,7 +71,6 @@ public class ShowNotificationAction {
                 .setContentTitle("Go4Lunch Time")
                 .setContentText(text)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setTimeoutAfter(6000)
                 .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setContentIntent(this.createNotificationContentIntent(id, text))
@@ -103,7 +110,12 @@ public class ShowNotificationAction {
         selection1.setRestaurantName("Chez Jojo");
         selection1.setId("selection1");
 
-        return Arrays.asList(selection1);
+        Selection selection2 = new Selection("resto1", "workmate2");
+        selection2.setWorkmateName("Cyril");
+        selection2.setRestaurantName("Chez Jojo");
+        selection2.setId("selection2");
+
+        return Arrays.asList(selection1, selection2);
     }
 
 }
