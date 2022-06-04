@@ -310,7 +310,9 @@ public class Launch extends Application {
 
     private ReceiveNotificationsUseCase receiveNotificationsUseCase() {
         if(this.receiveNotificationsUseCase == null) {
-            this.receiveNotificationsUseCase = new ReceiveNotificationsUseCase(this.visitorGateway());
+            this.receiveNotificationsUseCase = new ReceiveNotificationsUseCase(
+                    this.visitorGateway(),
+                    this.sessionGateway());
         }
         return this.receiveNotificationsUseCase;
     }

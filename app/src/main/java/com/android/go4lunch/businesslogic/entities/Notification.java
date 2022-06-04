@@ -2,24 +2,21 @@ package com.android.go4lunch.businesslogic.entities;
 
 public class Notification {
 
-    private Selection sender;
+    private int id;
 
-    private Selection receiver;
+    private Selection selection;
 
-    public Selection getSender() {
-        return sender;
+    public Notification(int id, Selection selection) {
+        this.id = id;
+        this.selection = selection;
     }
 
-    public void setSender(Selection sender) {
-        this.sender = sender;
+    public int getId() {
+        return id;
     }
 
-    public Selection getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(Selection receiver) {
-        this.receiver = receiver;
+    public Selection getSelection() {
+        return selection;
     }
 }
 

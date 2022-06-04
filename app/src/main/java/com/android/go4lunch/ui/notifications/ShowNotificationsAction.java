@@ -55,16 +55,15 @@ public class ShowNotificationsAction {
     }
 
     public void run() {
-        this.receiveNotificationsUseCase.handle(new Selection("1", "1"))
+        this.receiveNotificationsUseCase.handle()
                 .subscribe(notifications -> {
                     if(!notifications.isEmpty()) {
-                        for (int i = 0; i < notifications.size(); i++) {
+                        for (com.android.go4lunch.businesslogic.entities.Notification notification: notifications) {
                             this.notifyWorkmatesSelections(
-                                    i,
-                                    notifications.get(i).getReceiver().getWorkmateName() + " "
+                                    notification.getId(),
+                                    notification.getSelection().getWorkmateName() + " "
                                             + this.context.getString(R.string.is_eating_at) + " "
-                                            + notifications.get(i).getReceiver().getRestaurantName()
-
+                                            + notification.getSelection().getRestaurantName()
                             );
                         }
                     }
