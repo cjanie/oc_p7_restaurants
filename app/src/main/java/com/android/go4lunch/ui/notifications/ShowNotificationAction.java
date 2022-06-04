@@ -73,7 +73,7 @@ public class ShowNotificationAction {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setContentIntent(this.createNotificationContentIntent(id, text))
+                //.setContentIntent(this.createNotificationContentIntent(id, text))
                 .build();
 
         this.notificationManager.notify(id, notification);
