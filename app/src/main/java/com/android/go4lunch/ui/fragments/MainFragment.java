@@ -2,14 +2,9 @@ package com.android.go4lunch.ui.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +16,10 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.android.go4lunch.BuildConfig;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Geolocation;
 import com.android.go4lunch.ui.adapters.ViewPagerAdapter;
-import com.android.go4lunch.ui.utils.UsesPermission;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
 import com.android.go4lunch.ui.viewmodels.factories.SharedViewModelFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;

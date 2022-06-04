@@ -1,4 +1,4 @@
-package com.android.go4lunch.ui.utils;
+package com.android.go4lunch.ui.fragments;
 
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;

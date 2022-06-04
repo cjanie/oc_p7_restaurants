@@ -2,6 +2,7 @@ package com.android.go4lunch;
 
 import android.app.Application;
 
+import com.android.go4lunch.businesslogic.usecases.ReceiveNotificationsUseCase;
 import com.android.go4lunch.businesslogic.usecases.UpdateRestaurantWithDistanceUseCase;
 import com.android.go4lunch.data.apiGoogleMaps.repositories.DistanceRepository;
 import com.android.go4lunch.data.apiGoogleMaps.GoogleMapsHttpClientProvider;
@@ -22,6 +23,7 @@ import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.RealDateProvider;
 import com.android.go4lunch.providers.RealTimeProvider;
 import com.android.go4lunch.providers.TimeProvider;
+import com.android.go4lunch.ui.notifications.ShowNotificationsAction;
 import com.android.go4lunch.ui.viewmodels.factories.MainViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.RestaurantDetailsViewModelFactory;
@@ -80,6 +82,7 @@ public class Launch extends Application {
     private AddLikeUseCase addLikeUseCase;
     private IsInFavoritesRestaurantsUseCase isInFavoritesRestaurantsUseCase;
     private GetNumberOfLikesPerRestaurantUseCase getNumberOfLikesPerRestaurantUseCase;
+    private ReceiveNotificationsUseCase receiveNotificationsUseCase;
 
     // view models factories
     private MapViewModelFactory mapViewModelFactory;
@@ -90,6 +93,8 @@ public class Launch extends Application {
     private MainViewModelFactory mainViewModelFactory;
     private SharedViewModelFactory sharedViewModelFactory;
 
+    // work actions
+    private ShowNotificationsAction showNotificationsAction;
 
     // INSTANTIATIONS
 
@@ -303,6 +308,15 @@ public class Launch extends Application {
         return this.getNumberOfLikesPerRestaurantUseCase;
     }
 
+    private ReceiveNotificationsUseCase receiveNotificationsUseCase() {
+        if(this.receiveNotificationsUseCase == null) {
+            this.receiveNotificationsUseCase = new ReceiveNotificationsUseCase(
+                    this.visitorGateway(),
+                    this.sessionGateway());
+        }
+        return this.receiveNotificationsUseCase;
+    }
+
     // View model factories
 
     public synchronized MapViewModelFactory mapViewModelFactory() {
@@ -372,6 +386,16 @@ public class Launch extends Application {
             return this.sharedViewModelFactory = new SharedViewModelFactory();
         }
         return this.sharedViewModelFactory;
+    }
+
+    // Work actions
+
+    public synchronized ShowNotificationsAction showNotificationsAction() {
+        if(this.showNotificationsAction == null) {
+            this.showNotificationsAction = new ShowNotificationsAction(this,
+                    this.receiveNotificationsUseCase());
+        }
+        return this.showNotificationsAction;
     }
 
 }

@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
+import com.android.go4lunch.ui.notifications.NotificationWorker;
 import com.android.go4lunch.ui.viewmodels.MainViewModel;
 
 import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
@@ -108,6 +111,10 @@ public class MainActivity extends BaseActivity {
                 return false; // corresponds to is checked
             }
         });
+
+        // Notifications
+        WorkManager workManager = WorkManager.getInstance(this);
+        workManager.enqueue(OneTimeWorkRequest.from(NotificationWorker.class));
     }
 
     @Override
@@ -120,9 +127,7 @@ public class MainActivity extends BaseActivity {
         ViewGroup viewGroup = (ViewGroup) this.navigationView.getHeaderView(0);
         blurView.setupWith(viewGroup)
                 .setBlurAlgorithm(new RenderScriptBlur(this));
-
-
-
-
     }
+
+
 }
