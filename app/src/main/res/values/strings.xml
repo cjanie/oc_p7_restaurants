@@ -61,11 +61,6 @@
     <string name="call_rationale">You must grant permission for phone call</string>
     <string name="ok">OK</string>
 
-    <!-- FACEBOOK -->
-    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
-    <string name="facebook_application_id" translatable="false">570389354021189</string>
-    <string name="facebook_login_protocol_scheme" translatable="false">fb570389354021189</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
@@ -88,4 +83,8 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
 
+    <!-- Facebook -->
+    <string name="facebook_application_id" translatable="false">720823785792354</string>
+    <!-- Facebook Application ID, prefixed by 'fb'. Enables Chrome Custom tabs. -->
+    <string name="facebook_login_protocol_scheme" translatable="false">fb720823785792354</string>
 </resources>

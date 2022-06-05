@@ -1,5 +1,6 @@
 package com.android.go4lunch.ui;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 import java.util.List;
+
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 public class SignInActivity extends BaseActivity {
 
@@ -67,9 +71,7 @@ public class SignInActivity extends BaseActivity {
                             // User pressed back button for cancel
                             Log.e(this.TAG, this.getResources().getString(R.string.sign_in_cancelled));
                             Snackbar.make(getWindow().getDecorView().getRootView(), R.string.sign_in_cancelled, Snackbar.LENGTH_LONG).show();
-                            Intent intent = new Intent(this, SignInActivity.class);
-                            startActivity(intent);
-                            finish();
+                            this.restartSignInActivity();
                             return;
                         }
                         if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
@@ -78,11 +80,13 @@ public class SignInActivity extends BaseActivity {
                             return;
                         }
                         // Default error
-                        Log.e(this.TAG, "Activity result error: ", response.getError());
+                        Log.e(this.TAG, "Activity result error: Sign in failure", response.getError());
                         Snackbar.make(getWindow().getDecorView().getRootView(), R.string.sign_in_failure, Snackbar.LENGTH_LONG).show();
+                        this.restartSignInActivity();
                     }
                 });
         Intent signInIntent = this.buildSignInIntent();
+
         signInLauncher.launch(signInIntent);
     }
 
@@ -109,13 +113,19 @@ public class SignInActivity extends BaseActivity {
                     user.getDisplayName(),
                     user.getEmail(),
                     user.getPhoneNumber(),
-                    user.getPhotoUrl().toString()
+                    user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null
             );
         }
     }
 
     private void navigateToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void restartSignInActivity() {
+        Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
         finish();
     }
