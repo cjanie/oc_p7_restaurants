@@ -9,8 +9,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
+import com.android.go4lunch.ui.intentConfigs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
 import com.android.go4lunch.businesslogic.exceptions.NotFoundException;
+import com.google.android.material.snackbar.Snackbar;
 
 public class RestaurantDetailsActivity extends BaseActivity {
 
@@ -31,12 +33,12 @@ public class RestaurantDetailsActivity extends BaseActivity {
         // RESTAURANT
         Restaurant restaurant;
 
-        String id = getIntent().getStringExtra("id");
-        String name = getIntent().getStringExtra("name");
-        String address = getIntent().getStringExtra("address");
-        String photoUrl = getIntent().getStringExtra("photoUrl");
-        String phone = getIntent().getStringExtra("phone");
-        String website = getIntent().getStringExtra("website");
+        String id = getIntent().getStringExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ID);
+        String name = getIntent().getStringExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_NAME);
+        String address = getIntent().getStringExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ADDRESS);
+        String photoUrl = getIntent().getStringExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHOTO_URL);
+        String phone = getIntent().getStringExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHONE);
+        String website = getIntent().getStringExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_WEB_SITE);
 
         restaurant = new Restaurant(name, address);
         restaurant.setId(id);

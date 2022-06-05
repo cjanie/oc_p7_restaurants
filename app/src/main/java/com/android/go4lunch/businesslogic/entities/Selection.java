@@ -1,5 +1,7 @@
 package com.android.go4lunch.businesslogic.entities;
 
+import com.android.go4lunch.data.gateways_impl.VisitorGatewayImpl;
+
 public class Selection {
 
     private String id;
@@ -13,6 +15,14 @@ public class Selection {
     private String workmateName;
 
     private String workmateUrlPhoto;
+
+    private String restaurantUrlPhoto;
+
+    private String restaurantAddress;
+
+    private String restaurantPhone;
+
+    private String restaurantWebSite;
 
     public Selection(String restaurantId, String workmateId) {
         this.id = workmateId;
@@ -66,5 +76,37 @@ public class Selection {
 
     public void setWorkmateUrlPhoto(String workmateUrlPhoto) {
         this.workmateUrlPhoto = workmateUrlPhoto;
+    }
+
+    public String getRestaurantUrlPhoto() {
+        return restaurantUrlPhoto;
+    }
+
+    public void setRestaurantUrlPhoto(String restaurantUrlPhoto) {
+        this.restaurantUrlPhoto = restaurantUrlPhoto;
+    }
+
+    public String getRestaurantAddress() {
+        return restaurantAddress;
+    }
+
+    public void setRestaurantAddress(String restaurantAddress) {
+        this.restaurantAddress = restaurantAddress;
+    }
+
+    public String getRestaurantPhone() {
+        return restaurantPhone;
+    }
+
+    public void setRestaurantPhone(String restaurantPhone) {
+        this.restaurantPhone = restaurantPhone;
+    }
+
+    public String getRestaurantWebSite() {
+        return restaurantWebSite;
+    }
+
+    public void setRestaurantWebSite(String restaurantWebSite) {
+        this.restaurantWebSite = restaurantWebSite;
     }
 }
