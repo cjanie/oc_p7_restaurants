@@ -71,9 +71,7 @@ public class SignInActivity extends BaseActivity {
                             // User pressed back button for cancel
                             Log.e(this.TAG, this.getResources().getString(R.string.sign_in_cancelled));
                             Snackbar.make(getWindow().getDecorView().getRootView(), R.string.sign_in_cancelled, Snackbar.LENGTH_LONG).show();
-                            Intent intent = new Intent(this, SignInActivity.class);
-                            startActivity(intent);
-                            finish();
+                            this.restartSignInActivity();
                             return;
                         }
                         if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
@@ -82,8 +80,9 @@ public class SignInActivity extends BaseActivity {
                             return;
                         }
                         // Default error
-                        Log.e(this.TAG, "Activity result error: ", response.getError());
+                        Log.e(this.TAG, "Activity result error: Sign in failure", response.getError());
                         Snackbar.make(getWindow().getDecorView().getRootView(), R.string.sign_in_failure, Snackbar.LENGTH_LONG).show();
+                        this.restartSignInActivity();
                     }
                 });
         Intent signInIntent = this.buildSignInIntent();
@@ -121,6 +120,12 @@ public class SignInActivity extends BaseActivity {
 
     private void navigateToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void restartSignInActivity() {
+        Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
         finish();
     }
