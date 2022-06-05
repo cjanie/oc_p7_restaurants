@@ -1,5 +1,6 @@
 package com.android.go4lunch.ui;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 import java.util.List;
+
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 public class SignInActivity extends BaseActivity {
 
@@ -83,6 +87,7 @@ public class SignInActivity extends BaseActivity {
                     }
                 });
         Intent signInIntent = this.buildSignInIntent();
+
         signInLauncher.launch(signInIntent);
     }
 
@@ -109,7 +114,7 @@ public class SignInActivity extends BaseActivity {
                     user.getDisplayName(),
                     user.getEmail(),
                     user.getPhoneNumber(),
-                    user.getPhotoUrl().toString()
+                    user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null
             );
         }
     }
