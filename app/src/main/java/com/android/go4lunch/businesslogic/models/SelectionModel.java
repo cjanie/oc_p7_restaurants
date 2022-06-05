@@ -9,12 +9,20 @@ public class SelectionModel {
             String workmateId,
             String restaurantName,
             String workmateName,
-            String workmateUrlPhoto
+            String workmateUrlPhoto,
+            String restaurantUrlPhoto,
+            String restaurantAddress,
+            String restaurantPhone,
+            String restaurantWebSite
     ) {
         Selection selection = new Selection(restaurantId, workmateId);
         selection.setRestaurantName(restaurantName);
         selection.setWorkmateName(workmateName);
         selection.setWorkmateUrlPhoto(workmateUrlPhoto);
+        selection.setRestaurantUrlPhoto(restaurantUrlPhoto);
+        selection.setRestaurantAddress(restaurantAddress);
+        selection.setRestaurantPhone(restaurantPhone);
+        selection.setRestaurantWebSite(restaurantWebSite);
         return selection;
     }
 
@@ -24,13 +32,25 @@ public class SelectionModel {
             String restaurantName,
             String workmateName,
             String workmateUrlPhoto,
+            String restaurantUrlPhoto,
+            String restaurantAddress,
+            String restaurantPhone,
+            String restaurantWebSite,
             String selectionId
     ) {
-        Selection selection = new Selection(restaurantId, workmateId);
+        Selection selection = this.createSelection(
+                restaurantId,
+                workmateId,
+                restaurantName,
+                workmateName,
+                workmateUrlPhoto,
+                restaurantUrlPhoto,
+                restaurantAddress,
+                restaurantPhone,
+                restaurantWebSite);
+
         selection.setId(selectionId);
-        selection.setRestaurantName(restaurantName);
-        selection.setWorkmateName(workmateName);
-        selection.setWorkmateUrlPhoto(workmateUrlPhoto);
+
         return selection;
     }
 }

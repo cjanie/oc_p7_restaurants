@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.go4lunch.R;
 import com.android.go4lunch.ui.RestaurantDetailsActivity;
 import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
+import com.android.go4lunch.ui.intentConfigs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.utils.TimeInfoTextHandler;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -88,20 +89,18 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
                 }
             }
 
-            ((ItemViewHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Context context = v.getContext();
+            holder.itemView.setOnClickListener(view -> {
+                    Context context = view.getContext();
                     Intent intent = new Intent(context, RestaurantDetailsActivity.class);
-                    intent.putExtra("id", restaurant.getRestaurant().getId());
-                    intent.putExtra("name", restaurant.getRestaurant().getName());
-                    intent.putExtra("address", restaurant.getRestaurant().getAddress());
-                    intent.putExtra("phone", restaurant.getRestaurant().getPhone());
-                    intent.putExtra("website", restaurant.getRestaurant().getWebSite());
-                    intent.putExtra("photoUrl", restaurant.getRestaurant().getPhotoUrl());
+                    intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ID, restaurant.getRestaurant().getId());
+                    intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_NAME, restaurant.getRestaurant().getName());
+                    intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ADDRESS, restaurant.getRestaurant().getAddress());
+                    intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHONE, restaurant.getRestaurant().getPhone());
+                    intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_WEB_SITE, restaurant.getRestaurant().getWebSite());
+                    intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHOTO_URL, restaurant.getRestaurant().getPhotoUrl());
                     context.startActivity(intent);
                 }
-            });
+            );
         }
 
     }

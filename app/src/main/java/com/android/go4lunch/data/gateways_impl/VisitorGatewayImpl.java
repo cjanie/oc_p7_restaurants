@@ -29,6 +29,10 @@ public class VisitorGatewayImpl implements VisitorGateway {
         public static final String RESTAURANT_NAME = "restaurantName";
         public static final String WORKMATE_NAME = "workmateName";
         public static final String WORKMATE_URL_PHOTO = "workmateUrlPhoto";
+        public static final String RESTAURANT_URL_PHOTO = "restaurantUrlPhoto";
+        public static final String RESTAURANT_ADDRESS = "restaurantAddress";
+        public static final String RESTAURANT_PHONE = "restaurantPhone";
+        public static final String RESTAURANT_WEB_SITE = "restaurantWebSite";
     }
 
     private final String TAG = "VISITOR GATEWAY IMPL";
@@ -78,6 +82,12 @@ public class VisitorGatewayImpl implements VisitorGateway {
         selectionMap.put(SelectionDatabaseConfig.RESTAURANT_NAME, selection.getRestaurantName());
         selectionMap.put(SelectionDatabaseConfig.WORKMATE_NAME, selection.getWorkmateName());
         selectionMap.put(SelectionDatabaseConfig.WORKMATE_URL_PHOTO, selection.getWorkmateUrlPhoto());
+        selectionMap.put(SelectionDatabaseConfig.RESTAURANT_URL_PHOTO, selection.getRestaurantUrlPhoto());
+        selectionMap.put(SelectionDatabaseConfig.RESTAURANT_ADDRESS, selection.getRestaurantAddress());
+        selectionMap.put(SelectionDatabaseConfig.RESTAURANT_PHONE, selection.getRestaurantPhone());
+        selectionMap.put(SelectionDatabaseConfig.RESTAURANT_WEB_SITE, selection.getRestaurantWebSite());
+
+
         this.database.collection(SelectionDatabaseConfig.COLLECTION_PATH)
                 .document(selection.getId())
                 .set(selectionMap)
@@ -124,7 +134,7 @@ public class VisitorGatewayImpl implements VisitorGateway {
             }
         });
 
-        return Observable.just(visitors).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+        return Observable.just(visitors).subscribeOn(Schedulers.io());
     }
 
     private Selection createSelection(DocumentSnapshot doc) {
@@ -134,6 +144,10 @@ public class VisitorGatewayImpl implements VisitorGateway {
                 (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_NAME),
                 (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_NAME),
                 (String) doc.getData().get(SelectionDatabaseConfig.WORKMATE_URL_PHOTO),
+                (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_URL_PHOTO),
+                (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_ADDRESS),
+                (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_PHONE),
+                (String) doc.getData().get(SelectionDatabaseConfig.RESTAURANT_WEB_SITE),
                 doc.getId()
         );
         return selection;

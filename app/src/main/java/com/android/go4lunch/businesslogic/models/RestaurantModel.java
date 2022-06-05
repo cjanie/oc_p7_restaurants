@@ -20,8 +20,11 @@ public class RestaurantModel {
         if(!selections.isEmpty()) {
             for(Selection selection: selections) {
                 if(selection.getWorkmateId().equals(workmateId)) {
-                    Restaurant selectedRestaurant = new Restaurant(selection.getRestaurantName());
+                    Restaurant selectedRestaurant = new Restaurant(selection.getRestaurantName(), selection.getRestaurantAddress());
                     selectedRestaurant.setId(selection.getRestaurantId());
+                    selectedRestaurant.setPhotoUrl(selection.getRestaurantUrlPhoto());
+                    selectedRestaurant.setPhone(selection.getRestaurantPhone());
+                    selectedRestaurant.setWebSite(selection.getRestaurantWebSite());
                     return selectedRestaurant;
                 }
             }

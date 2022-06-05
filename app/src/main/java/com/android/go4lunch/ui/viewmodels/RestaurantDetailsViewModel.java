@@ -130,7 +130,14 @@ public class RestaurantDetailsViewModel extends ViewModel {
 
     public void handleGoForLunch() {
 
-        this.goForLunchUseCase.handle(this.restaurant.getId(), this.restaurant.getName()).delay(5, TimeUnit.SECONDS)
+        this.goForLunchUseCase.handle(
+                this.restaurant.getId(),
+                this.restaurant.getName(),
+                this.restaurant.getPhotoUrl(),
+                this.restaurant.getAddress(),
+                this.restaurant.getPhone(),
+                this.restaurant.getWebSite()
+        ).delay(5, TimeUnit.SECONDS)
                 .subscribe(isDone -> {
 
             });

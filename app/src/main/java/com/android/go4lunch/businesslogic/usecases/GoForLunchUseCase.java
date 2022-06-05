@@ -24,15 +24,44 @@ public class GoForLunchUseCase {
         this.sessionGateway = sessionGateway;
     }
 
-    public Observable<Boolean> handle(String restaurantId, String restaurantName) {
-        return this.toggle(restaurantId, restaurantName);
+    public Observable<Boolean> handle(
+            String restaurantId,
+            String restaurantName,
+            String restaurantUrlPhoto,
+            String restaurantAddress,
+            String restaurantPhone,
+            String restaurantWebSite
+    ) {
+        return this.toggle(
+                restaurantId,
+                restaurantName,
+                restaurantUrlPhoto,
+                restaurantAddress,
+                restaurantPhone,
+                restaurantWebSite
+        );
     }
 
-    private Observable<Boolean> toggle(String restaurantId, String restaurantName) {
+    private Observable<Boolean> toggle(
+            String restaurantId,
+            String restaurantName,
+            String restaurantUrlPhoto,
+            String restaurantAddress,
+            String restaurantPhone,
+            String restaurantWebSite
+    ) {
 
         return this.getSession().map(session -> {
             Selection newSelection = new SelectionModel().createSelection(
-                restaurantId, session.getId(), restaurantName, session.getName(), session.getUrlPhoto()
+                    restaurantId,
+                    session.getId(),
+                    restaurantName,
+                    session.getName(),
+                    session.getUrlPhoto(),
+                    restaurantUrlPhoto,
+                    restaurantAddress,
+                    restaurantPhone,
+                    restaurantWebSite
             );
 
             Selection workmateSelection = this.getWorkmateSelection(session.getId());
