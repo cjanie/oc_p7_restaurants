@@ -107,8 +107,8 @@ public class GetRestaurantsForListUseCaseTest {
 
     @Test
     public void filtersRestaurantsWithGeolocation() {
-        Restaurant restaurant1 = new Restaurant("resto1");
-        Restaurant restaurant2 = new Restaurant("resto2");
+        Restaurant restaurant1 = new Restaurant("resto1", "adresse");
+        Restaurant restaurant2 = new Restaurant("resto2", "adresse");
         InMemoryRestaurantGateway restaurantGateway
                 = this.fillGatewayWithRestaurants(Arrays.asList(restaurant1, restaurant2));
         GetRestaurantsForListUseCase getRestaurantsForListUseCase
@@ -132,10 +132,10 @@ public class GetRestaurantsForListUseCaseTest {
 
     @Test
     public void restaurantCanHaveSelections() {
-        Restaurant restaurant1 = new Restaurant("Chez Jojo");
+        Restaurant restaurant1 = new Restaurant("Chez Jojo", "adresse");
         restaurant1.setId("resto1");
         restaurant1.setGeolocation(new Geolocation(1.1, 1.1));
-        Restaurant restaurant2 = new Restaurant("Chez Janvier");
+        Restaurant restaurant2 = new Restaurant("Chez Janvier", "adresse");
         restaurant2.setId("resto2");
         restaurant2.setGeolocation(new Geolocation(1.2, 1.2));
 
@@ -153,7 +153,7 @@ public class GetRestaurantsForListUseCaseTest {
 
     @Test
     public void restaurantCanHaveLikes() {
-        Restaurant restaurant1 = new Restaurant("Chez Jojo");
+        Restaurant restaurant1 = new Restaurant("Chez Jojo", "adresse");
         restaurant1.setId("resto1");
         restaurant1.setGeolocation(new Geolocation(1.8, 1.9));
 
@@ -169,7 +169,7 @@ public class GetRestaurantsForListUseCaseTest {
 
     @Test
     public void restaurantNotLiked() {
-        Restaurant restaurant1 = new Restaurant("Chez Jojo");
+        Restaurant restaurant1 = new Restaurant("Chez Jojo", "adresse");
         restaurant1.setId("resto1");
         restaurant1.setGeolocation(new Geolocation(1.1, 1.3));
         GetRestaurantsForListUseCase getRestaurantsForListUseCase = this.createUseCaseWithAvailableLikes(
@@ -181,7 +181,7 @@ public class GetRestaurantsForListUseCaseTest {
 
     @Test
     public void starsNotMoreThanThree() {
-        Restaurant restaurant1 = new Restaurant("Chez Jojo");
+        Restaurant restaurant1 = new Restaurant("Chez Jojo", "adresse");
         restaurant1.setId("resto1");
         restaurant1.setGeolocation(new Geolocation(1.1, 1.1));
 

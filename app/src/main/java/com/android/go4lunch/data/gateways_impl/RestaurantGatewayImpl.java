@@ -24,17 +24,13 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
 
     @Override
     public Observable<List<Restaurant>> getRestaurantsNearby(Double myLatitude, Double myLongitude, int radius) {
-        if(this.restaurantsObservable == null) {
-            this.restaurantsObservable = Observable.just(new Mock().restaurants())
-                    .observeOn(Schedulers.single());
+            //return Observable.just(new Mock().restaurants())
+                   // .observeOn(Schedulers.single());
 
-           // this.restaurantsObservable = this.restaurantRepository.getRestaurantsNearbyWithDetails(myLatitude, myLongitude, radius)
-
-             //       .flatMap(restaurants -> this.formatRestaurants(restaurants));
-
-        }
-
-        return this.restaurantsObservable;
+            return this.restaurantRepository.getRestaurantsNearbyWithDetails(
+                    myLatitude, myLongitude, radius
+            )
+                    .flatMap(restaurants -> this.formatRestaurants(restaurants));
     }
 
     private Observable<List<Restaurant>> formatRestaurants(List<com.android.go4lunch.data.apiGoogleMaps.entities.Restaurant> listToFormat) {

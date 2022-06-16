@@ -2,7 +2,10 @@ package com.android.go4lunch;
 
 import android.app.Application;
 
+import com.android.go4lunch.businesslogic.gateways.MyPositionGateway;
+import com.android.go4lunch.businesslogic.usecases.GetMyPositionUseCase;
 import com.android.go4lunch.businesslogic.usecases.ReceiveNotificationsUseCase;
+import com.android.go4lunch.businesslogic.usecases.SaveMyPositionUseCase;
 import com.android.go4lunch.businesslogic.usecases.UpdateRestaurantWithDistanceUseCase;
 import com.android.go4lunch.data.apiGoogleMaps.repositories.DistanceRepository;
 import com.android.go4lunch.data.apiGoogleMaps.GoogleMapsHttpClientProvider;
@@ -14,6 +17,7 @@ import com.android.go4lunch.businesslogic.gateways.SessionGateway;
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
 import com.android.go4lunch.businesslogic.gateways.WorkmateGateway;
 import com.android.go4lunch.data.gateways_impl.DistanceGatewayImpl;
+import com.android.go4lunch.data.gateways_impl.InMemoryMyPositionGatewayImpl;
 import com.android.go4lunch.data.gateways_impl.LikeGatewayImpl;
 import com.android.go4lunch.data.gateways_impl.RestaurantGatewayImpl;
 import com.android.go4lunch.data.gateways_impl.SessionGatewayImpl;
@@ -66,6 +70,7 @@ public class Launch extends Application {
     private VisitorGateway visitorGateway;
     private SessionGateway sessionGateway;
     private LikeGateway likeGateway;
+    private MyPositionGateway myPositionGateway;
 
     // Use cases
     private GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase;
@@ -83,6 +88,8 @@ public class Launch extends Application {
     private IsInFavoritesRestaurantsUseCase isInFavoritesRestaurantsUseCase;
     private GetNumberOfLikesPerRestaurantUseCase getNumberOfLikesPerRestaurantUseCase;
     private ReceiveNotificationsUseCase receiveNotificationsUseCase;
+    private SaveMyPositionUseCase saveMyPositionUseCase;
+    private GetMyPositionUseCase getMyPositionUseCase;
 
     // view models factories
     private MapViewModelFactory mapViewModelFactory;
@@ -181,6 +188,13 @@ public class Launch extends Application {
             this.likeGateway = new LikeGatewayImpl(this.database());
         }
         return this.likeGateway;
+    }
+
+    private synchronized MyPositionGateway myPositionGateway() {
+        if(this.myPositionGateway == null) {
+            this.myPositionGateway = new InMemoryMyPositionGatewayImpl();
+        }
+        return this.myPositionGateway;
     }
 
     // Use cases
@@ -317,6 +331,20 @@ public class Launch extends Application {
         return this.receiveNotificationsUseCase;
     }
 
+    private SaveMyPositionUseCase saveMyPositionUseCase() {
+        if(this.saveMyPositionUseCase == null) {
+            this.saveMyPositionUseCase = new SaveMyPositionUseCase(this.myPositionGateway());
+        }
+        return this.saveMyPositionUseCase;
+    }
+
+    private GetMyPositionUseCase getMyPositionUseCase() {
+        if(this.getMyPositionUseCase == null) {
+            this.getMyPositionUseCase = new GetMyPositionUseCase(this.myPositionGateway());
+        }
+        return this.getMyPositionUseCase;
+    }
+
     // View model factories
 
     public synchronized MapViewModelFactory mapViewModelFactory() {
@@ -383,7 +411,9 @@ public class Launch extends Application {
 
     public synchronized SharedViewModelFactory sharedViewModelFactory() {
         if(this.sharedViewModelFactory == null) {
-            return this.sharedViewModelFactory = new SharedViewModelFactory();
+            return this.sharedViewModelFactory = new SharedViewModelFactory(
+                    this.saveMyPositionUseCase(),
+                    this.getMyPositionUseCase());
         }
         return this.sharedViewModelFactory;
     }

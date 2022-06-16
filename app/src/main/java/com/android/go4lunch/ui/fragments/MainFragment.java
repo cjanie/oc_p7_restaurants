@@ -139,7 +139,7 @@ public class MainFragment extends UsesPermission {
 
     private void saveLocation(Location location) {
         if(location != null) {
-            this.sharedViewModel.setGeolocation(new Geolocation(
+            this.sharedViewModel.saveMyPosition(new Geolocation(
                     location.getLatitude(),
                     location.getLongitude())
             );
