@@ -53,6 +53,9 @@
     <string name="visitor">Visitor</string>
     <string name="visitor_text"> is joining!</string>
 
+    <!-- SEARCH PLACE -->
+    <string name="search_restaurants">Search restaurants</string>
+
 
     <!-- PERMISSION -->
     <string name="location_permission_rationale_text">We need permission to get your location</string>
