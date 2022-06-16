@@ -13,7 +13,13 @@ import java.util.List;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import io.reactivex.Observable;
+
 public class GoForLunchUseCaseTest {
+
+    private Observable<Boolean> launchUseCase(GoForLunchUseCase goForLunchUseCase, String restaurantId, String restaurantName) {
+        return goForLunchUseCase.handle("1", "resto1", "urlphoto", "address", "022222", "website");
+    }
 
 
     @Test
@@ -30,7 +36,7 @@ public class GoForLunchUseCaseTest {
 
         GoForLunchUseCase goForLunchUseCase = new GoForLunchUseCase(
                 visitorGateway, sessionGateway);
-        goForLunchUseCase.handle("1", "resto1").subscribe();
+        this.launchUseCase(goForLunchUseCase, "1", "resto1").subscribe();
 
         List<Selection> savedSelections = new ArrayList<>();
         visitorGateway.getSelections().subscribe(savedSelections::addAll);
@@ -47,9 +53,9 @@ public class GoForLunchUseCaseTest {
         sessionGateway.setSession(session);
         GoForLunchUseCase goForLunchUseCase = new GoForLunchUseCase(visitorGateway, sessionGateway);
         // Increments
-        goForLunchUseCase.handle("1", "resto1").subscribe();
+        this.launchUseCase(goForLunchUseCase,"1", "resto1").subscribe();
         // Decrements
-        goForLunchUseCase.handle("1", "resto1").subscribe();
+        this.launchUseCase(goForLunchUseCase,"1", "resto1").subscribe();
 
         List<Selection> savedSelections = new ArrayList<>();
         visitorGateway.getSelections().subscribe(savedSelections::addAll);
@@ -72,8 +78,8 @@ public class GoForLunchUseCaseTest {
         GoForLunchUseCase goForLunchUseCase = new GoForLunchUseCase(
                 visitorGateway, sessionGateway
         );
-        goForLunchUseCase.handle("2","resto2").subscribe();
-        goForLunchUseCase.handle("2", "resto2").subscribe();
+        this.launchUseCase(goForLunchUseCase, "2","resto2").subscribe();
+        this.launchUseCase(goForLunchUseCase,"2", "resto2").subscribe();
         List<Selection> savedSelections = new ArrayList<>();
         visitorGateway.getSelections().subscribe(savedSelections::addAll);
         assert(savedSelections.size() == 1);
@@ -93,9 +99,9 @@ public class GoForLunchUseCaseTest {
         sessionGateway.setSession(session);
 
         // SUT
-        new GoForLunchUseCase(
+        this.launchUseCase(new GoForLunchUseCase(
                 visitorGateway, sessionGateway
-        ).handle("1", "resto1").subscribe();
+        ), "1", "resto1").subscribe();
         List<Selection> savedSelections = new ArrayList<>();
         visitorGateway.getSelections().subscribe(savedSelections::addAll);
         assert(savedSelections.size() == 1);
