@@ -1,20 +1,16 @@
 package com.android.go4lunch.data.apiGoogleMaps.requests;
 
-import com.android.go4lunch.data.apiGoogleMaps.repositories.GoogleMapsRequestConfig;
 import com.android.go4lunch.data.apiGoogleMaps.deserializers.place.PlaceResponseRoot;
+import com.android.go4lunch.data.apiGoogleMaps.repositories.GoogleMapsRequestConfig;
 
 import io.reactivex.Observable;
-
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public interface NearbySearchRequest {
+public interface AutocompleteSearchRequest {
 
-    @GET(GoogleMapsRequestConfig.NEARBY_SEARCH_END_POINT)
+    @GET(GoogleMapsRequestConfig.AUTOCOMPLETE_SEARCH_END_POINT)
     Observable<PlaceResponseRoot> getData(
-            @Query("location") String location,
-            @Query("radius") int radius,
-            @Query("type") String type,
             @Query("key") String key
     );
 }

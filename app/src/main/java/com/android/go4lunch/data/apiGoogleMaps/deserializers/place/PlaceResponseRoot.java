@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class NearbySearchResponseRoot {
+public class PlaceResponseRoot {
     @SerializedName("results")
     @Expose
     private List<Result> results;

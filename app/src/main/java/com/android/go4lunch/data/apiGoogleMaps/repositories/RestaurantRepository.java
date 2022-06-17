@@ -1,11 +1,15 @@
 package com.android.go4lunch.data.apiGoogleMaps.repositories;
 
+import android.app.Application;
+
 import com.android.go4lunch.data.apiGoogleMaps.GoogleMapsHttpClientProvider;
 import com.android.go4lunch.data.apiGoogleMaps.deserializers.place.Result;
 import com.android.go4lunch.data.apiGoogleMaps.factories.PlanningFactory;
 import com.android.go4lunch.data.apiGoogleMaps.entities.Restaurant;
+import com.android.go4lunch.data.apiGoogleMaps.requests.AutocompleteSearchRequest;
 import com.android.go4lunch.data.apiGoogleMaps.requests.DetailsRequest;
 import com.android.go4lunch.data.apiGoogleMaps.requests.NearbySearchRequest;
+import com.google.android.libraries.places.api.Places;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +27,12 @@ public class RestaurantRepository {
 
     private DetailsRequest detailsRequest;
 
+    private AutocompleteSearchRequest autocompleteSearchRequest;
+
     public RestaurantRepository(GoogleMapsHttpClientProvider httpClientProvider) {
         this.nearbySearchRequest = httpClientProvider.getRetrofit().create(NearbySearchRequest.class);
         this.detailsRequest = httpClientProvider.getRetrofit().create(DetailsRequest.class);
+        this.autocompleteSearchRequest = httpClientProvider.getRetrofit().create(AutocompleteSearchRequest.class);
     }
 
     public Observable<List<Restaurant>> getRestaurantsNearby(Double latitude, Double longitude, int radius) {
@@ -111,4 +118,8 @@ public class RestaurantRepository {
                 });
     }
 
+    public void searchRestaurants(Application application) {
+        Places.initialize(application, GoogleMapsRequestConfig.API_KEY);
+        Places.createClient(application);
+    }
 }

@@ -19,6 +19,8 @@ public class GoogleMapsRequestConfig {
 
     public static final String NEARBY_SEARCH_TYPE_PARAM = "restaurant";
 
+    public static final String AUTOCOMPLETE_SEARCH_END_POINT = "";
+
 
     // Api Place Details
     // Url form
