@@ -40,7 +40,7 @@ public class MapViewModel extends ViewModel {
     // View model Action that updates the view model livedata
     public void fetchRestaurantsToUpdateRestaurantsMarkersLiveData(Double myLatitude, Double myLongitude, int radius) {
         this.getRestaurantsNearbyUseCase.handle(myLatitude, myLongitude, radius)
-                .subscribeOn(Schedulers.io())
+
                 .subscribe(restaurants -> {
                     List<MarkerOptions> markersOptions = new ArrayList<>();
                     if(!restaurants.isEmpty()) {

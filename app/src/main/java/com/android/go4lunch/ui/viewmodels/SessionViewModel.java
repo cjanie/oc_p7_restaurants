@@ -29,7 +29,7 @@ public class SessionViewModel extends ViewModel {
 
     public LiveData<Workmate> getSession() throws NoWorkmateForSessionException {
 
-        this.getSessionUseCase.handle().subscribeOn(Schedulers.io())
+        this.getSessionUseCase.handle()
                 .subscribe(
                 sessionWorkmate -> {
                     if(sessionWorkmate != null)

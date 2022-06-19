@@ -82,7 +82,7 @@ public class RestaurantModel {
         int count = 0;
         if (!selections.isEmpty()) {
             for (Selection selection : selections) {
-                if (selection.getRestaurantId().equals(restaurantId)) {
+                if (selection.getRestaurantId() != null && selection.getRestaurantId().equals(restaurantId)) {
                     count += 1;
                 }
             }
@@ -110,7 +110,7 @@ public class RestaurantModel {
         int count = 0;
         if(!likes.isEmpty()) {
             for(Like like: likes) {
-                if(like.getRestaurantId().equals(restaurantId)) {
+                if(like.getRestaurantId() != null && like.getRestaurantId().equals(restaurantId)) {
                     count +=1;
                 }
             }

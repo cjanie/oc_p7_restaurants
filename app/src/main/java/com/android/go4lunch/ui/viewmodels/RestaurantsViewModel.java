@@ -69,7 +69,6 @@ public class RestaurantsViewModel extends ViewModel {
                 .flatMap(restaurantVOs -> this.updateRestaurantsWithDistance(restaurantVOs, myLatitude, myLongitude)
                 )
                 .doOnNext(restaurantValueObjects -> Log.d(TAG, "-- fetchRestaurantsObservableToUpdateLiveData : " + Thread.currentThread().getName()))
-                .subscribeOn(Schedulers.io())
                 .subscribe(restaurants ->
                         this.restaurantsLiveData.postValue(restaurants),
                         Throwable::printStackTrace
