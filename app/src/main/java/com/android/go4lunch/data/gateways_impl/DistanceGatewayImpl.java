@@ -6,6 +6,7 @@ import com.android.go4lunch.businesslogic.gateways.DistanceGateway;
 import com.android.go4lunch.businesslogic.entities.Geolocation;
 
 import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 
 public class DistanceGatewayImpl implements DistanceGateway {
 
@@ -20,6 +21,8 @@ public class DistanceGatewayImpl implements DistanceGateway {
         String destination = restaurantGeolocation.getLatitude().toString() + "," + restaurantGeolocation.getLongitude().toString();
         String origin = myPosition.getLatitude().toString() + "," + restaurantGeolocation.getLongitude().toString();
         return this.distanceRepository.getDistanceInMeter(destination, origin)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
                 .map(distance ->
                         Long.valueOf(distance));
     }

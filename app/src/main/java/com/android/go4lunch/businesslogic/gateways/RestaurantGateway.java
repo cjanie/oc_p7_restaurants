@@ -14,4 +14,5 @@ public interface RestaurantGateway {
             int radius
     );
 
+    Observable<Restaurant> getRestaurantById(String restaurantId);
 }

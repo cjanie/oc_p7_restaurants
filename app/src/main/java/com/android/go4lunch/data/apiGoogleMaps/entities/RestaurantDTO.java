@@ -3,7 +3,7 @@ package com.android.go4lunch.data.apiGoogleMaps.entities;
 import java.time.LocalTime;
 import java.util.Map;
 
-public class Restaurant {
+public class RestaurantDTO {
 
     private String id;
 

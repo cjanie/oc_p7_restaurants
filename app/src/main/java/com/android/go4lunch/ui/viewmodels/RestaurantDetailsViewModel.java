@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 
 public class RestaurantDetailsViewModel extends ViewModel {
 
@@ -81,13 +82,6 @@ public class RestaurantDetailsViewModel extends ViewModel {
         return this.restaurant;
     }
 
-    private void setSession() throws NoWorkmateForSessionException {
-        List<Workmate> sessionResults = new ArrayList<>();
-        this.getSessionUseCase.handle().subscribe(sessionResults::add);
-        if(!sessionResults.isEmpty())
-            this.session = sessionResults.get(0);
-    }
-
     public LiveData<Boolean> getIsTheCurrentSelection() {
         return this.isTheCurrentSelectionLiveData;
     }
@@ -95,8 +89,10 @@ public class RestaurantDetailsViewModel extends ViewModel {
     public void fetchIsTheCurrentSelectionToUpdateLiveData() {
         if(this.restaurant != null) {
             this.isTheCurrentSelectionUseCase.handle(this.restaurant.getId())
+                    .subscribeOn(Schedulers.io())
                     .subscribe(isTheCurrentSelection ->
-                        this.isTheCurrentSelectionLiveData.postValue(isTheCurrentSelection)
+                        this.isTheCurrentSelectionLiveData.postValue(isTheCurrentSelection),
+                            Throwable::printStackTrace
             );
         }
     }
@@ -107,10 +103,11 @@ public class RestaurantDetailsViewModel extends ViewModel {
 
     public void fetchIsMarkedAsFavoriteToUpdateLiveData() {
         if(this.restaurant != null) {
-            this.isInFavoritesRestaurantsUseCase.handle(this.restaurant.getId()).subscribe(
-                    isFavorite -> {
-                        this.isMarkedAsFavoriteLiveData.postValue(isFavorite);
-                    }
+            this.isInFavoritesRestaurantsUseCase.handle(this.restaurant.getId())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(isFavorite ->
+                            this.isMarkedAsFavoriteLiveData.postValue(isFavorite),
+                            Throwable::printStackTrace
             );
         }
     }
@@ -122,8 +119,10 @@ public class RestaurantDetailsViewModel extends ViewModel {
     public void fetchVisitorsToUpdateLiveData() {
         if(this.restaurant != null) {
             this.getRestaurantVisitorsUseCase.handle(this.restaurant.getId())
+                    .subscribeOn(Schedulers.io())
                     .subscribe(visitors ->
-                            this.visitorsLiveData.postValue(visitors)
+                            this.visitorsLiveData.postValue(visitors),
+                            Throwable::printStackTrace
                     );
         }
     }
@@ -138,9 +137,10 @@ public class RestaurantDetailsViewModel extends ViewModel {
                 this.restaurant.getPhone(),
                 this.restaurant.getWebSite()
         ).delay(5, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
                 .subscribe(isDone -> {
 
-            });
+            }, Throwable::printStackTrace);
         this.fetchIsTheCurrentSelectionToUpdateLiveData();
     }
 
@@ -149,8 +149,10 @@ public class RestaurantDetailsViewModel extends ViewModel {
     public void handleLike() {
 
         this.addLikeUseCase.handle(this.restaurant.getId())
+                .subscribeOn(Schedulers.io())
                 .subscribe(isDone ->
-                        this.fetchIsMarkedAsFavoriteToUpdateLiveData()
+                        this.fetchIsMarkedAsFavoriteToUpdateLiveData(),
+                        Throwable::printStackTrace
                 );
 
 

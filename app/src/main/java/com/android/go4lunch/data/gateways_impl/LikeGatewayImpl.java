@@ -2,10 +2,14 @@ package com.android.go4lunch.data.gateways_impl;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.android.go4lunch.businesslogic.gateways.LikeGateway;
 import com.android.go4lunch.businesslogic.entities.Like;
 
 
+import com.android.go4lunch.data.firebase.exceptions.FirebaseException;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -47,18 +51,32 @@ public class LikeGatewayImpl implements LikeGateway {
         this.fetchLikesToUpdateSubject();
         return this.likesSubject
                 .hide()
-                .observeOn(Schedulers.io());
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .doOnError(error -> {
+                    Log.e(TAG, error.getMessage());
+                });
+
     }
 
     private void fetchLikesToUpdateSubject() {
         this.database.collection(LikeDatabaseConfig.COLLECTION_PATH)
                 .get()
+
                 .addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 List<Like> likes = this.formatLikesQuery(task.getResult());
                 Log.d(TAG, " -- fetch likes -- size: " + likes.size());
-                this.updateLikesSubject(likes);
+                this.likesSubject.onNext(likes);
             }
+            task.addOnFailureListener(e -> {
+                Log.e(TAG, e.getMessage());
+                try {
+                    throw new FirebaseException();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            });
         });
     }
 
@@ -76,9 +94,6 @@ public class LikeGatewayImpl implements LikeGateway {
             }
         }
         return likes;
-    }
-    private void updateLikesSubject(List<Like> likes) {
-        this.likesSubject.onNext(likes);
     }
 
     @Override

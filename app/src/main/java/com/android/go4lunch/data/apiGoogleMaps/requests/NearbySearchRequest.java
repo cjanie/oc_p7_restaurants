@@ -15,6 +15,7 @@ public interface NearbySearchRequest {
             @Query("location") String location,
             @Query("radius") int radius,
             @Query("type") String type,
+            @Query("fields") String fields,
             @Query("key") String key
     );
 }

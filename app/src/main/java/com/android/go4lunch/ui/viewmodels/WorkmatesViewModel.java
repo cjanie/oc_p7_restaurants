@@ -39,7 +39,11 @@ public class WorkmatesViewModel extends ViewModel {
 
     public void fetchWorkmatesToUpdateLiveData() {
         this.getWorkmatesUseCase.handle()
-                .subscribe(workmates -> this.workmatesLiveData.postValue(workmates));
+                .subscribeOn(Schedulers.io())
+                .subscribe(workmates ->
+                        this.workmatesLiveData.postValue(workmates),
+                        Throwable::printStackTrace
+                );
 
     }
 

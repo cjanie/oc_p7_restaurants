@@ -21,6 +21,11 @@ public class InMemoryRestaurantGateway implements RestaurantGateway {
         return Observable.just(this.restaurants);
     }
 
+    @Override
+    public Observable<Restaurant> getRestaurantById(String restaurantId) {
+        return null;
+    }
+
     public void setRestaurants(List<Restaurant> restaurants) {
         this.restaurants = restaurants;
     }

@@ -9,7 +9,6 @@ import androidx.work.WorkManager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,26 +19,14 @@ import android.widget.Toast;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
-import com.android.go4lunch.data.apiGoogleMaps.repositories.GoogleMapsRequestConfig;
 import com.android.go4lunch.ui.notifications.NotificationWorker;
-import com.android.go4lunch.ui.viewmodels.MainViewModel;
+import com.android.go4lunch.ui.viewmodels.SessionViewModel;
 
 import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.RectangularBounds;
-import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,7 +37,7 @@ import eightbitlab.com.blurview.RenderScriptBlur;
 public class MainActivity extends BaseActivity {
 
     // DATA
-    private MainViewModel mainViewModel;
+    private SessionViewModel sessionViewModel;
 
     // UI
     @BindView(R.id.drawer_layout)
@@ -66,10 +53,10 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Instantiate data provider
-        this.mainViewModel = new ViewModelProvider(
+        this.sessionViewModel = new ViewModelProvider(
                 this,
                 ((Launch) this.getApplication()).mainViewModelFactory()
-        ).get(MainViewModel.class);
+        ).get(SessionViewModel.class);
 
         // Instantiate UI
         this.setContentView(R.layout.activity_main);
@@ -86,7 +73,7 @@ public class MainActivity extends BaseActivity {
 
         // Navigation view header showing session data
         try {
-            this.mainViewModel.getSession().observe(this, workmateSession -> {
+            this.sessionViewModel.getSession().observe(this, workmateSession -> {
                 Glide.with(
                         (ImageView) navigationView.getHeaderView(0).findViewById(R.id.photo_session)
                 )
@@ -115,7 +102,7 @@ public class MainActivity extends BaseActivity {
                     startActivity(intent);
                 }
                 if(item.getItemId() == R.id.logout) {
-                    mainViewModel.signOut();
+                    sessionViewModel.signOut();
                     Intent intent = new Intent(MainActivity.this, SignInActivity.class);
                     startActivity(intent);
                     finish();
