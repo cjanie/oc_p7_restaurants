@@ -1,6 +1,9 @@
 package com.android.go4lunch.data.apiGoogleMaps.repositories;
 
+import android.util.Log;
+
 import com.android.go4lunch.data.apiGoogleMaps.GoogleMapsHttpClientProvider;
+import com.android.go4lunch.data.apiGoogleMaps.exceptions.DistanceRequestException;
 import com.android.go4lunch.data.apiGoogleMaps.requests.DistanceRequest;
 import com.android.go4lunch.exceptions.NullDistanceResponseException;
 import com.android.go4lunch.data.apiGoogleMaps.deserializers.distance.Element;
@@ -14,6 +17,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class DistanceRepository {
+
+    private String TAG = "DISTANCE REPOSITORY";
 
     private DistanceRequest distanceRequest;
 
@@ -37,10 +42,12 @@ public class DistanceRepository {
                 origins,
                 GoogleMapsRequestConfig.API_KEY
         )
-                // operator to execute request in a dedicated thread (Schedulers.io)
                 .subscribeOn(Schedulers.io())
-                // operator for all subscribers on main thread to listen
                 .observeOn(Schedulers.io())
+                .doOnError((error -> {
+                    Log.e(TAG, error.getMessage());
+                    throw new DistanceRequestException();
+                }))
                 .map(root -> {
                     Integer distance = null;
                     if(!root.getRows().isEmpty()) {

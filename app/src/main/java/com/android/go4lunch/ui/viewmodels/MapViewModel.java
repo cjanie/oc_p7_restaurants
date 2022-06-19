@@ -14,6 +14,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.schedulers.Schedulers;
+
 public class MapViewModel extends ViewModel {
 
     private String TAG = "MAP VIEW MODEL";
@@ -37,29 +39,31 @@ public class MapViewModel extends ViewModel {
 
     // View model Action that updates the view model livedata
     public void fetchRestaurantsToUpdateRestaurantsMarkersLiveData(Double myLatitude, Double myLongitude, int radius) {
-        this.getRestaurantsNearbyUseCase.handle(myLatitude, myLongitude, radius).subscribe(restaurants -> {
-            List<MarkerOptions> markersOptions = new ArrayList<>();
-            if(!restaurants.isEmpty()) {
-                for(RestaurantValueObject restaurant: restaurants) {
-                    if(restaurant.getRestaurant().getGeolocation() != null) {
-                        MarkerOptions markerOptions = new MarkerOptions()
-                                .position(new LatLng(
-                                        restaurant.getRestaurant().getGeolocation().getLatitude(),
-                                        restaurant.getRestaurant().getGeolocation().getLongitude())
-                                )
-                                .title(restaurant.getRestaurant().getName())
-                                .snippet(restaurant.getRestaurant().getAddress())
-                                .icon(restaurant.getVisitorsCount() > 0 ?
-                                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
-                                        :
-                                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        this.getRestaurantsNearbyUseCase.handle(myLatitude, myLongitude, radius)
+                .subscribeOn(Schedulers.io())
+                .subscribe(restaurants -> {
+                    List<MarkerOptions> markersOptions = new ArrayList<>();
+                    if(!restaurants.isEmpty()) {
+                        for(RestaurantValueObject restaurant: restaurants) {
+                            if(restaurant.getRestaurant().getGeolocation() != null) {
+                                MarkerOptions markerOptions = new MarkerOptions()
+                                        .position(new LatLng(
+                                                restaurant.getRestaurant().getGeolocation().getLatitude(),
+                                                restaurant.getRestaurant().getGeolocation().getLongitude())
+                                        )
+                                        .title(restaurant.getRestaurant().getName())
+                                        .snippet(restaurant.getRestaurant().getAddress())
+                                        .icon(restaurant.getVisitorsCount() > 0 ?
+                                                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
+                                                :
+                                                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
 
-                        markersOptions.add(markerOptions);
+                                markersOptions.add(markerOptions);
+                            }
+                        }
                     }
-                }
-            }
-            markersLiveData.postValue(markersOptions);
-        });
+                    markersLiveData.postValue(markersOptions);
+                }, Throwable::printStackTrace);
     }
 
 }

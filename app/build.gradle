@@ -80,6 +80,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:19.0.1'
     implementation 'com.google.android.gms:play-services-auth:20.2.0'
 
+    // Search autocomplete map api
+    implementation 'com.google.android.libraries.places:places:2.6.0'
+
+
     // Gson
     implementation 'com.google.code.gson:gson:2.8.9'
 

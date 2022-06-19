@@ -19,6 +19,8 @@ public class GoogleMapsRequestConfig {
 
     public static final String NEARBY_SEARCH_TYPE_PARAM = "restaurant";
 
+    public static final String NEARBY_SEARCH_FIELDS_PARAM = "place_id";
+
 
     // Api Place Details
     // Url form
@@ -28,7 +30,7 @@ public class GoogleMapsRequestConfig {
     //  &key=YOUR_API_KEY
     public static final String DETAILS_ENDPOINT = "place/details/json";
 
-    public static final String DETAILS_FIELDS_PARAM = "formatted_address,opening_hours";
+    public static final String DETAILS_FIELDS_PARAM = "name,geometry,formatted_address,opening_hours,photos";
 
     // Api Place Photo
     // Url form

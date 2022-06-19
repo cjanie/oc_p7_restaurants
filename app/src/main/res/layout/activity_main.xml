@@ -34,8 +34,17 @@ DrawerLayout as Root contains:
                 app:title="@string/app_name"
                 app:navigationIcon="@drawable/ic_baseline_menu_24"
                 app:layout_scrollFlags="scroll|enterAlways"
-                style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface" />
+                style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface">
+
+                <fragment
+                    android:id="@+id/autocomplete_fragment"
+                    android:name="com.android.go4lunch.ui.fragments.SearchAutocompleteFragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -9,10 +9,9 @@ import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
 import com.android.go4lunch.businesslogic.usecases.SignOutUseCase;
 import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
-public class MainViewModel extends ViewModel {
+public class SessionViewModel extends ViewModel {
 
     private GetSessionUseCase getSessionUseCase;
 
@@ -20,7 +19,7 @@ public class MainViewModel extends ViewModel {
 
     private MutableLiveData<Workmate> sessionWorkmate;
 
-    public MainViewModel(
+    public SessionViewModel(
             GetSessionUseCase getSessionUseCase,
             SignOutUseCase signOutUseCase) {
         this.getSessionUseCase = getSessionUseCase;
@@ -30,7 +29,7 @@ public class MainViewModel extends ViewModel {
 
     public LiveData<Workmate> getSession() throws NoWorkmateForSessionException {
 
-        Disposable disposable = this.getSessionUseCase.handle()
+        this.getSessionUseCase.handle().subscribeOn(Schedulers.io())
                 .subscribe(
                 sessionWorkmate -> {
                     if(sessionWorkmate != null)

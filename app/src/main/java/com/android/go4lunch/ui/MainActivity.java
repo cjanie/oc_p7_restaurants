@@ -20,7 +20,7 @@ import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
 import com.android.go4lunch.ui.notifications.NotificationWorker;
-import com.android.go4lunch.ui.viewmodels.MainViewModel;
+import com.android.go4lunch.ui.viewmodels.SessionViewModel;
 
 import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
 import com.bumptech.glide.Glide;
@@ -37,7 +37,7 @@ import eightbitlab.com.blurview.RenderScriptBlur;
 public class MainActivity extends BaseActivity {
 
     // DATA
-    private MainViewModel mainViewModel;
+    private SessionViewModel sessionViewModel;
 
     // UI
     @BindView(R.id.drawer_layout)
@@ -53,10 +53,10 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Instantiate data provider
-        this.mainViewModel = new ViewModelProvider(
+        this.sessionViewModel = new ViewModelProvider(
                 this,
                 ((Launch) this.getApplication()).mainViewModelFactory()
-        ).get(MainViewModel.class);
+        ).get(SessionViewModel.class);
 
         // Instantiate UI
         this.setContentView(R.layout.activity_main);
@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity {
 
         // Navigation view header showing session data
         try {
-            this.mainViewModel.getSession().observe(this, workmateSession -> {
+            this.sessionViewModel.getSession().observe(this, workmateSession -> {
                 Glide.with(
                         (ImageView) navigationView.getHeaderView(0).findViewById(R.id.photo_session)
                 )
@@ -102,7 +102,7 @@ public class MainActivity extends BaseActivity {
                     startActivity(intent);
                 }
                 if(item.getItemId() == R.id.logout) {
-                    mainViewModel.signOut();
+                    sessionViewModel.signOut();
                     Intent intent = new Intent(MainActivity.this, SignInActivity.class);
                     startActivity(intent);
                     finish();

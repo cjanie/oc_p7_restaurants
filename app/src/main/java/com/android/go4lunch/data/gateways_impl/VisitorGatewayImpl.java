@@ -51,6 +51,7 @@ public class VisitorGatewayImpl implements VisitorGateway {
         this.fetchSelectionsToUpdateSubject();
         return this.selectionsSubject
                 .hide()
+                .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io());
     }
 
@@ -60,6 +61,9 @@ public class VisitorGatewayImpl implements VisitorGateway {
                 List<Selection> selections = this.formatSelectionsQuery(task.getResult());
                 this.selectionsSubject.onNext(selections);
             }
+            task.addOnFailureListener(e -> {
+                Log.e(TAG, e.getMessage());
+            });
         });
     }
 
@@ -134,7 +138,9 @@ public class VisitorGatewayImpl implements VisitorGateway {
             }
         });
 
-        return Observable.just(visitors).subscribeOn(Schedulers.io());
+        return Observable.just(visitors)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io());
     }
 
     private Selection createSelection(DocumentSnapshot doc) {

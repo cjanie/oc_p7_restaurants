@@ -69,15 +69,15 @@ public class RestaurantsViewModel extends ViewModel {
                 .flatMap(restaurantVOs -> this.updateRestaurantsWithDistance(restaurantVOs, myLatitude, myLongitude)
                 )
                 .doOnNext(restaurantValueObjects -> Log.d(TAG, "-- fetchRestaurantsObservableToUpdateLiveData : " + Thread.currentThread().getName()))
+                .subscribeOn(Schedulers.io())
                 .subscribe(restaurants ->
-                    this.restaurantsLiveData.postValue(restaurants)
+                        this.restaurantsLiveData.postValue(restaurants),
+                        Throwable::printStackTrace
                 );
     }
 
     public Observable<List<RestaurantValueObject>> updateRestaurantsWithDistance(List<RestaurantValueObject> restaurantVOs, Double myLatitude, Double myLongitude) {
         return Observable.fromIterable(restaurantVOs)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
                 .flatMap(restaurantVO ->
                         this.updateRestaurantWithDistanceUseCase.handle(restaurantVO, myLatitude, myLongitude)
                 ).toList().toObservable()
