@@ -4,12 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
-import com.android.go4lunch.businesslogic.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.businesslogic.usecases.IsInFavoritesRestaurantsUseCase;
 import com.android.go4lunch.businesslogic.usecases.IsTheCurrentSelectionUseCase;
 import com.android.go4lunch.businesslogic.usecases.AddLikeUseCase;
-import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.businesslogic.entities.Workmate;
 import com.android.go4lunch.businesslogic.usecases.GetRestaurantVisitorsUseCase;
@@ -20,19 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
-
 public class RestaurantDetailsViewModel extends ViewModel {
 
     // Use cases
-    private GetSessionUseCase getSessionUseCase;
-
     private GoForLunchUseCase goForLunchUseCase;
 
     private GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
-
-    private GetWorkmateByIdUseCase getWorkmateByIdUsecase;
 
     private IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase;
 
@@ -43,8 +33,6 @@ public class RestaurantDetailsViewModel extends ViewModel {
     //DATA
     private Restaurant restaurant;
 
-    private Workmate session;
-
     private MutableLiveData<List<Workmate>> visitorsLiveData;
 
     private MutableLiveData<Boolean> isTheCurrentSelectionLiveData;
@@ -52,18 +40,14 @@ public class RestaurantDetailsViewModel extends ViewModel {
     private MutableLiveData<Boolean> isMarkedAsFavoriteLiveData;
 
     public RestaurantDetailsViewModel(
-            GetSessionUseCase getSessionUseCase,
             GoForLunchUseCase goForLunchUseCase,
             GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase,
-            GetWorkmateByIdUseCase getWorkmateByIdUsecase,
             IsTheCurrentSelectionUseCase isTheCurrentSelectionUseCase,
             AddLikeUseCase addLikeUseCase,
             IsInFavoritesRestaurantsUseCase isInFavoritesRestaurantsUseCase
     ) {
-        this.getSessionUseCase = getSessionUseCase;
         this.goForLunchUseCase = goForLunchUseCase;
         this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
-        this.getWorkmateByIdUsecase = getWorkmateByIdUsecase;
         this.isTheCurrentSelectionUseCase = isTheCurrentSelectionUseCase;
         this.addLikeUseCase = addLikeUseCase;
         this.isInFavoritesRestaurantsUseCase = isInFavoritesRestaurantsUseCase;
@@ -136,12 +120,12 @@ public class RestaurantDetailsViewModel extends ViewModel {
                 this.restaurant.getAddress(),
                 this.restaurant.getPhone(),
                 this.restaurant.getWebSite()
-        ).delay(5, TimeUnit.SECONDS)
+        )
+                .subscribe(isDone ->
+                        this.fetchIsTheCurrentSelectionToUpdateLiveData(),
+                        Throwable::printStackTrace
+                );
 
-                .subscribe(isDone -> {
-
-            }, Throwable::printStackTrace);
-        this.fetchIsTheCurrentSelectionToUpdateLiveData();
     }
 
 
@@ -149,12 +133,10 @@ public class RestaurantDetailsViewModel extends ViewModel {
     public void handleLike() {
 
         this.addLikeUseCase.handle(this.restaurant.getId())
-
                 .subscribe(isDone ->
                         this.fetchIsMarkedAsFavoriteToUpdateLiveData(),
                         Throwable::printStackTrace
                 );
-
 
     }
 

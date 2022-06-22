@@ -81,7 +81,6 @@ public class DetailsFragment extends UsesPermission {
         if(restaurant.getPhotoUrl() != null) {
             Glide.with(this.restaurantImage.getContext())
                     .load(restaurant.getPhotoUrl())
-                    .apply(RequestOptions.circleCropTransform())
                     .error(R.drawable.ic_baseline_error_24)
                     .into(this.restaurantImage);
         }
@@ -99,7 +98,6 @@ public class DetailsFragment extends UsesPermission {
         this.restaurantDetailsViewModel.fetchIsTheCurrentSelectionToUpdateLiveData();
 
         // IS FAVORITE
-
         this.restaurantDetailsViewModel.getIsMarkedAsFavoriteLiveData().observe(this.getActivity(), isFavorite -> {
             if(isFavorite) {
                 this.star.setImageDrawable(this.getActivity().getDrawable(R.drawable.ic_baseline_star_24));
@@ -108,7 +106,6 @@ public class DetailsFragment extends UsesPermission {
             }
         });
         this.restaurantDetailsViewModel.fetchIsMarkedAsFavoriteToUpdateLiveData();
-
 
         // VISITORS
         this.restaurantDetailsViewModel.getVisitorsLiveData().observe(this.getActivity(), visitors -> {

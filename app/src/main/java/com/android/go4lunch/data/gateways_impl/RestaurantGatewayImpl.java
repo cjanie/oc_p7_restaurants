@@ -36,15 +36,11 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
             //return Observable.just(new Mock().restaurants())
                    // .observeOn(Schedulers.single());
            if(this.numberOfRestaurantsNearbyRequests > 0)
-               return this.restaurantsSubject.hide()
-                       .subscribeOn(Schedulers.io())
-                       .observeOn(Schedulers.io());
+               return this.restaurantsSubject.hide();
 
             return this.restaurantRepository.getRestaurantsNearby(
                     myLatitude, myLongitude, radius
             )
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.io())
                     .map(restaurants -> {
                         List<Restaurant> formated = this.formatRestaurants(restaurants);
                         this.restaurantsSubject.onNext(formated);
@@ -85,6 +81,8 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
             ));
             restaurant.setPlanning(r.getPlanning());
             restaurant.setPhotoUrl(r.getPhotoUrl());
+            restaurant.setPhone(r.getPhone());
+            restaurant.setWebSite(r.getWebsite());
         }
         return restaurant;
     }

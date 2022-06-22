@@ -31,6 +31,14 @@ public class Result{
     @Expose
     private String address;
 
+    @SerializedName("international_phone_number")
+    @Expose
+    private String phone;
+
+    @SerializedName("website")
+    @Expose
+    private String website;
+
     public Geometry getGeometry() {
         return geometry;
     }
@@ -77,5 +85,21 @@ public class Result{
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
     }
 }

@@ -37,7 +37,6 @@ import com.android.go4lunch.ui.viewmodels.factories.SignInViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.WorkmatesViewModelFactory;
 import com.android.go4lunch.businesslogic.usecases.GetNumberOfLikesPerRestaurantUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetRestaurantVisitorsUseCase;
-import com.android.go4lunch.businesslogic.usecases.GetWorkmateByIdUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetWorkmatesUseCase;
 import com.android.go4lunch.businesslogic.usecases.GoForLunchUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForListUseCase;
@@ -77,7 +76,6 @@ public class Launch extends Application {
     private GetRestaurantsForListUseCase getRestaurantsForListUseCase;
     private UpdateRestaurantWithDistanceUseCase updateRestaurantWithDistanceUseCase;
     private GetWorkmatesUseCase getWorkmatesUseCase;
-    private GetWorkmateByIdUseCase getWorkmateByIdUseCase;
     private GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
     private GetSessionUseCase getSessionUseCase;
     private GoForLunchUseCase goForLunchUseCase;
@@ -239,13 +237,6 @@ public class Launch extends Application {
         return this.getWorkmatesUseCase;
     }
 
-    private synchronized GetWorkmateByIdUseCase getWorkmateByIdUseCase() {
-        if(this.getWorkmateByIdUseCase == null) {
-            this.getWorkmateByIdUseCase = new GetWorkmateByIdUseCase(workmateGateway());
-        }
-        return this.getWorkmateByIdUseCase;
-    }
-
     private synchronized GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase() {
         if(this.getRestaurantVisitorsUseCase == null) {
             this.getRestaurantVisitorsUseCase = new GetRestaurantVisitorsUseCase(visitorGateway());
@@ -369,10 +360,8 @@ public class Launch extends Application {
     public synchronized RestaurantDetailsViewModelFactory restaurantDetailsViewModelFactory() {
         if(this.restaurantDetailsViewModelFactory == null) {
             this.restaurantDetailsViewModelFactory = new RestaurantDetailsViewModelFactory(
-                    getSessionUseCase(),
                     goForLunchUseCase(),
                     getRestaurantVisitorsUseCase(),
-                    getWorkmateByIdUseCase(),
                     isTheCurrentSelectionUseCase(),
                     likeUseCase(),
                     isOneOfTheUserFavoriteRestaurants()

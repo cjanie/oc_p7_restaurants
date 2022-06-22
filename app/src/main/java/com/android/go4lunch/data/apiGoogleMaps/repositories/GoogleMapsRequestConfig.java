@@ -30,7 +30,7 @@ public class GoogleMapsRequestConfig {
     //  &key=YOUR_API_KEY
     public static final String DETAILS_ENDPOINT = "place/details/json";
 
-    public static final String DETAILS_FIELDS_PARAM = "name,geometry,formatted_address,opening_hours,photos";
+    public static final String DETAILS_FIELDS_PARAM = "name,geometry,formatted_address,opening_hours,photos,international_phone_number,website";
 
     // Api Place Photo
     // Url form

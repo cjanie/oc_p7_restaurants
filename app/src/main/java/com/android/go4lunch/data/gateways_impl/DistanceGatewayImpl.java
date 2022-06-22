@@ -21,8 +21,7 @@ public class DistanceGatewayImpl implements DistanceGateway {
         String destination = restaurantGeolocation.getLatitude().toString() + "," + restaurantGeolocation.getLongitude().toString();
         String origin = myPosition.getLatitude().toString() + "," + restaurantGeolocation.getLongitude().toString();
         return this.distanceRepository.getDistanceInMeter(destination, origin)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
+
                 .map(distance ->
                         Long.valueOf(distance));
     }

@@ -2,16 +2,10 @@ package com.android.go4lunch.data.gateways_impl;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.android.go4lunch.businesslogic.gateways.LikeGateway;
 import com.android.go4lunch.businesslogic.entities.Like;
 
 
-import com.android.go4lunch.data.firebase.exceptions.FirebaseException;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -20,10 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
@@ -51,11 +43,11 @@ public class LikeGatewayImpl implements LikeGateway {
         this.fetchLikesToUpdateSubject();
         return this.likesSubject
                 .hide()
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
                 .doOnError(error -> {
                     Log.e(TAG, error.getMessage());
-                });
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io());
 
     }
 
@@ -64,20 +56,15 @@ public class LikeGatewayImpl implements LikeGateway {
                 .get()
 
                 .addOnCompleteListener(task -> {
-            if(task.isSuccessful()) {
-                List<Like> likes = this.formatLikesQuery(task.getResult());
-                Log.d(TAG, " -- fetch likes -- size: " + likes.size());
-                this.likesSubject.onNext(likes);
-            }
-            task.addOnFailureListener(e -> {
-                Log.e(TAG, e.getMessage());
-                try {
-                    throw new FirebaseException();
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            });
-        });
+                    if(task.isSuccessful()) {
+                        List<Like> likes = this.formatLikesQuery(task.getResult());
+                        this.likesSubject.onNext(likes);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    e.printStackTrace();
+                    Log.e(TAG, e.getMessage());
+                });
     }
 
     private List<Like> formatLikesQuery(QuerySnapshot query) {
@@ -97,12 +84,35 @@ public class LikeGatewayImpl implements LikeGateway {
     }
 
     @Override
-    public Observable<Boolean> add(Like like) {
+    public void add(Like like) {
+
         Map<String, Object> likeMap = new HashMap<>();
         likeMap.put(LikeDatabaseConfig.RESTAURANT_ID, like.getRestaurantId());
         likeMap.put(LikeDatabaseConfig.WORKMATE_ID, like.getWorkmateId());
-        Task<DocumentReference> task = this.database.collection(LikeDatabaseConfig.COLLECTION_PATH)
-                .add(likeMap);
-        return Observable.just(task.isSuccessful());
+        this.database.collection(LikeDatabaseConfig.COLLECTION_PATH)
+                .add(likeMap)
+                .addOnSuccessListener(aVoid -> {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                })
+                .addOnFailureListener(e ->
+                        Log.w(TAG, "Error writing document", e)
+                );
+
+
+        /*
+        return Observable.just(false).map( b -> {
+            Map<String, Object> likeMap = new HashMap<>();
+            likeMap.put(LikeDatabaseConfig.RESTAURANT_ID, like.getRestaurantId());
+            likeMap.put(LikeDatabaseConfig.WORKMATE_ID, like.getWorkmateId());
+            Task<DocumentReference> task = this.database.collection(LikeDatabaseConfig.COLLECTION_PATH)
+                    .add(likeMap);
+            System.out.println("!!!!!!!!!!!!!!!!!!!!! Task is successful: " + task.isSuccessful());
+            return task.isSuccessful();
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io());
+
+         */
+
     }
 }

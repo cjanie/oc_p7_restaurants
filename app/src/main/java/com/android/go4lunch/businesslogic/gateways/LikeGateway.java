@@ -10,5 +10,5 @@ public interface LikeGateway {
 
     Observable<List<Like>> getLikes();
 
-    Observable<Boolean> add(Like like);
+    void add(Like like);
 }

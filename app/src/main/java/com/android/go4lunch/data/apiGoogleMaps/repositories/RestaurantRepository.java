@@ -91,17 +91,17 @@ public class RestaurantRepository {
                     throw new DetailRequestException();
                 })
                 .map(detailsResponseRoot ->
-                        this.buildRestaurantDTOWithDetails(detailsResponseRoot)
+                        this.buildRestaurantDTOWithDetails(detailsResponseRoot, restaurantId)
                 );
     }
 
 
-    private RestaurantDTO buildRestaurantDTOWithDetails(DetailsResponseRoot detailsResponseRoot) {
+    private RestaurantDTO buildRestaurantDTOWithDetails(DetailsResponseRoot detailsResponseRoot, String restaurantId) {
         RestaurantDTO restaurant = new RestaurantDTO();
 
         Result result = detailsResponseRoot.getResult();
         if(result != null) {
-            restaurant.setId(result.getPlaceId());
+            restaurant.setId(restaurantId);
             restaurant.setName(result.getName());
             restaurant.setLatitude(result.getGeometry().getLocation().getLat());
             restaurant.setLongitude(result.getGeometry().getLocation().getLng());
@@ -117,6 +117,8 @@ public class RestaurantRepository {
             }
 
             restaurant.setAddress(result.getAddress().split(",")[0]);
+            restaurant.setPhone(result.getPhone());
+            restaurant.setWebsite(result.getWebsite());
 
             // Set opening hours
             if(result.getOpeningHours() != null && result.getOpeningHours().getPeriods() != null) {

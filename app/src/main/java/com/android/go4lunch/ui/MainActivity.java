@@ -115,6 +115,7 @@ public class MainActivity extends BaseActivity {
         // Notifications
         WorkManager workManager = WorkManager.getInstance(this);
         workManager.enqueue(OneTimeWorkRequest.from(NotificationWorker.class));
+
     }
 
     @Override

@@ -51,20 +51,26 @@ public class VisitorGatewayImpl implements VisitorGateway {
         this.fetchSelectionsToUpdateSubject();
         return this.selectionsSubject
                 .hide()
+                .doOnError(error -> {
+                    Log.e(TAG, error.getMessage());
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io());
+
     }
 
     private void fetchSelectionsToUpdateSubject() {
-        this.database.collection(SelectionDatabaseConfig.COLLECTION_PATH).get().addOnCompleteListener(task -> {
-            if(task.isSuccessful()) {
-                List<Selection> selections = this.formatSelectionsQuery(task.getResult());
-                this.selectionsSubject.onNext(selections);
-            }
-            task.addOnFailureListener(e -> {
-                Log.e(TAG, e.getMessage());
-            });
-        });
+        this.database.collection(SelectionDatabaseConfig.COLLECTION_PATH)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()) {
+                        List<Selection> selections = this.formatSelectionsQuery(task.getResult());
+                        this.selectionsSubject.onNext(selections);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, e.getMessage());
+                });
     }
 
     private List<Selection> formatSelectionsQuery(QuerySnapshot query) {

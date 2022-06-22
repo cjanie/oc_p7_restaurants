@@ -52,8 +52,8 @@ public class AddLikeUseCase {
 
             if(!doesLikeExist) {
                 Like like = new Like(restaurantId, session.getId());
-                return this.likeGateway.add(like);
-
+                this.likeGateway.add(like);
+                return Observable.just(true);
             }
             return Observable.just(false);
         });
