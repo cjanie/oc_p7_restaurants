@@ -65,6 +65,7 @@ public class AddLikeUseCase {
         return likesResult;
     }
 
+
     private Observable<Workmate> getSession() {
         return this.sessionGateway.getSession();
     }
