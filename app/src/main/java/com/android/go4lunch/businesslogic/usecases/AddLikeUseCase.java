@@ -8,6 +8,7 @@ import com.android.go4lunch.businesslogic.entities.Like;
 import com.android.go4lunch.businesslogic.gateways.SessionGateway;
 import com.android.go4lunch.businesslogic.models.LikeModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -39,8 +40,7 @@ public class AddLikeUseCase {
     }
 
     private Observable<Boolean> getLikesAndAddToLikesIfDoesNotExist(String restaurantId) {
-        return this.getLikes()
-                .flatMap(likes -> this.addToLikesIfDoesNotExist(restaurantId, likes));
+        return this.addToLikesIfDoesNotExist(restaurantId, this.getLikes());
     }
 
 
@@ -59,8 +59,10 @@ public class AddLikeUseCase {
         });
     }
 
-    private Observable<List<Like>> getLikes() {
-        return this.likeGateway.getLikes();
+    private List<Like> getLikes() {
+        List<Like> likesResult = new ArrayList<>();
+        this.likeGateway.getLikes().subscribe(likes -> likesResult.addAll(likes));
+        return likesResult;
     }
 
     private Observable<Workmate> getSession() {

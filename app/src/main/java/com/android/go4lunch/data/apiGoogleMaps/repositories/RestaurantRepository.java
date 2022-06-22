@@ -32,7 +32,7 @@ public class RestaurantRepository {
         this.detailsRequest = httpClientProvider.getRetrofit().create(DetailsRequest.class);
     }
 
-    public Observable<List<RestaurantDTO>> getRestaurantsNearby(Double latitude, Double longitude, int radius) {
+    public synchronized Observable<List<RestaurantDTO>> getRestaurantsNearby(Double latitude, Double longitude, int radius) {
         return this.getRestaurantsNearbyIds(latitude, longitude, radius)
                 .flatMap(restaurantIds ->
                         Observable.fromIterable(restaurantIds)

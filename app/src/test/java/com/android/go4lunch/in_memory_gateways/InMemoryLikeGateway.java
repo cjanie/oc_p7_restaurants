@@ -26,12 +26,12 @@ public class InMemoryLikeGateway implements LikeGateway {
     }
 
     @Override
-    public Observable<Boolean> add(Like like) {
+    public void add(Like like) {
         List<Like> likesResult = new ArrayList<>();
         this.likes.subscribe(likesResult::addAll);
         likesResult.add(like);
         this.likes = Observable.just(likesResult);
-        return Observable.just(true);
+        
     }
 
 }
