@@ -32,7 +32,7 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
     }
 
     @Override
-    public Observable<List<Restaurant>> getRestaurantsNearby(Double myLatitude, Double myLongitude, int radius) {
+    public synchronized Observable<List<Restaurant>> getRestaurantsNearby(Double myLatitude, Double myLongitude, int radius) {
             //return Observable.just(new Mock().restaurants())
                    // .observeOn(Schedulers.single());
            if(this.numberOfRestaurantsNearbyRequests > 0)

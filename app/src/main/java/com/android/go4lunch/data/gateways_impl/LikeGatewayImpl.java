@@ -97,22 +97,5 @@ public class LikeGatewayImpl implements LikeGateway {
                 .addOnFailureListener(e ->
                         Log.w(TAG, "Error writing document", e)
                 );
-
-
-        /*
-        return Observable.just(false).map( b -> {
-            Map<String, Object> likeMap = new HashMap<>();
-            likeMap.put(LikeDatabaseConfig.RESTAURANT_ID, like.getRestaurantId());
-            likeMap.put(LikeDatabaseConfig.WORKMATE_ID, like.getWorkmateId());
-            Task<DocumentReference> task = this.database.collection(LikeDatabaseConfig.COLLECTION_PATH)
-                    .add(likeMap);
-            System.out.println("!!!!!!!!!!!!!!!!!!!!! Task is successful: " + task.isSuccessful());
-            return task.isSuccessful();
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io());
-
-         */
-
     }
 }
