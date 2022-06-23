@@ -3,6 +3,7 @@ package com.android.go4lunch;
 import android.app.Application;
 
 import com.android.go4lunch.businesslogic.gateways.MyPositionGateway;
+import com.android.go4lunch.businesslogic.usecases.GetMyLunchUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetMyPositionUseCase;
 import com.android.go4lunch.businesslogic.usecases.ReceiveNotificationsUseCase;
 import com.android.go4lunch.businesslogic.usecases.SaveMyPositionUseCase;
@@ -88,6 +89,7 @@ public class Launch extends Application {
     private ReceiveNotificationsUseCase receiveNotificationsUseCase;
     private SaveMyPositionUseCase saveMyPositionUseCase;
     private GetMyPositionUseCase getMyPositionUseCase;
+    private GetMyLunchUseCase getMyLunchUseCase;
 
     // view models factories
     private MapViewModelFactory mapViewModelFactory;
@@ -313,7 +315,7 @@ public class Launch extends Application {
         return this.getNumberOfLikesPerRestaurantUseCase;
     }
 
-    private ReceiveNotificationsUseCase receiveNotificationsUseCase() {
+    private synchronized ReceiveNotificationsUseCase receiveNotificationsUseCase() {
         if(this.receiveNotificationsUseCase == null) {
             this.receiveNotificationsUseCase = new ReceiveNotificationsUseCase(
                     this.visitorGateway(),
@@ -322,18 +324,28 @@ public class Launch extends Application {
         return this.receiveNotificationsUseCase;
     }
 
-    private SaveMyPositionUseCase saveMyPositionUseCase() {
+    private synchronized SaveMyPositionUseCase saveMyPositionUseCase() {
         if(this.saveMyPositionUseCase == null) {
             this.saveMyPositionUseCase = new SaveMyPositionUseCase(this.myPositionGateway());
         }
         return this.saveMyPositionUseCase;
     }
 
-    private GetMyPositionUseCase getMyPositionUseCase() {
+    private synchronized GetMyPositionUseCase getMyPositionUseCase() {
         if(this.getMyPositionUseCase == null) {
             this.getMyPositionUseCase = new GetMyPositionUseCase(this.myPositionGateway());
         }
         return this.getMyPositionUseCase;
+    }
+
+    private synchronized GetMyLunchUseCase getMyLunchUseCase() {
+        if(this.getMyLunchUseCase == null) {
+            this.getMyLunchUseCase = new GetMyLunchUseCase(
+                    this.sessionGateway(),
+                    this.visitorGateway()
+            );
+        }
+        return this.getMyLunchUseCase;
     }
 
     // View model factories
@@ -392,7 +404,8 @@ public class Launch extends Application {
         if(this.mainViewModelFactory == null) {
             this.mainViewModelFactory = new MainViewModelFactory(
                     this.getSessionUseCase(),
-                    this.signOutUseCase()
+                    this.signOutUseCase(),
+                    this.getMyLunchUseCase()
             );
         }
         return this.mainViewModelFactory;
