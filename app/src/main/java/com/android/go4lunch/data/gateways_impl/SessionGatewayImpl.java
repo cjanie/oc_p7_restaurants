@@ -36,8 +36,8 @@ public class SessionGatewayImpl implements SessionGateway {
 
         return this.sessionSubject
                 .hide()
-                //.subscribeOn(Schedulers.io())
-                //.observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
                 .doOnError(exception -> {
                     throw new NoWorkmateForSessionException();
                 });
