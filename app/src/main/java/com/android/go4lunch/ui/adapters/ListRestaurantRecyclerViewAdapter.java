@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
@@ -21,6 +22,7 @@ import com.android.go4lunch.ui.utils.TimeInfoTextHandler;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -32,10 +34,16 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
     private static final int TYPE_ITEM_VIEW = 1;
 
-    private final List<RestaurantValueObject> restaurantValueObjects;
+    private List<RestaurantValueObject> restaurantValueObjects;
 
-    public ListRestaurantRecyclerViewAdapter(List<RestaurantValueObject> restaurantValueObjects) {
-        this.restaurantValueObjects = restaurantValueObjects;
+    public ListRestaurantRecyclerViewAdapter() {
+        this.restaurantValueObjects = new ArrayList<>();
+    }
+
+    public void updateList(List<RestaurantValueObject> restaurantVOs) {
+        this.restaurantValueObjects.clear();
+        this.restaurantValueObjects.addAll(restaurantVOs);
+        notifyDataSetChanged(); // Notifies the recycler view that data changed // Notify or DiffUtil object to handle list changes
     }
 
     @NonNull
@@ -120,6 +128,9 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
     @Override
     public int getItemViewType(int position) {
+        // if(en cours de chargement > Loaderview)
+        // ou cas d'erreur // Wrapper avec message d'erreur, ou liste de restaurant + View type
+        // Wrapper data list générique
         if(this.restaurantValueObjects.isEmpty() && position == 0) {
             return TYPE_EMPTY_VIEW;
         } else {

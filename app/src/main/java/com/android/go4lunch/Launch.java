@@ -415,17 +415,19 @@ public class Launch extends Application {
         if(this.sharedViewModelFactory == null) {
             return this.sharedViewModelFactory = new SharedViewModelFactory(
                     this.saveMyPositionUseCase(),
-                    this.getMyPositionUseCase());
+                    this.getMyPositionUseCase()
+            );
         }
         return this.sharedViewModelFactory;
     }
 
     // Work actions
-
     public synchronized ShowNotificationsAction showNotificationsAction() {
         if(this.showNotificationsAction == null) {
-            this.showNotificationsAction = new ShowNotificationsAction(this,
-                    this.receiveNotificationsUseCase());
+            this.showNotificationsAction = new ShowNotificationsAction(
+                    this,
+                    this.receiveNotificationsUseCase()
+            );
         }
         return this.showNotificationsAction;
     }

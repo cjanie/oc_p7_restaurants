@@ -8,6 +8,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -22,6 +25,7 @@ import com.android.go4lunch.R;
 
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.intentConfigs.RestaurantDetailsActivityIntentConfig;
+import com.android.go4lunch.ui.notifications.AlarmReceiver;
 import com.android.go4lunch.ui.notifications.NotificationWorker;
 import com.android.go4lunch.ui.viewmodels.SessionViewModel;
 
@@ -30,6 +34,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,6 +60,11 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.navigation_view)
     NavigationView navigationView;
+
+    // Alarm notifications
+    private AlarmManager alarmManager;
+
+    private PendingIntent alarmPendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +153,24 @@ public class MainActivity extends BaseActivity {
 
          */
 
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            this.alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(this, AlarmReceiver.class);
+            this.alarmPendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+            LocalDateTime localDateTime = LocalDateTime.of(2022, 7, 29, 11, 30);
+            long time2epoch = localDateTime.toEpochSecond(ZoneOffset.UTC);
+            this.alarmManager.setInexactRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    time2epoch,
+                    AlarmManager.INTERVAL_DAY,
+                    alarmPendingIntent
+            );
+
+        }
+
+
+
     }
 
     @Override
@@ -155,5 +185,14 @@ public class MainActivity extends BaseActivity {
                 .setBlurAlgorithm(new RenderScriptBlur(this));
     }
 
+    private void cancelAlarm() {
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        this.alarmPendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
+        if(this.alarmManager == null) {
+            this.alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        }
+        alarmManager.cancel(this.alarmPendingIntent);
+        Toast.makeText(this, this.getText(R.string.alarm_canceled), Toast.LENGTH_LONG).show();
+    }
 }

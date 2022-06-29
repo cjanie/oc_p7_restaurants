@@ -27,17 +27,21 @@ import com.android.go4lunch.ui.adapters.ListRestaurantRecyclerViewAdapter;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModel;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
 
+import java.util.ArrayList;
+
 public class ListRestaurantFragment extends Fragment {
 
     private SharedViewModel sharedViewModel;
 
-    public ListRestaurantFragment(SharedViewModel sharedViewModel) {
-        this.sharedViewModel = sharedViewModel;
-    }
-
     private RestaurantsViewModel restaurantsViewModel;
 
     RecyclerView recyclerView;
+
+    ListRestaurantRecyclerViewAdapter adapter;
+
+    public ListRestaurantFragment(SharedViewModel sharedViewModel) {
+        this.sharedViewModel = sharedViewModel;
+    }
 
     @Nullable
     @Override
@@ -55,6 +59,9 @@ public class ListRestaurantFragment extends Fragment {
         this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
         this.recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
 
+        // TODO Creer adaper. Le parametrer pour afficher le loader. ou dans constructeur par défault de l'adapter
+        this.adapter = new ListRestaurantRecyclerViewAdapter();
+
         // Listens to the result of the view model action
         this.observeRestaurantsData();
 
@@ -66,7 +73,7 @@ public class ListRestaurantFragment extends Fragment {
 
     private void observeRestaurantsData() {
         this.restaurantsViewModel.getRestaurantsLiveData().observe(this.getViewLifecycleOwner(), restaurants -> {
-            ListRestaurantRecyclerViewAdapter adapter = new ListRestaurantRecyclerViewAdapter(restaurants);
+            this.adapter.updateList(restaurants);
             this.recyclerView.setAdapter(adapter);
         });
     }

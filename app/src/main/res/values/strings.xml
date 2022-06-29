@@ -1,11 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">I\'m Hungry!</string>
     <string name="app_title">Go4Lunch</string>
     <string name="app_subtitle">Find a nice restaurant and invite your co-workers for lunch!</string>
     <!-- SIGN IN -->
-    <string name="sign_in_with_google">Sign in with Google</string>
-    <string name="sign_in_with_facebook">Sign in with Facebook</string>
     <string name="sign_in_failure">Sign in failure</string>
     <string name="sign_in_cancelled">Sign in cancelled</string>
     <string name="no_internet_connection">No internet connection</string>
@@ -16,7 +15,6 @@
     <string name="your_lunch">Your lunch</string>
     <string name="settings">Settings</string>
     <string name="logout">Logout</string>
-    <string name="name">Name</string>
     <string name="email">Email</string>
 
     <!-- MENU -->
@@ -32,7 +30,6 @@
     <string name="info">Info</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
-    <string name="opening_soon">Opening soon</string>
     <string name="closing_soon">Closing soon</string>
     <string name="open_until">Open until</string>
 
@@ -54,9 +51,6 @@
     <string name="visitor_text"> is joining!</string>
 
     <!-- SEARCH PLACE -->
-    <string name="search_restaurants">Search restaurants</string>
-
-
     <!-- PERMISSION -->
     <string name="location_permission_rationale_text">We need permission to get your location</string>
     <string name="location_rationale">You must grant permission for location</string>
@@ -64,12 +58,12 @@
     <string name="call_rationale">You must grant permission for phone call</string>
     <string name="ok">OK</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- NOTIFICATIONS -->
     <string name="receive_notifications">Receive notifications</string>
     <string name="is_eating_at">is eating at</string>
+    <string name="alarm_canceled">Notifications alarm canceled</string>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
@@ -89,5 +83,5 @@
     <!-- Facebook -->
     <string name="facebook_application_id" translatable="false">720823785792354</string>
     <!-- Facebook Application ID, prefixed by 'fb'. Enables Chrome Custom tabs. -->
-    <string name="facebook_login_protocol_scheme" translatable="false">fb720823785792354</string>
+
 </resources>
