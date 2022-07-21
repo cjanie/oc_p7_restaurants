@@ -58,7 +58,7 @@ public class SearchAutocompleteFragment extends AutocompleteSupportFragment {
             public void onPlaceSelected(@NonNull Place place) {
                 // TODO Get info about the selected place
                 // name and id
-                searchViewModel.find(place.getId());
+                searchViewModel.setId(place.getId());
             }
         });
 

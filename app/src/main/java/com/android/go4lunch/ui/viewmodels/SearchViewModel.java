@@ -9,20 +9,17 @@ import com.android.go4lunch.businesslogic.usecases.SearchRestaurantByIdUseCase;
 
 public class SearchViewModel extends ViewModel {
 
-    private SearchRestaurantByIdUseCase searchUseCase;
+    private MutableLiveData<String> id;
 
-    private MutableLiveData<Restaurant> foundLiveData;
-
-    public SearchViewModel(SearchRestaurantByIdUseCase searchUseCase) {
-        this.searchUseCase = searchUseCase;
-        this.foundLiveData = new MutableLiveData<>();
+    public SearchViewModel() {
+        this.id = new MutableLiveData<>();
     }
 
-    public void find(String id) {
-        this.searchUseCase.handle(id).subscribe(restaurant -> foundLiveData.postValue(restaurant));
+    public void setId(String id) {
+        this.id.setValue(id);
     }
 
-    public LiveData<Restaurant> getFound(String id) {
-        return this.foundLiveData;
+    public LiveData<String> getId() {
+        return this.id;
     }
 }

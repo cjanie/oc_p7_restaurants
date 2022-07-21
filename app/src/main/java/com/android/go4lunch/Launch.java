@@ -433,7 +433,7 @@ public class Launch extends Application {
 
     public synchronized SearchViewModelFactory searchViewModelFactory() {
         if(this.searchViewModelFactory == null) {
-            this.searchViewModelFactory = new SearchViewModelFactory(this.searchRestaurantByIdUseCase());
+            this.searchViewModelFactory = new SearchViewModelFactory();
         }
         return this.searchViewModelFactory;
     }

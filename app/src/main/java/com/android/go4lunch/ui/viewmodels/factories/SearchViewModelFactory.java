@@ -9,17 +9,11 @@ import com.android.go4lunch.ui.viewmodels.SearchViewModel;
 
 public class SearchViewModelFactory implements ViewModelProvider.Factory {
 
-    private final SearchRestaurantByIdUseCase searchRestaurantByIdUseCase;
-
-    public SearchViewModelFactory(SearchRestaurantByIdUseCase searchRestaurantByIdUseCase) {
-        this.searchRestaurantByIdUseCase = searchRestaurantByIdUseCase;
-    }
-
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if(modelClass.isAssignableFrom(SearchViewModel.class)) {
-            return (T) new SearchViewModel(this.searchRestaurantByIdUseCase);
+            return (T) new SearchViewModel();
         } else {
             throw new IllegalArgumentException("SearchViewModelFactory: Unknown ViewModel class");
         }
