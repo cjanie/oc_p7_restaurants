@@ -7,6 +7,7 @@ import com.android.go4lunch.businesslogic.usecases.GetMyLunchUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetMyPositionUseCase;
 import com.android.go4lunch.businesslogic.usecases.ReceiveNotificationsUseCase;
 import com.android.go4lunch.businesslogic.usecases.SaveMyPositionUseCase;
+import com.android.go4lunch.businesslogic.usecases.SearchRestaurantByIdUseCase;
 import com.android.go4lunch.businesslogic.usecases.UpdateRestaurantWithDistanceUseCase;
 import com.android.go4lunch.data.apiGoogleMaps.repositories.DistanceRepository;
 import com.android.go4lunch.data.apiGoogleMaps.GoogleMapsHttpClientProvider;
@@ -33,6 +34,7 @@ import com.android.go4lunch.ui.viewmodels.factories.MainViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.RestaurantDetailsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.RestaurantsViewModelFactory;
+import com.android.go4lunch.ui.viewmodels.factories.SearchViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.SharedViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.SignInViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.WorkmatesViewModelFactory;
@@ -90,6 +92,7 @@ public class Launch extends Application {
     private SaveMyPositionUseCase saveMyPositionUseCase;
     private GetMyPositionUseCase getMyPositionUseCase;
     private GetMyLunchUseCase getMyLunchUseCase;
+    private SearchRestaurantByIdUseCase searchRestaurantByIdUseCase;
 
     // view models factories
     private MapViewModelFactory mapViewModelFactory;
@@ -99,7 +102,7 @@ public class Launch extends Application {
     private SignInViewModelFactory signInViewModelFactory;
     private MainViewModelFactory mainViewModelFactory;
     private SharedViewModelFactory sharedViewModelFactory;
-
+    private SearchViewModelFactory searchViewModelFactory;
     // work actions
     private ShowNotificationsAction showNotificationsAction;
 
@@ -348,6 +351,13 @@ public class Launch extends Application {
         return this.getMyLunchUseCase;
     }
 
+    private synchronized SearchRestaurantByIdUseCase searchRestaurantByIdUseCase() {
+        if(this.searchRestaurantByIdUseCase == null) {
+            this.searchRestaurantByIdUseCase = new SearchRestaurantByIdUseCase(this.restaurantGateway());
+        }
+        return this.searchRestaurantByIdUseCase;
+    }
+
     // View model factories
 
     public synchronized MapViewModelFactory mapViewModelFactory() {
@@ -413,12 +423,19 @@ public class Launch extends Application {
 
     public synchronized SharedViewModelFactory sharedViewModelFactory() {
         if(this.sharedViewModelFactory == null) {
-            return this.sharedViewModelFactory = new SharedViewModelFactory(
+            this.sharedViewModelFactory = new SharedViewModelFactory(
                     this.saveMyPositionUseCase(),
                     this.getMyPositionUseCase()
             );
         }
         return this.sharedViewModelFactory;
+    }
+
+    public synchronized SearchViewModelFactory searchViewModelFactory() {
+        if(this.searchViewModelFactory == null) {
+            this.searchViewModelFactory = new SearchViewModelFactory(this.searchRestaurantByIdUseCase());
+        }
+        return this.searchViewModelFactory;
     }
 
     // Work actions

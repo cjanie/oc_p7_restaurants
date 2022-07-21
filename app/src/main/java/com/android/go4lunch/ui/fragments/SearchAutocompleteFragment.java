@@ -8,9 +8,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.android.go4lunch.Launch;
 import com.android.go4lunch.data.apiGoogleMaps.repositories.GoogleMapsRequestConfig;
-import com.android.go4lunch.ui.MainActivity;
+import com.android.go4lunch.ui.viewmodels.SearchViewModel;
+import com.android.go4lunch.ui.viewmodels.factories.SearchViewModelFactory;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
@@ -25,9 +28,17 @@ import java.util.Arrays;
 public class SearchAutocompleteFragment extends AutocompleteSupportFragment {
     // https://developers.google.com/maps/documentation/places/android-sdk/autocomplete#select-place-details
     // Text watcher: https://rrtutors.com/tutorials/android-auto-suggesion-with-textwatcher-example
+
+    private SearchViewModel searchViewModel;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        SearchViewModelFactory searchViewModelFactory = ((Launch)this.getActivity().getApplication()).searchViewModelFactory();
+        this.searchViewModel = new ViewModelProvider(this, searchViewModelFactory).get(SearchViewModel.class);
+
+
         this.setTypeFilter(TypeFilter.ESTABLISHMENT);
         Places.initialize(this.getActivity().getApplicationContext(), GoogleMapsRequestConfig.API_KEY);
 
@@ -47,8 +58,10 @@ public class SearchAutocompleteFragment extends AutocompleteSupportFragment {
             public void onPlaceSelected(@NonNull Place place) {
                 // TODO Get info about the selected place
                 // name and id
+                searchViewModel.find(place.getId());
             }
         });
+
 
 
         return super.onCreateView(inflater, container, savedInstanceState);
