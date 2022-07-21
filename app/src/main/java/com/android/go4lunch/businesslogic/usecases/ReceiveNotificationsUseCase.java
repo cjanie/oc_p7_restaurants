@@ -25,7 +25,7 @@ public class ReceiveNotificationsUseCase {
     }
 
     public Observable<List<Notification>> handle() {
-        //return this.createNotifications(sender);
+
         return this.getSelectionsFilteredFromSession()
                 .map(selections -> this.formatNotifications(selections));
     }

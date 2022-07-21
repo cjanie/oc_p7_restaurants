@@ -12,11 +12,13 @@ import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.TimeProvider;
 import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
 import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForListUseCase;
+import com.android.go4lunch.ui.LoadingException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class RestaurantsViewModel extends ViewModel {
@@ -32,13 +34,12 @@ public class RestaurantsViewModel extends ViewModel {
 
     private final DateProvider dateProvider;
 
-    // Dependencies
-
-
-    private Observable<List<RestaurantValueObject>> restaurantModelsObservable;
-
     // List LiveData
     private final MutableLiveData<List<RestaurantValueObject>> restaurantsLiveData;
+
+    private final MutableLiveData<Boolean> isLoadingLiveData;
+
+    private final MutableLiveData<String> errorLiveData;
 
     // Constructor
     public RestaurantsViewModel(
@@ -53,11 +54,17 @@ public class RestaurantsViewModel extends ViewModel {
         this.dateProvider = dateProvider;
 
         this.restaurantsLiveData = new MutableLiveData<>(new ArrayList<>());
+        this.isLoadingLiveData = new MutableLiveData<>(true);
+        this.errorLiveData = new MutableLiveData<>();
     }
 
     // Getter for the view the model livedata that the activity listens
     public LiveData<List<RestaurantValueObject>> getRestaurantsLiveData() {
         return this.restaurantsLiveData;
+    }
+
+    public LiveData<Boolean> getIsLoadingLiveData() {
+        return this.isLoadingLiveData;
     }
 
     // Action
@@ -66,12 +73,20 @@ public class RestaurantsViewModel extends ViewModel {
                 .map(restaurantVOs -> updateRestaurantsWithTimeInfo(
                       restaurantVOs, this.timeProvider, this.dateProvider))
 
-                .flatMap(restaurantVOs -> this.updateRestaurantsWithDistance(restaurantVOs, myLatitude, myLongitude)
-                )
-                .doOnNext(restaurantValueObjects -> Log.d(TAG, "-- fetchRestaurantsObservableToUpdateLiveData : " + Thread.currentThread().getName()))
-                .subscribe(restaurants ->
-                        this.restaurantsLiveData.postValue(restaurants),
-                        Throwable::printStackTrace
+                .flatMap(restaurantVOs -> this.updateRestaurantsWithDistance(restaurantVOs, myLatitude, myLongitude))
+                .doOnNext(restaurantVOs -> Log.d(TAG, "-- fetchRestaurantsObservableToUpdateLiveData : " + Thread.currentThread().getName()))
+                .subscribe(
+                        restaurants -> {
+                            this.restaurantsLiveData.postValue(restaurants);
+                            this.isLoadingLiveData.postValue(false);
+                        },
+                        error -> {
+                            this.isLoadingLiveData.postValue(false);
+                            error.printStackTrace();
+                            throw new LoadingException();
+                        },
+                        () ->
+                            this.isLoadingLiveData.postValue(false)
                 );
     }
 

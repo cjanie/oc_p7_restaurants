@@ -23,6 +23,7 @@ import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
 import com.android.go4lunch.businesslogic.entities.Geolocation;
+import com.android.go4lunch.ui.LoadingDialog;
 import com.android.go4lunch.ui.adapters.ListRestaurantRecyclerViewAdapter;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModel;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
@@ -38,6 +39,8 @@ public class ListRestaurantFragment extends Fragment {
     RecyclerView recyclerView;
 
     ListRestaurantRecyclerViewAdapter adapter;
+
+    LoadingDialog loadingDialog;
 
     public ListRestaurantFragment(SharedViewModel sharedViewModel) {
         this.sharedViewModel = sharedViewModel;
@@ -61,6 +64,9 @@ public class ListRestaurantFragment extends Fragment {
 
         // TODO Creer adaper. Le parametrer pour afficher le loader. ou dans constructeur par défault de l'adapter
         this.adapter = new ListRestaurantRecyclerViewAdapter();
+        this.loadingDialog = new LoadingDialog(this.getActivity());
+        this.loadingDialog.showLoadingDialog();
+        this.observeIsLoading();
 
         // Listens to the result of the view model action
         this.observeRestaurantsData();
@@ -86,8 +92,14 @@ public class ListRestaurantFragment extends Fragment {
                         geolocation.getLongitude(),
                         1000
                 );
-
             }
+        });
+    }
+
+    private void observeIsLoading() {
+        this.restaurantsViewModel.getIsLoadingLiveData().observe(this.getViewLifecycleOwner(), isLoading -> {
+            if(!isLoading)
+                this.loadingDialog.dismissDialog();
         });
     }
 

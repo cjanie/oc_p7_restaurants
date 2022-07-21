@@ -38,6 +38,7 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
            if(this.numberOfRestaurantsNearbyRequests > 0)
                return this.restaurantsSubject.hide();
 
+           synchronized (RestaurantGatewayImpl.class) {}
             return this.restaurantRepository.getRestaurantsNearby(
                     myLatitude, myLongitude, radius
             )

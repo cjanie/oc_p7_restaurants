@@ -61,27 +61,20 @@
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- NOTIFICATIONS -->
-    <string name="receive_notifications">Receive notifications</string>
     <string name="is_eating_at">is eating at</string>
     <string name="alarm_canceled">Notifications alarm canceled</string>
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <!-- SETTINGS -->
+    <string name="search_nearby_radius_header">Search Nearby Radius</string>
+    <string name="search_nearby_radius_title">Set radius in meters</string>
 
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
-
+    <string name="notifications_header">Notifications</string>
+    <string name="notifications_title">Enable notifications</string>
 
     <!-- Facebook -->
     <string name="facebook_application_id" translatable="false">720823785792354</string>
-    <!-- Facebook Application ID, prefixed by 'fb'. Enables Chrome Custom tabs. -->
+
+    <!-- Loader -->
+    <string name="loading_text">Loading...</string>
 
 </resources>

@@ -95,7 +95,7 @@ public class RestaurantModel {
             Observable<List<Like>> likesObservable
     ) {
         return likesObservable.map(likes -> {
-            List<RestaurantValueObject> restaurantVOsCopy = restaurantVOs;
+            List<RestaurantValueObject> restaurantVOsCopy = new ArrayList<>(restaurantVOs);
             if(!restaurantVOsCopy.isEmpty()) {
                 for(RestaurantValueObject restaurantVO: restaurantVOsCopy) {
                     int likesCount = this.getLikesCountByRestaurantId(likes, restaurantVO.getRestaurant().getId());

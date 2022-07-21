@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
@@ -12,6 +13,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +26,7 @@ import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
 import com.android.go4lunch.businesslogic.entities.Restaurant;
+import com.android.go4lunch.ui.fragments.SearchAutocompleteFragment;
 import com.android.go4lunch.ui.intentConfigs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.notifications.AlarmReceiver;
 import com.android.go4lunch.ui.notifications.NotificationWorker;
@@ -146,30 +149,29 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        // Notifications
-        /*
-        WorkManager workManager = WorkManager.getInstance(this);
-        workManager.enqueue(OneTimeWorkRequest.from(NotificationWorker.class));
+        // Notifications // Shared preference manager. Parametre activité (context)
+        // shared preference listener // WeakReferences pour ne pas garder en mémoire le contexte
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        boolean enableNotifications = sharedPreferences.getBoolean("notifications", false);
+        if(enableNotifications) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                this.alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+                Intent intent = new Intent(this, AlarmReceiver.class);
+                this.alarmPendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-         */
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            this.alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-            Intent intent = new Intent(this, AlarmReceiver.class);
-            this.alarmPendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-            LocalDateTime localDateTime = LocalDateTime.of(2022, 7, 29, 11, 30);
-            long time2epoch = localDateTime.toEpochSecond(ZoneOffset.UTC);
-            this.alarmManager.setInexactRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    time2epoch,
-                    AlarmManager.INTERVAL_DAY,
-                    alarmPendingIntent
-            );
-
+                LocalDateTime localDateTime = LocalDateTime.of(2022, 7, 29, 11, 30);
+                long time2epoch = localDateTime.toEpochSecond(ZoneOffset.UTC);
+                this.alarmManager.setInexactRepeating(
+                        AlarmManager.RTC_WAKEUP,
+                        time2epoch,
+                        AlarmManager.INTERVAL_DAY,
+                        alarmPendingIntent
+                );
+            }
+        } else {
+            this.cancelAlarm();
         }
-
-
 
     }
 

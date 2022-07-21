@@ -23,6 +23,8 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import java.util.Arrays;
 
 public class SearchAutocompleteFragment extends AutocompleteSupportFragment {
+    // https://developers.google.com/maps/documentation/places/android-sdk/autocomplete#select-place-details
+    // Text watcher: https://rrtutors.com/tutorials/android-auto-suggesion-with-textwatcher-example
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -30,11 +32,11 @@ public class SearchAutocompleteFragment extends AutocompleteSupportFragment {
         Places.initialize(this.getActivity().getApplicationContext(), GoogleMapsRequestConfig.API_KEY);
 
         this.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
-        this.setLocationBias(RectangularBounds.newInstance(
+        this.setLocationRestriction(RectangularBounds.newInstance(
                 new LatLng(-33.880490, 151.184363),
                 new LatLng(-33.858754, 151.229596)));
+        this.setTypeFilter(TypeFilter.ESTABLISHMENT);
 
-        this.setCountry("FR");
         this.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onError(@NonNull Status status) {
