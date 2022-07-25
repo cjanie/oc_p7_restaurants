@@ -26,7 +26,7 @@ public class GetNumberOfLikesPerRestaurantUseCaseTest {
     }
 
     @Test
-    public void aRestaurantWithoutLikeShouldNotBeFound() {
+    public void aRestaurantCanHaveNoLike() {
         InMemoryLikeGateway inMemoryLikeGateway = new InMemoryLikeGateway();
         List<Integer> numberOfLikePerRestaurantResults = new ArrayList<>();
         new GetNumberOfLikesPerRestaurantUseCase(inMemoryLikeGateway).handle("restaurant1")

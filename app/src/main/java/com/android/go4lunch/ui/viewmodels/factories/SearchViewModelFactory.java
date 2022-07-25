@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.android.go4lunch.businesslogic.usecases.SearchRestaurantByIdUseCase;
 import com.android.go4lunch.ui.viewmodels.SearchViewModel;
 
 public class SearchViewModelFactory implements ViewModelProvider.Factory {

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.ui.viewmodels.WorkmatesViewModel;
-import com.android.go4lunch.businesslogic.usecases.GetWorkmatesUseCase;
+import com.android.go4lunch.businesslogic.usecases.workmate.GetWorkmatesUseCase;
 
 public class WorkmatesViewModelFactory implements ViewModelProvider.Factory {
 

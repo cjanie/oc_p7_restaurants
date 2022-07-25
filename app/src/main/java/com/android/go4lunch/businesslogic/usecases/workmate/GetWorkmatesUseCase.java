@@ -1,4 +1,4 @@
-package com.android.go4lunch.businesslogic.usecases;
+package com.android.go4lunch.businesslogic.usecases.workmate;
 
 import android.util.Log;
 
@@ -113,8 +113,7 @@ public class GetWorkmatesUseCase {
         return this.getSelections().map(selections -> {
             Log.d(TAG, "--updateWorkmatesWithTheirSelectedRestaurant : " + Thread.currentThread().getName());
 
-            List<WorkmateValueObject> filteredWorkmatesCopy = workmateVOs;
-            if(!filteredWorkmatesCopy.isEmpty()) {
+            if(!workmateVOs.isEmpty()) {
                 for(WorkmateValueObject workmateVO: workmateVOs) {
                     Restaurant selection = this.restaurantModel
                             .findWorkmateSelection(
@@ -127,12 +126,7 @@ public class GetWorkmatesUseCase {
                     }
                 }
             }
-            return filteredWorkmatesCopy;
+            return workmateVOs;
         });
     }
-
-
-
-
-
 }

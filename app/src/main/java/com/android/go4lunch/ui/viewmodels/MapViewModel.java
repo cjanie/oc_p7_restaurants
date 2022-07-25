@@ -4,8 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.businesslogic.entities.Restaurant;
-import com.android.go4lunch.businesslogic.usecases.GetRestaurantsNearbyUseCase;
+import com.android.go4lunch.businesslogic.usecases.restaurant.GetRestaurantsNearbyUseCase;
 import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -13,8 +12,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.schedulers.Schedulers;
 
 public class MapViewModel extends ViewModel {
 

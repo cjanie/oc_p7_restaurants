@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -87,11 +88,16 @@ public class ListRestaurantFragment extends Fragment {
     private void updateRestaurantsDataFromMyPosition() {
         this.sharedViewModel.getGeolocation().observe(this.getViewLifecycleOwner(), geolocation -> {
             if(geolocation != null) {
-                this.restaurantsViewModel.fetchRestaurantsObservableToUpdateLiveData(
-                        geolocation.getLatitude(),
-                        geolocation.getLongitude(),
-                        1000
-                );
+                try {
+                    this.restaurantsViewModel.fetchRestaurantsObservableToUpdateLiveData(
+                            geolocation.getLatitude(),
+                            geolocation.getLongitude(),
+                            1000
+                    );
+                } catch(Exception e) {
+                    Toast.makeText(this.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }

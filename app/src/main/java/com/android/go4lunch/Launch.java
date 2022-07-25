@@ -3,12 +3,12 @@ package com.android.go4lunch;
 import android.app.Application;
 
 import com.android.go4lunch.businesslogic.gateways.MyPositionGateway;
+import com.android.go4lunch.businesslogic.usecases.GetDistanceFromMyPositionToRestaurantUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetMyLunchUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetMyPositionUseCase;
 import com.android.go4lunch.businesslogic.usecases.ReceiveNotificationsUseCase;
 import com.android.go4lunch.businesslogic.usecases.SaveMyPositionUseCase;
-import com.android.go4lunch.businesslogic.usecases.SearchRestaurantByIdUseCase;
-import com.android.go4lunch.businesslogic.usecases.UpdateRestaurantWithDistanceUseCase;
+import com.android.go4lunch.businesslogic.usecases.restaurant.SearchRestaurantUseCase;
 import com.android.go4lunch.data.apiGoogleMaps.repositories.DistanceRepository;
 import com.android.go4lunch.data.apiGoogleMaps.GoogleMapsHttpClientProvider;
 import com.android.go4lunch.data.apiGoogleMaps.repositories.RestaurantRepository;
@@ -40,10 +40,9 @@ import com.android.go4lunch.ui.viewmodels.factories.SignInViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.WorkmatesViewModelFactory;
 import com.android.go4lunch.businesslogic.usecases.GetNumberOfLikesPerRestaurantUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetRestaurantVisitorsUseCase;
-import com.android.go4lunch.businesslogic.usecases.GetWorkmatesUseCase;
+import com.android.go4lunch.businesslogic.usecases.workmate.GetWorkmatesUseCase;
 import com.android.go4lunch.businesslogic.usecases.GoForLunchUseCase;
-import com.android.go4lunch.businesslogic.usecases.GetRestaurantsForListUseCase;
-import com.android.go4lunch.businesslogic.usecases.GetRestaurantsNearbyUseCase;
+import com.android.go4lunch.businesslogic.usecases.restaurant.GetRestaurantsNearbyUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
 import com.android.go4lunch.businesslogic.usecases.IsInFavoritesRestaurantsUseCase;
 import com.android.go4lunch.businesslogic.usecases.IsTheCurrentSelectionUseCase;
@@ -76,8 +75,7 @@ public class Launch extends Application {
 
     // Use cases
     private GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase;
-    private GetRestaurantsForListUseCase getRestaurantsForListUseCase;
-    private UpdateRestaurantWithDistanceUseCase updateRestaurantWithDistanceUseCase;
+    private GetDistanceFromMyPositionToRestaurantUseCase getDistanceFromMyPositionToRestaurantUseCase;
     private GetWorkmatesUseCase getWorkmatesUseCase;
     private GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
     private GetSessionUseCase getSessionUseCase;
@@ -92,7 +90,7 @@ public class Launch extends Application {
     private SaveMyPositionUseCase saveMyPositionUseCase;
     private GetMyPositionUseCase getMyPositionUseCase;
     private GetMyLunchUseCase getMyLunchUseCase;
-    private SearchRestaurantByIdUseCase searchRestaurantByIdUseCase;
+    private SearchRestaurantUseCase searchRestaurantUseCase;
 
     // view models factories
     private MapViewModelFactory mapViewModelFactory;
@@ -201,7 +199,7 @@ public class Launch extends Application {
     }
 
     // Use cases
-    private synchronized GetRestaurantsNearbyUseCase getGetRestaurantsForMapUseCase() {
+    private synchronized GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase() {
         if(this.getRestaurantsNearbyUseCase == null) {
             this.getRestaurantsNearbyUseCase = new GetRestaurantsNearbyUseCase(
                     restaurantGateway(),
@@ -211,24 +209,13 @@ public class Launch extends Application {
         return this.getRestaurantsNearbyUseCase;
     }
 
-    private synchronized GetRestaurantsForListUseCase getGetRestaurantsForListUseCase() {
-        if(this.getRestaurantsForListUseCase == null) {
-            this.getRestaurantsForListUseCase = new GetRestaurantsForListUseCase(
-                    restaurantGateway(),
-                    visitorGateway(),
-                    likeGateway()
-            );
-        }
-        return this.getRestaurantsForListUseCase;
-    }
-
-    private synchronized UpdateRestaurantWithDistanceUseCase getUpdateRestaurantWithDistanceUseCase() {
-        if(this.updateRestaurantWithDistanceUseCase == null) {
-            this.updateRestaurantWithDistanceUseCase = new UpdateRestaurantWithDistanceUseCase(
+    private synchronized GetDistanceFromMyPositionToRestaurantUseCase getDistanceFromMyPositionToRestaurantUseCase() {
+        if(this.getDistanceFromMyPositionToRestaurantUseCase == null) {
+            this.getDistanceFromMyPositionToRestaurantUseCase = new GetDistanceFromMyPositionToRestaurantUseCase(
                 this.distanceGateway()
             );
         }
-        return this.updateRestaurantWithDistanceUseCase;
+        return this.getDistanceFromMyPositionToRestaurantUseCase;
     }
 
     private synchronized GetWorkmatesUseCase getWorkmatesUseCase() {
@@ -351,18 +338,18 @@ public class Launch extends Application {
         return this.getMyLunchUseCase;
     }
 
-    private synchronized SearchRestaurantByIdUseCase searchRestaurantByIdUseCase() {
-        if(this.searchRestaurantByIdUseCase == null) {
-            this.searchRestaurantByIdUseCase = new SearchRestaurantByIdUseCase(this.restaurantGateway());
+    private synchronized SearchRestaurantUseCase searchRestaurantByIdUseCase() {
+        if(this.searchRestaurantUseCase == null) {
+            this.searchRestaurantUseCase = new SearchRestaurantUseCase(this.restaurantGateway());
         }
-        return this.searchRestaurantByIdUseCase;
+        return this.searchRestaurantUseCase;
     }
 
     // View model factories
 
     public synchronized MapViewModelFactory mapViewModelFactory() {
         if(this.mapViewModelFactory == null) {
-            this.mapViewModelFactory = new MapViewModelFactory(this.getGetRestaurantsForMapUseCase());
+            this.mapViewModelFactory = new MapViewModelFactory(this.getRestaurantsNearbyUseCase());
         }
         return this.mapViewModelFactory;
     }
@@ -370,8 +357,9 @@ public class Launch extends Application {
     public synchronized RestaurantsViewModelFactory restaurantsViewModelFactory() {
         if(this.restaurantsViewModelFactory == null) {
             this.restaurantsViewModelFactory = new RestaurantsViewModelFactory(
-                    this.getGetRestaurantsForListUseCase(),
-                    this.getUpdateRestaurantWithDistanceUseCase(),
+                    this.getRestaurantsNearbyUseCase(),
+                    this.getNumberOfLikesPerRestaurantUseCase(),
+                    this.getDistanceFromMyPositionToRestaurantUseCase(),
                     this.timeProvider(),
                     this.dateProvider()
             );

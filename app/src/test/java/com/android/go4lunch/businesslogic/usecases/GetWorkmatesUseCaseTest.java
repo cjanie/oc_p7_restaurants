@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import com.android.go4lunch.businesslogic.entities.Selection;
+import com.android.go4lunch.businesslogic.usecases.workmate.GetWorkmatesUseCase;
 import com.android.go4lunch.businesslogic.valueobjects.WorkmateValueObject;
 import com.android.go4lunch.in_memory_gateways.InMemorySessionGateway;
 import com.android.go4lunch.in_memory_gateways.InMemoryVisitorGateway;

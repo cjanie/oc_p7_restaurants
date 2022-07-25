@@ -39,6 +39,7 @@ public class RestaurantModel {
                 .map(restaurants ->
                         this.formatRestaurantsToValueObjects(restaurants));
     }
+
     private List<RestaurantValueObject> formatRestaurantsToValueObjects(List<Restaurant> restaurants) {
         // All VOs have a Geolocation in order to update distance
         List<Restaurant> filteredRestaurantsWithGeolocation = this.filterRestaurantsWithGeolocation(restaurants);
@@ -60,34 +61,6 @@ public class RestaurantModel {
             }
         }
         return filteredRestaurantsWithGeolocation;
-    }
-
-    public Observable<List<RestaurantValueObject>> updateRestaurantsWithVisitorsCount(
-            List<RestaurantValueObject> restaurantVOs,
-            Observable<List<Selection>> selectionsObservable
-    ) {
-        return selectionsObservable.map(selections -> {
-            List<RestaurantValueObject> restaurantVOsCopy = restaurantVOs;
-            if(!restaurantVOsCopy.isEmpty()) {
-                for(RestaurantValueObject restaurantVO: restaurantVOsCopy) {
-                    int visitorsCount = this.getVisitorsCountByRestaurantId(selections, restaurantVO.getRestaurant().getId());
-                    restaurantVO.setVisitorsCount(visitorsCount);
-                }
-            }
-            return restaurantVOsCopy;
-        });
-    }
-
-    private int getVisitorsCountByRestaurantId(List<Selection> selections, String restaurantId) {
-        int count = 0;
-        if (!selections.isEmpty()) {
-            for (Selection selection : selections) {
-                if (selection.getRestaurantId().equals(restaurantId)) {
-                    count += 1;
-                }
-            }
-        }
-        return count;
     }
 
     public Observable<List<RestaurantValueObject>> updateRestaurantsWithLikesCount(

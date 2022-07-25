@@ -1,21 +1,15 @@
 package com.android.go4lunch.ui.viewmodels;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.businesslogic.entities.Workmate;
-import com.android.go4lunch.businesslogic.usecases.GetWorkmatesUseCase;
+import com.android.go4lunch.businesslogic.usecases.workmate.GetWorkmatesUseCase;
 import com.android.go4lunch.businesslogic.valueobjects.WorkmateValueObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class WorkmatesViewModel extends ViewModel {

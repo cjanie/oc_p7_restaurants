@@ -32,4 +32,5 @@ public class GetNumberOfLikesPerRestaurantUseCase {
             return numberOfLikesPerRestaurant;
         });
     }
+
 }

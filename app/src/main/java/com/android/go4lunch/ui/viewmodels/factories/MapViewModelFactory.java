@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.ui.viewmodels.MapViewModel;
-import com.android.go4lunch.businesslogic.usecases.GetRestaurantsNearbyUseCase;
+import com.android.go4lunch.businesslogic.usecases.restaurant.GetRestaurantsNearbyUseCase;
 
 public class MapViewModelFactory implements ViewModelProvider.Factory {
 

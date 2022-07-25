@@ -1,6 +1,5 @@
-package com.android.go4lunch.businesslogic.usecases;
+package com.android.go4lunch.businesslogic.usecases.restaurant;
 
-import com.android.go4lunch.businesslogic.entities.Selection;
 import com.android.go4lunch.businesslogic.gateways.RestaurantGateway;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 
@@ -12,11 +11,9 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class GetRestaurantsNearbyUseCase {
+public class GetRestaurantsNearbyUseCase extends FindVisitorsUseCase {
 
     private RestaurantGateway restaurantGateway;
-
-    private VisitorGateway visitorGateway;
 
     private RestaurantModel restaurantModel;
 
@@ -33,16 +30,13 @@ public class GetRestaurantsNearbyUseCase {
     private Observable<List<Restaurant>> getRestaurantsNearby(Double myLatitude, Double myLongitude, int radius) {
         return this.restaurantGateway.getRestaurantsNearby(myLatitude, myLongitude, radius);
     }
-    private Observable<List<Selection>> getSelections() {
-        return this.visitorGateway.getSelections();
-    }
 
     public Observable<List<RestaurantValueObject>>handle(Double myLatitude, Double myLongitude, int radius) {
         return this.restaurantModel.formatRestaurantsAsValueObjects(
                     this.getRestaurantsNearby(myLatitude, myLongitude, radius)
                 )
                 .flatMap(restaurantVOs ->
-                        this.restaurantModel.updateRestaurantsWithVisitorsCount(
+                        this.updateRestaurantsWithVisitorsCount(
                             restaurantVOs,
                             this.getSelections()
                         ));
