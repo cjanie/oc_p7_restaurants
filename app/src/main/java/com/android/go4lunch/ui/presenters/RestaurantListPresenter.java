@@ -63,4 +63,34 @@ public class RestaurantListPresenter {
             return restaurants;
         });
     }
+
+    // SEARCH
+    public Observable<RestaurantValueObject> updateRestaurantWithLikesCount(Observable<RestaurantValueObject> restaurant) {
+        return restaurant.map(r -> {
+            this.likeUseCase.handle(r.getRestaurant().getId()).subscribe(count -> {
+               r.setLikesCount(count);
+            });
+            return r;
+        });
+    }
+
+    public Observable<RestaurantValueObject> updateRestaurantWithDistance(Observable<RestaurantValueObject> restaurantObservable, Double myLatitude, Double myLongitude) {
+        Geolocation myPosition = new Geolocation(myLatitude, myLongitude);
+        return restaurantObservable.map(r -> {
+            this.distanceUseCase.handle(myPosition, r.getRestaurant().getGeolocation())
+                    .subscribe(distance -> {
+                        r.setDistance(distance);
+                    });
+            return r;
+        });
+    }
+
+    public Observable<RestaurantValueObject> updateRestaurantWithTimeInfo(Observable<RestaurantValueObject> restaurantObservable, TimeProvider timeProvider, DateProvider dateProvider) {
+        return restaurantObservable.map(r -> {
+           r.setTimeInfo(timeProvider, dateProvider);
+           r.setOpenHoursToday(dateProvider);
+           return r;
+        });
+    }
+
 }

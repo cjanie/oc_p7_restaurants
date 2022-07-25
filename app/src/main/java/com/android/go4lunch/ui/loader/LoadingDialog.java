@@ -1,4 +1,4 @@
-package com.android.go4lunch.ui;
+package com.android.go4lunch.ui.loader;
 
 import android.app.Activity;
 import android.content.Context;

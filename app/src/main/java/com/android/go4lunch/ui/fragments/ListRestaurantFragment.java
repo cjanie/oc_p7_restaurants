@@ -15,21 +15,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
 
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
-import com.android.go4lunch.businesslogic.entities.Geolocation;
-import com.android.go4lunch.ui.LoadingDialog;
+import com.android.go4lunch.ui.loader.LoadingDialog;
 import com.android.go4lunch.ui.adapters.ListRestaurantRecyclerViewAdapter;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModel;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
-
-import java.util.ArrayList;
 
 public class ListRestaurantFragment extends Fragment {
 

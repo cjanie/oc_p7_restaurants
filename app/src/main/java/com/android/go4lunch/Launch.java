@@ -338,7 +338,7 @@ public class Launch extends Application {
         return this.getMyLunchUseCase;
     }
 
-    private synchronized SearchRestaurantUseCase searchRestaurantByIdUseCase() {
+    private synchronized SearchRestaurantUseCase searchRestaurantUseCase() {
         if(this.searchRestaurantUseCase == null) {
             this.searchRestaurantUseCase = new SearchRestaurantUseCase(this.restaurantGateway());
         }
@@ -358,6 +358,7 @@ public class Launch extends Application {
         if(this.restaurantsViewModelFactory == null) {
             this.restaurantsViewModelFactory = new RestaurantsViewModelFactory(
                     this.getRestaurantsNearbyUseCase(),
+                    this.searchRestaurantUseCase(),
                     this.getNumberOfLikesPerRestaurantUseCase(),
                     this.getDistanceFromMyPositionToRestaurantUseCase(),
                     this.timeProvider(),

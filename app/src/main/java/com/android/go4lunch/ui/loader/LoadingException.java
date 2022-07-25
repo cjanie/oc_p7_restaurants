@@ -1,4 +1,4 @@
-package com.android.go4lunch.ui;
+package com.android.go4lunch.ui.loader;
 
 public class LoadingException extends Exception {
 
