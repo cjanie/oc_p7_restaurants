@@ -19,6 +19,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Geolocation;
+import com.android.go4lunch.ui.Cache;
 import com.android.go4lunch.ui.adapters.ViewPagerAdapter;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
 import com.android.go4lunch.ui.viewmodels.factories.SharedViewModelFactory;
@@ -38,6 +39,8 @@ public class MainFragment extends UsesPermission {
     // DATA
 
     private SharedViewModel sharedViewModel;
+
+    private Cache cache;
 
     // UI
 
@@ -63,6 +66,8 @@ public class MainFragment extends UsesPermission {
 
         SharedViewModelFactory sharedViewModelFactory = ((Launch) this.getActivity().getApplication()).sharedViewModelFactory();
         this.sharedViewModel = new ViewModelProvider(this, sharedViewModelFactory).get(SharedViewModel.class);
+
+        this.cache = ((Launch)this.getActivity().getApplication()).cache();
 
         View root = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, root);
@@ -142,6 +147,9 @@ public class MainFragment extends UsesPermission {
             this.sharedViewModel.saveMyPosition(new Geolocation(
                     location.getLatitude(),
                     location.getLongitude())
+            );
+            this.cache.setMyPosition(
+                    new Geolocation(location.getLatitude(), location.getLongitude())
             );
         }
     }

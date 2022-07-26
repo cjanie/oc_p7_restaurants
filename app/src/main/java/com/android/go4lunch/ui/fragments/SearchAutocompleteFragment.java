@@ -8,14 +8,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.Launch;
+import com.android.go4lunch.businesslogic.entities.Geolocation;
 import com.android.go4lunch.data.apiGoogleMaps.repositories.GoogleMapsRequestConfig;
 import com.android.go4lunch.ui.Cache;
 import com.android.go4lunch.ui.Mode;
-import com.android.go4lunch.ui.viewmodels.SearchViewModel;
-import com.android.go4lunch.ui.viewmodels.factories.SearchViewModelFactory;
+import com.android.go4lunch.ui.utils.RectangularBoundsFactory;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
@@ -41,13 +40,10 @@ public class SearchAutocompleteFragment extends AutocompleteSupportFragment {
 
         this.cache = ((Launch)this.getActivity().getApplication()).cache();
 
-        this.setTypeFilter(TypeFilter.ESTABLISHMENT);
         Places.initialize(this.getActivity().getApplicationContext(), GoogleMapsRequestConfig.API_KEY);
 
         this.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
-        this.setLocationRestriction(RectangularBounds.newInstance(
-                new LatLng(-33.880490, 151.184363),
-                new LatLng(-33.858754, 151.229596)));
+
         this.setTypeFilter(TypeFilter.ESTABLISHMENT);
 
         this.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -64,6 +60,14 @@ public class SearchAutocompleteFragment extends AutocompleteSupportFragment {
             }
         });
 
+        this.cache.getMyPosition().observe(this.getViewLifecycleOwner(), myPosition -> {
+
+            Double forkOfLatitudes = 0.005947700000007217;
+            Double forkOfLongitudes = 0.011622000000000021;
+            RectangularBounds rectangularBounds = new RectangularBoundsFactory(myPosition, forkOfLatitudes, forkOfLongitudes).create();
+
+            this.setLocationRestriction(rectangularBounds);
+        });
 
 
         return super.onCreateView(inflater, container, savedInstanceState);

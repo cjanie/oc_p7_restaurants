@@ -68,7 +68,7 @@ public class RestaurantsViewModel extends ViewModel {
 
         this.restaurants = new MutableLiveData<>(new ArrayList<>());
         this.searchResult = new MutableLiveData<>();
-        this.isLoading = new MutableLiveData<>(true); // TODO Loading
+        this.isLoading = new MutableLiveData<>(true);
     }
 
     // Getter for the view the model livedata that the activity listens
@@ -80,7 +80,6 @@ public class RestaurantsViewModel extends ViewModel {
         return this.searchResult;
     }
 
-    // TODO Loading
     public LiveData<Boolean> isLoading() {
         return this.isLoading;
     }
@@ -119,15 +118,15 @@ public class RestaurantsViewModel extends ViewModel {
         restaurant.subscribe(
                 r -> {
                     this.searchResult.postValue(r);
-                    this.isLoading.postValue(false);// TODO Loading
+                    this.isLoading.postValue(false);
                 },
                 error -> {
-                    this.isLoading.postValue(false);// TODO Loading
+                    this.isLoading.postValue(false);
                     error.printStackTrace();
                     throw new LoadingException(error.getClass() + " " + error.getMessage());
                 },
                 () ->
-                    this.isLoading.postValue(false)// TODO Loading
+                    this.isLoading.postValue(false)
 
         );
 

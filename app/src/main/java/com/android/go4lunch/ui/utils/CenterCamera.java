@@ -29,6 +29,9 @@ public class CenterCamera {
         Double forkOfLontitudes = (longitudes.get(longitudes.size() - 1) - longitudes.get(0));
         Double centerLongitude = longitudes.get(0) + forkOfLontitudes / 2;
 
+        System.out.println("!! Fork of latitudes: " + forkOfLatitudes); // !! Fork of latitudes: 0.005947700000007217
+        System.out.println("!! Fork of longitudes: " + forkOfLontitudes); // !! Fork of longitudes: 0.011622000000000021
+
         return new LatLng(centerLatitude, centerLongitude);
     }
 }

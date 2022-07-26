@@ -22,6 +22,7 @@ import com.android.go4lunch.R;
 
 import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
 import com.android.go4lunch.ui.Cache;
+import com.android.go4lunch.ui.Mode;
 import com.android.go4lunch.ui.loader.LoadingDialog;
 import com.android.go4lunch.ui.adapters.ListRestaurantRecyclerViewAdapter;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModel;
@@ -66,16 +67,20 @@ public class ListRestaurantFragment extends Fragment {
         this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
         this.recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
 
-        // TODO Creer adaper. Le parametrer pour afficher le loader. ou dans constructeur par défault de l'adapter
         this.adapter = new ListRestaurantRecyclerViewAdapter();
         this.loadingDialog = new LoadingDialog(this.getActivity());
 
         // Listening to the results of the view model actions
-        this.observeIsLoading(); // TODO actual infinite loading
+        this.observeIsLoading();
 
-        this.observeRestaurantsData();
-
-        this.observeSearchResult();
+        this.cache.getMode().observe(this.getViewLifecycleOwner(), mode -> {
+            if(mode.equals(Mode.LIST)) {
+                this.observeRestaurantsData();
+            }
+            if(mode.equals(Mode.SEARCH)) {
+                this.observeSearchResult();
+            }
+        });
 
         // Call the View model actions
         this.updateRestaurantsDataFromMyPosition();
@@ -95,6 +100,7 @@ public class ListRestaurantFragment extends Fragment {
                     this.adapter.updateList(restaurants);
                     this.recyclerView.setAdapter(adapter);
                 });
+        this.restaurantsViewModel.getSearchResult().removeObservers(this.getViewLifecycleOwner());
     }
 
     private void observeSearchResult() {
@@ -107,6 +113,7 @@ public class ListRestaurantFragment extends Fragment {
                         this.recyclerView.setAdapter(adapter);
                     }
                 });
+        this.restaurantsViewModel.getRestaurants().removeObservers(this.getViewLifecycleOwner());
     }
 
     private void updateRestaurantsDataFromMyPosition() {
