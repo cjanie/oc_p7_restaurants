@@ -20,10 +20,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
+import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
+import com.android.go4lunch.ui.Cache;
 import com.android.go4lunch.ui.loader.LoadingDialog;
 import com.android.go4lunch.ui.adapters.ListRestaurantRecyclerViewAdapter;
 import com.android.go4lunch.ui.viewmodels.RestaurantsViewModel;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ListRestaurantFragment extends Fragment {
 
@@ -31,11 +36,13 @@ public class ListRestaurantFragment extends Fragment {
 
     private RestaurantsViewModel restaurantsViewModel;
 
-    RecyclerView recyclerView;
+    private Cache cache;
 
-    ListRestaurantRecyclerViewAdapter adapter;
+    private RecyclerView recyclerView;
 
-    LoadingDialog loadingDialog;
+    private ListRestaurantRecyclerViewAdapter adapter;
+
+    private LoadingDialog loadingDialog;
 
     public ListRestaurantFragment(SharedViewModel sharedViewModel) {
         this.sharedViewModel = sharedViewModel;
@@ -50,6 +57,8 @@ public class ListRestaurantFragment extends Fragment {
                 ((Launch) this.getActivity().getApplication()).restaurantsViewModelFactory()
         ).get(RestaurantsViewModel.class);
 
+        this.cache = ((Launch) this.getActivity().getApplication()).cache();
+
         // UI
         View root = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
         Context context = root.getContext();
@@ -60,34 +69,57 @@ public class ListRestaurantFragment extends Fragment {
         // TODO Creer adaper. Le parametrer pour afficher le loader. ou dans constructeur par défault de l'adapter
         this.adapter = new ListRestaurantRecyclerViewAdapter();
         this.loadingDialog = new LoadingDialog(this.getActivity());
-        this.loadingDialog.showLoadingDialog();
-        this.observeIsLoading();
 
-        // Listens to the result of the view model action
+        // Listening to the results of the view model actions
+        this.observeIsLoading(); // TODO actual infinite loading
+
         this.observeRestaurantsData();
 
-        // Call the View model action
+        this.observeSearchResult();
+
+        // Call the View model actions
         this.updateRestaurantsDataFromMyPosition();
+
+        this.cache.getRestaurantIdForSearch().observe(this.getViewLifecycleOwner(), id -> {
+            if(id != null || !id.isEmpty()) {
+                this.updateSearchResult(id);
+            }
+        });
 
         return root;
     }
 
     private void observeRestaurantsData() {
-        this.restaurantsViewModel.getRestaurantsLiveData().observe(this.getViewLifecycleOwner(), restaurants -> {
-            this.adapter.updateList(restaurants);
-            this.recyclerView.setAdapter(adapter);
-        });
+        this.restaurantsViewModel.getRestaurants().observe(this.getViewLifecycleOwner(),
+                restaurants -> {
+                    this.adapter.updateList(restaurants);
+                    this.recyclerView.setAdapter(adapter);
+                });
+    }
+
+    private void observeSearchResult() {
+        this.restaurantsViewModel.getSearchResult().observe(this.getViewLifecycleOwner(),
+                restaurant -> {
+                    if(restaurant != null) {
+                        List<RestaurantValueObject> restaurants = new ArrayList<>();
+                        restaurants.add(restaurant);
+                        this.adapter.updateList(restaurants);
+                        this.recyclerView.setAdapter(adapter);
+                    }
+                });
     }
 
     private void updateRestaurantsDataFromMyPosition() {
         this.sharedViewModel.getGeolocation().observe(this.getViewLifecycleOwner(), geolocation -> {
             if(geolocation != null) {
                 try {
+
                     this.restaurantsViewModel.fetchRestaurantsObservableToUpdateLiveData(
                             geolocation.getLatitude(),
                             geolocation.getLongitude(),
                             1000
                     );
+
                 } catch(Exception e) {
                     Toast.makeText(this.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -96,10 +128,22 @@ public class ListRestaurantFragment extends Fragment {
         });
     }
 
+    private void updateSearchResult(String restaurantId) {
+        this.sharedViewModel.getGeolocation().observe(this.getViewLifecycleOwner(), geolocation -> {
+            if(geolocation != null) {
+                try {
+                    this.restaurantsViewModel.fetchSearchResultToUpdateLiveData(restaurantId, geolocation.getLatitude(), geolocation.getLongitude());
+                } catch(Exception e) {
+                    Toast.makeText(this.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+// TODO Loading
     private void observeIsLoading() {
-        this.restaurantsViewModel.getIsLoadingLiveData().observe(this.getViewLifecycleOwner(), isLoading -> {
-            if(!isLoading)
-                this.loadingDialog.dismissDialog();
+        this.restaurantsViewModel.isLoading().observe(this.getViewLifecycleOwner(), isLoading -> {
+            if(isLoading) this.loadingDialog.showLoadingDialog();
+            else this.loadingDialog.dismissDialog();
         });
     }
 

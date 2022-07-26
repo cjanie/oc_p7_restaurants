@@ -1,6 +1,6 @@
 package com.android.go4lunch.ui;
 
-public enum AppMode {
+public enum Mode {
 
     LIST, SEARCH
 

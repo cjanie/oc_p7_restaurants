@@ -21,8 +21,6 @@ import io.reactivex.Observable;
 
 public class RestaurantsViewModel extends ViewModel {
 
-    private final String TAG = "RESTAURANTS VIEW MODEL";
-
     // Use Cases
     private final GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase;
 
@@ -39,13 +37,15 @@ public class RestaurantsViewModel extends ViewModel {
     // List Presenter
     private final RestaurantListPresenter presenter;
 
-    // List LiveData
-    private final MutableLiveData<List<RestaurantValueObject>> restaurantsLiveData;
+    // LiveData
+    // LIST
+    private final MutableLiveData<List<RestaurantValueObject>> restaurants;
 
     // SEARCH RESULT
     private final MutableLiveData<RestaurantValueObject> searchResult;
 
-    private final MutableLiveData<Boolean> isLoadingLiveData;
+    // LOADER
+    private final MutableLiveData<Boolean> isLoading;
 
 
     // Constructor
@@ -66,63 +66,68 @@ public class RestaurantsViewModel extends ViewModel {
 
         this.presenter = new RestaurantListPresenter(this.likeUseCase, this.distanceUseCase);
 
-        this.restaurantsLiveData = new MutableLiveData<>(new ArrayList<>());
+        this.restaurants = new MutableLiveData<>(new ArrayList<>());
         this.searchResult = new MutableLiveData<>();
-        this.isLoadingLiveData = new MutableLiveData<>(true);
+        this.isLoading = new MutableLiveData<>(true); // TODO Loading
     }
 
     // Getter for the view the model livedata that the activity listens
-    public LiveData<List<RestaurantValueObject>> getRestaurantsLiveData() {
-        return this.restaurantsLiveData;
+    public LiveData<List<RestaurantValueObject>> getRestaurants() {
+        return this.restaurants;
     }
 
     public LiveData<RestaurantValueObject> getSearchResult() {
         return this.searchResult;
     }
 
-    public LiveData<Boolean> getIsLoadingLiveData() {
-        return this.isLoadingLiveData;
+    // TODO Loading
+    public LiveData<Boolean> isLoading() {
+        return this.isLoading;
     }
 
     // Actions
     // List
     public void fetchRestaurantsObservableToUpdateLiveData(Double myLatitude, Double myLongitude, int radius) {
+        this.isLoading.postValue(true);
         Observable<List<RestaurantValueObject>> restaurantsObservable = this.getRestaurantsNearbyUseCase.handle(myLatitude, myLongitude, radius);
         restaurantsObservable = this.presenter.updateRestaurantsWithDistance(restaurantsObservable, myLatitude, myLongitude);
         restaurantsObservable = this.presenter.updateRestaurantsWithLikesCount(restaurantsObservable);
         restaurantsObservable = this.presenter.updateRestaurantsWithTimeInfo(restaurantsObservable, this.timeProvider, this.dateProvider);
         restaurantsObservable.subscribe(restaurants -> {
-                    this.restaurantsLiveData.postValue(restaurants);
-                    this.isLoadingLiveData.postValue(false);
+                    this.restaurants.postValue(restaurants);
+                    this.isLoading.postValue(false);// TODO Loading
                 },
                 error -> {
-                    this.isLoadingLiveData.postValue(false);
+                    this.isLoading.postValue(false);// TODO Loading
                     error.printStackTrace();
                     throw new LoadingException(error.getClass() + " " + error.getMessage());
                 },
                 () ->
-                        this.isLoadingLiveData.postValue(false)
+                        this.isLoading.postValue(false)//// TODO Loading
         );
     }
 
     // Search
     public void fetchSearchResultToUpdateLiveData(String restaurantId, Double myLatitude, Double myLongitude) {
+        this.isLoading.postValue(true);
         Observable<RestaurantValueObject> restaurant = this.searchRestaurantUseCase.handle(restaurantId);
         restaurant = this.presenter.updateRestaurantWithLikesCount(restaurant);
+
         restaurant = this.presenter.updateRestaurantWithDistance(restaurant, myLatitude, myLongitude);
+
         restaurant = this.presenter.updateRestaurantWithTimeInfo(restaurant, this.timeProvider, this.dateProvider);
         restaurant.subscribe(
                 r -> {
                     this.searchResult.postValue(r);
-                    this.isLoadingLiveData.postValue(false);
+                    this.isLoading.postValue(false);// TODO Loading
                 },
                 error -> {
-                    this.isLoadingLiveData.postValue(false);
+                    this.isLoading.postValue(false);// TODO Loading
                     error.printStackTrace();
                     throw new LoadingException(error.getClass() + " " + error.getMessage());
                 },
                 () ->
-                    this.isLoadingLiveData.postValue(false)
+                    this.isLoading.postValue(false)// TODO Loading
 
         );
 

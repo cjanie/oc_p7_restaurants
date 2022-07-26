@@ -67,9 +67,12 @@ public class RestaurantListPresenter {
     // SEARCH
     public Observable<RestaurantValueObject> updateRestaurantWithLikesCount(Observable<RestaurantValueObject> restaurant) {
         return restaurant.map(r -> {
-            this.likeUseCase.handle(r.getRestaurant().getId()).subscribe(count -> {
-               r.setLikesCount(count);
-            });
+            this.likeUseCase.handle(r.getRestaurant().getId())
+                    .subscribe(
+                            count -> {
+                               r.setLikesCount(count);
+                            },
+                            error -> error.printStackTrace());
             return r;
         });
     }
@@ -78,9 +81,13 @@ public class RestaurantListPresenter {
         Geolocation myPosition = new Geolocation(myLatitude, myLongitude);
         return restaurantObservable.map(r -> {
             this.distanceUseCase.handle(myPosition, r.getRestaurant().getGeolocation())
-                    .subscribe(distance -> {
-                        r.setDistance(distance);
-                    });
+                    .subscribe(
+                            distance -> {
+                                r.setDistance(distance);
+                            },
+                            error -> {
+                                error.printStackTrace();
+                            });
             return r;
         });
     }

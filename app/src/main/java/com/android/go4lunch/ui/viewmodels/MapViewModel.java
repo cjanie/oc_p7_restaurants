@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.android.go4lunch.businesslogic.usecases.restaurant.GetRestaurantsNearbyUseCase;
+import com.android.go4lunch.businesslogic.usecases.restaurant.SearchRestaurantUseCase;
 import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
+import com.android.go4lunch.ui.loader.LoadingException;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -20,47 +22,79 @@ public class MapViewModel extends ViewModel {
     // Use Case
     private GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase;
 
+    private SearchRestaurantUseCase searchRestaurantUseCase;
+
     // LiveData
-    private final MutableLiveData<List<MarkerOptions>> markersLiveData;
+    // MARKERS NEARBY
+    private final MutableLiveData<List<MarkerOptions>> restaurantsMarkers;
+
+    // SEARCH RESULT MARKER
+    private final MutableLiveData<MarkerOptions> searchResultMarker;
 
     // Constructor
-    public MapViewModel(GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase) {
+    public MapViewModel(GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase, SearchRestaurantUseCase searchRestaurantUseCase) {
         this.getRestaurantsNearbyUseCase = getRestaurantsNearbyUseCase;
-        this.markersLiveData = new MutableLiveData<>(new ArrayList<>());
+        this.searchRestaurantUseCase = searchRestaurantUseCase;
+        this.restaurantsMarkers = new MutableLiveData<>(new ArrayList<>());
+        this.searchResultMarker = new MutableLiveData<>();
     }
 
     // Getter for the view the model livedata that the activity listens
-    public LiveData<List<MarkerOptions>> getRestaurantsMarkersLiveData() {
-        return this.markersLiveData;
+    public LiveData<List<MarkerOptions>> getRestaurantsMarkers() {
+        return this.restaurantsMarkers;
     }
 
-    // View model Action that updates the view model livedata
+    public LiveData<MarkerOptions> getSearchResultMarker() {
+        return this.searchResultMarker;
+    }
+
+    // View model Actions that updates the view model livedata
     public void fetchRestaurantsToUpdateRestaurantsMarkersLiveData(Double myLatitude, Double myLongitude, int radius) {
         this.getRestaurantsNearbyUseCase.handle(myLatitude, myLongitude, radius)
 
-                .subscribe(restaurants -> {
-                    List<MarkerOptions> markersOptions = new ArrayList<>();
-                    if(!restaurants.isEmpty()) {
-                        for(RestaurantValueObject restaurant: restaurants) {
-                            if(restaurant.getRestaurant().getGeolocation() != null) {
-                                MarkerOptions markerOptions = new MarkerOptions()
-                                        .position(new LatLng(
-                                                restaurant.getRestaurant().getGeolocation().getLatitude(),
-                                                restaurant.getRestaurant().getGeolocation().getLongitude())
-                                        )
-                                        .title(restaurant.getRestaurant().getName())
-                                        .snippet(restaurant.getRestaurant().getAddress())
-                                        .icon(restaurant.getVisitorsCount() > 0 ?
-                                                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
-                                                :
-                                                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-
-                                markersOptions.add(markerOptions);
+                .subscribe(
+                        restaurants -> {
+                            List<MarkerOptions> markers = new ArrayList<>();
+                            if(!restaurants.isEmpty()) {
+                                for(RestaurantValueObject restaurant: restaurants) {
+                                    MarkerOptions marker = createMarker(restaurant);
+                                    markers.add(marker);
+                                }
                             }
+                            restaurantsMarkers.postValue(markers);
+                        },
+                        error -> {
+                            error.printStackTrace();
+                            throw new LoadingException(error.getMessage());
+                        });
+    }
+
+    public void fetchSearchResultToUpdateData(String restaurantId) {
+        this.searchRestaurantUseCase.handle(restaurantId)
+                .subscribe(
+                        restaurant -> {
+                            MarkerOptions marker = createMarker(restaurant);
+                            this.searchResultMarker.postValue(marker);
+                        },
+                        error -> {
+                            error.printStackTrace();
+                            throw new LoadingException(error.getMessage());
                         }
-                    }
-                    markersLiveData.postValue(markersOptions);
-                }, Throwable::printStackTrace);
+                );
+    }
+
+    private MarkerOptions createMarker(RestaurantValueObject restaurant) {
+        return new MarkerOptions()
+                .position(new LatLng(
+                        restaurant.getRestaurant().getGeolocation().getLatitude(),
+                        restaurant.getRestaurant().getGeolocation().getLongitude())
+                )
+                .title(restaurant.getRestaurant().getName())
+                .snippet(restaurant.getRestaurant().getAddress())
+                .icon(restaurant.getVisitorsCount() > 0 ?
+                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
+                        :
+                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
     }
 
 }

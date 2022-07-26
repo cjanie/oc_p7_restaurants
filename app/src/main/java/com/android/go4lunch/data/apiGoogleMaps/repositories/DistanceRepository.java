@@ -57,6 +57,7 @@ public class DistanceRepository {
                             throw new NullDistanceResponseException();
 
                         if(!elements.isEmpty()) {
+
                             if(elements.get(0).getDistance() == null)
                                 throw new NullDistanceResponseException();
                             distance = elements.get(0).getDistance().getValue();

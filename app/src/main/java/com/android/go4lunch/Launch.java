@@ -29,6 +29,7 @@ import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.RealDateProvider;
 import com.android.go4lunch.providers.RealTimeProvider;
 import com.android.go4lunch.providers.TimeProvider;
+import com.android.go4lunch.ui.Cache;
 import com.android.go4lunch.ui.notifications.ShowNotificationsAction;
 import com.android.go4lunch.ui.viewmodels.factories.MainViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
@@ -103,6 +104,9 @@ public class Launch extends Application {
     private SearchViewModelFactory searchViewModelFactory;
     // work actions
     private ShowNotificationsAction showNotificationsAction;
+
+    // Cache
+    private Cache cache;
 
     // INSTANTIATIONS
 
@@ -340,16 +344,24 @@ public class Launch extends Application {
 
     private synchronized SearchRestaurantUseCase searchRestaurantUseCase() {
         if(this.searchRestaurantUseCase == null) {
-            this.searchRestaurantUseCase = new SearchRestaurantUseCase(this.restaurantGateway());
+            this.searchRestaurantUseCase = new SearchRestaurantUseCase(this.restaurantGateway(), this.visitorGateway());
         }
         return this.searchRestaurantUseCase;
+    }
+
+    // Cache
+    public synchronized Cache cache() {
+        if(this.cache == null) {
+            this.cache = new Cache();
+        }
+        return this.cache;
     }
 
     // View model factories
 
     public synchronized MapViewModelFactory mapViewModelFactory() {
         if(this.mapViewModelFactory == null) {
-            this.mapViewModelFactory = new MapViewModelFactory(this.getRestaurantsNearbyUseCase());
+            this.mapViewModelFactory = new MapViewModelFactory(this.getRestaurantsNearbyUseCase(), this.searchRestaurantUseCase());
         }
         return this.mapViewModelFactory;
     }
