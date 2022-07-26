@@ -61,10 +61,8 @@ public class SearchAutocompleteFragment extends AutocompleteSupportFragment {
         });
 
         this.cache.getMyPosition().observe(this.getViewLifecycleOwner(), myPosition -> {
-
-            Double forkOfLatitudes = 0.005947700000007217;
-            Double forkOfLongitudes = 0.011622000000000021;
-            RectangularBounds rectangularBounds = new RectangularBoundsFactory(myPosition, forkOfLatitudes, forkOfLongitudes).create();
+            Double forkOfLatitudesAndLongitudes = 0.012;
+            RectangularBounds rectangularBounds = new RectangularBoundsFactory(myPosition, forkOfLatitudesAndLongitudes).create();
 
             this.setLocationRestriction(rectangularBounds);
         });

@@ -9,16 +9,14 @@ import org.junit.Test;
 
 public class RectangularBoundsTest {
 
-    Double forkOfLatitudes = 0.005947700000007217;
-    Double forkOfLongitudes = 0.011622000000000021;
-
+    Double fork = 0.012;
 
     @Test
     public void myPosition() {
 
         // My position
         Geolocation myPosition = new Geolocation(1.1, 1.1);
-        Double north = myPosition.getLatitude() + forkOfLatitudes / 2;
-        assertEquals(north, new RectangularBoundsFactory(myPosition, forkOfLatitudes, forkOfLongitudes).create().getNortheast().latitude, 0);
+        Double north = myPosition.getLatitude() + fork / 2;
+        assertEquals(north, new RectangularBoundsFactory(myPosition, fork).create().getNortheast().latitude, 0);
     }
 }

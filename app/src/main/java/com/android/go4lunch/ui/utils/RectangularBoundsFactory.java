@@ -8,14 +8,13 @@ public class RectangularBoundsFactory {
 
     private Geolocation myPosition;
 
-    private Double forkOfLatitudes;
+    private Double forkOfLatitudesAndLongitudes;
 
-    private Double forkOfLongitudes;
 
-    public RectangularBoundsFactory(Geolocation myPosition, Double forkOfLatitudes, Double forkOfLongitudes) {
+
+    public RectangularBoundsFactory(Geolocation myPosition, Double forkOfLatitudesAndLongitudes) {
         this.myPosition = myPosition;
-        this.forkOfLatitudes = forkOfLatitudes;
-        this.forkOfLongitudes = forkOfLongitudes;
+        this.forkOfLatitudesAndLongitudes = forkOfLatitudesAndLongitudes;
     }
 
     public RectangularBounds create() {
@@ -26,19 +25,19 @@ public class RectangularBoundsFactory {
     }
 
     private Double latitudeNorthToMyPosition() {
-        return myPosition.getLatitude() + forkOfLatitudes / 2;
+        return myPosition.getLatitude() + forkOfLatitudesAndLongitudes / 2;
     }
 
     private Double latitudeSouthToMyPosition() {
-        return myPosition.getLatitude() - forkOfLatitudes / 2;
+        return myPosition.getLatitude() - forkOfLatitudesAndLongitudes / 2;
     }
 
     private Double longitudeEastToMyPosition() {
-        return myPosition.getLongitude() + forkOfLongitudes / 2;
+        return myPosition.getLongitude() + forkOfLatitudesAndLongitudes / 2;
     }
 
     private Double longitudeWestToMyPosition() {
-        return myPosition.getLongitude() - forkOfLongitudes / 2;
+        return myPosition.getLongitude() - forkOfLatitudesAndLongitudes / 2;
     }
 
 
