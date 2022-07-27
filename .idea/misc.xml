@@ -26,6 +26,7 @@
         <entry key="app/src/main/res/layout/toolbar.xml" value="0.1" />
         <entry key="app/src/main/res/menu/navigation_drawer.xml" value="0.1638888888888889" />
         <entry key="app/src/main/res/menu/navigation_drawer_menu.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/toolbar_menu.xml" value="0.1" />
         <entry key="app/src/main/res/xml/root_preferences.xml" value="0.25" />
       </map>
     </option>

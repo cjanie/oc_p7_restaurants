@@ -40,7 +40,10 @@ public class SearchAutocompleteFragment extends AutocompleteSupportFragment {
 
         this.cache = ((Launch)this.getActivity().getApplication()).cache();
 
-        Places.initialize(this.getActivity().getApplicationContext(), GoogleMapsRequestConfig.API_KEY);
+        if(!Places.isInitialized()) {
+            Places.initialize(this.getActivity().getApplicationContext(), GoogleMapsRequestConfig.API_KEY);
+        }
+
 
         this.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
 
@@ -57,6 +60,7 @@ public class SearchAutocompleteFragment extends AutocompleteSupportFragment {
                 // name and id
                 cache.setMode(Mode.SEARCH);
                 cache.setRestaurantIdForSearch(place.getId());
+
             }
         });
 
@@ -67,7 +71,8 @@ public class SearchAutocompleteFragment extends AutocompleteSupportFragment {
             this.setLocationRestriction(rectangularBounds);
         });
 
+        View root = super.onCreateView(inflater, container, savedInstanceState);
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return root;
     }
 }

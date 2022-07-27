@@ -1,13 +1,11 @@
 package com.android.go4lunch.ui;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -16,7 +14,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,10 +23,8 @@ import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
 import com.android.go4lunch.businesslogic.entities.Restaurant;
-import com.android.go4lunch.ui.fragments.SearchAutocompleteFragment;
 import com.android.go4lunch.ui.intentConfigs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.notifications.AlarmReceiver;
-import com.android.go4lunch.ui.notifications.NotificationWorker;
 import com.android.go4lunch.ui.viewmodels.SessionViewModel;
 
 import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
@@ -51,6 +46,8 @@ public class MainActivity extends BaseActivity {
 
     // DATA
     private SessionViewModel sessionViewModel;
+
+    private Cache cache;
 
     private Restaurant myLunch;
 
@@ -78,12 +75,17 @@ public class MainActivity extends BaseActivity {
                 ((Launch) this.getApplication()).mainViewModelFactory()
         ).get(SessionViewModel.class);
 
+        this.cache = ((Launch)this.getApplication()).cache();
+
         // Instantiate UI
         this.setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
         //Toolbar
-        this.setSupportActionBar(toolbar);
+        this.setSupportActionBar(this.toolbar);
+        ActionBar actionBar = this.getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        this.toolbar.inflateMenu(R.menu.toolbar_menu);
         this.toolbar.setNavigationOnClickListener(view ->
                 drawerLayout.open()
         );
@@ -196,5 +198,27 @@ public class MainActivity extends BaseActivity {
         }
         alarmManager.cancel(this.alarmPendingIntent);
         Toast.makeText(this, this.getText(R.string.alarm_canceled), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                this.onSearchCalled();
+                return true;
+            case R.id.action_home:
+                this.onHomeCalled();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void onSearchCalled() {
+        this.cache.setMode(Mode.SEARCH);
+    }
+
+    private void onHomeCalled() {
+        this.cache.setMode(Mode.LIST);
     }
 }

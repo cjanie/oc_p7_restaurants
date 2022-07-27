@@ -22,6 +22,9 @@
     <string name="list_view">List View</string>
     <string name="workmates">Workmates</string>
 
+    <string name="search">Search</string>
+    <string name="home">Home</string>
+
     <!-- RESTAURANTS -->
     <string name="location_not_available">Your location is not available</string>
     <string name="restaurant_name">Restaurant Name</string>
