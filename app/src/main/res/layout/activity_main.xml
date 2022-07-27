@@ -21,10 +21,12 @@ DrawerLayout as Root contains:
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface">
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -47,28 +49,32 @@ DrawerLayout as Root contains:
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                     -->
+                <!--
+                                <ImageView
+                                    android:id="@+id/action_search"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="right"
+                                    android:layout_margin="@dimen/margin"
+                                    android:src="@drawable/ic_baseline_search_24" />
 
-                <ImageView
-                    android:id="@+id/action_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_margin="@dimen/margin"
-                    android:src="@drawable/ic_baseline_search_24" />
 
-                <ImageView
-                    android:id="@+id/action_home"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_margin="@dimen/margin"
-                    android:src="@drawable/ic_baseline_home_24" />
+                                <ImageView
+                                    android:id="@+id/action_home"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="right"
+                                    android:layout_margin="@dimen/margin"
+                                    android:src="@drawable/ic_baseline_home_24" />
+                                    -->
 
 
             </androidx.appcompat.widget.Toolbar>
+
         </com.google.android.material.appbar.AppBarLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

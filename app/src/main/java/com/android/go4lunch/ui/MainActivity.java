@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
@@ -13,7 +15,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +27,7 @@ import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
 import com.android.go4lunch.businesslogic.entities.Restaurant;
+import com.android.go4lunch.ui.fragments.SearchAutocompleteFragment;
 import com.android.go4lunch.ui.intentConfigs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.notifications.AlarmReceiver;
 import com.android.go4lunch.ui.viewmodels.SessionViewModel;
@@ -61,6 +66,7 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.navigation_view)
     NavigationView navigationView;
 
+
     // Alarm notifications
     private AlarmManager alarmManager;
 
@@ -84,8 +90,8 @@ public class MainActivity extends BaseActivity {
         //Toolbar
         this.setSupportActionBar(this.toolbar);
         ActionBar actionBar = this.getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        this.toolbar.inflateMenu(R.menu.toolbar_menu);
+
+        actionBar.setDisplayShowHomeEnabled(true);
         this.toolbar.setNavigationOnClickListener(view ->
                 drawerLayout.open()
         );
@@ -201,10 +207,17 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
                 this.onSearchCalled();
+                item.setVisible(false);
                 return true;
             case R.id.action_home:
                 this.onHomeCalled();
@@ -215,10 +228,17 @@ public class MainActivity extends BaseActivity {
     }
 
     private void onSearchCalled() {
+        this.showFragment(new SearchAutocompleteFragment());
         this.cache.setMode(Mode.SEARCH);
     }
 
     private void onHomeCalled() {
         this.cache.setMode(Mode.LIST);
+    }
+
+    private void showFragment(Fragment fragment) {
+        FragmentTransaction transaction = this.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.toolbar_frame_layout, fragment);
+        transaction.commit();
     }
 }
