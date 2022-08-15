@@ -1,5 +1,8 @@
 package com.android.go4lunch.businesslogic.usecases;
 
+import android.util.Log;
+
+import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.businesslogic.entities.Workmate;
 import com.android.go4lunch.businesslogic.gateways.SessionGateway;
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
@@ -13,6 +16,8 @@ import io.reactivex.Observable;
 
 public class GoForLunchUseCase {
 
+    private final String TAG = "GO FOR LUNCH USE CASE";
+
     private final VisitorGateway visitorGateway;
 
     private final SessionGateway sessionGateway;
@@ -24,84 +29,42 @@ public class GoForLunchUseCase {
         this.sessionGateway = sessionGateway;
     }
 
-    public Observable<Boolean> handle(
-            String restaurantId,
-            String restaurantName,
-            String restaurantUrlPhoto,
-            String restaurantAddress,
-            String restaurantPhone,
-            String restaurantWebSite
-    ) {
-        return this.toggle(
-                restaurantId,
-                restaurantName,
-                restaurantUrlPhoto,
-                restaurantAddress,
-                restaurantPhone,
-                restaurantWebSite
-        );
-    }
+    public Observable<Boolean> selectRestaurant(Restaurant restaurant) {
+        return this.sessionGateway.getSession().map(session -> {
+            Selection newSelection = new Selection(restaurant.getId(), session.getId());
+            newSelection.setRestaurantName(restaurant.getName());
+            newSelection.setWorkmateName(session.getName());
+            newSelection.setWorkmateUrlPhoto(session.getUrlPhoto());
+            newSelection.setRestaurantUrlPhoto(restaurant.getPhotoUrl());
+            newSelection.setRestaurantAddress(restaurant.getAddress());
+            newSelection.setRestaurantPhone(restaurant.getPhone());
+            newSelection.setRestaurantWebSite(restaurant.getWebSite());
 
-    private Observable<Boolean> toggle(
-            String restaurantId,
-            String restaurantName,
-            String restaurantUrlPhoto,
-            String restaurantAddress,
-            String restaurantPhone,
-            String restaurantWebSite
-    ) {
-
-        return this.getSession().map(session -> {
-            Selection newSelection = new SelectionModel().createSelection(
-                    restaurantId,
-                    session.getId(),
-                    restaurantName,
-                    session.getName(),
-                    session.getUrlPhoto(),
-                    restaurantUrlPhoto,
-                    restaurantAddress,
-                    restaurantPhone,
-                    restaurantWebSite
-            );
-
-            Selection workmateSelection = this.getWorkmateSelection(session.getId());
-
-            if(workmateSelection == null) {
-                this.visitorGateway.addSelection(newSelection);
-
-            } else {
-                if(workmateSelection.getRestaurantId().equals(restaurantId)) {
-                    this.visitorGateway.removeSelection(workmateSelection.getId());
-
-                } else {
-                    this.visitorGateway.removeSelection(workmateSelection.getId());
-                    this.visitorGateway.addSelection(newSelection);
-                }
-            }
+            this.visitorGateway.addSelection(newSelection);
             return true;
         });
     }
 
-    private List<Selection> getSelections() {
-        List<Selection> selectionsResults = new ArrayList<>();
-        this.visitorGateway.getSelections()
-                .subscribe(selections -> selectionsResults.addAll(selections));
-        return selectionsResults;
+    public Observable<Boolean> unselectRestaurant(String restaurantId) {
+        return this.getSession().map(session -> {
+            this.getSelections().subscribe(selections -> {
+                if(!selections.isEmpty()) {
+                    for(Selection selection: selections) {
+                        if(selection.getWorkmateId().equals(session.getId()) && selection.getRestaurantId().equals(restaurantId)) {
+                            this.visitorGateway.removeSelection(selection.getId());
+                        }
+                    }
+                }
+            });
+            return true;
+        });
     }
-
-    private Selection getWorkmateSelection(String workmateId) {
-        List<Selection> selectionsResults = this.getSelections();
-        if(!selectionsResults.isEmpty()) {
-            for(Selection selection: selectionsResults) {
-                if(selection.getWorkmateId().equals(workmateId))
-                    return selection;
-            }
-        }
-        return null;
-    }
-
 
     private Observable<Workmate> getSession() {
         return this.sessionGateway.getSession();
+    }
+
+    private Observable<List<Selection>> getSelections() {
+        return this.visitorGateway.getSelections();
     }
 }

@@ -18,13 +18,13 @@ import com.android.go4lunch.businesslogic.gateways.RestaurantGateway;
 import com.android.go4lunch.businesslogic.gateways.SessionGateway;
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
 import com.android.go4lunch.businesslogic.gateways.WorkmateGateway;
-import com.android.go4lunch.data.gateways_impl.DistanceGatewayImpl;
-import com.android.go4lunch.data.gateways_impl.InMemoryMyPositionGatewayImpl;
-import com.android.go4lunch.data.gateways_impl.LikeGatewayImpl;
-import com.android.go4lunch.data.gateways_impl.RestaurantGatewayImpl;
-import com.android.go4lunch.data.gateways_impl.SessionGatewayImpl;
-import com.android.go4lunch.data.gateways_impl.VisitorGatewayImpl;
-import com.android.go4lunch.data.gateways_impl.WorkmateGatewayImpl;
+import com.android.go4lunch.data.gatewaysImpl.DistanceGatewayImpl;
+import com.android.go4lunch.data.gatewaysImpl.InMemoryMyPositionGatewayImpl;
+import com.android.go4lunch.data.gatewaysImpl.LikeGatewayImpl;
+import com.android.go4lunch.data.gatewaysImpl.RestaurantGatewayImpl;
+import com.android.go4lunch.data.gatewaysImpl.SessionGatewayImpl;
+import com.android.go4lunch.data.gatewaysImpl.VisitorGatewayImpl;
+import com.android.go4lunch.data.gatewaysImpl.WorkmateGatewayImpl;
 import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.RealDateProvider;
 import com.android.go4lunch.providers.RealTimeProvider;
@@ -174,11 +174,11 @@ public class Launch extends Application {
         return this.workmateGateway;
     }
 
-    private synchronized VisitorGateway visitorGateway() {
+    public synchronized VisitorGateway visitorGateway() { // TODO Private
         if(this.visitorGateway == null) {
             this.visitorGateway = new VisitorGatewayImpl(this.database());
         }
-        return visitorGateway;
+        return this.visitorGateway;
     }
 
     private synchronized SessionGateway sessionGateway() {

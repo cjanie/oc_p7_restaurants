@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
+import com.android.go4lunch.SharedPreferencesListener;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.fragments.SearchAutocompleteFragment;
 import com.android.go4lunch.ui.intentConfigs.RestaurantDetailsActivityIntentConfig;
@@ -159,28 +160,33 @@ public class MainActivity extends BaseActivity {
 
         // Notifications // Shared preference manager. Parametre activité (context)
         // shared preference listener // WeakReferences pour ne pas garder en mémoire le contexte
-        SharedPreferences sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(this);
-        boolean enableNotifications = sharedPreferences.getBoolean("notifications", false);
+        /*
+        boolean enableNotifications = this.getPreferences(MODE_PRIVATE).getBoolean("notifications", true);
         if(enableNotifications) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                this.alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-                Intent intent = new Intent(this, AlarmReceiver.class);
-                this.alarmPendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-                LocalDateTime localDateTime = LocalDateTime.of(2022, 7, 29, 11, 30);
-                long time2epoch = localDateTime.toEpochSecond(ZoneOffset.UTC);
-                this.alarmManager.setInexactRepeating(
-                        AlarmManager.RTC_WAKEUP,
-                        time2epoch,
-                        AlarmManager.INTERVAL_DAY,
-                        alarmPendingIntent
-                );
-            }
+            this.enableAlarm();
         } else {
             this.cancelAlarm();
         }
 
+         */
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.getPreferences(MODE_PRIVATE).registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if(key.equals(SettingsConfiguration.notifications)) {
+                    boolean enableNotifications = sharedPreferences.getBoolean(SettingsConfiguration.notifications, true);
+                    if(enableNotifications) {
+                        enableAlarm();
+                    } else {
+                        cancelAlarm();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -195,6 +201,25 @@ public class MainActivity extends BaseActivity {
                 .setBlurAlgorithm(new RenderScriptBlur(this));
     }
 
+    private void enableAlarm() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
+            alarmPendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+            LocalDateTime localDateTime = LocalDateTime.of(2022, 7, 29, 11, 30);
+            long time2epoch = localDateTime.toEpochSecond(ZoneOffset.UTC);
+            alarmManager.setInexactRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    time2epoch,
+                    AlarmManager.INTERVAL_DAY,
+                    alarmPendingIntent
+            );
+            System.out.println("Notifications : " + this.getText(R.string.alarm_enabled));
+            Toast.makeText(this, this.getText(R.string.alarm_enabled), Toast.LENGTH_LONG).show();
+        }
+    }
+
     private void cancelAlarm() {
         Intent intent = new Intent(this, AlarmReceiver.class);
         this.alarmPendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
@@ -203,6 +228,7 @@ public class MainActivity extends BaseActivity {
             this.alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         }
         alarmManager.cancel(this.alarmPendingIntent);
+        System.out.println("notifications : " + this.getText(R.string.alarm_canceled));
         Toast.makeText(this, this.getText(R.string.alarm_canceled), Toast.LENGTH_LONG).show();
     }
 
@@ -241,4 +267,6 @@ public class MainActivity extends BaseActivity {
         transaction.replace(R.id.toolbar_frame_layout, fragment);
         transaction.commit();
     }
+
+
 }

@@ -20,6 +20,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.adapters.ListVisitorRecyclerViewAdapter;
@@ -51,8 +52,11 @@ public class DetailsFragment extends UsesPermission {
     @BindView(R.id.details_start)
     ImageView star;
 
-    @BindView(R.id.button_go)
-    FloatingActionButton buttonGo;
+    @BindView(R.id.button_go_unchecked)
+    FloatingActionButton buttonGoUnchecked;
+
+    @BindView(R.id.button_go_checked)
+    FloatingActionButton buttonGoChecked;
 
     @BindView(R.id.button_call_container)
     ConstraintLayout buttonCall;
@@ -90,9 +94,11 @@ public class DetailsFragment extends UsesPermission {
         // IS THE CURRENT SELECTION
         this.restaurantDetailsViewModel.getIsTheCurrentSelection().observe(this.getActivity(), isTheCurrentSelection -> {
             if(isTheCurrentSelection) {
-                this.buttonGo.setImageDrawable(this.getActivity().getDrawable(R.drawable.ic_baseline_check_circle_24));
+                this.buttonGoChecked.setVisibility(View.VISIBLE);
+                this.buttonGoUnchecked.setVisibility(View.GONE);
             } else {
-                this.buttonGo.setImageDrawable(this.getActivity().getDrawable(R.drawable.ic_baseline_add_task_24));
+                this.buttonGoChecked.setVisibility(View.GONE);
+                this.buttonGoUnchecked.setVisibility(View.VISIBLE);
             }
         });
         this.restaurantDetailsViewModel.fetchIsTheCurrentSelectionToUpdateLiveData();
@@ -118,16 +124,17 @@ public class DetailsFragment extends UsesPermission {
 
 
         // set on Click Listeners
-        this.buttonGo.setOnClickListener(view ->
-                handleGoForLunch()
+        this.buttonGoChecked.setOnClickListener(view ->
+                unselectRestaurant()
+        );
+
+        this.buttonGoUnchecked.setOnClickListener(view ->
+                selectRestaurant()
         );
 
         this.buttonCall.setOnClickListener(view ->
-                {
-                    // requests and handles call permission
-                    this.launcher.launch(this.PERMISSION);
-                }
-
+                // requests and handles call permission
+                this.launcher.launch(this.PERMISSION)
         );
 
         this.buttonLike.setOnClickListener(view ->
@@ -162,9 +169,13 @@ public class DetailsFragment extends UsesPermission {
         this.goToSettingsWithRationale(R.string.call_rationale, R.string.call_permission_rationale_text);
     }
 
-    private void handleGoForLunch() {
-        this.restaurantDetailsViewModel.handleGoForLunch();
+    private void selectRestaurant() {
 
+        this.restaurantDetailsViewModel.selectRestaurant();
+    }
+
+    private void unselectRestaurant() {
+        this.restaurantDetailsViewModel.unselectRestaurant();
     }
 
     private void handleLike() {

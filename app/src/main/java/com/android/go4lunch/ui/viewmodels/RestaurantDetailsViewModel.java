@@ -15,10 +15,6 @@ import com.android.go4lunch.businesslogic.exceptions.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class RestaurantDetailsViewModel extends ViewModel {
 
@@ -114,24 +110,21 @@ public class RestaurantDetailsViewModel extends ViewModel {
         }
     }
 
-    public void handleGoForLunch() {
-
-        this.goForLunchUseCase.handle(
-                this.restaurant.getId(),
-                this.restaurant.getName(),
-                this.restaurant.getPhotoUrl(),
-                this.restaurant.getAddress(),
-                this.restaurant.getPhone(),
-                this.restaurant.getWebSite()
-        )
-                .subscribe(isDone ->
-                        this.fetchIsTheCurrentSelectionToUpdateLiveData(),
-                        Throwable::printStackTrace
-                );
-
+    public void selectRestaurant() {
+        this.goForLunchUseCase.selectRestaurant(this.restaurant)
+                .subscribe(isDone -> {
+                    this.fetchIsTheCurrentSelectionToUpdateLiveData();
+                },
+                        Throwable::printStackTrace);
     }
 
+    public void unselectRestaurant() {
 
+        this.goForLunchUseCase.unselectRestaurant(this.restaurant.getId())
+                .subscribe(
+                        isDone -> this.fetchIsTheCurrentSelectionToUpdateLiveData(),
+                        Throwable::printStackTrace);
+    }
 
     public void handleLike() {
 

@@ -1,21 +1,31 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 <!-- écouter les shared preférences pour mettre à jour le radius -->
     <PreferenceCategory
         app:key="search_nearby_radius_category"
         app:title="@string/search_nearby_radius_header">
-        <EditTextPreference
-            app:key="search_nearby_radius"
-            app:title="@string/search_nearby_radius_title"
+        <ListPreference
+            android:defaultValue="1"
+            android:dialogTitle="@string/search_nearby_radius_title"
+            android:entries="@array/pref_radius"
+            android:entryValues="@array/pref_radius"
+            android:key="@string/key_pref_radius"
+            android:title="@string/search_nearby_radius_header"
             app:isPreferenceVisible="true"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory
         app:key="notifications_category"
         app:title="@string/notifications_header">
+
         <SwitchPreferenceCompat
-            app:key="notifications"
-            app:title="@string/notifications_title" />
+            android:defaultValue="true"
+            app:key="@string/key_pref_notifications"
+            app:title="@string/notifications_title"
+            app:isPreferenceVisible="true"
+            />
     </PreferenceCategory>
 
 </PreferenceScreen>

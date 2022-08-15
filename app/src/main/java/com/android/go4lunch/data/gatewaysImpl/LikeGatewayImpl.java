@@ -1,4 +1,4 @@
-package com.android.go4lunch.data.gateways_impl;
+package com.android.go4lunch.data.gatewaysImpl;
 
 import android.util.Log;
 
@@ -6,6 +6,7 @@ import com.android.go4lunch.businesslogic.gateways.LikeGateway;
 import com.android.go4lunch.businesslogic.entities.Like;
 
 
+import com.android.go4lunch.exceptions.PersistanceException;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -44,7 +45,7 @@ public class LikeGatewayImpl implements LikeGateway {
         return this.likesSubject
                 .hide()
                 .doOnError(error -> {
-                    Log.e(TAG, error.getMessage());
+                    throw new PersistanceException(error.getMessage());
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io());

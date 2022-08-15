@@ -1,4 +1,4 @@
-package com.android.go4lunch.data.gateways_impl;
+package com.android.go4lunch.data.gatewaysImpl;
 
 import android.util.Log;
 
@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
 public class WorkmateGatewayImpl implements WorkmateGateway {

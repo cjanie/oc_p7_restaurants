@@ -1,4 +1,4 @@
-package com.android.go4lunch.data.gateways_impl;
+package com.android.go4lunch.data.gatewaysImpl;
 
 import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
 import com.android.go4lunch.businesslogic.gateways.SessionGateway;
@@ -8,7 +8,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 

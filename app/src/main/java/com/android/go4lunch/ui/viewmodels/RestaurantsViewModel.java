@@ -35,7 +35,7 @@ public class RestaurantsViewModel extends ViewModel {
     private final DateProvider dateProvider;
 
     // List Presenter
-    private final RestaurantListPresenter presenter;
+    private final RestaurantListPresenter presenter; // Controller
 
     // LiveData
     // LIST
@@ -64,7 +64,7 @@ public class RestaurantsViewModel extends ViewModel {
         this.timeProvider = timeProvider;
         this.dateProvider = dateProvider;
 
-        this.presenter = new RestaurantListPresenter(this.likeUseCase, this.distanceUseCase);
+        this.presenter = new RestaurantListPresenter(this.likeUseCase, this.distanceUseCase); // Controller ; presenter pour MVP
 
         this.restaurants = new MutableLiveData<>(new ArrayList<>());
         this.searchResult = new MutableLiveData<>();

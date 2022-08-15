@@ -1,10 +1,11 @@
-package com.android.go4lunch.data.gateways_impl;
+package com.android.go4lunch.data.gatewaysImpl;
 
 import android.util.Log;
 
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
 import com.android.go4lunch.businesslogic.entities.Selection;
 import com.android.go4lunch.businesslogic.models.SelectionModel;
+import com.android.go4lunch.exceptions.PersistanceException;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -15,14 +16,12 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
 public class VisitorGatewayImpl implements VisitorGateway {
 
     private class SelectionDatabaseConfig {
-
         public static final String COLLECTION_PATH = "selections";
         public static final String RESTAURANT_ID = "restaurantId";
         public static final String WORKMATE_ID = "workmateId";
@@ -52,7 +51,7 @@ public class VisitorGatewayImpl implements VisitorGateway {
         return this.selectionsSubject
                 .hide()
                 .doOnError(error -> {
-                    Log.e(TAG, error.getMessage());
+                    throw new PersistanceException(error.getMessage());
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io());
@@ -96,7 +95,6 @@ public class VisitorGatewayImpl implements VisitorGateway {
         selectionMap.put(SelectionDatabaseConfig.RESTAURANT_ADDRESS, selection.getRestaurantAddress());
         selectionMap.put(SelectionDatabaseConfig.RESTAURANT_PHONE, selection.getRestaurantPhone());
         selectionMap.put(SelectionDatabaseConfig.RESTAURANT_WEB_SITE, selection.getRestaurantWebSite());
-
 
         this.database.collection(SelectionDatabaseConfig.COLLECTION_PATH)
                 .document(selection.getId())
@@ -145,6 +143,9 @@ public class VisitorGatewayImpl implements VisitorGateway {
         });
 
         return Observable.just(visitors)
+                .doOnError(error -> {
+                    throw new PersistanceException(error.getMessage());
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io());
     }

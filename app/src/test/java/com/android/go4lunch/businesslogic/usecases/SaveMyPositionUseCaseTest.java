@@ -1,7 +1,7 @@
 package com.android.go4lunch.businesslogic.usecases;
 
 import com.android.go4lunch.businesslogic.gateways.MyPositionGateway;
-import com.android.go4lunch.data.gateways_impl.InMemoryMyPositionGatewayImpl;
+import com.android.go4lunch.data.gatewaysImpl.InMemoryMyPositionGatewayImpl;
 
 import org.junit.Test;
 

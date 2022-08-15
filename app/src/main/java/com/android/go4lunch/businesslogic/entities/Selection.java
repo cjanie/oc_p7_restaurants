@@ -1,7 +1,5 @@
 package com.android.go4lunch.businesslogic.entities;
 
-import com.android.go4lunch.data.gateways_impl.VisitorGatewayImpl;
-
 public class Selection {
 
     private String id;

@@ -65,19 +65,36 @@
 
     <!-- NOTIFICATIONS -->
     <string name="is_eating_at">is eating at</string>
+    <string name="alarm_enabled">Notifications alarm enabled</string>
     <string name="alarm_canceled">Notifications alarm canceled</string>
 
     <!-- SETTINGS -->
-    <string name="search_nearby_radius_header">Search Nearby Radius</string>
+    <string name="search_nearby_radius_header">Search Nearby Radius in Meters</string>
     <string name="search_nearby_radius_title">Set radius in meters</string>
+    <string name="key_pref_radius">radius</string>
+    <string name="radius_default_value">1000</string>
 
     <string name="notifications_header">Notifications</string>
-    <string name="notifications_title">Enable notifications</string>
+    <string name="notifications_title">Notifications enabled</string>
+    <string name="key_pref_notifications">notifications</string>
 
     <!-- Facebook -->
     <string name="facebook_application_id" translatable="false">720823785792354</string>
 
     <!-- Loader -->
     <string name="loading_text">Loading...</string>
+
+    <!-- preferences -->
+    <string-array name="pref_radius">
+        <item>500</item>
+        <item>1000</item>
+        <item>1500</item>
+        <item>2000</item>
+    </string-array>
+
+    <string-array name="pref_notifications">
+        <item>Enabled</item>
+        <item>Disabled</item>
+    </string-array>
 
 </resources>

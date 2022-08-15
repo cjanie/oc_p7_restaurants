@@ -1,12 +1,10 @@
-package com.android.go4lunch.data.gateways_impl;
+package com.android.go4lunch.data.gatewaysImpl;
 
-import com.android.go4lunch.exceptions.NullDistanceResponseException;
 import com.android.go4lunch.data.apiGoogleMaps.repositories.DistanceRepository;
 import com.android.go4lunch.businesslogic.gateways.DistanceGateway;
 import com.android.go4lunch.businesslogic.entities.Geolocation;
 
 import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
 
 public class DistanceGatewayImpl implements DistanceGateway {
 

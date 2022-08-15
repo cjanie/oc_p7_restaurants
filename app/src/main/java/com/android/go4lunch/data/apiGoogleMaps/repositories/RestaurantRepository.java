@@ -71,6 +71,7 @@ public class RestaurantRepository {
                     if(!results.isEmpty()) {
                         for(Result result: results) {
                             restaurantsIds.add(result.getPlaceId());
+                            System.out.println(TAG + " !!!!!!!! " + result.getName());
                         }
                     }
                     return restaurantsIds;
@@ -99,9 +100,11 @@ public class RestaurantRepository {
     private RestaurantDTO buildRestaurantDTOWithDetails(DetailsResponseRoot detailsResponseRoot, String restaurantId) {
         RestaurantDTO restaurant = new RestaurantDTO();
 
+
         Result result = detailsResponseRoot.getResult();
         if(result != null) {
             restaurant.setId(restaurantId);
+            System.out.println(result.getName());
             restaurant.setName(result.getName());
             restaurant.setLatitude(result.getGeometry().getLocation().getLat());
             restaurant.setLongitude(result.getGeometry().getLocation().getLng());

@@ -1,4 +1,4 @@
-package com.android.go4lunch.data.gateways_impl;
+package com.android.go4lunch.data.gatewaysImpl;
 
 import android.util.Log;
 
@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
 public class RestaurantGatewayImpl implements RestaurantGateway {
@@ -33,8 +32,6 @@ public class RestaurantGatewayImpl implements RestaurantGateway {
 
     @Override
     public synchronized Observable<List<Restaurant>> getRestaurantsNearby(Double myLatitude, Double myLongitude, int radius) {
-            //return Observable.just(new Mock().restaurants())
-                   // .observeOn(Schedulers.single());
            if(this.numberOfRestaurantsNearbyRequests > 0)
                return this.restaurantsSubject.hide();
 
