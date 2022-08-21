@@ -159,7 +159,7 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
                 for(MarkerOptions marker: markers) {
                     googleMap.addMarker(marker);
                 }
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(this.getCenterPosition(markers)));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(this.getCenterPosition(markers), 10.0f));
             }
         });
         this.mapViewModel.getSearchResultMarker().removeObservers(this.getViewLifecycleOwner());

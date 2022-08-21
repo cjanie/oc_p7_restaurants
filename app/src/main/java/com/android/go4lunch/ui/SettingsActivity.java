@@ -35,17 +35,19 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
-            //EditTextPreference searchNearbyRadiusPreference = this.findPreference(this.getText(R.string.key_pref_radius));
             ListPreference radius = this.findPreference(this.getText(R.string.key_pref_radius));
 
-            this.getActivity().getPreferences(MODE_PRIVATE).getInt(this.getResources().getString(R.string.key_pref_radius), Integer.parseInt(radius.getValue()));
+            //this.getActivity().getPreferences(MODE_PRIVATE).getInt(this.getResources().getString(R.string.key_pref_radius), Integer.parseInt(radius.getValue()));
 
             SwitchPreferenceCompat notificationsPreference = this.findPreference(this.getText(R.string.key_pref_notifications));
+            /*
             if(notificationsPreference.isChecked()) {
                 this.getActivity().getPreferences(MODE_PRIVATE).getBoolean(this.getResources().getString(R.string.key_pref_notifications), true);
             } else {
                 this.getActivity().getPreferences(MODE_PRIVATE).getBoolean(this.getResources().getString(R.string.key_pref_notifications), false);
             }
+
+             */
             // TODO something with this preference
 
         }

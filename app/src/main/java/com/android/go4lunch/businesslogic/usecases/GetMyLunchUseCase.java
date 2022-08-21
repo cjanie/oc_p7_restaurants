@@ -8,6 +8,7 @@ import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
 public class GetMyLunchUseCase {
@@ -34,17 +35,19 @@ public class GetMyLunchUseCase {
     private void findMyLunch(List<Selection> selections) {
         this.sessionGateway.getSession().subscribe(session -> {
             if(!selections.isEmpty()) {
-                for(Selection s: selections) {
-                    if(s.getWorkmateId() == session.getId()) {
-                        Restaurant selected = new Restaurant(s.getRestaurantName(), s.getRestaurantAddress());
-                        selected.setId(s.getRestaurantId());
-                        selected.setPhone(s.getRestaurantPhone());
-                        selected.setWebSite(s.getRestaurantWebSite());
-                        selected.setPhotoUrl(s.getRestaurantUrlPhoto());
-                        this.myLunchSubject.onNext(selected);
+                for(Selection selection: selections) {
+                    if(selection.getWorkmateId().equals(session.getId())) {
+                        Restaurant selectedRestaurant = new Restaurant(selection.getRestaurantName(), selection.getRestaurantAddress());
+                        selectedRestaurant.setId(selection.getRestaurantId());
+                        selectedRestaurant.setPhone(selection.getRestaurantPhone());
+                        selectedRestaurant.setWebSite(selection.getRestaurantWebSite());
+                        selectedRestaurant.setPhotoUrl(selection.getRestaurantUrlPhoto());
+                        System.out.println("findMyLunch : " + selectedRestaurant.getName());
+                        this.myLunchSubject.onNext(selectedRestaurant);
                     }
                 }
             }
         });
     }
+
 }

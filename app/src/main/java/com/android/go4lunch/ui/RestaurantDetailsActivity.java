@@ -1,5 +1,6 @@
 package com.android.go4lunch.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -53,4 +54,10 @@ public class RestaurantDetailsActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        this.startActivity(intent);
+    }
 }

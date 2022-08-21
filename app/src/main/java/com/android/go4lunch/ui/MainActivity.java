@@ -55,8 +55,6 @@ public class MainActivity extends BaseActivity {
 
     private Cache cache;
 
-    private Restaurant myLunch;
-
     // UI
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
@@ -72,6 +70,8 @@ public class MainActivity extends BaseActivity {
     private AlarmManager alarmManager;
 
     private PendingIntent alarmPendingIntent;
+
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,13 +116,11 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(this, e.getClass().getCanonicalName(), Toast.LENGTH_LONG);
         }
         this.sessionViewModel.fetchSessionToUpdateLiveData();
+        this.sessionViewModel.fetchMyLunchToUpdateLiveData();
 
         this.blurNavigationViewHeaderBackground();
 
-        sessionViewModel.fetchMyLunchToUpdateLiveData();
-        sessionViewModel.getMyLunch().observe(MainActivity.this, restaurant -> {
-            this.myLunch = restaurant;
-        });
+
 
         // Navigation view menu
         this.navigationView.setCheckedItem(R.id.your_lunch);
@@ -130,18 +128,19 @@ public class MainActivity extends BaseActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if(item.getItemId() == R.id.your_lunch) {
-                    if(myLunch != null) {
-                        Intent intent = new Intent(MainActivity.this, RestaurantDetailsActivity.class);
-                        intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ID, myLunch.getId());
-                        intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_NAME, myLunch.getName());
-                        intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ADDRESS, myLunch.getAddress());
-                        intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHONE, myLunch.getPhone());
-                        intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_WEB_SITE, myLunch.getWebSite());
-                        intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHOTO_URL, myLunch.getPhotoUrl());
+                    sessionViewModel.getMyLunch().observe(MainActivity.this, myLunch -> {
+                        if(myLunch != null) {
+                            Intent intent = new Intent(MainActivity.this, RestaurantDetailsActivity.class);
+                            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ID, myLunch.getId());
+                            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_NAME, myLunch.getName());
+                            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ADDRESS, myLunch.getAddress());
+                            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHONE, myLunch.getPhone());
+                            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_WEB_SITE, myLunch.getWebSite());
+                            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHOTO_URL, myLunch.getPhotoUrl());
 
-                        startActivity(intent);
-                    }
-
+                            startActivity(intent);
+                        }
+                    });
                 }
                 if(item.getItemId() == R.id.settings) {
                     Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
@@ -158,35 +157,25 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        // Notifications // Shared preference manager. Parametre activité (context)
-        // shared preference listener // WeakReferences pour ne pas garder en mémoire le contexte
-        /*
-        boolean enableNotifications = this.getPreferences(MODE_PRIVATE).getBoolean("notifications", true);
-        if(enableNotifications) {
+        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        this.checkSharedPreferences();
+    }
+
+    private void checkSharedPreferences() {
+        Boolean notificationsEnabled = this.sharedPreferences.getBoolean(this.getString(R.string.key_pref_notifications), true);
+        System.out.println("check notifications enabled : " + notificationsEnabled);
+        if(notificationsEnabled) {
             this.enableAlarm();
         } else {
             this.cancelAlarm();
         }
-
-         */
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
-        this.getPreferences(MODE_PRIVATE).registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                if(key.equals(SettingsConfiguration.notifications)) {
-                    boolean enableNotifications = sharedPreferences.getBoolean(SettingsConfiguration.notifications, true);
-                    if(enableNotifications) {
-                        enableAlarm();
-                    } else {
-                        cancelAlarm();
-                    }
-                }
-            }
-        });
+        this.checkSharedPreferences();
     }
 
     @Override

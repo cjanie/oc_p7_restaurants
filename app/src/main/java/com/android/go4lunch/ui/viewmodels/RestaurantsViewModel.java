@@ -92,17 +92,17 @@ public class RestaurantsViewModel extends ViewModel {
         restaurantsObservable = this.presenter.updateRestaurantsWithDistance(restaurantsObservable, myLatitude, myLongitude);
         restaurantsObservable = this.presenter.updateRestaurantsWithLikesCount(restaurantsObservable);
         restaurantsObservable = this.presenter.updateRestaurantsWithTimeInfo(restaurantsObservable, this.timeProvider, this.dateProvider);
-        restaurantsObservable.subscribe(restaurants -> {
+        restaurantsObservable.subscribe(
+                restaurants -> {
                     this.restaurants.postValue(restaurants);
-                    this.isLoading.postValue(false);// TODO Loading
+                    this.isLoading.postValue(false);
                 },
                 error -> {
-                    this.isLoading.postValue(false);// TODO Loading
+                    this.isLoading.postValue(false);
                     error.printStackTrace();
                     throw new LoadingException(error.getClass() + " " + error.getMessage());
                 },
-                () ->
-                        this.isLoading.postValue(false)//// TODO Loading
+                () -> this.isLoading.postValue(false)
         );
     }
 
