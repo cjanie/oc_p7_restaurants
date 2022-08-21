@@ -1,10 +1,12 @@
 package com.android.go4lunch.ui.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,8 +16,11 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
+import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.Cache;
 import com.android.go4lunch.ui.Mode;
+import com.android.go4lunch.ui.RestaurantDetailsActivity;
+import com.android.go4lunch.ui.intentConfigs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.utils.CenterCamera;
 import com.android.go4lunch.ui.viewmodels.MapViewModel;
 import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
@@ -26,6 +31,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -34,7 +40,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MapRestaurantFragment extends Fragment implements OnMapReadyCallback {
+public class MapRestaurantFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private SharedViewModel sharedViewModel;
 
@@ -160,6 +166,7 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
                     googleMap.addMarker(marker);
                 }
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(this.getCenterPosition(markers), 10.0f));
+                googleMap.setOnMarkerClickListener(this);
             }
         });
         this.mapViewModel.getSearchResultMarker().removeObservers(this.getViewLifecycleOwner());
@@ -195,5 +202,22 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
             latLngs.add(marker.getPosition());
         }
         return new CenterCamera().getCenter(latLngs);
+    }
+
+    @Override
+    public boolean onMarkerClick(@NonNull Marker marker) {
+        this.mapViewModel.getMarkersRestaurantsMap().observe(this, map -> {
+            Restaurant restaurant = map.get(marker.getTitle()).getRestaurant();
+            Intent intent = new Intent(this.getContext(), RestaurantDetailsActivity.class);
+            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ID, restaurant.getId());
+            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_NAME, restaurant.getName());
+            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ADDRESS, restaurant.getAddress());
+            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHONE, restaurant.getPhone());
+            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_WEB_SITE, restaurant.getWebSite());
+            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHOTO_URL, restaurant.getPhotoUrl());
+            this.getContext().startActivity(intent);
+        });
+
+        return true;
     }
 }

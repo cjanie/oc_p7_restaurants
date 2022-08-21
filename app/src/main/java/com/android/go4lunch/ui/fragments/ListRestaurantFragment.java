@@ -146,7 +146,7 @@ public class ListRestaurantFragment extends Fragment {
             }
         });
     }
-// TODO Loading
+
     private void observeIsLoading() {
         this.restaurantsViewModel.isLoading().observe(this.getViewLifecycleOwner(), isLoading -> {
             if(isLoading) this.loadingDialog.showLoadingDialog();
