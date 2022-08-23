@@ -10,10 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
-import com.android.go4lunch.businesslogic.entities.Workmate;
 import com.android.go4lunch.businesslogic.valueobjects.WorkmateValueObject;
 import com.android.go4lunch.ui.RestaurantDetailsActivity;
-import com.android.go4lunch.ui.intentConfigs.RestaurantDetailsActivityIntentConfig;
+import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -68,13 +67,15 @@ public class ListWorkmateRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             if(workmate.getSelection() != null) {
                 holder.itemView.setOnClickListener(view -> {
                         Context context = view.getContext();
-                        Intent intent = new Intent(context, RestaurantDetailsActivity.class);
-                        intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ID, workmate.getSelection().getId());
-                        intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_NAME, workmate.getSelection().getName());
-                        intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ADDRESS, workmate.getSelection().getAddress());
-                        intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHONE, workmate.getSelection().getPhone());
-                        intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_WEB_SITE, workmate.getSelection().getWebSite());
-                        intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHOTO_URL, workmate.getSelection().getPhotoUrl());
+                        Intent intent = RestaurantDetailsActivityIntentConfig.getIntent(
+                                context,
+                                workmate.getSelection().getId(),
+                                workmate.getSelection().getName(),
+                                workmate.getSelection().getAddress(),
+                                workmate.getSelection().getPhone(),
+                                workmate.getSelection().getWebSite(),
+                                workmate.getSelection().getPhotoUrl()
+                        );
                         context.startActivity(intent);
                     }
                 );

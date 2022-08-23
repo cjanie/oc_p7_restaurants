@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,12 +19,11 @@ import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.Cache;
 import com.android.go4lunch.ui.Mode;
 import com.android.go4lunch.ui.RestaurantDetailsActivity;
-import com.android.go4lunch.ui.intentConfigs.RestaurantDetailsActivityIntentConfig;
+import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.utils.CenterCamera;
 import com.android.go4lunch.ui.viewmodels.MapViewModel;
 import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -208,13 +206,16 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
     public boolean onMarkerClick(@NonNull Marker marker) {
         this.mapViewModel.getMarkersRestaurantsMap().observe(this, map -> {
             Restaurant restaurant = map.get(marker.getTitle()).getRestaurant();
-            Intent intent = new Intent(this.getContext(), RestaurantDetailsActivity.class);
-            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ID, restaurant.getId());
-            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_NAME, restaurant.getName());
-            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ADDRESS, restaurant.getAddress());
-            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHONE, restaurant.getPhone());
-            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_WEB_SITE, restaurant.getWebSite());
-            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHOTO_URL, restaurant.getPhotoUrl());
+            Intent intent = RestaurantDetailsActivityIntentConfig.getIntent(
+                    this.getContext(),
+                    restaurant.getId(),
+                    restaurant.getName(),
+                    restaurant.getAddress(),
+                    restaurant.getPhone(),
+                    restaurant.getWebSite(),
+                    restaurant.getPhotoUrl()
+            );
+
             this.getContext().startActivity(intent);
         });
 

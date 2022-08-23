@@ -2,6 +2,7 @@ package com.android.go4lunch.ui.fragments;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,16 +18,17 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.adapters.ListVisitorRecyclerViewAdapter;
+import com.android.go4lunch.ui.configs.MyLunchPreferencesConfig;
+import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import butterknife.BindView;
@@ -39,6 +41,10 @@ public class DetailsFragment extends UsesPermission {
     private final String PERMISSION = Manifest.permission.CALL_PHONE;
 
     private RestaurantDetailsViewModel restaurantDetailsViewModel;
+
+    private SharedPreferences sharedPreferences;
+
+    private SharedPreferences.Editor preferencesEditor;
 
     @BindView(R.id.details_restaurant_image)
     ImageView restaurantImage;
@@ -77,6 +83,10 @@ public class DetailsFragment extends UsesPermission {
         this.launcher = this.createResultActivityLauncher();
 
         this.restaurantDetailsViewModel = new ViewModelProvider(this.getActivity()).get(RestaurantDetailsViewModel.class);
+
+        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+
+        this.preferencesEditor = sharedPreferences.edit();
 
         View root = inflater.inflate(R.layout.fragment_details, container, false);
         ButterKnife.bind(this, root);
@@ -124,12 +134,24 @@ public class DetailsFragment extends UsesPermission {
 
 
         // set on Click Listeners
-        this.buttonGoChecked.setOnClickListener(view ->
-                unselectRestaurant()
+        this.buttonGoChecked.setOnClickListener(view -> {
+                unselectRestaurant();
+                preferencesEditor.putBoolean(MyLunchPreferencesConfig.IS_MY_LUNCH_SELECTED, false);
+                preferencesEditor.commit();
+            }
         );
 
-        this.buttonGoUnchecked.setOnClickListener(view ->
-                selectRestaurant()
+        this.buttonGoUnchecked.setOnClickListener(view -> {
+                selectRestaurant();
+                preferencesEditor.putBoolean(MyLunchPreferencesConfig.IS_MY_LUNCH_SELECTED, true);
+                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_ID, this.restaurantDetailsViewModel.getRestaurant().getId());
+                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_NAME, this.restaurantDetailsViewModel.getRestaurant().getName());
+                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_ADDRESS, this.restaurantDetailsViewModel.getRestaurant().getAddress());
+                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_PHONE, this.restaurantDetailsViewModel.getRestaurant().getPhone());
+                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_PHOTO_URL, this.restaurantDetailsViewModel.getRestaurant().getPhotoUrl());
+                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_WEB_SITE, this.restaurantDetailsViewModel.getRestaurant().getWebSite());
+                preferencesEditor.commit();
+            }
         );
 
         this.buttonCall.setOnClickListener(view ->

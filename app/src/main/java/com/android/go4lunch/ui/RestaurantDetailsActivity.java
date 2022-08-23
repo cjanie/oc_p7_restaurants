@@ -1,6 +1,5 @@
 package com.android.go4lunch.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -10,10 +9,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
-import com.android.go4lunch.ui.intentConfigs.RestaurantDetailsActivityIntentConfig;
+import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
 import com.android.go4lunch.businesslogic.exceptions.NotFoundException;
-import com.google.android.material.snackbar.Snackbar;
 
 public class RestaurantDetailsActivity extends BaseActivity {
 
@@ -22,6 +20,7 @@ public class RestaurantDetailsActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.getSupportFragmentManager();
 
         this.restaurantDetailsViewModel = new ViewModelProvider(
                 this,
@@ -32,20 +31,7 @@ public class RestaurantDetailsActivity extends BaseActivity {
 
         // Data
         // RESTAURANT
-        Restaurant restaurant;
-
-        String id = getIntent().getStringExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ID);
-        String name = getIntent().getStringExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_NAME);
-        String address = getIntent().getStringExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ADDRESS);
-        String photoUrl = getIntent().getStringExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHOTO_URL);
-        String phone = getIntent().getStringExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHONE);
-        String website = getIntent().getStringExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_WEB_SITE);
-
-        restaurant = new Restaurant(name, address);
-        restaurant.setId(id);
-        restaurant.setPhotoUrl(photoUrl);
-        restaurant.setPhone(phone);
-        restaurant.setWebSite(website);
+        Restaurant restaurant = RestaurantDetailsActivityIntentConfig.getRestaurant(this.getIntent());
 
         try {
             this.restaurantDetailsViewModel.setRestaurant(restaurant);
@@ -54,10 +40,4 @@ public class RestaurantDetailsActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(this, MainActivity.class);
-        this.startActivity(intent);
-    }
 }

@@ -11,13 +11,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
 import com.android.go4lunch.ui.RestaurantDetailsActivity;
 import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
-import com.android.go4lunch.ui.intentConfigs.RestaurantDetailsActivityIntentConfig;
+import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.utils.TimeInfoTextHandler;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -99,13 +98,16 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
             holder.itemView.setOnClickListener(view -> {
                     Context context = view.getContext();
-                    Intent intent = new Intent(context, RestaurantDetailsActivity.class);
-                    intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ID, restaurant.getRestaurant().getId());
-                    intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_NAME, restaurant.getRestaurant().getName());
-                    intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ADDRESS, restaurant.getRestaurant().getAddress());
-                    intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHONE, restaurant.getRestaurant().getPhone());
-                    intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_WEB_SITE, restaurant.getRestaurant().getWebSite());
-                    intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHOTO_URL, restaurant.getRestaurant().getPhotoUrl());
+                    Intent intent = RestaurantDetailsActivityIntentConfig.getIntent(
+                            context,
+                            restaurant.getRestaurant().getId(),
+                            restaurant.getRestaurant().getName(),
+                            restaurant.getRestaurant().getAddress(),
+                            restaurant.getRestaurant().getPhone(),
+                            restaurant.getRestaurant().getWebSite(),
+                            restaurant.getRestaurant().getPhotoUrl()
+
+                    );
                     context.startActivity(intent);
                 }
             );

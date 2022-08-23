@@ -17,7 +17,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,10 +25,9 @@ import android.widget.Toast;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
-import com.android.go4lunch.SharedPreferencesListener;
-import com.android.go4lunch.businesslogic.entities.Restaurant;
+import com.android.go4lunch.ui.configs.MyLunchPreferencesConfig;
 import com.android.go4lunch.ui.fragments.SearchAutocompleteFragment;
-import com.android.go4lunch.ui.intentConfigs.RestaurantDetailsActivityIntentConfig;
+import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.notifications.AlarmReceiver;
 import com.android.go4lunch.ui.viewmodels.SessionViewModel;
 
@@ -84,6 +82,8 @@ public class MainActivity extends BaseActivity {
 
         this.cache = ((Launch)this.getApplication()).cache();
 
+        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         // Instantiate UI
         this.setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -116,7 +116,6 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(this, e.getClass().getCanonicalName(), Toast.LENGTH_LONG);
         }
         this.sessionViewModel.fetchSessionToUpdateLiveData();
-        this.sessionViewModel.fetchMyLunchToUpdateLiveData();
 
         this.blurNavigationViewHeaderBackground();
 
@@ -128,19 +127,25 @@ public class MainActivity extends BaseActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if(item.getItemId() == R.id.your_lunch) {
-                    sessionViewModel.getMyLunch().observe(MainActivity.this, myLunch -> {
-                        if(myLunch != null) {
-                            Intent intent = new Intent(MainActivity.this, RestaurantDetailsActivity.class);
-                            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ID, myLunch.getId());
-                            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_NAME, myLunch.getName());
-                            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_ADDRESS, myLunch.getAddress());
-                            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHONE, myLunch.getPhone());
-                            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_WEB_SITE, myLunch.getWebSite());
-                            intent.putExtra(RestaurantDetailsActivityIntentConfig.RESTAURANT_PHOTO_URL, myLunch.getPhotoUrl());
-
-                            startActivity(intent);
-                        }
-                    });
+                    Boolean myLunch = sharedPreferences.getBoolean(MyLunchPreferencesConfig.IS_MY_LUNCH_SELECTED, false);
+                    if(myLunch) {
+                        String restaurantId = sharedPreferences.getString(MyLunchPreferencesConfig.RESTAURANT_ID, "");
+                        String restaurantName = sharedPreferences.getString(MyLunchPreferencesConfig.RESTAURANT_NAME, "");
+                        String restaurantAddress = sharedPreferences.getString(MyLunchPreferencesConfig.RESTAURANT_ADDRESS, "");
+                        String restaurantPhone = sharedPreferences.getString(MyLunchPreferencesConfig.RESTAURANT_PHONE, "");
+                        String restaurantWebSite = sharedPreferences.getString(MyLunchPreferencesConfig.RESTAURANT_WEB_SITE, "");
+                        String restaurantPhotoUrl = sharedPreferences.getString(MyLunchPreferencesConfig.RESTAURANT_PHOTO_URL, "");
+                        Intent intent = RestaurantDetailsActivityIntentConfig.getIntent(
+                                MainActivity.this,
+                                restaurantId,
+                                restaurantName,
+                                restaurantAddress,
+                                restaurantPhone,
+                                restaurantWebSite,
+                                restaurantPhotoUrl
+                        );
+                        startActivity(intent);
+                    }
                 }
                 if(item.getItemId() == R.id.settings) {
                     Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
@@ -157,11 +162,10 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        this.checkSharedPreferences();
+        this.checkNotificationsEnabled();
     }
 
-    private void checkSharedPreferences() {
+    private void checkNotificationsEnabled() {
         Boolean notificationsEnabled = this.sharedPreferences.getBoolean(this.getString(R.string.key_pref_notifications), true);
         System.out.println("check notifications enabled : " + notificationsEnabled);
         if(notificationsEnabled) {
@@ -175,7 +179,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        this.checkSharedPreferences();
+        this.checkNotificationsEnabled();
     }
 
     @Override
@@ -204,8 +208,6 @@ public class MainActivity extends BaseActivity {
                     AlarmManager.INTERVAL_DAY,
                     alarmPendingIntent
             );
-            System.out.println("Notifications : " + this.getText(R.string.alarm_enabled));
-            Toast.makeText(this, this.getText(R.string.alarm_enabled), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -217,8 +219,6 @@ public class MainActivity extends BaseActivity {
             this.alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         }
         alarmManager.cancel(this.alarmPendingIntent);
-        System.out.println("notifications : " + this.getText(R.string.alarm_canceled));
-        Toast.makeText(this, this.getText(R.string.alarm_canceled), Toast.LENGTH_LONG).show();
     }
 
     @Override
