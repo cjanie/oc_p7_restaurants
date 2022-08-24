@@ -11,6 +11,7 @@ import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
 import com.android.go4lunch.businesslogic.usecases.SignOutUseCase;
 import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -60,6 +61,7 @@ public class SessionViewModel extends ViewModel {
                         error -> error.printStackTrace()
                 );
     }
+
 
     public LiveData<Restaurant> getMyLunch() {
         return this.myLunch;

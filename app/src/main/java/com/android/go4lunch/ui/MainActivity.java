@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
+import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.configs.MyLunchPreferencesConfig;
 import com.android.go4lunch.ui.fragments.SearchAutocompleteFragment;
 import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
@@ -71,6 +72,8 @@ public class MainActivity extends BaseActivity {
 
     private SharedPreferences sharedPreferences;
 
+    private SharedPreferences.Editor preferencesEditor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +86,7 @@ public class MainActivity extends BaseActivity {
         this.cache = ((Launch)this.getApplication()).cache();
 
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        this.preferencesEditor = sharedPreferences.edit();
 
         // Instantiate UI
         this.setContentView(R.layout.activity_main);
@@ -116,6 +120,23 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(this, e.getClass().getCanonicalName(), Toast.LENGTH_LONG);
         }
         this.sessionViewModel.fetchSessionToUpdateLiveData();
+
+        Boolean myLunch = this.sharedPreferences.getBoolean(MyLunchPreferencesConfig.IS_MY_LUNCH_SELECTED, false);
+        if(!myLunch) {
+            this.sessionViewModel.getMyLunch().observe(this, restaurant -> {
+                if(restaurant != null) {
+                    this.preferencesEditor.putBoolean(MyLunchPreferencesConfig.IS_MY_LUNCH_SELECTED, true);
+                    this.preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_ID, restaurant.getId());
+                    this.preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_NAME, restaurant.getName());
+                    this.preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_ADDRESS, restaurant.getAddress());
+                    this.preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_PHONE, restaurant.getPhone());
+                    this.preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_WEB_SITE, restaurant.getWebSite());
+                    this.preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_PHOTO_URL, restaurant.getPhotoUrl());
+                    this.preferencesEditor.commit();
+                }
+            });
+            this.sessionViewModel.fetchMyLunchToUpdateLiveData();
+        }
 
         this.blurNavigationViewHeaderBackground();
 
