@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.android.go4lunch.businesslogic.usecases.GetMyLunchUseCase;
 import com.android.go4lunch.ui.viewmodels.SessionViewModel;
 import com.android.go4lunch.businesslogic.usecases.GetSessionUseCase;
 import com.android.go4lunch.businesslogic.usecases.SignOutUseCase;
@@ -15,16 +14,12 @@ public class MainViewModelFactory implements ViewModelProvider.Factory {
 
     private final SignOutUseCase signOutUseCase;
 
-    private final GetMyLunchUseCase getMyLunchUseCase;
-
     public MainViewModelFactory(
             GetSessionUseCase getSessionUseCase,
-            SignOutUseCase signOutUseCase,
-            GetMyLunchUseCase getMyLunchUseCase
+            SignOutUseCase signOutUseCase
     ) {
         this.getSessionUseCase = getSessionUseCase;
         this.signOutUseCase = signOutUseCase;
-        this.getMyLunchUseCase = getMyLunchUseCase;
     }
 
     @NonNull
@@ -33,8 +28,7 @@ public class MainViewModelFactory implements ViewModelProvider.Factory {
         if(modelClass.isAssignableFrom(SessionViewModel.class)) {
             return (T) new SessionViewModel(
                     this.getSessionUseCase,
-                    this.signOutUseCase,
-                    this.getMyLunchUseCase
+                    this.signOutUseCase
             );
         }
         throw new IllegalArgumentException("MainViewModelFactory: Unknown ViewModel class");

@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.android.go4lunch.businesslogic.gateways.MyPositionGateway;
 import com.android.go4lunch.businesslogic.usecases.GetDistanceFromMyPositionToRestaurantUseCase;
-import com.android.go4lunch.businesslogic.usecases.GetMyLunchUseCase;
 import com.android.go4lunch.businesslogic.usecases.GetMyPositionUseCase;
 import com.android.go4lunch.businesslogic.usecases.ReceiveNotificationsUseCase;
 import com.android.go4lunch.businesslogic.usecases.SaveMyPositionUseCase;
@@ -90,7 +89,6 @@ public class Launch extends Application {
     private ReceiveNotificationsUseCase receiveNotificationsUseCase;
     private SaveMyPositionUseCase saveMyPositionUseCase;
     private GetMyPositionUseCase getMyPositionUseCase;
-    private GetMyLunchUseCase getMyLunchUseCase;
     private SearchRestaurantUseCase searchRestaurantUseCase;
 
     // view models factories
@@ -332,16 +330,6 @@ public class Launch extends Application {
         return this.getMyPositionUseCase;
     }
 
-    private synchronized GetMyLunchUseCase getMyLunchUseCase() {
-        if(this.getMyLunchUseCase == null) {
-            this.getMyLunchUseCase = new GetMyLunchUseCase(
-                    this.sessionGateway(),
-                    this.visitorGateway()
-            );
-        }
-        return this.getMyLunchUseCase;
-    }
-
     private synchronized SearchRestaurantUseCase searchRestaurantUseCase() {
         if(this.searchRestaurantUseCase == null) {
             this.searchRestaurantUseCase = new SearchRestaurantUseCase(this.restaurantGateway(), this.visitorGateway());
@@ -415,8 +403,7 @@ public class Launch extends Application {
         if(this.mainViewModelFactory == null) {
             this.mainViewModelFactory = new MainViewModelFactory(
                     this.getSessionUseCase(),
-                    this.signOutUseCase(),
-                    this.getMyLunchUseCase()
+                    this.signOutUseCase()
             );
         }
         return this.mainViewModelFactory;

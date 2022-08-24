@@ -121,26 +121,7 @@ public class MainActivity extends BaseActivity {
         }
         this.sessionViewModel.fetchSessionToUpdateLiveData();
 
-        Boolean myLunch = this.sharedPreferences.getBoolean(MyLunchPreferencesConfig.IS_MY_LUNCH_SELECTED, false);
-        if(!myLunch) {
-            this.sessionViewModel.getMyLunch().observe(this, restaurant -> {
-                if(restaurant != null) {
-                    this.preferencesEditor.putBoolean(MyLunchPreferencesConfig.IS_MY_LUNCH_SELECTED, true);
-                    this.preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_ID, restaurant.getId());
-                    this.preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_NAME, restaurant.getName());
-                    this.preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_ADDRESS, restaurant.getAddress());
-                    this.preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_PHONE, restaurant.getPhone());
-                    this.preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_WEB_SITE, restaurant.getWebSite());
-                    this.preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_PHOTO_URL, restaurant.getPhotoUrl());
-                    this.preferencesEditor.commit();
-                }
-            });
-            this.sessionViewModel.fetchMyLunchToUpdateLiveData();
-        }
-
         this.blurNavigationViewHeaderBackground();
-
-
 
         // Navigation view menu
         this.navigationView.setCheckedItem(R.id.your_lunch);
