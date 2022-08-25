@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -84,6 +85,8 @@ public class MainActivity extends BaseActivity {
         ).get(SessionViewModel.class);
 
         this.cache = ((Launch)this.getApplication()).cache();
+        //this.cache = new ViewModelProvider(this).get(Cache.class);
+        Log.d("MainActivity", "cache instance n° " + this.cache.hashCode());
 
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         this.preferencesEditor = sharedPreferences.edit();

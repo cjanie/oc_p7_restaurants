@@ -14,16 +14,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
-
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.Cache;
 import com.android.go4lunch.ui.Mode;
-import com.android.go4lunch.ui.RestaurantDetailsActivity;
 import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.utils.CenterCamera;
 import com.android.go4lunch.ui.viewmodels.MapViewModel;
-import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
+import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -38,9 +36,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MapRestaurantFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
-
-    private SharedViewModel sharedViewModel;
+public class MapSearchResultFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private MapViewModel mapViewModel;
 
@@ -50,11 +46,6 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
     MapView mapView;
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
-
-    // Constructor
-    public MapRestaurantFragment(SharedViewModel sharedViewModel) {
-        this.sharedViewModel = sharedViewModel;
-    }
 
     @Nullable
     @Override
@@ -78,9 +69,8 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
 
-        // Call the Map View Model Update Action when My Position is available
         // The result of the action is listened in the call back on map ready
-        this.updateRestaurantsMarkersAtInitMyPosition();
+        this.updateSearchResultMarker();
 
         return root;
     }
@@ -118,13 +108,7 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        // Listening to the result of my position to show it on the map
-        this.sharedViewModel.getGeolocation().observe(this, geolocation -> {
-            if(geolocation != null) {
-                //googleMap.setMyLocationEnabled(true);
-            }
-        });
-        this.observeRestaurantsMarkers(googleMap);
+        this.observeSearchResultMarker(googleMap);
     }
 
     @Override
@@ -145,40 +129,24 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
         mapView.onLowMemory();
     }
 
-    private void observeRestaurantsMarkers(GoogleMap googleMap) {
-        this.mapViewModel.getRestaurantsMarkers().observe(this, markers -> {
-            if(!markers.isEmpty()) {
-
-                for(MarkerOptions marker: markers) {
-                    googleMap.addMarker(marker);
-                }
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(this.getCenterPosition(markers), 10.0f));
-                googleMap.setOnMarkerClickListener(this);
-            }
+    private void observeSearchResultMarker(GoogleMap googleMap) {
+        this.mapViewModel.getSearchResultMarker().observe(this, marker -> {
+            googleMap.addMarker(marker);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
+            googleMap.setOnMarkerClickListener(this);
         });
+
     }
 
-    private void updateRestaurantsMarkersAtInitMyPosition() {
-        this.sharedViewModel.getGeolocation().observe(this.getViewLifecycleOwner(), geolocation -> {
-            // Action of the Map View Model to update data when geolocation is available;
-            this.mapViewModel.fetchRestaurantsToUpdateRestaurantsMarkersLiveData(
-                    geolocation.getLatitude(),
-                    geolocation.getLongitude(),
-                    1000);
+    private void updateSearchResultMarker() {
+        this.cache.getRestaurantIdForSearch().observe(this.getViewLifecycleOwner(), id -> {
+            this.mapViewModel.fetchSearchResultToUpdateData(id);
         });
-    }
-
-    public LatLng getCenterPosition(List<MarkerOptions> markers) {
-        List<LatLng> latLngs = new ArrayList<>();
-        for(MarkerOptions marker: markers) {
-            latLngs.add(marker.getPosition());
-        }
-        return new CenterCamera().getCenter(latLngs);
     }
 
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
-        this.mapViewModel.getMarkersRestaurantsMap().observe(this, map -> {
+        this.mapViewModel.getSearchResultMarkerMap().observe(this, map -> {
             Restaurant restaurant = map.get(marker.getTitle()).getRestaurant();
             Intent intent = RestaurantDetailsActivityIntentConfig.getIntent(
                     this.getContext(),
@@ -194,4 +162,5 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
         });
         return true;
     }
+
 }
