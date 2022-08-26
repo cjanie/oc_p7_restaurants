@@ -11,6 +11,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.go4lunch.R;
 import com.android.go4lunch.ui.fragments.ListRestaurantFragment;
+import com.android.go4lunch.ui.fragments.MapFragment;
 import com.android.go4lunch.ui.fragments.MapRestaurantFragment;
 import com.android.go4lunch.ui.fragments.WorkmateListFragment;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
@@ -54,7 +55,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new MapRestaurantFragment(this.sharedViewModel);
+                return new MapFragment(this.sharedViewModel);
             case 1:
                 return new ListRestaurantFragment(this.sharedViewModel);
             case 2:

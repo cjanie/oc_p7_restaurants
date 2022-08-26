@@ -35,6 +35,8 @@ public class MapViewModel extends ViewModel {
     // SEARCH RESULT MARKER
     private final MutableLiveData<MarkerOptions> searchResultMarker;
 
+    private final MutableLiveData<Map<String, RestaurantValueObject>> searchResultMarkerMap;
+
     // Constructor
     public MapViewModel(GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase, SearchRestaurantUseCase searchRestaurantUseCase) {
         this.getRestaurantsNearbyUseCase = getRestaurantsNearbyUseCase;
@@ -42,6 +44,7 @@ public class MapViewModel extends ViewModel {
         this.restaurantsMarkers = new MutableLiveData<>(new ArrayList<>());
         this.restaurantsMarkersMap = new MutableLiveData<>(new HashMap<>());
         this.searchResultMarker = new MutableLiveData<>();
+        this.searchResultMarkerMap = new MutableLiveData<>(new HashMap<>());
     }
 
     // Getter for the view the model livedata that the activity listens
@@ -57,10 +60,13 @@ public class MapViewModel extends ViewModel {
         return this.searchResultMarker;
     }
 
+    public LiveData<Map<String, RestaurantValueObject>> getSearchResultMarkerMap() {
+        return this.searchResultMarkerMap;
+    }
+
     // View model Actions that updates the view model livedata
     public void fetchRestaurantsToUpdateRestaurantsMarkersLiveData(Double myLatitude, Double myLongitude, int radius) {
         this.getRestaurantsNearbyUseCase.handle(myLatitude, myLongitude, radius)
-
                 .subscribe(
                         restaurants -> {
                             List<MarkerOptions> markers = new ArrayList<>();
@@ -87,6 +93,9 @@ public class MapViewModel extends ViewModel {
                         restaurant -> {
                             MarkerOptions marker = createMarker(restaurant);
                             this.searchResultMarker.postValue(marker);
+                            Map<String, RestaurantValueObject> searchResultMap = new HashMap<>();
+                            searchResultMap.put(marker.getTitle(), restaurant);
+                            this.searchResultMarkerMap.postValue(searchResultMap);
                         },
                         error -> {
                             error.printStackTrace();

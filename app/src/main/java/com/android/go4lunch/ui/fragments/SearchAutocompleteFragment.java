@@ -1,6 +1,7 @@
 package com.android.go4lunch.ui.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.businesslogic.entities.Geolocation;
@@ -39,7 +41,8 @@ public class SearchAutocompleteFragment extends AutocompleteSupportFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         this.cache = ((Launch)this.getActivity().getApplication()).cache();
-
+        //this.cache = new ViewModelProvider(this.requireActivity()).get(Cache.class);
+        Log.d("SearchFragment", "cache instance n°" + this.cache.hashCode());
         if(!Places.isInitialized()) {
             Places.initialize(this.getActivity().getApplicationContext(), GoogleMapsRequestConfig.API_KEY);
         }
@@ -64,7 +67,7 @@ public class SearchAutocompleteFragment extends AutocompleteSupportFragment {
             }
         });
 
-        this.cache.getMyPosition().observe(this.getViewLifecycleOwner(), myPosition -> {
+        this.cache.getMyPosition().observe(this.getActivity(), myPosition -> {
             Double forkOfLatitudesAndLongitudes = 0.012;
             RectangularBounds rectangularBounds = new RectangularBoundsFactory(myPosition, forkOfLatitudesAndLongitudes).create();
 
