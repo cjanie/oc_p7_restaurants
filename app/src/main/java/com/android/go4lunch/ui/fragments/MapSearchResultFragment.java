@@ -146,20 +146,19 @@ public class MapSearchResultFragment extends Fragment implements OnMapReadyCallb
 
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
-        this.mapViewModel.getSearchResultMarkerMap().observe(this, map -> {
-            Restaurant restaurant = map.get(marker.getTitle()).getRestaurant();
-            Intent intent = RestaurantDetailsActivityIntentConfig.getIntent(
-                    this.getContext(),
-                    restaurant.getId(),
-                    restaurant.getName(),
-                    restaurant.getAddress(),
-                    restaurant.getPhone(),
-                    restaurant.getWebSite(),
-                    restaurant.getPhotoUrl()
-            );
+        Restaurant restaurant = this.mapViewModel.getSearchResultMarkerMap().getValue().get(marker.getTitle()).getRestaurant();
+        Intent intent = RestaurantDetailsActivityIntentConfig.getIntent(
+                this.getContext(),
+                restaurant.getId(),
+                restaurant.getName(),
+                restaurant.getAddress(),
+                restaurant.getPhone(),
+                restaurant.getWebSite(),
+                restaurant.getPhotoUrl()
+        );
 
-            this.getContext().startActivity(intent);
-        });
+        this.getContext().startActivity(intent);
+
         return true;
     }
 

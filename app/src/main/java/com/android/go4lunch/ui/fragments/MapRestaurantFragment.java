@@ -178,20 +178,19 @@ public class MapRestaurantFragment extends Fragment implements OnMapReadyCallbac
 
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
-        this.mapViewModel.getMarkersRestaurantsMap().observe(this, map -> {
-            Restaurant restaurant = map.get(marker.getTitle()).getRestaurant();
-            Intent intent = RestaurantDetailsActivityIntentConfig.getIntent(
-                    this.getContext(),
-                    restaurant.getId(),
-                    restaurant.getName(),
-                    restaurant.getAddress(),
-                    restaurant.getPhone(),
-                    restaurant.getWebSite(),
-                    restaurant.getPhotoUrl()
-            );
+        Restaurant restaurant = this.mapViewModel.getMarkersRestaurantsMap().getValue().get(marker.getTitle()).getRestaurant();
+        Intent intent = RestaurantDetailsActivityIntentConfig.getIntent(
+                this.getContext(),
+                restaurant.getId(),
+                restaurant.getName(),
+                restaurant.getAddress(),
+                restaurant.getPhone(),
+                restaurant.getWebSite(),
+                restaurant.getPhotoUrl()
+        );
 
-            this.getContext().startActivity(intent);
-        });
+        this.getContext().startActivity(intent);
+
         return true;
     }
 }
