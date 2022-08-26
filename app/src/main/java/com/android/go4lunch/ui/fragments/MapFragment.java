@@ -40,7 +40,7 @@ public class MapFragment extends Fragment {
                 this.showFragment(new MapRestaurantFragment(this.sharedViewModel));
             }
             if(mode.equals(Mode.SEARCH)) {
-                this.showFragment(new MapSearchResultFragment(this.sharedViewModel));
+                this.showFragment(new MapSearchResultFragment());
             }
         });
         return root;

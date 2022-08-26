@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">I\'m Hungry!</string>
+    <string name="app_title">Go4Lunch</string>
+    <string name="app_subtitle">Trouve un chouette restaurant et invite tes collègues à diner!</string>
+    <!-- SIGN IN -->
+    <string name="sign_in_failure">L\'authentification a échoué</string>
+    <string name="sign_in_cancelled">L\'authentification a été annulée</string>
+    <string name="no_internet_connection">Pas de connection internet</string>
+
+    <string name="on_back_pressed_disabled">Bouton de retour désactivé</string>
+
+    <!-- NAV DRAWER -->
+    <string name="your_lunch">Ton diner</string>
+    <string name="settings">Configuration</string>
+    <string name="logout">Déconnection</string>
+    <string name="email">Email</string>
+
+    <!-- MENU -->
+    <string name="map_view">Carte</string>
+    <string name="list_view">Liste</string>
+    <string name="workmates">Collègues</string>
+
+    <string name="search">Rechercher</string>
+    <string name="home">Accueil</string>
+
+    <!-- RESTAURANTS -->
+    <string name="location_not_available">Ta localisation n\'est pas disponible</string>
+    <string name="restaurant_name">Nom du restaurant</string>
+    <string name="address">Adresse</string>
+
+    <string name="info">Info</string>
+    <string name="open">Ouvert</string>
+    <string name="close">Fermé</string>
+    <string name="closing_soon">Ferme bientôt</string>
+    <string name="open_until">Ouvert jusqu\'à</string>
+
+    <string name="distance">Distance</string>
+    <string name="meter_abbrev">m</string>
+
+    <!-- WORKMATES -->
+    <string name="selections">Selections</string>
+
+    <string name="is_eating">mange</string>
+    <string name="has_not_decided">n\'a pas encore décidé</string>
+
+    <!-- RESTAURANT -->
+    <string name="call">Tel</string>
+    <string name="no_phone_number_available">Pas de numéro de téléphone disponible</string>
+    <string name="like">J\'aime</string>
+    <string name="website">Site web</string>
+    <string name="visitor">Visiteur</string>
+    <string name="visitor_text"> nous rejoint!</string>
+
+    <!-- SEARCH PLACE -->
+    <!-- PERMISSION -->
+    <string name="location_permission_rationale_text">Permission de localisation requise</string>
+    <string name="location_rationale">Tu dois accorder ta permission de géolocalisation</string>
+    <string name="call_permission_rationale_text">Permission requise pour téléphoner</string>
+    <string name="call_rationale">Tu dois accorder ta permission pour téléphoner</string>
+    <string name="ok">OK</string>
+
+    <string name="title_activity_settings">Configuration</string>
+
+    <!-- NOTIFICATIONS -->
+    <string name="is_eating_at">mange à</string>
+    <string name="alarm_enabled">Alarme de notifications activée</string>
+    <string name="alarm_canceled">Alarm de notifications annulée</string>
+
+    <!-- SETTINGS -->
+    <string name="search_nearby_radius_header">Rechercher autour par radius en mètres</string>
+    <string name="search_nearby_radius_title">Définir le radius en mètres</string>
+    <string name="key_pref_radius">radius</string>
+    <string name="radius_default_value">1000</string>
+
+    <string name="notifications_header">Notifications</string>
+    <string name="notifications_title">Notifications activées</string>
+    <string name="key_pref_notifications">notifications</string>
+
+    <!-- Facebook -->
+    <string name="facebook_application_id" translatable="false">720823785792354</string>
+
+    <!-- Loader -->
+    <string name="loading_text">Chargement...</string>
+
+    <!-- preferences -->
+    <string-array name="pref_radius">
+        <item>500</item>
+        <item>1000</item>
+        <item>1500</item>
+        <item>2000</item>
+    </string-array>
+
+    <string-array name="pref_notifications">
+        <item>Activé</item>
+        <item>Désactivé</item>
+    </string-array>
+
+</resources>

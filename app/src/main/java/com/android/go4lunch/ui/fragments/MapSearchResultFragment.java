@@ -38,15 +38,9 @@ import butterknife.ButterKnife;
 
 public class MapSearchResultFragment extends GoogleMapFragment {
 
-    private SharedViewModel sharedViewModel;
-
     private MapViewModel mapViewModel;
 
     private Cache cache;
-
-    public MapSearchResultFragment(SharedViewModel sharedViewModel) {
-        this.sharedViewModel = sharedViewModel;
-    }
 
     @Nullable
     @Override
@@ -80,14 +74,9 @@ public class MapSearchResultFragment extends GoogleMapFragment {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         // Listening to the result of my position to show it on the map
-        /*
-        this.sharedViewModel.getGeolocation().observe(this, geolocation -> {
-            if(geolocation != null) {
-                googleMap.setMyLocationEnabled(true);
-            }
+        this.cache.getMyPosition().observe(this.getViewLifecycleOwner(), geolocation -> {
+            googleMap.setMyLocationEnabled(true);
         });
-
-         */
         this.observeSearchResultMarker(googleMap);
     }
 
