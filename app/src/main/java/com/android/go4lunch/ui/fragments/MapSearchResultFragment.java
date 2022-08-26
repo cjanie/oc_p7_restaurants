@@ -36,16 +36,17 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MapSearchResultFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MapSearchResultFragment extends GoogleMapFragment {
+
+    private SharedViewModel sharedViewModel;
 
     private MapViewModel mapViewModel;
 
     private Cache cache;
 
-    @BindView(R.id.map_view)
-    MapView mapView;
-
-    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+    public MapSearchResultFragment(SharedViewModel sharedViewModel) {
+        this.sharedViewModel = sharedViewModel;
+    }
 
     @Nullable
     @Override
@@ -75,58 +76,19 @@ public class MapSearchResultFragment extends Fragment implements OnMapReadyCallb
         return root;
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        Bundle mapViewBundle = outState.getBundle(MAPVIEW_BUNDLE_KEY);
-        if(mapViewBundle == null) {
-            mapViewBundle = new Bundle();
-            outState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle);
-        }
-        mapView.onSaveInstanceState(mapViewBundle);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mapView.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mapView.onStop();
-    }
-
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        // Listening to the result of my position to show it on the map
+        /*
+        this.sharedViewModel.getGeolocation().observe(this, geolocation -> {
+            if(geolocation != null) {
+                googleMap.setMyLocationEnabled(true);
+            }
+        });
+
+         */
         this.observeSearchResultMarker(googleMap);
-    }
-
-    @Override
-    public void onPause() {
-        mapView.onPause();
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        mapView.onDestroy();
-        super.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
     }
 
     private void observeSearchResultMarker(GoogleMap googleMap) {
