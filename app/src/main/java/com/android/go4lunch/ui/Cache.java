@@ -51,4 +51,13 @@ public class Cache extends ViewModel {
         this.mode = new MutableLiveData<>(Mode.LIST);
         this.restaurantIdForSearch = new MutableLiveData<>();
     }
+
+    public void test() {
+        try {
+            Thread.sleep(8000);
+            this.mode.postValue(Mode.SEARCH);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

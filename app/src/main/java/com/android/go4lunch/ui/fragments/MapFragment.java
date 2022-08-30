@@ -47,8 +47,9 @@ public class MapFragment extends Fragment {
     }
 
     private void showFragment(Fragment fragment) {
-        FragmentTransaction transaction = this.getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = this.getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.map_frame_layout, fragment);
         transaction.commit();
     }
+
 }
