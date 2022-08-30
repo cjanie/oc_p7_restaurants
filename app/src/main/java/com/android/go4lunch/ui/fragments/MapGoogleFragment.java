@@ -12,7 +12,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 
 import butterknife.BindView;
 
-public abstract class GoogleMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public abstract class MapGoogleFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     @BindView(R.id.map_view)
     MapView mapView;

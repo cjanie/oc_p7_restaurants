@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.Launch;
@@ -17,8 +16,6 @@ import com.android.go4lunch.R;
 
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.Cache;
-import com.android.go4lunch.ui.Mode;
-import com.android.go4lunch.ui.RestaurantDetailsActivity;
 import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.utils.CenterCamera;
 import com.android.go4lunch.ui.viewmodels.MapViewModel;
@@ -26,8 +23,6 @@ import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.SharedViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -35,21 +30,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MapRestaurantFragment extends GoogleMapFragment {
+public class MapRestaurantFragment extends MapGoogleFragment {
 
-    private SharedViewModel sharedViewModel;
 
     private MapViewModel mapViewModel;
 
     private Cache cache;
-
-    // Constructor
-    public MapRestaurantFragment(SharedViewModel sharedViewModel) {
-        this.sharedViewModel = sharedViewModel;
-    }
 
     @Nullable
     @Override
@@ -84,7 +72,7 @@ public class MapRestaurantFragment extends GoogleMapFragment {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         // Listening to the result of my position to show it on the map
-        this.sharedViewModel.getGeolocation().observe(this, geolocation -> {
+        this.cache.getMyPosition().observe(this, geolocation -> {
             if(geolocation != null) {
                 googleMap.setMyLocationEnabled(true);
             }
@@ -106,7 +94,7 @@ public class MapRestaurantFragment extends GoogleMapFragment {
     }
 
     private void updateRestaurantsMarkersAtInitMyPosition() {
-        this.sharedViewModel.getGeolocation().observe(this.getViewLifecycleOwner(), geolocation -> {
+        this.cache.getMyPosition().observe(this.getViewLifecycleOwner(), geolocation -> {
             // Action of the Map View Model to update data when geolocation is available;
             this.mapViewModel.fetchRestaurantsToUpdateRestaurantsMarkersLiveData(
                     geolocation.getLatitude(),

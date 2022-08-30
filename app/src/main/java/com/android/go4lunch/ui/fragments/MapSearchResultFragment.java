@@ -9,34 +9,22 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.Cache;
-import com.android.go4lunch.ui.Mode;
 import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
-import com.android.go4lunch.ui.utils.CenterCamera;
 import com.android.go4lunch.ui.viewmodels.MapViewModel;
-import com.android.go4lunch.ui.viewmodels.SharedViewModel;
 import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MapSearchResultFragment extends GoogleMapFragment {
+public class MapSearchResultFragment extends MapGoogleFragment {
 
     private MapViewModel mapViewModel;
 

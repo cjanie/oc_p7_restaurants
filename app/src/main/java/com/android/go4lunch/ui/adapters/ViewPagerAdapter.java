@@ -10,6 +10,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.go4lunch.R;
+import com.android.go4lunch.ui.fragments.ListFragment;
 import com.android.go4lunch.ui.fragments.ListRestaurantFragment;
 import com.android.go4lunch.ui.fragments.MapFragment;
 import com.android.go4lunch.ui.fragments.MapRestaurantFragment;
@@ -22,9 +23,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
 
     final int totalTabs = 3;
 
-    private SharedViewModel sharedViewModel;
-
-    public ViewPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, TabLayout tabLayout, ViewPager2 viewPager2, SharedViewModel sharedViewModel) {
+    public ViewPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, TabLayout tabLayout, ViewPager2 viewPager2) {
         super(fragmentManager, lifecycle);
 
         viewPager2.setAdapter(this);
@@ -47,7 +46,6 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
                     tab.setIcon(tabsIcons[position]);
                 }).attach();
 
-        this.sharedViewModel = sharedViewModel;
     }
 
     @NonNull
@@ -55,9 +53,9 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new MapFragment(this.sharedViewModel);
+                return new MapFragment();
             case 1:
-                return new ListRestaurantFragment(this.sharedViewModel);
+                return new ListFragment();
             case 2:
                 return new WorkmateListFragment();
             default:

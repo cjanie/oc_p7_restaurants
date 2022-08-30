@@ -14,34 +14,29 @@ import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 import com.android.go4lunch.ui.Cache;
 import com.android.go4lunch.ui.Mode;
-import com.android.go4lunch.ui.viewmodels.SharedViewModel;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 
-public class MapFragment extends WithFrameLayoutFragment {
+public class ListFragment extends WithFrameLayoutFragment {
 
     private Cache cache;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         this.cache = ((Launch)this.getActivity().getApplication()).cache();
-        //this.cache = new ViewModelProvider(this).get(Cache.class);
-        View root = inflater.inflate(R.layout.fragment_map, container, false);
-        this.frameLayoutId = R.id.map_frame_layout;
+        View root = inflater.inflate(R.layout.fragment_list, container, false);
+        this.frameLayoutId = R.id.list_frame_layout;
 
         this.cache.getMode().observe(this.getViewLifecycleOwner(), mode -> {
+
             if(mode.equals(Mode.LIST)) {
-                this.showFragment(new MapRestaurantFragment());
+                this.showFragment(new ListRestaurantFragment());
             }
             if(mode.equals(Mode.SEARCH)) {
-                this.showFragment(new MapSearchResultFragment());
+                this.showFragment(new ListSearchResultFragment());
+
             }
         });
         return root;
     }
-
-
 
 }

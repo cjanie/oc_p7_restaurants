@@ -37,9 +37,6 @@ import butterknife.ButterKnife;
 public class MainFragment extends UsesPermission {
 
     // DATA
-
-    private SharedViewModel sharedViewModel;
-
     private Cache cache;
 
     // UI
@@ -64,16 +61,13 @@ public class MainFragment extends UsesPermission {
         this.locationPermissionsResultLauncher = this.createResultActivityLauncher();
         this.locationPermissionsResultLauncher.launch(this.PERMISSION);
 
-        SharedViewModelFactory sharedViewModelFactory = ((Launch) this.getActivity().getApplication()).sharedViewModelFactory();
-        this.sharedViewModel = new ViewModelProvider(this, sharedViewModelFactory).get(SharedViewModel.class);
-
         this.cache = ((Launch)this.getActivity().getApplication()).cache();
 
         View root = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, root);
 
         // ViewPagerAdapter attachs ViewPager to Tablaout
-        new ViewPagerAdapter(this.getActivity().getSupportFragmentManager(), this.getLifecycle(), this.tabLayout, this.viewPager, this.sharedViewModel);
+        new ViewPagerAdapter(this.getActivity().getSupportFragmentManager(), this.getLifecycle(), this.tabLayout, this.viewPager);
 
         return root;
     }
@@ -144,10 +138,6 @@ public class MainFragment extends UsesPermission {
 
     private void saveLocation(Location location) {
         if(location != null) {
-            this.sharedViewModel.saveMyPosition(new Geolocation(
-                    location.getLatitude(),
-                    location.getLongitude())
-            );
             this.cache.setMyPosition(
                     new Geolocation(location.getLatitude(), location.getLongitude())
             );
