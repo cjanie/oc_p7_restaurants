@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -192,12 +193,13 @@ public class DetailsFragment extends UsesPermission {
     }
 
     private void selectRestaurant() {
-
         this.restaurantDetailsViewModel.selectRestaurant();
+        System.out.println("Details fragment " + "select");
     }
 
     private void unselectRestaurant() {
         this.restaurantDetailsViewModel.unselectRestaurant();
+        System.out.println("Details fragment " + "unselect");
     }
 
     private void handleLike() {

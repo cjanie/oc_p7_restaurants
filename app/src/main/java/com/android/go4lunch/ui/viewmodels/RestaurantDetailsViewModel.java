@@ -1,5 +1,7 @@
 package com.android.go4lunch.ui.viewmodels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -111,6 +113,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
     }
 
     public void selectRestaurant() {
+        System.out.println("Details ViewModel " + "select this.restaurant is : " + this.restaurant);
         this.goForLunchUseCase.selectRestaurant(this.restaurant)
                 .subscribe(isDone -> {
                     this.fetchIsTheCurrentSelectionToUpdateLiveData();
@@ -119,7 +122,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
     }
 
     public void unselectRestaurant() {
-
+        System.out.println("Details ViewModel " +  "unselect this.restaurant is : " + this.restaurant);
         this.goForLunchUseCase.unselectRestaurant(this.restaurant.getId())
                 .subscribe(
                         isDone -> this.fetchIsTheCurrentSelectionToUpdateLiveData(),

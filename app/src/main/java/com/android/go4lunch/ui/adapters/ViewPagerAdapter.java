@@ -23,6 +23,12 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
 
     final int totalTabs = 3;
 
+    private MapFragment mapFragment;
+
+    private ListFragment listFragment;
+
+    private WorkmateListFragment workmateListFragment;
+
     public ViewPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, TabLayout tabLayout, ViewPager2 viewPager2) {
         super(fragmentManager, lifecycle);
 
@@ -53,11 +59,20 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new MapFragment();
+                if(this.mapFragment == null) {
+                    this.mapFragment = new MapFragment();
+                }
+                return this.mapFragment;
             case 1:
-                return new ListFragment();
+                if(this.listFragment == null) {
+                    this.listFragment = new ListFragment();
+                }
+                return this.listFragment;
             case 2:
-                return new WorkmateListFragment();
+                if(this.workmateListFragment == null) {
+                    this.workmateListFragment = new WorkmateListFragment();
+                }
+                return this.workmateListFragment;
             default:
                 return null;
         }

@@ -22,6 +22,10 @@ public class MapFragment extends WithFrameLayoutFragment {
 
     private Cache cache;
 
+    private MapRestaurantFragment mapRestaurantFragment;
+
+    private MapSearchResultFragment mapSearchResultFragment;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -33,10 +37,16 @@ public class MapFragment extends WithFrameLayoutFragment {
 
         this.cache.getMode().observe(this.getViewLifecycleOwner(), mode -> {
             if(mode.equals(Mode.LIST)) {
-                this.showFragment(new MapRestaurantFragment());
+                if(this.mapRestaurantFragment == null) {
+                    this.mapRestaurantFragment = new MapRestaurantFragment();
+                }
+                this.showFragment(this.mapRestaurantFragment);
             }
             if(mode.equals(Mode.SEARCH)) {
-                this.showFragment(new MapSearchResultFragment());
+                if(this.mapSearchResultFragment == null) {
+                    this.mapSearchResultFragment = new MapSearchResultFragment();
+                }
+                this.showFragment(this.mapSearchResultFragment);
             }
         });
         return root;
