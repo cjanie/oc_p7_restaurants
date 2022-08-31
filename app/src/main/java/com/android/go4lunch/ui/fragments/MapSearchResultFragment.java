@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
+import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
 import com.android.go4lunch.ui.Cache;
 import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.viewmodels.MapViewModel;
@@ -85,20 +86,24 @@ public class MapSearchResultFragment extends MapGoogleFragment {
 
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
-        Restaurant restaurant = this.mapViewModel.getSearchResultMarkerMap().getValue().get(marker.getTitle()).getRestaurant();
-        Intent intent = RestaurantDetailsActivityIntentConfig.getIntent(
-                this.getContext(),
-                restaurant.getId(),
-                restaurant.getName(),
-                restaurant.getAddress(),
-                restaurant.getPhone(),
-                restaurant.getWebSite(),
-                restaurant.getPhotoUrl()
-        );
+        RestaurantValueObject restaurantV0 = this.mapViewModel.getSearchResultMarkerMap().getValue().get(marker.getTitle());
+        if(restaurantV0 != null) {
+            Restaurant restaurant = this.mapViewModel.getSearchResultMarkerMap().getValue().get(marker.getTitle()).getRestaurant();
+            Intent intent = RestaurantDetailsActivityIntentConfig.getIntent(
+                    this.getContext(),
+                    restaurant.getId(),
+                    restaurant.getName(),
+                    restaurant.getAddress(),
+                    restaurant.getPhone(),
+                    restaurant.getWebSite(),
+                    restaurant.getPhotoUrl()
+            );
 
-        this.getContext().startActivity(intent);
+            this.getContext().startActivity(intent);
 
-        return true;
+            return true;
+        }
+        return false;
     }
 
 }

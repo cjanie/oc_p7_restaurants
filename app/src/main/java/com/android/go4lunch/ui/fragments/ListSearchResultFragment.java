@@ -89,6 +89,16 @@ public class ListSearchResultFragment extends Fragment {
             }
         });
     }
+/*
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.cache.getRestaurantIdForSearch().observe(this.getViewLifecycleOwner(), id -> {
+            if(id != null || !id.isEmpty()) {
+                this.updateSearchResult(id);
+            }
+        });
+    }
 
-
+ */
 }

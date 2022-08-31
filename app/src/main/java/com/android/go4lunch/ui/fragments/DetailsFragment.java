@@ -138,6 +138,12 @@ public class DetailsFragment extends UsesPermission {
         this.buttonGoChecked.setOnClickListener(view -> {
                 unselectRestaurant();
                 preferencesEditor.putBoolean(MyLunchPreferencesConfig.IS_MY_LUNCH_SELECTED, false);
+                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_ID, "");
+                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_NAME, "");
+                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_ADDRESS, "");
+                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_PHONE, "");
+                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_PHOTO_URL, "");
+                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_WEB_SITE, "");
                 preferencesEditor.commit();
             }
         );
@@ -216,7 +222,4 @@ public class DetailsFragment extends UsesPermission {
         Navigation.findNavController(this.getActivity(), R.id.nav_host_fragment).navigate(R.id.action_detailsFragment_to_webViewFragment);
     }
 
-    private void handleError(Exception e) {
-        Toast.makeText(this.getActivity(), e.getClass().getName() + " " + e.getMessage(), Toast.LENGTH_LONG).show();
-    }
 }

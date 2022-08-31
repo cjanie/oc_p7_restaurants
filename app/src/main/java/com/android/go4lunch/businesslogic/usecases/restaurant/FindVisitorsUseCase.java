@@ -37,10 +37,10 @@ public class FindVisitorsUseCase {
             RestaurantValueObject restaurantVO
     ) {
        return this.getSelections().map(selections -> {
-           if(!selections.isEmpty()) {
-               int count = this.getVisitorsCountByRestaurantId(selections, restaurantVO.getRestaurant().getId());
-               restaurantVO.setVisitorsCount(count);
-           }
+
+           int count = this.getVisitorsCountByRestaurantId(selections, restaurantVO.getRestaurant().getId());
+           restaurantVO.setVisitorsCount(count);
+
            return restaurantVO;
        });
     }
