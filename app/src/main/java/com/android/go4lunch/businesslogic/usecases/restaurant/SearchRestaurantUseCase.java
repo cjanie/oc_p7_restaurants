@@ -4,6 +4,8 @@ import com.android.go4lunch.businesslogic.gateways.RestaurantGateway;
 import com.android.go4lunch.businesslogic.gateways.VisitorGateway;
 import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
 
+import java.util.Arrays;
+
 import io.reactivex.Observable;
 
 public class SearchRestaurantUseCase extends FindVisitorsUseCase {

@@ -54,7 +54,7 @@ public class RestaurantDetailsViewModel extends ViewModel {
         this.isInFavoritesRestaurantsUseCase = isInFavoritesRestaurantsUseCase;
 
         this.visitorsLiveData = new MutableLiveData<>(new ArrayList<>());
-        this.isTheCurrentSelectionLiveData = new MutableLiveData<>(false);
+        this.isTheCurrentSelectionLiveData = new MutableLiveData<>();
         this.isMarkedAsFavoriteLiveData = new MutableLiveData<>(false);
     }
 
@@ -113,7 +113,8 @@ public class RestaurantDetailsViewModel extends ViewModel {
     }
 
     public void selectRestaurant() {
-        System.out.println("Details ViewModel " + "select this.restaurant is : " + this.restaurant);
+        if(this.restaurant != null)
+        System.out.println("Details ViewModel " + "select this.restaurant is : " + this.restaurant.getName());
         this.goForLunchUseCase.selectRestaurant(this.restaurant)
                 .subscribe(isDone -> {
                     this.fetchIsTheCurrentSelectionToUpdateLiveData();
@@ -122,7 +123,8 @@ public class RestaurantDetailsViewModel extends ViewModel {
     }
 
     public void unselectRestaurant() {
-        System.out.println("Details ViewModel " +  "unselect this.restaurant is : " + this.restaurant);
+        if(this.restaurant != null)
+            System.out.println("Details ViewModel " +  "unselect this.restaurant is : " + this.restaurant.getName());
         this.goForLunchUseCase.unselectRestaurant(this.restaurant.getId())
                 .subscribe(
                         isDone -> this.fetchIsTheCurrentSelectionToUpdateLiveData(),
