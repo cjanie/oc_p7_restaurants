@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +26,6 @@ import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.adapters.ListVisitorRecyclerViewAdapter;
 import com.android.go4lunch.ui.configs.MyLunchPreferencesConfig;
-import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.viewmodels.RestaurantDetailsViewModel;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -138,12 +136,12 @@ public class DetailsFragment extends UsesPermission {
         this.buttonGoChecked.setOnClickListener(view -> {
                 unselectRestaurant();
                 preferencesEditor.putBoolean(MyLunchPreferencesConfig.IS_MY_LUNCH_SELECTED, false);
-                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_ID, "");
-                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_NAME, "");
-                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_ADDRESS, "");
-                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_PHONE, "");
-                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_PHOTO_URL, "");
-                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_WEB_SITE, "");
+                preferencesEditor.putString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_ID, "");
+                preferencesEditor.putString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_NAME, "");
+                preferencesEditor.putString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_ADDRESS, "");
+                preferencesEditor.putString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_PHONE, "");
+                preferencesEditor.putString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_PHOTO_URL, "");
+                preferencesEditor.putString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_WEB_SITE, "");
                 preferencesEditor.commit();
             }
         );
@@ -151,12 +149,12 @@ public class DetailsFragment extends UsesPermission {
         this.buttonGoUnchecked.setOnClickListener(view -> {
                 selectRestaurant();
                 preferencesEditor.putBoolean(MyLunchPreferencesConfig.IS_MY_LUNCH_SELECTED, true);
-                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_ID, this.restaurantDetailsViewModel.getRestaurant().getId());
-                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_NAME, this.restaurantDetailsViewModel.getRestaurant().getName());
-                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_ADDRESS, this.restaurantDetailsViewModel.getRestaurant().getAddress());
-                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_PHONE, this.restaurantDetailsViewModel.getRestaurant().getPhone());
-                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_PHOTO_URL, this.restaurantDetailsViewModel.getRestaurant().getPhotoUrl());
-                preferencesEditor.putString(MyLunchPreferencesConfig.RESTAURANT_WEB_SITE, this.restaurantDetailsViewModel.getRestaurant().getWebSite());
+                preferencesEditor.putString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_ID, this.restaurantDetailsViewModel.getRestaurant().getId());
+                preferencesEditor.putString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_NAME, this.restaurantDetailsViewModel.getRestaurant().getName());
+                preferencesEditor.putString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_ADDRESS, this.restaurantDetailsViewModel.getRestaurant().getAddress());
+                preferencesEditor.putString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_PHONE, this.restaurantDetailsViewModel.getRestaurant().getPhone());
+                preferencesEditor.putString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_PHOTO_URL, this.restaurantDetailsViewModel.getRestaurant().getPhotoUrl());
+                preferencesEditor.putString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_WEB_SITE, this.restaurantDetailsViewModel.getRestaurant().getWebSite());
                 preferencesEditor.commit();
             }
         );

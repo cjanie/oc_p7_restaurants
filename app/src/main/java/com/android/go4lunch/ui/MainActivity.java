@@ -26,7 +26,6 @@ import android.widget.Toast;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 
-import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.ui.configs.MyLunchPreferencesConfig;
 import com.android.go4lunch.ui.fragments.SearchAutocompleteFragment;
 import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
@@ -134,12 +133,12 @@ public class MainActivity extends BaseActivity {
                 if(item.getItemId() == R.id.your_lunch) {
                     Boolean myLunch = sharedPreferences.getBoolean(MyLunchPreferencesConfig.IS_MY_LUNCH_SELECTED, false);
                     if(myLunch) {
-                        String restaurantId = sharedPreferences.getString(MyLunchPreferencesConfig.RESTAURANT_ID, "");
-                        String restaurantName = sharedPreferences.getString(MyLunchPreferencesConfig.RESTAURANT_NAME, "");
-                        String restaurantAddress = sharedPreferences.getString(MyLunchPreferencesConfig.RESTAURANT_ADDRESS, "");
-                        String restaurantPhone = sharedPreferences.getString(MyLunchPreferencesConfig.RESTAURANT_PHONE, "");
-                        String restaurantWebSite = sharedPreferences.getString(MyLunchPreferencesConfig.RESTAURANT_WEB_SITE, "");
-                        String restaurantPhotoUrl = sharedPreferences.getString(MyLunchPreferencesConfig.RESTAURANT_PHOTO_URL, "");
+                        String restaurantId = sharedPreferences.getString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_ID, "");
+                        String restaurantName = sharedPreferences.getString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_NAME, "");
+                        String restaurantAddress = sharedPreferences.getString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_ADDRESS, "");
+                        String restaurantPhone = sharedPreferences.getString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_PHONE, "");
+                        String restaurantWebSite = sharedPreferences.getString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_WEB_SITE, "");
+                        String restaurantPhotoUrl = sharedPreferences.getString(MyLunchPreferencesConfig.MY_LUNCH_RESTAURANT_PHOTO_URL, "");
                         Intent intent = RestaurantDetailsActivityIntentConfig.getIntent(
                                 MainActivity.this,
                                 restaurantId,
