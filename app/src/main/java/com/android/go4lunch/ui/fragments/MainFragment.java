@@ -13,7 +13,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProvider;
+
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.go4lunch.Launch;
@@ -21,8 +21,7 @@ import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Geolocation;
 import com.android.go4lunch.ui.Cache;
 import com.android.go4lunch.ui.adapters.ViewPagerAdapter;
-import com.android.go4lunch.ui.viewmodels.SharedViewModel;
-import com.android.go4lunch.ui.viewmodels.factories.SharedViewModelFactory;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
@@ -91,7 +90,7 @@ public class MainFragment extends UsesPermission {
         LocationCallback locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
-                if(!locationResult.equals(null) && !locationResult.getLocations().isEmpty()) {
+                if(!locationResult.getLocations().isEmpty()) {
                     stopLocationUpdates(fusedLocationProviderClient, this);
                     saveLocation(locationResult.getLocations().get(0));
                 }
@@ -100,9 +99,9 @@ public class MainFragment extends UsesPermission {
             @Override
             public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
                 if(locationAvailability.isLocationAvailable()) {
-                    fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
-                        saveLocation(location);
-                    });
+                    fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location ->
+                        saveLocation(location)
+                    );
                 } else {
                     requestLocationUpdates(fusedLocationProviderClient, this);
                     Toast.makeText(getActivity(), getText(R.string.location_not_available), Toast.LENGTH_SHORT).show();

@@ -19,6 +19,10 @@ public class ListFragment extends WithFrameLayoutFragment {
 
     private Cache cache;
 
+    private ListRestaurantFragment listRestaurantFragment;
+
+    private ListSearchResultFragment listSearchResultFragment;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -29,10 +33,16 @@ public class ListFragment extends WithFrameLayoutFragment {
         this.cache.getMode().observe(this.getViewLifecycleOwner(), mode -> {
 
             if(mode.equals(Mode.LIST)) {
-                this.showFragment(new ListRestaurantFragment());
+                if(this.listRestaurantFragment == null) {
+                    this.listRestaurantFragment = new ListRestaurantFragment();
+                }
+                this.showFragment(this.listRestaurantFragment);
             }
             if(mode.equals(Mode.SEARCH)) {
-                this.showFragment(new ListSearchResultFragment());
+                if(this.listSearchResultFragment == null) {
+                    this.listSearchResultFragment = new ListSearchResultFragment();
+                }
+                this.showFragment(this.listSearchResultFragment);
 
             }
         });

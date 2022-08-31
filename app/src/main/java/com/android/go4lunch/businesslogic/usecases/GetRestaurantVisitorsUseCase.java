@@ -11,8 +11,6 @@ import io.reactivex.Observable;
 
 public class GetRestaurantVisitorsUseCase {
 
-    private final String TAG = "GET VISITORS USE CASE";
-
     private VisitorGateway visitorGateway;
 
     private WorkmateModel workmateModel;
