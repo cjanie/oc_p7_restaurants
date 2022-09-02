@@ -9,16 +9,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.Launch;
-import com.android.go4lunch.businesslogic.entities.Geolocation;
 import com.android.go4lunch.data.apiGoogleMaps.repositories.GoogleMapsRequestConfig;
-import com.android.go4lunch.ui.Cache;
+import com.android.go4lunch.ui.viewmodels.Cache;
 import com.android.go4lunch.ui.Mode;
 import com.android.go4lunch.ui.utils.RectangularBoundsFactory;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.RectangularBounds;

@@ -94,7 +94,8 @@ public class SignInActivity extends BaseActivity {
         // Choose authentication providers Google, Facebook
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.FacebookBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build());
+                new AuthUI.IdpConfig.GoogleBuilder().build()
+        );
         // Intent to return
         return AuthUI.getInstance()
                         .createSignInIntentBuilder()

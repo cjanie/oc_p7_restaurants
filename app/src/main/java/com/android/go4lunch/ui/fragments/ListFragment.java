@@ -7,21 +7,21 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
-import com.android.go4lunch.ui.Cache;
+import com.android.go4lunch.ui.viewmodels.Cache;
 import com.android.go4lunch.ui.Mode;
 
 public class ListFragment extends WithFrameLayoutFragment {
 
     private Cache cache;
 
-    private ListRestaurantFragment listRestaurantFragment;
+    private ListRestaurantsNearbyFragment listRestaurantsNearbyFragment;
 
     private ListSearchResultFragment listSearchResultFragment;
+
+    private ListSelectedRestaurantsFragment listSelectedRestaurantsFragment;
 
     @Nullable
     @Override
@@ -33,19 +33,25 @@ public class ListFragment extends WithFrameLayoutFragment {
         this.cache.getMode().observe(this.getViewLifecycleOwner(), mode -> {
 
             if(mode.equals(Mode.LIST)) {
-                if(this.listRestaurantFragment == null) {
-                    this.listRestaurantFragment = new ListRestaurantFragment();
+                if(this.listRestaurantsNearbyFragment == null) {
+                    this.listRestaurantsNearbyFragment = new ListRestaurantsNearbyFragment();
                 }
-                this.showFragment(this.listRestaurantFragment);
+                this.showFragment(this.listRestaurantsNearbyFragment);
             }
             if(mode.equals(Mode.SEARCH)) {
                 if(this.listSearchResultFragment == null) {
                     this.listSearchResultFragment = new ListSearchResultFragment();
                 }
                 this.showFragment(this.listSearchResultFragment);
-
+            }
+            if(mode.equals(Mode.FILTER_SELECTIONS)) {
+                if(this.listSelectedRestaurantsFragment == null) {
+                    this.listSelectedRestaurantsFragment = new ListSelectedRestaurantsFragment();
+                }
+                this.showFragment(this.listSelectedRestaurantsFragment);
             }
         });
+
         return root;
     }
 

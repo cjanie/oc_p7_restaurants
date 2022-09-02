@@ -15,7 +15,7 @@ import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Restaurant;
 import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
-import com.android.go4lunch.ui.Cache;
+import com.android.go4lunch.ui.viewmodels.Cache;
 import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.viewmodels.MapViewModel;
 import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;

@@ -23,6 +23,7 @@
 
     <string name="search">Rechercher</string>
     <string name="home">Accueil</string>
+    <string name="filter_selections">Filtrer les selections</string>
 
     <!-- RESTAURANTS -->
     <string name="location_not_available">Ta localisation n\'est pas disponible</string>

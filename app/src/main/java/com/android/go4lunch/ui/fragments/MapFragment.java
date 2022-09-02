@@ -7,24 +7,21 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
-import com.android.go4lunch.ui.Cache;
+import com.android.go4lunch.ui.viewmodels.Cache;
 import com.android.go4lunch.ui.Mode;
-import com.android.go4lunch.ui.viewmodels.SharedViewModel;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 
 public class MapFragment extends WithFrameLayoutFragment {
 
     private Cache cache;
 
-    private MapRestaurantFragment mapRestaurantFragment;
+    private MapRestaurantsNearbyFragment mapRestaurantsNearbyFragment;
 
     private MapSearchResultFragment mapSearchResultFragment;
+
+    private MapSelectedRestaurantsFragment mapSelectedRestaurantsFragment;
 
     @Nullable
     @Override
@@ -37,16 +34,22 @@ public class MapFragment extends WithFrameLayoutFragment {
 
         this.cache.getMode().observe(this.getViewLifecycleOwner(), mode -> {
             if(mode.equals(Mode.LIST)) {
-                if(this.mapRestaurantFragment == null) {
-                    this.mapRestaurantFragment = new MapRestaurantFragment();
+                if(this.mapRestaurantsNearbyFragment == null) {
+                    this.mapRestaurantsNearbyFragment = new MapRestaurantsNearbyFragment();
                 }
-                this.showFragment(this.mapRestaurantFragment);
+                this.showFragment(this.mapRestaurantsNearbyFragment);
             }
             if(mode.equals(Mode.SEARCH)) {
                 if(this.mapSearchResultFragment == null) {
                     this.mapSearchResultFragment = new MapSearchResultFragment();
                 }
                 this.showFragment(this.mapSearchResultFragment);
+            }
+            if(mode.equals(Mode.FILTER_SELECTIONS)) {
+                if(this.mapSelectedRestaurantsFragment == null) {
+                    this.mapSelectedRestaurantsFragment = new MapSelectedRestaurantsFragment();
+                }
+                this.showFragment(this.mapSelectedRestaurantsFragment);
             }
         });
         return root;
