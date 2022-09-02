@@ -11,4 +11,7 @@
         android:icon="@drawable/ic_baseline_home_24"
         android:title="@string/home"
         />
+    <item
+        android:id="@+id/action_filter_selections"
+        android:title="@string/filter_selections"/>
 </menu>

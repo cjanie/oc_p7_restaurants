@@ -7,6 +7,7 @@ import com.android.go4lunch.businesslogic.usecases.GetDistanceFromMyPositionToRe
 import com.android.go4lunch.businesslogic.usecases.GetMyPositionUseCase;
 import com.android.go4lunch.businesslogic.usecases.ReceiveNotificationsUseCase;
 import com.android.go4lunch.businesslogic.usecases.SaveMyPositionUseCase;
+import com.android.go4lunch.businesslogic.usecases.restaurant.FilterSelectedRestaurantsUseCase;
 import com.android.go4lunch.businesslogic.usecases.restaurant.SearchRestaurantUseCase;
 import com.android.go4lunch.data.apiGoogleMaps.repositories.DistanceRepository;
 import com.android.go4lunch.data.apiGoogleMaps.GoogleMapsHttpClientProvider;
@@ -28,13 +29,15 @@ import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.RealDateProvider;
 import com.android.go4lunch.providers.RealTimeProvider;
 import com.android.go4lunch.providers.TimeProvider;
-import com.android.go4lunch.ui.Cache;
+import com.android.go4lunch.ui.viewmodels.Cache;
 import com.android.go4lunch.ui.notifications.ShowNotificationsAction;
 import com.android.go4lunch.ui.viewmodels.factories.MainViewModelFactory;
+import com.android.go4lunch.ui.viewmodels.factories.MapSelectedRestaurantsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.RestaurantDetailsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.RestaurantsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.SearchViewModelFactory;
+import com.android.go4lunch.ui.viewmodels.factories.SelectedRestaurantsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.SharedViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.SignInViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.WorkmatesViewModelFactory;
@@ -90,6 +93,7 @@ public class Launch extends Application {
     private SaveMyPositionUseCase saveMyPositionUseCase;
     private GetMyPositionUseCase getMyPositionUseCase;
     private SearchRestaurantUseCase searchRestaurantUseCase;
+    private FilterSelectedRestaurantsUseCase filterSelectedRestaurantsUseCase;
 
     // view models factories
     private MapViewModelFactory mapViewModelFactory;
@@ -100,6 +104,8 @@ public class Launch extends Application {
     private MainViewModelFactory mainViewModelFactory;
     private SharedViewModelFactory sharedViewModelFactory;
     private SearchViewModelFactory searchViewModelFactory;
+    private SelectedRestaurantsViewModelFactory selectedRestaurantsViewModelFactory;
+    private MapSelectedRestaurantsViewModelFactory mapSelectedRestaurantsViewModelFactory;
     // work actions
     private ShowNotificationsAction showNotificationsAction;
 
@@ -337,6 +343,15 @@ public class Launch extends Application {
         return this.searchRestaurantUseCase;
     }
 
+    private synchronized FilterSelectedRestaurantsUseCase filterSelectedRestaurantsUseCase() {
+        if(this.filterSelectedRestaurantsUseCase == null) {
+            this.filterSelectedRestaurantsUseCase = new FilterSelectedRestaurantsUseCase(
+                    this.getRestaurantsNearbyUseCase()
+            );
+        }
+        return this.filterSelectedRestaurantsUseCase;
+    }
+
     // Cache
     public synchronized Cache cache() {
         if(this.cache == null) {
@@ -424,6 +439,26 @@ public class Launch extends Application {
             this.searchViewModelFactory = new SearchViewModelFactory();
         }
         return this.searchViewModelFactory;
+    }
+
+    public synchronized SelectedRestaurantsViewModelFactory selectedRestaurantsViewModelFactory() {
+        if(this.selectedRestaurantsViewModelFactory == null) {
+            this.selectedRestaurantsViewModelFactory = new SelectedRestaurantsViewModelFactory(
+                    this.filterSelectedRestaurantsUseCase(),
+                    this.getNumberOfLikesPerRestaurantUseCase(),
+                    this.getDistanceFromMyPositionToRestaurantUseCase()
+            );
+        }
+        return this.selectedRestaurantsViewModelFactory;
+    }
+
+    public synchronized MapSelectedRestaurantsViewModelFactory mapSelectedRestaurantsViewModelFactory() {
+        if(this.mapSelectedRestaurantsViewModelFactory == null) {
+            this.mapSelectedRestaurantsViewModelFactory = new MapSelectedRestaurantsViewModelFactory(
+                    this.filterSelectedRestaurantsUseCase()
+            );
+        }
+        return this.mapSelectedRestaurantsViewModelFactory;
     }
 
     // Work actions

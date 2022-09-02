@@ -11,7 +11,7 @@ import com.android.go4lunch.businesslogic.usecases.restaurant.GetRestaurantsNear
 import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
 import com.android.go4lunch.in_memory_gateways.InMemoryDistanceGateway;
 import com.android.go4lunch.in_memory_gateways.InMemoryLikeGateway;
-import com.android.go4lunch.ui.presenters.RestaurantListPresenter;
+import com.android.go4lunch.ui.presenters.RestaurantListController;
 
 import org.junit.Test;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class ListPresenterTest {
 
         GetDistanceFromMyPositionToRestaurantUseCase distanceUseCase = new GetDistanceFromMyPositionToRestaurantUseCase(new InMemoryDistanceGateway(Observable.just(1L)));
 
-        RestaurantListPresenter presenter = new RestaurantListPresenter(getLikesPerRestaurantUsecase, distanceUseCase);
+        RestaurantListController presenter = new RestaurantListController(getLikesPerRestaurantUsecase, distanceUseCase);
         Observable<List<RestaurantValueObject>> updated = presenter.updateRestaurantsWithLikesCount(restaurants);
 
         List<RestaurantValueObject> results = new ArrayList<>();
@@ -70,7 +70,7 @@ public class ListPresenterTest {
         InMemoryLikeGateway likeGateway = new InMemoryLikeGateway();
         GetNumberOfLikesPerRestaurantUseCase likeUseCase = new GetNumberOfLikesPerRestaurantUseCase(likeGateway);
         GetDistanceFromMyPositionToRestaurantUseCase distanceUseCase = new GetDistanceFromMyPositionToRestaurantUseCase(new InMemoryDistanceGateway(Observable.just(1L)));
-        RestaurantListPresenter presenter = new RestaurantListPresenter(likeUseCase, distanceUseCase);
+        RestaurantListController presenter = new RestaurantListController(likeUseCase, distanceUseCase);
         Observable<List<RestaurantValueObject>> updated = presenter.updateRestaurantsWithLikesCount(restaurants);
 
         List<RestaurantValueObject> results = new ArrayList<>();
@@ -98,7 +98,7 @@ public class ListPresenterTest {
         GetNumberOfLikesPerRestaurantUseCase likeUseCase = new GetNumberOfLikesPerRestaurantUseCase(likeGateway);
         GetDistanceFromMyPositionToRestaurantUseCase distanceUseCase = new GetDistanceFromMyPositionToRestaurantUseCase(new InMemoryDistanceGateway(Observable.just(1L)));
 
-        RestaurantListPresenter presenter = new RestaurantListPresenter(likeUseCase, distanceUseCase);
+        RestaurantListController presenter = new RestaurantListController(likeUseCase, distanceUseCase);
         Observable<List<RestaurantValueObject>> updated = presenter.updateRestaurantsWithLikesCount(restaurants);
 
         List<RestaurantValueObject> results = new ArrayList<>();
@@ -120,7 +120,7 @@ public class ListPresenterTest {
 
         InMemoryDistanceGateway distanceGateway = new InMemoryDistanceGateway(Observable.just(1L));
         GetDistanceFromMyPositionToRestaurantUseCase distanceUseCase = new GetDistanceFromMyPositionToRestaurantUseCase(distanceGateway);
-        RestaurantListPresenter presenter = new RestaurantListPresenter(likeUseCase, distanceUseCase);
+        RestaurantListController presenter = new RestaurantListController(likeUseCase, distanceUseCase);
 
         List<RestaurantValueObject> results = new ArrayList<>();
         presenter.updateRestaurantsWithDistance(restaurantsObservable, 1.1, 1.2).subscribe(results::addAll);

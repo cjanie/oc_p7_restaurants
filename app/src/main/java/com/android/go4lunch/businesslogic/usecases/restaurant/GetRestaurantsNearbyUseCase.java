@@ -31,19 +31,19 @@ public class GetRestaurantsNearbyUseCase extends FindVisitorsUseCase {
         return this.restaurantGateway.getRestaurantsNearby(myLatitude, myLongitude, radius);
     }
 
-    public Observable<List<RestaurantValueObject>>handle(Double myLatitude, Double myLongitude, int radius) {
+    private Observable<List<RestaurantValueObject>> getFormated(Double myLatitude, Double myLongitude, int radius) {
         return this.restaurantModel.formatRestaurantsAsValueObjects(
-                    this.getRestaurantsNearby(myLatitude, myLongitude, radius)
-                )
+                this.getRestaurantsNearby(myLatitude, myLongitude, radius)
+        )
                 .flatMap(restaurantVOs ->
                         this.updateRestaurantsWithVisitorsCount(
-                            restaurantVOs,
-                            this.getSelections()
+                                restaurantVOs,
+                                this.getSelections()
                         ));
     }
 
-
-
-
+    public Observable<List<RestaurantValueObject>> handle(Double myLatitude, Double myLongitude, int radius) {
+        return this.getFormated(myLatitude, myLongitude, radius);
+    }
 
 }

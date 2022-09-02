@@ -24,6 +24,7 @@
 
     <string name="search">Search</string>
     <string name="home">Home</string>
+    <string name="filter_selections">Filter Selections</string>
 
     <!-- RESTAURANTS -->
     <string name="location_not_available">Your location is not available</string>

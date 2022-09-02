@@ -20,7 +20,6 @@ public class RestaurantDetailsActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getSupportFragmentManager();
 
         this.restaurantDetailsViewModel = new ViewModelProvider(
                 this,

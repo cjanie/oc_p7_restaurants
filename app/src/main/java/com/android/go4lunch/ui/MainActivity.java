@@ -30,6 +30,7 @@ import com.android.go4lunch.ui.configs.MyLunchPreferencesConfig;
 import com.android.go4lunch.ui.fragments.SearchAutocompleteFragment;
 import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.notifications.AlarmReceiver;
+import com.android.go4lunch.ui.viewmodels.Cache;
 import com.android.go4lunch.ui.viewmodels.SessionViewModel;
 
 import com.android.go4lunch.businesslogic.exceptions.NoWorkmateForSessionException;
@@ -241,6 +242,9 @@ public class MainActivity extends BaseActivity {
             case R.id.action_home:
                 this.onHomeCalled();
                 return true;
+            case R.id.action_filter_selections:
+                this.onFilterSelectionsCalled();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -253,6 +257,10 @@ public class MainActivity extends BaseActivity {
 
     private void onHomeCalled() {
         this.cache.setMode(Mode.LIST);
+    }
+
+    private void onFilterSelectionsCalled() {
+        this.cache.setMode(Mode.FILTER_SELECTIONS);
     }
 
     private void showFragment(Fragment fragment) {

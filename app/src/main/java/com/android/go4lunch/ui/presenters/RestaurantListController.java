@@ -11,13 +11,13 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class RestaurantListPresenter {
+public class RestaurantListController {
 
     private GetNumberOfLikesPerRestaurantUseCase likeUseCase;
 
     private GetDistanceFromMyPositionToRestaurantUseCase distanceUseCase;
 
-    public RestaurantListPresenter(
+    public RestaurantListController(
             GetNumberOfLikesPerRestaurantUseCase likeUseCase,
             GetDistanceFromMyPositionToRestaurantUseCase distanceUseCase
     ) {

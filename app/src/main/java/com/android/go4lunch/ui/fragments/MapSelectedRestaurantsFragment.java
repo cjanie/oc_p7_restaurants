@@ -13,14 +13,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
-
 import com.android.go4lunch.businesslogic.entities.Restaurant;
-import com.android.go4lunch.ui.Cache;
+import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
 import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.utils.CenterCamera;
+import com.android.go4lunch.ui.viewmodels.Cache;
+import com.android.go4lunch.ui.viewmodels.MapSelectedRestaurantsViewModel;
 import com.android.go4lunch.ui.viewmodels.MapViewModel;
+import com.android.go4lunch.ui.viewmodels.factories.MapSelectedRestaurantsViewModelFactory;
 import com.android.go4lunch.ui.viewmodels.factories.MapViewModelFactory;
-import com.android.go4lunch.ui.viewmodels.SharedViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -32,10 +33,9 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
-public class MapRestaurantFragment extends MapGoogleFragment {
+public class MapSelectedRestaurantsFragment extends MapGoogleFragment {
 
-
-    private MapViewModel mapViewModel;
+    private MapSelectedRestaurantsViewModel mapSelectedRestaurantsViewModel;
 
     private Cache cache;
 
@@ -44,8 +44,8 @@ public class MapRestaurantFragment extends MapGoogleFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // Data
-        MapViewModelFactory mapViewModelFactory = ((Launch) this.getActivity().getApplication()).mapViewModelFactory();
-        this.mapViewModel = new ViewModelProvider(this, mapViewModelFactory).get(MapViewModel.class);
+        MapSelectedRestaurantsViewModelFactory viewModelFactory = ((Launch) this.getActivity().getApplication()).mapSelectedRestaurantsViewModelFactory();
+        this.mapSelectedRestaurantsViewModel = new ViewModelProvider(this, viewModelFactory).get(MapSelectedRestaurantsViewModel.class);
         this.cache = ((Launch)this.getActivity().getApplication()).cache();
         // UI
         View root = inflater.inflate(R.layout.fragment_restaurant_map, container, false);
@@ -81,7 +81,7 @@ public class MapRestaurantFragment extends MapGoogleFragment {
     }
 
     private void observeRestaurantsMarkers(GoogleMap googleMap) {
-        this.mapViewModel.getRestaurantsMarkers().observe(this, markers -> {
+        this.mapSelectedRestaurantsViewModel.getRestaurantsMarkers().observe(this, markers -> {
             if(!markers.isEmpty()) {
 
                 for(MarkerOptions marker: markers) {
@@ -96,7 +96,7 @@ public class MapRestaurantFragment extends MapGoogleFragment {
     private void updateRestaurantsMarkersAtInitMyPosition() {
         this.cache.getMyPosition().observe(this.getViewLifecycleOwner(), geolocation -> {
             // Action of the Map View Model to update data when geolocation is available;
-            this.mapViewModel.fetchRestaurantsToUpdateRestaurantsMarkersLiveData(
+            this.mapSelectedRestaurantsViewModel.fetchRestaurantsToUpdateRestaurantsMarkersLiveData(
                     geolocation.getLatitude(),
                     geolocation.getLongitude(),
                     1000);
@@ -113,7 +113,7 @@ public class MapRestaurantFragment extends MapGoogleFragment {
 
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
-        Restaurant restaurant = this.mapViewModel.getMarkersRestaurantsMap().getValue().get(marker.getTitle()).getRestaurant();
+        Restaurant restaurant = this.mapSelectedRestaurantsViewModel.getRestaurantsMarkersMap().getValue().get(marker.getTitle()).getRestaurant();
         Intent intent = RestaurantDetailsActivityIntentConfig.getIntent(
                 this.getContext(),
                 restaurant.getId(),

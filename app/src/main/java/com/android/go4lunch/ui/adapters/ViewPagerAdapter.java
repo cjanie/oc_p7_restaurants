@@ -11,11 +11,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.go4lunch.R;
 import com.android.go4lunch.ui.fragments.ListFragment;
-import com.android.go4lunch.ui.fragments.ListRestaurantFragment;
 import com.android.go4lunch.ui.fragments.MapFragment;
-import com.android.go4lunch.ui.fragments.MapRestaurantFragment;
 import com.android.go4lunch.ui.fragments.WorkmateListFragment;
-import com.android.go4lunch.ui.viewmodels.SharedViewModel;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 

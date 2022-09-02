@@ -19,7 +19,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
 import com.android.go4lunch.businesslogic.entities.Geolocation;
-import com.android.go4lunch.ui.Cache;
+import com.android.go4lunch.ui.viewmodels.Cache;
 import com.android.go4lunch.ui.adapters.ViewPagerAdapter;
 
 import com.google.android.gms.location.FusedLocationProviderClient;

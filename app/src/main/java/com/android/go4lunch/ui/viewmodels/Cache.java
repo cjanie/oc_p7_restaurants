@@ -1,10 +1,11 @@
-package com.android.go4lunch.ui;
+package com.android.go4lunch.ui.viewmodels;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.android.go4lunch.businesslogic.entities.Geolocation;
+import com.android.go4lunch.ui.Mode;
 
 public class Cache extends ViewModel {
 
@@ -42,22 +43,9 @@ public class Cache extends ViewModel {
         return this.restaurantIdForSearch;
     }
 
-    private void clear() {
-        this.init();
-    }
-
     private void init() {
         this.myPosition = new MutableLiveData<>();
         this.mode = new MutableLiveData<>(Mode.LIST);
         this.restaurantIdForSearch = new MutableLiveData<>();
-    }
-
-    public void test() {
-        try {
-            Thread.sleep(8000);
-            this.mode.postValue(Mode.SEARCH);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }

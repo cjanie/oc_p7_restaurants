@@ -9,8 +9,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -19,21 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
-
-import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
-import com.android.go4lunch.ui.Cache;
-import com.android.go4lunch.ui.Mode;
-import com.android.go4lunch.ui.loader.LoadingDialog;
 import com.android.go4lunch.ui.adapters.ListRestaurantRecyclerViewAdapter;
-import com.android.go4lunch.ui.viewmodels.RestaurantsViewModel;
-import com.android.go4lunch.ui.viewmodels.SharedViewModel;
+import com.android.go4lunch.ui.viewmodels.Cache;
+import com.android.go4lunch.ui.viewmodels.SelectedRestaurantsViewModel;
+import com.android.go4lunch.ui.viewmodels.factories.SelectedRestaurantsViewModelFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+public class ListSelectedRestaurantsFragment extends Fragment {
 
-public class ListRestaurantFragment extends Fragment {
-
-    private RestaurantsViewModel restaurantsViewModel;
+    private SelectedRestaurantsViewModel selectedRestaurantsViewModel;
 
     private Cache cache;
 
@@ -41,19 +32,12 @@ public class ListRestaurantFragment extends Fragment {
 
     private ListRestaurantRecyclerViewAdapter adapter;
 
-    private LoadingDialog loadingDialog;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Data
-        this.restaurantsViewModel = new ViewModelProvider(
-                this,
-                ((Launch) this.getActivity().getApplication()).restaurantsViewModelFactory()
-        ).get(RestaurantsViewModel.class);
-
+        SelectedRestaurantsViewModelFactory viewModelFactory = ((Launch)this.getActivity().getApplication()).selectedRestaurantsViewModelFactory();
+        this.selectedRestaurantsViewModel = new ViewModelProvider(this, viewModelFactory).get(SelectedRestaurantsViewModel.class);
         this.cache = ((Launch)this.getActivity().getApplication()).cache();
-
         // UI
         View root = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
         Context context = root.getContext();
@@ -62,25 +46,17 @@ public class ListRestaurantFragment extends Fragment {
         this.recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
 
         this.adapter = new ListRestaurantRecyclerViewAdapter();
-        this.loadingDialog = new LoadingDialog(this.getActivity());
 
-        // Listening to the results of the view model actions
-        this.observeIsLoading();
-
-        this.observeRestaurantsData();
-
-        // Call the View model actions
+        this.observeSelectedRestaurantsLiveData();
         this.updateRestaurantsDataFromMyPosition();
-
         return root;
     }
 
-    private void observeRestaurantsData() {
-        this.restaurantsViewModel.getRestaurants().observe(this.getViewLifecycleOwner(),
-                restaurants -> {
-                    this.adapter.updateList(restaurants);
-                    this.recyclerView.setAdapter(adapter);
-                });
+    private void observeSelectedRestaurantsLiveData() {
+        this.selectedRestaurantsViewModel.getRestaurants().observe(this.getViewLifecycleOwner(), restaurants -> {
+            this.adapter.updateList(restaurants);
+            this.recyclerView.setAdapter(adapter);
+        });
     }
 
     private void updateRestaurantsDataFromMyPosition() {
@@ -88,7 +64,7 @@ public class ListRestaurantFragment extends Fragment {
             if(geolocation != null) {
                 try {
 
-                    this.restaurantsViewModel.fetchRestaurantsObservableToUpdateLiveData(
+                    this.selectedRestaurantsViewModel.fetchRestaurantsToUpdateLiveData(
                             geolocation.getLatitude(),
                             geolocation.getLongitude(),
                             1000
@@ -101,12 +77,4 @@ public class ListRestaurantFragment extends Fragment {
             }
         });
     }
-
-    private void observeIsLoading() {
-        this.restaurantsViewModel.isLoading().observe(this.getViewLifecycleOwner(), isLoading -> {
-            if(isLoading) this.loadingDialog.showLoadingDialog();
-            else this.loadingDialog.dismissDialog();
-        });
-    }
-
 }

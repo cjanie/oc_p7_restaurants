@@ -12,7 +12,7 @@ import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.TimeProvider;
 import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
 import com.android.go4lunch.ui.loader.LoadingException;
-import com.android.go4lunch.ui.presenters.RestaurantListPresenter;
+import com.android.go4lunch.ui.presenters.RestaurantListController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class RestaurantsViewModel extends ViewModel {
     private final DateProvider dateProvider;
 
     // List Presenter
-    private final RestaurantListPresenter presenter; // Controller
+    private final RestaurantListController restaurantListController;
 
     // LiveData
     // LIST
@@ -64,7 +64,7 @@ public class RestaurantsViewModel extends ViewModel {
         this.timeProvider = timeProvider;
         this.dateProvider = dateProvider;
 
-        this.presenter = new RestaurantListPresenter(this.likeUseCase, this.distanceUseCase); // Controller ; presenter pour MVP
+        this.restaurantListController = new RestaurantListController(this.likeUseCase, this.distanceUseCase);
 
         this.restaurants = new MutableLiveData<>(new ArrayList<>());
         this.searchResult = new MutableLiveData<>();
@@ -89,9 +89,9 @@ public class RestaurantsViewModel extends ViewModel {
     public void fetchRestaurantsObservableToUpdateLiveData(Double myLatitude, Double myLongitude, int radius) {
         this.isLoading.postValue(true);
         Observable<List<RestaurantValueObject>> restaurantsObservable = this.getRestaurantsNearbyUseCase.handle(myLatitude, myLongitude, radius);
-        restaurantsObservable = this.presenter.updateRestaurantsWithDistance(restaurantsObservable, myLatitude, myLongitude);
-        restaurantsObservable = this.presenter.updateRestaurantsWithLikesCount(restaurantsObservable);
-        restaurantsObservable = this.presenter.updateRestaurantsWithTimeInfo(restaurantsObservable, this.timeProvider, this.dateProvider);
+        restaurantsObservable = this.restaurantListController.updateRestaurantsWithDistance(restaurantsObservable, myLatitude, myLongitude);
+        restaurantsObservable = this.restaurantListController.updateRestaurantsWithLikesCount(restaurantsObservable);
+        restaurantsObservable = this.restaurantListController.updateRestaurantsWithTimeInfo(restaurantsObservable, this.timeProvider, this.dateProvider);
         restaurantsObservable.subscribe(
                 restaurants -> {
                     this.restaurants.postValue(restaurants);
@@ -110,11 +110,11 @@ public class RestaurantsViewModel extends ViewModel {
     public void fetchSearchResultToUpdateLiveData(String restaurantId, Double myLatitude, Double myLongitude) {
         this.isLoading.postValue(true);
         Observable<RestaurantValueObject> restaurant = this.searchRestaurantUseCase.handle(restaurantId);
-        restaurant = this.presenter.updateRestaurantWithLikesCount(restaurant);
+        restaurant = this.restaurantListController.updateRestaurantWithLikesCount(restaurant);
 
-        restaurant = this.presenter.updateRestaurantWithDistance(restaurant, myLatitude, myLongitude);
+        restaurant = this.restaurantListController.updateRestaurantWithDistance(restaurant, myLatitude, myLongitude);
 
-        restaurant = this.presenter.updateRestaurantWithTimeInfo(restaurant, this.timeProvider, this.dateProvider);
+        restaurant = this.restaurantListController.updateRestaurantWithTimeInfo(restaurant, this.timeProvider, this.dateProvider);
         restaurant.subscribe(
                 r -> {
                     this.searchResult.postValue(r);
