@@ -5,25 +5,20 @@ import android.graphics.Typeface;
 import android.widget.TextView;
 
 import com.android.go4lunch.R;
-import com.android.go4lunch.models.Restaurant;
-import com.android.go4lunch.providers.RealDateProvider;
-import com.android.go4lunch.usecases.decorators.TimeInfoDecorator;
-import com.android.go4lunch.usecases.enums.TimeInfo;
-import com.android.go4lunch.usecases.models.RestaurantModel;
-import com.android.go4lunch.usecases.enums.TimeInfoVisitor;
+import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
+import com.android.go4lunch.businesslogic.enums.TimeInfoVisitor;
 
 import java.time.LocalTime;
 
 public class TimeInfoTextHandler {
 
-    public String getText(RestaurantModel restaurantModel, Context context) {
-        return restaurantModel.getTimeInfo().accept(new TimeInfoVisitor<String>() {
+    public String getText(RestaurantValueObject restaurantValueObject, Context context) {
+        return restaurantValueObject.getTimeInfo().accept(new TimeInfoVisitor<String>() {
             @Override
             public String visitOpen() {
-                LocalTime close = restaurantModel.getCloseToday();
+                LocalTime close = restaurantValueObject.getOpenHoursToday().get("close");
                 return context.getString(
-                        R.string.open_until) + " "
-                        + close.toString();
+                        R.string.open_until) + " " + close.toString();
             }
 
             @Override
@@ -43,7 +38,7 @@ public class TimeInfoTextHandler {
         });
     }
 
-    public int getColor(RestaurantModel restaurant, TextView textView) {
+    public int getColor(RestaurantValueObject restaurant, TextView textView) {
         return restaurant.getTimeInfo().accept(new TimeInfoVisitor<Integer>() {
             @Override
             public Integer visitOpen() {
@@ -57,7 +52,7 @@ public class TimeInfoTextHandler {
 
             @Override
             public Integer visitClosingSoon() {
-                return textView.getContext().getResources().getColor(R.color.colorAccent);
+                return textView.getContext().getResources().getColor(R.color.accent);
             }
 
             @Override
@@ -67,7 +62,7 @@ public class TimeInfoTextHandler {
         });
     }
 
-    public int getStyle(RestaurantModel restaurant) {
+    public int getStyle(RestaurantValueObject restaurant) {
         return restaurant.getTimeInfo().accept(new TimeInfoVisitor<Integer>() {
             @Override
             public Integer visitOpen() {

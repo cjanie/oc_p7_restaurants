@@ -1,35 +1,31 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <PreferenceCategory app:title="@string/messages_header">
-
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
-
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<!-- écouter les shared preférences pour mettre à jour le radius -->
+    <PreferenceCategory
+        app:key="search_nearby_radius_category"
+        app:title="@string/search_nearby_radius_header">
         <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />
+            android:defaultValue="1"
+            android:dialogTitle="@string/search_nearby_radius_title"
+            android:entries="@array/pref_radius"
+            android:entryValues="@array/pref_radius"
+            android:key="@string/key_pref_radius"
+            android:title="@string/search_nearby_radius_header"
+            app:isPreferenceVisible="true"
+            app:useSimpleSummaryProvider="true"/>
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/sync_header">
+    <PreferenceCategory
+        app:key="notifications_category"
+        app:title="@string/notifications_header">
 
         <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
-
+            android:defaultValue="true"
+            app:key="@string/key_pref_notifications"
+            app:title="@string/notifications_title"
+            app:isPreferenceVisible="true"
+            />
     </PreferenceCategory>
 
 </PreferenceScreen>

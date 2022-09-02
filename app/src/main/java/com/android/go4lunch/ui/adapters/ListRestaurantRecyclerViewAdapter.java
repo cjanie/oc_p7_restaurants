@@ -2,8 +2,6 @@ package com.android.go4lunch.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
 import com.android.go4lunch.ui.RestaurantDetailsActivity;
-import com.android.go4lunch.usecases.models.RestaurantModel;
+import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
+import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
 import com.android.go4lunch.ui.utils.TimeInfoTextHandler;
-import com.android.go4lunch.usecases.enums.Vote;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,10 +33,16 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
     private static final int TYPE_ITEM_VIEW = 1;
 
-    private final List<RestaurantModel> restaurantModels;
+    private List<RestaurantValueObject> restaurantValueObjects;
 
-    public ListRestaurantRecyclerViewAdapter(List<RestaurantModel> restaurantModels) {
-        this.restaurantModels = restaurantModels;
+    public ListRestaurantRecyclerViewAdapter() {
+        this.restaurantValueObjects = new ArrayList<>();
+    }
+
+    public void updateList(List<RestaurantValueObject> restaurantVOs) {
+        this.restaurantValueObjects.clear();
+        this.restaurantValueObjects.addAll(restaurantVOs);
+        notifyDataSetChanged(); // Notifies the recycler view that data changed // Notify or DiffUtil object to handle list changes
     }
 
     @NonNull
@@ -56,7 +61,7 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof ItemViewHolder) {
-            RestaurantModel restaurant = this.restaurantModels.get(position);
+            RestaurantValueObject restaurant = this.restaurantValueObjects.get(position);
             Glide.with(((ItemViewHolder) holder).photo.getContext())
                     .load(restaurant.getRestaurant().getPhotoUrl())
                     .apply(RequestOptions.centerCropTransform())
@@ -73,46 +78,39 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
                 ((ItemViewHolder)holder).info.setTypeface(null, timeInfoTextHandler.getStyle(restaurant));
             }
 
+            // DISTANCE
             if(restaurant.getDistance() != null) {
                 ((ItemViewHolder)holder).distance.setText(
                         restaurant.getDistance().toString()
                                 + ((ItemViewHolder) holder).distance.getContext().getString(R.string.meter_abbrev));
             }
 
+            // VISITORS
             ((ItemViewHolder)holder).selections.setText("(" + restaurant.getVisitorsCount() +")");
 
-            /*
-            Vote vote = restaurant.getVoteInfo();
+            // STARS
+            if(restaurant.getNumberOfStarts() > 0) {
+                for(int i=0; i<restaurant.getNumberOfStarts(); i++) {
+                    ((ItemViewHolder)holder).starsContainer.addView(this.createStar(holder.itemView.getContext()));
 
-            if(vote == Vote.ONE_STAR) {
-                ((ItemViewHolder)holder).starsContainer.addView(this.createStar(holder.itemView.getContext()));
-            }
-            if(vote == Vote.TWO_STARS) {
-                for(int i=0; i<2; i++) {
-                    ((ItemViewHolder)holder).starsContainer.addView(this.createStar(holder.itemView.getContext()));
-                }
-            }
-            if(vote == Vote.THREE_STARS) {
-                for(int i=0; i<3; i++) {
-                    ((ItemViewHolder)holder).starsContainer.addView(this.createStar(holder.itemView.getContext()));
                 }
             }
 
-             */
-            ((ItemViewHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Context context = v.getContext();
-                    Intent intent = new Intent(context, RestaurantDetailsActivity.class);
-                    intent.putExtra("id", restaurant.getRestaurant().getId());
-                    intent.putExtra("name", restaurant.getRestaurant().getName());
-                    intent.putExtra("address", restaurant.getRestaurant().getAddress());
-                    intent.putExtra("phone", restaurant.getRestaurant().getPhone());
-                    intent.putExtra("website", restaurant.getRestaurant().getWebSite());
-                    intent.putExtra("photoUrl", restaurant.getRestaurant().getPhotoUrl());
+            holder.itemView.setOnClickListener(view -> {
+                    Context context = view.getContext();
+                    Intent intent = RestaurantDetailsActivityIntentConfig.getIntent(
+                            context,
+                            restaurant.getRestaurant().getId(),
+                            restaurant.getRestaurant().getName(),
+                            restaurant.getRestaurant().getAddress(),
+                            restaurant.getRestaurant().getPhone(),
+                            restaurant.getRestaurant().getWebSite(),
+                            restaurant.getRestaurant().getPhotoUrl()
+
+                    );
                     context.startActivity(intent);
                 }
-            });
+            );
         }
 
     }
@@ -132,7 +130,10 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
     @Override
     public int getItemViewType(int position) {
-        if(this.restaurantModels.isEmpty() && position == 0) {
+        // if(en cours de chargement > Loaderview)
+        // ou cas d'erreur // Wrapper avec message d'erreur, ou liste de restaurant + View type
+        // Wrapper data list générique
+        if(this.restaurantValueObjects.isEmpty() && position == 0) {
             return TYPE_EMPTY_VIEW;
         } else {
             return TYPE_ITEM_VIEW;
@@ -141,10 +142,10 @@ public class ListRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
     @Override
     public int getItemCount() {
-        if(this.restaurantModels.isEmpty()) {
+        if(this.restaurantValueObjects.isEmpty()) {
             return 1;
         }
-        return this.restaurantModels.size();
+        return this.restaurantValueObjects.size();
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {

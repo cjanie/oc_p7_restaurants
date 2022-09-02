@@ -1,7 +1,7 @@
 package com.android.go4lunch.in_memory_gateways;
 
-import com.android.go4lunch.gateways.LikeGateway;
-import com.android.go4lunch.models.Like;
+import com.android.go4lunch.businesslogic.gateways.LikeGateway;
+import com.android.go4lunch.businesslogic.entities.Like;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,14 +26,13 @@ public class InMemoryLikeGateway implements LikeGateway {
     }
 
     @Override
-    public boolean add(Like like) {
+    public void add(Like like) {
         List<Like> likesResult = new ArrayList<>();
         this.likes.subscribe(likesResult::addAll);
         likesResult.add(like);
         this.likes = Observable.just(likesResult);
-        return true;
+        
     }
-
 
 }
 

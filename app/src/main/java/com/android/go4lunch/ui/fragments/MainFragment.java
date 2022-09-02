@@ -2,34 +2,43 @@ package com.android.go4lunch.ui.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.android.go4lunch.Launch;
 import com.android.go4lunch.R;
-import com.android.go4lunch.models.Geolocation;
+import com.android.go4lunch.businesslogic.entities.Geolocation;
+import com.android.go4lunch.ui.viewmodels.Cache;
 import com.android.go4lunch.ui.adapters.ViewPagerAdapter;
-import com.android.go4lunch.ui.viewmodels.SharedViewModel;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.tabs.TabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainFragment extends Fragment {
+public class MainFragment extends UsesPermission {
+
+    // DATA
+    private Cache cache;
+
+    // UI
 
     @BindView(R.id.tabs)
     TabLayout tabLayout;
@@ -37,82 +46,101 @@ public class MainFragment extends Fragment {
     @BindView(R.id.container)
     ViewPager2 viewPager;
 
-    private final String[] permissions = new String[] {Manifest.permission.ACCESS_FINE_LOCATION};
+    // FOR LOCATION PERMISSION
 
-    public final int requestCode = 123;
+    private ActivityResultLauncher locationPermissionsResultLauncher;
 
-    private SharedViewModel sharedViewModel;
+    private final String PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        this.locationPermissionsResultLauncher = this.createResultActivityLauncher();
+        this.locationPermissionsResultLauncher.launch(this.PERMISSION);
+
+        this.cache = ((Launch)this.getActivity().getApplication()).cache();
+
         View root = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, root);
 
-        this.sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
-
         // ViewPagerAdapter attachs ViewPager to Tablaout
-        new ViewPagerAdapter(this.getActivity().getSupportFragmentManager(), this.getLifecycle(), this.tabLayout, this.viewPager, this.sharedViewModel);
-
-        // Location
-        this.requestLocationPermission();
+        new ViewPagerAdapter(this.getActivity().getSupportFragmentManager(), this.getLifecycle(), this.tabLayout, this.viewPager);
 
         return root;
     }
 
-    private void requestLocationPermission() {
-        ActivityResultLauncher launcher = this.registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                isGranted -> {
-                    if(isGranted) {
-                        EasyPermissions.onRequestPermissionsResult(
-                                this.requestCode,
-                                this.permissions,
-                                new int[]{PackageManager.PERMISSION_GRANTED},
-                                this);
-                    } else {
-                        EasyPermissions.onRequestPermissionsResult(
-                                this.requestCode,
-                                this.permissions,
-                                new int[]{PackageManager.PERMISSION_DENIED},
-                                this);
-                    }
-                }
-        );
-        launcher.launch(this.permissions[0]);
-    }
-
-    @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(123)
-    private void initMyPosition() {
-        // Control
-        if(EasyPermissions.hasPermissions(this.getActivity(), this.permissions)) {
-            // Get location when permission is not missing
-            FusedLocationProviderClient fusedlocationProviderClient =
-                    LocationServices.getFusedLocationProviderClient(this.getActivity());
-            fusedlocationProviderClient.getLastLocation().addOnSuccessListener(this.getActivity(), location -> {
-                if(location != null) {
-                    this.sharedViewModel.setGeolocation(new Geolocation(
-                            location.getLatitude(),
-                            location.getLongitude())
-                    );
-                }
-            });
-        } else {
-            // Demand permission if missing, explaining that a permission is needed to get the user location
-            EasyPermissions.requestPermissions(
-                    this,
-                    this.getString(R.string.permission_rationale_text),
-                    123,
-                    this.permissions);
-        }
+    @Override
+    protected void handlePermissionIsGranted() {
+        this.handleLocationPermissionIsGranted();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        this.initMyPosition();
+    protected void goToSettings() {
+        this.goToSettingsWithRationale(R.string.location_rationale, R.string.location_permission_rationale_text);
     }
+
+    @SuppressLint("MissingPermission")
+    private void handleLocationPermissionIsGranted() {
+        // Get location when permission is not missing
+        FusedLocationProviderClient fusedLocationProviderClient =
+                LocationServices.getFusedLocationProviderClient(this.getActivity());
+
+        LocationCallback locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                if(!locationResult.getLocations().isEmpty()) {
+                    stopLocationUpdates(fusedLocationProviderClient, this);
+                    saveLocation(locationResult.getLocations().get(0));
+                }
+            }
+
+            @Override
+            public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
+                if(locationAvailability.isLocationAvailable()) {
+                    fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location ->
+                        saveLocation(location)
+                    );
+                } else {
+                    requestLocationUpdates(fusedLocationProviderClient, this);
+                    Toast.makeText(getActivity(), getText(R.string.location_not_available), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        };
+
+        requestLocationUpdates(fusedLocationProviderClient, locationCallback);
+    }
+
+    @SuppressLint("MissingPermission")
+    private void requestLocationUpdates(
+            FusedLocationProviderClient fusedLocationProviderClient,
+            LocationCallback locationCallback
+    ) {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setInterval(100);
+        locationRequest.setFastestInterval(50);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        fusedLocationProviderClient.requestLocationUpdates(
+                locationRequest, locationCallback, Looper.getMainLooper()
+        );
+    }
+
+    private void stopLocationUpdates(
+            FusedLocationProviderClient fusedLocationProviderClient,
+            LocationCallback locationCallback
+    ) {
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+    }
+
+    private void saveLocation(Location location) {
+        if(location != null) {
+            this.cache.setMyPosition(
+                    new Geolocation(location.getLatitude(), location.getLongitude())
+            );
+        }
+    }
+
 }

@@ -1,8 +1,7 @@
 package com.android.go4lunch.in_memory_gateways;
 
-import com.android.go4lunch.gateways.RestaurantGateway;
-import com.android.go4lunch.models.Geolocation;
-import com.android.go4lunch.models.Restaurant;
+import com.android.go4lunch.businesslogic.gateways.RestaurantGateway;
+import com.android.go4lunch.businesslogic.entities.Restaurant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,19 +17,13 @@ public class InMemoryRestaurantGateway implements RestaurantGateway {
     }
 
     @Override
-    public Observable<List<Restaurant>> getRestaurantsNearby(Geolocation myPosition, int radius) {
-        // TODO
+    public Observable<List<Restaurant>> getRestaurantsNearby(Double myLatitude, Double myLongitude, int radius) {
+        return Observable.just(this.restaurants);
+    }
+
+    @Override
+    public Observable<Restaurant> getRestaurantById(String restaurantId) {
         return null;
-    }
-
-    @Override
-    public Observable<List<Restaurant>> getRestaurantsNearbyWithDetails(Geolocation myPosition, int radius) {
-        return Observable.just(this.restaurants);
-    }
-
-    @Override
-    public Observable<List<Restaurant>> getRestaurantsNearby() {
-        return Observable.just(this.restaurants);
     }
 
     public void setRestaurants(List<Restaurant> restaurants) {

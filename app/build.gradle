@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services' // To read the google-services.json config for FIREBASE
+    id 'com.github.konifar.gradle.unused-resources-remover'
 }
 
 def apikeyPropertiesFile = rootProject.file("apikey.properties")
@@ -8,8 +9,7 @@ def apikeyProperties = new Properties()
 apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 32
 
     buildFeatures {
         buildConfig = true
@@ -18,13 +18,14 @@ android {
     defaultConfig {
         applicationId "com.android.go4lunch"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        resConfigs 'en'
 
-        resConfigs "en" // And any other languages you support
+        // And any other languages you support
         vectorDrawables.useSupportLibrary = true // to use SVG
 
         // should correspond to key/value pairs inside the file
@@ -45,9 +46,6 @@ android {
         }
     }
     compileOptions {
-        // Flag to enable support for the new language APIs
-        coreLibraryDesugaringEnabled true
-
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -58,12 +56,15 @@ android {
 }
 
 dependencies {
+
     // Nav drawer
-    implementation 'androidx.navigation:navigation-ui:2.3.0'
+    implementation 'androidx.navigation:navigation-ui:2.4.2'
+
+    // Nav host fragment
+    implementation 'androidx.navigation:navigation-fragment:2.4.2'
+
     // Settings
-    implementation 'androidx.preference:preference:1.1.1'
-    // support for the new language APIs, cf. compile options
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
+    implementation 'androidx.preference:preference:1.2.0'
 
     // For tests
     testImplementation 'junit:junit:4.13.2'
@@ -71,27 +72,33 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    // EASY PERMISSIONS
-    implementation 'pub.devrel:easypermissions:3.0.0'
-
     // GOOGLE
     // Material
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.6.0'
 
     // Services for Maps, Location, Auth
-    implementation 'com.google.android.gms:play-services-maps:18.0.1'
-    implementation 'com.google.android.gms:play-services-location:15.0.1'
-    implementation 'com.google.android.gms:play-services-auth:19.2.0'
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
+
+    // Search autocomplete map api
+    implementation 'com.google.android.libraries.places:places:2.6.0'
+
 
     // Gson
-    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.google.code.gson:gson:2.8.9'
 
     // Firebase
-    implementation platform('com.google.firebase:firebase-bom:29.0.3')
-    implementation 'com.google.firebase:firebase-analytics'
+    implementation platform('com.google.firebase:firebase-bom:30.1.0')
+    // Declare the dependency for the Firebase Authentication library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-firestore'
-    implementation 'com.google.firebase:firebase-core:9.6.1'
+    implementation 'com.google.firebase:firebase-core'
+
+    // FIREBASE-UI
+    implementation 'com.firebaseui:firebase-ui-auth:8.0.0'
 
     // BUTTERKNIFE
     implementation 'com.jakewharton:butterknife:10.2.3'
@@ -115,13 +122,33 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
 
-    // FIREBASE-UI
-    implementation 'com.firebaseui:firebase-ui-auth:8.0.0'
-
     // FACEBOOK - latest Facebook SDK releases here: https://github.com/facebook/facebook-android-sdk/blob/master/CHANGELOG.md
     implementation 'com.facebook.android:facebook-android-sdk:8.0.0'
 
     // If Facebook login support is required
     implementation 'com.facebook.android:facebook-login:8.1.0'
+
+    // Notifs
+    def work_version = "2.7.1"
+
+    // (Java only)
+    implementation "androidx.work:work-runtime:$work_version"
+
+    // optional - RxJava2 support
+    implementation "androidx.work:work-rxjava2:$work_version"
+
+    // optional - GCMNetworkManager support
+    implementation "androidx.work:work-gcm:$work_version"
+
+    // optional - Test helpers
+    androidTestImplementation "androidx.work:work-testing:$work_version"
+
+    // optional - Multiprocess support
+    implementation "androidx.work:work-multiprocess:$work_version"
+
+
+    // Leaks
+    // debugImplementation because LeakCanary should only run in debug builds.
+    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
 
 }

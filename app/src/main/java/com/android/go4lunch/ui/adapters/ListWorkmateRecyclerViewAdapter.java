@@ -1,5 +1,7 @@
 package com.android.go4lunch.ui.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.go4lunch.R;
-import com.android.go4lunch.usecases.models.WorkmateModel;
+import com.android.go4lunch.businesslogic.valueobjects.WorkmateValueObject;
+import com.android.go4lunch.ui.RestaurantDetailsActivity;
+import com.android.go4lunch.ui.configs.RestaurantDetailsActivityIntentConfig;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -20,9 +24,9 @@ public class ListWorkmateRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
     private static final int TYPE_ITEM_VIEW = 1;
 
-    private List<WorkmateModel> workmates;
+    private List<WorkmateValueObject> workmates;
 
-    public ListWorkmateRecyclerViewAdapter(List<WorkmateModel> workmates) {
+    public ListWorkmateRecyclerViewAdapter(List<WorkmateValueObject> workmates) {
         this.workmates = workmates;
     }
 
@@ -43,7 +47,7 @@ public class ListWorkmateRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         if(holder instanceof WorkmateViewHolder) {
-            WorkmateModel workmate = this.workmates.get(position);
+            WorkmateValueObject workmate = this.workmates.get(position);
             // Avatar
             Glide.with(((WorkmateViewHolder) holder).avatar.getContext())
                     .load(workmate.getWorkmate().getUrlPhoto())
@@ -59,6 +63,23 @@ public class ListWorkmateRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                 stringBuilder.append(" " + holder.itemView.getContext().getString(R.string.is_eating)+ " (" + workmate.getSelection().getName() + ")");
             }
             ((WorkmateViewHolder) holder).text.setText(stringBuilder.toString());
+
+            if(workmate.getSelection() != null) {
+                holder.itemView.setOnClickListener(view -> {
+                        Context context = view.getContext();
+                        Intent intent = RestaurantDetailsActivityIntentConfig.getIntent(
+                                context,
+                                workmate.getSelection().getId(),
+                                workmate.getSelection().getName(),
+                                workmate.getSelection().getAddress(),
+                                workmate.getSelection().getPhone(),
+                                workmate.getSelection().getWebSite(),
+                                workmate.getSelection().getPhotoUrl()
+                        );
+                        context.startActivity(intent);
+                    }
+                );
+            }
         }
     }
 

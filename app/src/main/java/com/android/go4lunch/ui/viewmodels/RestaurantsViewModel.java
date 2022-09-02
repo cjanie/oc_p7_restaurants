@@ -4,111 +4,132 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.go4lunch.gateways_impl.SessionGatewayImpl;
-import com.android.go4lunch.models.Restaurant;
-import com.android.go4lunch.models.Workmate;
+import com.android.go4lunch.businesslogic.usecases.GetDistanceFromMyPositionToRestaurantUseCase;
+import com.android.go4lunch.businesslogic.usecases.GetNumberOfLikesPerRestaurantUseCase;
+import com.android.go4lunch.businesslogic.usecases.restaurant.GetRestaurantsNearbyUseCase;
+import com.android.go4lunch.businesslogic.usecases.restaurant.SearchRestaurantUseCase;
 import com.android.go4lunch.providers.DateProvider;
 import com.android.go4lunch.providers.TimeProvider;
-import com.android.go4lunch.usecases.GetRestaurantVisitorsUseCase;
-import com.android.go4lunch.usecases.GetSessionUseCase;
-import com.android.go4lunch.usecases.decorators.TimeInfoDecorator;
-import com.android.go4lunch.usecases.models.RestaurantModel;
-import com.android.go4lunch.models.Geolocation;
-import com.android.go4lunch.usecases.GetRestaurantsForListUseCase;
+import com.android.go4lunch.businesslogic.valueobjects.RestaurantValueObject;
+import com.android.go4lunch.ui.loader.LoadingException;
+import com.android.go4lunch.ui.presenters.RestaurantListController;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
 
 public class RestaurantsViewModel extends ViewModel {
 
     // Use Cases
-    private final GetRestaurantsForListUseCase getRestaurantsForListUseCase;
+    private final GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase;
 
-    private final GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase;
+    private final SearchRestaurantUseCase searchRestaurantUseCase;
 
-    // Dependencies
+    private final GetNumberOfLikesPerRestaurantUseCase likeUseCase;
+
+    private final GetDistanceFromMyPositionToRestaurantUseCase distanceUseCase;
+
     private final TimeProvider timeProvider;
 
     private final DateProvider dateProvider;
 
-    // Restaurant List LiveData
-    private final MutableLiveData<List<RestaurantModel>> restaurants;
+    // List Presenter
+    private final RestaurantListController restaurantListController;
 
-    // Data observer
-    private Disposable disposable;
+    // LiveData
+    // LIST
+    private final MutableLiveData<List<RestaurantValueObject>> restaurants;
+
+    // SEARCH RESULT
+    private final MutableLiveData<RestaurantValueObject> searchResult;
+
+    // LOADER
+    private final MutableLiveData<Boolean> isLoading;
 
 
     // Constructor
     public RestaurantsViewModel(
-            GetRestaurantsForListUseCase getRestaurantsForListUseCase,
-            GetRestaurantVisitorsUseCase getRestaurantVisitorsUseCase,
+            GetRestaurantsNearbyUseCase getRestaurantsNearbyUseCase,
+            SearchRestaurantUseCase searchRestaurantUseCase,
+            GetNumberOfLikesPerRestaurantUseCase likeUseCase,
+            GetDistanceFromMyPositionToRestaurantUseCase distanceUseCase,
             TimeProvider timeProvider,
             DateProvider dateProvider) {
-        this.getRestaurantsForListUseCase = getRestaurantsForListUseCase;
-        this.getRestaurantVisitorsUseCase = getRestaurantVisitorsUseCase;
+        this.getRestaurantsNearbyUseCase = getRestaurantsNearbyUseCase;
+        this.searchRestaurantUseCase = searchRestaurantUseCase;
+        this.likeUseCase = likeUseCase;
+        this.distanceUseCase = distanceUseCase;
+
         this.timeProvider = timeProvider;
         this.dateProvider = dateProvider;
 
+        this.restaurantListController = new RestaurantListController(this.likeUseCase, this.distanceUseCase);
+
         this.restaurants = new MutableLiveData<>(new ArrayList<>());
+        this.searchResult = new MutableLiveData<>();
+        this.isLoading = new MutableLiveData<>(true);
     }
 
-    // GET methods
-
-    public LiveData<List<RestaurantModel>> getRestaurants(Double myLatitude, Double myLongitude, int radius) {
-        List<Restaurant> restaurantsResults = new ArrayList<>();
-        this.getRestaurantsForListUseCase.handle(new Geolocation(myLatitude, myLongitude), radius)
-                .subscribe(restaurantsResults::addAll);
-        List<RestaurantModel> restaurantModels = new ArrayList<>();
-        if(!restaurantsResults.isEmpty()) {
-            for(Restaurant r: restaurantsResults) {
-                List<String> visitorsResults = new ArrayList<>();
-                this.getRestaurantVisitorsUseCase.handle(r.getId()).subscribe(visitorsResults::addAll);
-                RestaurantModel restaurantModel = new RestaurantModel(
-                        r,
-                        this.timeProvider,
-                        this.dateProvider,
-                        100L,
-                        visitorsResults);
-                restaurantModels.add(restaurantModel);
-            }
-        }
-        this.setRestaurants(
-                Observable.just(restaurantModels)
-        );
+    // Getter for the view the model livedata that the activity listens
+    public LiveData<List<RestaurantValueObject>> getRestaurants() {
         return this.restaurants;
     }
 
-    private void setRestaurants(Observable<List<RestaurantModel>> observableWithRestaurants) {
-        this.disposable = observableWithRestaurants
-                .subscribeWith(new DisposableObserver<List<RestaurantModel>>() {
-
-                    @Override
-                    public void onNext(@io.reactivex.annotations.NonNull List<RestaurantModel> restaurants) {
-
-                        RestaurantsViewModel.this.restaurants.postValue(restaurants);
-                    }
-
-                    @Override
-                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+    public LiveData<RestaurantValueObject> getSearchResult() {
+        return this.searchResult;
     }
 
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        if(this.disposable != null && !this.disposable.isDisposed())
-            this.disposable.dispose();
+    public LiveData<Boolean> isLoading() {
+        return this.isLoading;
     }
+
+    // Actions
+    // List
+    public void fetchRestaurantsObservableToUpdateLiveData(Double myLatitude, Double myLongitude, int radius) {
+        this.isLoading.postValue(true);
+        Observable<List<RestaurantValueObject>> restaurantsObservable = this.getRestaurantsNearbyUseCase.handle(myLatitude, myLongitude, radius);
+        restaurantsObservable = this.restaurantListController.updateRestaurantsWithDistance(restaurantsObservable, myLatitude, myLongitude);
+        restaurantsObservable = this.restaurantListController.updateRestaurantsWithLikesCount(restaurantsObservable);
+        restaurantsObservable = this.restaurantListController.updateRestaurantsWithTimeInfo(restaurantsObservable, this.timeProvider, this.dateProvider);
+        restaurantsObservable.subscribe(
+                restaurants -> {
+                    this.restaurants.postValue(restaurants);
+                    this.isLoading.postValue(false);
+                },
+                error -> {
+                    this.isLoading.postValue(false);
+                    error.printStackTrace();
+                    throw new LoadingException(error.getClass() + " " + error.getMessage());
+                },
+                () -> this.isLoading.postValue(false)
+        );
+    }
+
+    // Search
+    public void fetchSearchResultToUpdateLiveData(String restaurantId, Double myLatitude, Double myLongitude) {
+        this.isLoading.postValue(true);
+        Observable<RestaurantValueObject> restaurant = this.searchRestaurantUseCase.handle(restaurantId);
+        restaurant = this.restaurantListController.updateRestaurantWithLikesCount(restaurant);
+
+        restaurant = this.restaurantListController.updateRestaurantWithDistance(restaurant, myLatitude, myLongitude);
+
+        restaurant = this.restaurantListController.updateRestaurantWithTimeInfo(restaurant, this.timeProvider, this.dateProvider);
+        restaurant.subscribe(
+                r -> {
+                    this.searchResult.postValue(r);
+                    this.isLoading.postValue(false);
+                },
+                error -> {
+                    this.isLoading.postValue(false);
+                    error.printStackTrace();
+                    throw new LoadingException(error.getClass() + " " + error.getMessage());
+                },
+                () ->
+                    this.isLoading.postValue(false)
+
+        );
+
+    }
+
 }

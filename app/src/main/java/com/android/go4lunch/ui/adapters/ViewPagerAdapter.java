@@ -10,10 +10,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.go4lunch.R;
-import com.android.go4lunch.ui.fragments.ListRestaurantFragment;
-import com.android.go4lunch.ui.fragments.MapRestaurantFragment;
+import com.android.go4lunch.ui.fragments.ListFragment;
+import com.android.go4lunch.ui.fragments.MapFragment;
 import com.android.go4lunch.ui.fragments.WorkmateListFragment;
-import com.android.go4lunch.ui.viewmodels.SharedViewModel;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -21,9 +20,13 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
 
     final int totalTabs = 3;
 
-    private SharedViewModel sharedViewModel;
+    private MapFragment mapFragment;
 
-    public ViewPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, TabLayout tabLayout, ViewPager2 viewPager2, SharedViewModel sharedViewModel) {
+    private ListFragment listFragment;
+
+    private WorkmateListFragment workmateListFragment;
+
+    public ViewPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, TabLayout tabLayout, ViewPager2 viewPager2) {
         super(fragmentManager, lifecycle);
 
         viewPager2.setAdapter(this);
@@ -46,7 +49,6 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
                     tab.setIcon(tabsIcons[position]);
                 }).attach();
 
-        this.sharedViewModel = sharedViewModel;
     }
 
     @NonNull
@@ -54,11 +56,20 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new MapRestaurantFragment(this.sharedViewModel);
+                if(this.mapFragment == null) {
+                    this.mapFragment = new MapFragment();
+                }
+                return this.mapFragment;
             case 1:
-                return new ListRestaurantFragment(this.sharedViewModel);
+                if(this.listFragment == null) {
+                    this.listFragment = new ListFragment();
+                }
+                return this.listFragment;
             case 2:
-                return new WorkmateListFragment();
+                if(this.workmateListFragment == null) {
+                    this.workmateListFragment = new WorkmateListFragment();
+                }
+                return this.workmateListFragment;
             default:
                 return null;
         }

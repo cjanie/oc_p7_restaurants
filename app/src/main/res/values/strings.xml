@@ -1,23 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">I\'m Hungry!</string>
     <string name="app_title">Go4Lunch</string>
     <string name="app_subtitle">Find a nice restaurant and invite your co-workers for lunch!</string>
     <!-- SIGN IN -->
-    <string name="sign_in_with_google">Sign in with Google</string>
-    <string name="sign_in_with_facebook">Sign in with Facebook</string>
     <string name="sign_in_failure">Sign in failure</string>
     <string name="sign_in_cancelled">Sign in cancelled</string>
     <string name="no_internet_connection">No internet connection</string>
 
     <string name="on_back_pressed_disabled">On back pressed disabled</string>
-    <string name="permission_rationale_text">We need permission to get your location</string>
 
     <!-- NAV DRAWER -->
     <string name="your_lunch">Your lunch</string>
     <string name="settings">Settings</string>
     <string name="logout">Logout</string>
-    <string name="name">Name</string>
     <string name="email">Email</string>
 
     <!-- MENU -->
@@ -25,14 +22,18 @@
     <string name="list_view">List View</string>
     <string name="workmates">Workmates</string>
 
+    <string name="search">Search</string>
+    <string name="home">Home</string>
+    <string name="filter_selections">Filter Selections</string>
+
     <!-- RESTAURANTS -->
+    <string name="location_not_available">Your location is not available</string>
     <string name="restaurant_name">Restaurant Name</string>
     <string name="address">Address</string>
 
     <string name="info">Info</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
-    <string name="opening_soon">Opening soon</string>
     <string name="closing_soon">Closing soon</string>
     <string name="open_until">Open until</string>
 
@@ -47,36 +48,54 @@
 
     <!-- RESTAURANT -->
     <string name="call">Call</string>
+    <string name="no_phone_number_available">There is no phone number available</string>
     <string name="like">Like</string>
     <string name="website">Website</string>
     <string name="visitor">Visitor</string>
     <string name="visitor_text"> is joining!</string>
 
-
+    <!-- SEARCH PLACE -->
     <!-- PERMISSION -->
-    <string name="location_rationale">You must grant permissions for location</string>
+    <string name="location_permission_rationale_text">We need permission to get your location</string>
+    <string name="location_rationale">You must grant permission for location</string>
+    <string name="call_permission_rationale_text">We need permission to make phone call</string>
+    <string name="call_rationale">You must grant permission for phone call</string>
+    <string name="ok">OK</string>
 
-    <!-- FACEBOOK -->
-    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
-    <string name="facebook_application_id" translatable="false">570389354021189</string>
-    <string name="facebook_login_protocol_scheme" translatable="false">fb570389354021189</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <!-- NOTIFICATIONS -->
+    <string name="is_eating_at">is eating at</string>
+    <string name="alarm_enabled">Notifications alarm enabled</string>
+    <string name="alarm_canceled">Notifications alarm canceled</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <!-- SETTINGS -->
+    <string name="search_nearby_radius_header">Search Nearby Radius in Meters</string>
+    <string name="search_nearby_radius_title">Set radius in meters</string>
+    <string name="key_pref_radius">radius</string>
+    <string name="radius_default_value">1000</string>
 
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="notifications_header">Notifications</string>
+    <string name="notifications_title">Notifications enabled</string>
+    <string name="key_pref_notifications">notifications</string>
+
+    <!-- Facebook -->
+    <string name="facebook_application_id" translatable="false">720823785792354</string>
+
+    <!-- Loader -->
+    <string name="loading_text">Loading...</string>
+
+    <!-- preferences -->
+    <string-array name="pref_radius">
+        <item>500</item>
+        <item>1000</item>
+        <item>1500</item>
+        <item>2000</item>
+    </string-array>
+
+    <string-array name="pref_notifications">
+        <item>Enabled</item>
+        <item>Disabled</item>
+    </string-array>
 
 </resources>
